@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 const pack = require("../package.json");
 
@@ -104,13 +105,13 @@ module.exports = function exports(env) {
       new HtmlWebpackPlugin({
         title: "KosmoS3 CMS",
       }),
+      new FaviconsWebpackPlugin({ logo: "./resource/rocket.svg", prefix: "" }),
       new MiniCssExtractPlugin({
         filename: "[contenthash].css",
       }),
       new CopyWebpackPlugin({
         patterns: [
           { from: "./resource/404.html" },
-          { from: "./resource/favicon.ico" },
           { from: "./resource/CNAME" },
         ],
       }),
