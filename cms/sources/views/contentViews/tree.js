@@ -1,0 +1,201 @@
+import { JetView } from "webix-jet";
+import * as webix from "webix";
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import "../../edittree";
+
+export default class TreeView extends JetView {
+  config() {
+    const onChangeFnc = async () => {
+      const tree = $$("tree").data.serialize();
+      const editors0 = await $$("tinymce").getEditor(true);
+      const editors1 = await $$("ace-content").getEditor(true);
+      if (!tree.length) {
+        $$("tinymce").$scope.setValue("");
+        editors0.setMode("readonly");
+        editors1.setValue("");
+        editors1.setReadOnly(true);
+      } else {
+        editors0.setMode("design");
+        editors1.setReadOnly(false);
+      }
+      try {
+        await this.app.s3Client.send(
+          new PutObjectCommand({
+            Bucket: this.app.bucket,
+            Key: `index.json`,
+            ContentType: "application/json",
+            Body: webix.ajax().stringify(tree),
+          })
+        );
+        webix.message("Tree save complete");
+        if (this.siteWorker) this.siteWorker.terminate();
+        this.siteWorker = new Worker(
+          new URL("../../workers/site.js", import.meta.url)
+        );
+        this.siteWorker.postMessage({
+          pAccessKeyId: this.app.authenticationData.username,
+          pSecretAccessKey: this.app.authenticationData.password,
+          pBucketName: this.app.bucket,
+          pRegion: this.app.region,
+        });
+      } catch (err) {
+        webix.message({
+          text: err.message,
+          type: "error",
+        });
+      }
+    };
+    return {
+      view: "edittree",
+      id: "tree",
+      select: true,
+      activeTitle: true,
+      type: {
+        visible(obj) {
+          return `<span class='check mdi mdi-18px mdi-checkbox-${
+            obj.visible ? "marked-" : "blank-"
+          }outline'></span>`;
+        },
+      },
+      onClick: {
+        check(e, id) {
+          const item = this.getItem(id);
+          item.visible = !item.visible;
+          this.updateItem(id, item);
+        },
+      },
+      template: "{common.icon()} {common.visible()} {common.folder()} #value#",
+      checkboxRefresh: true,
+      editable: true,
+      onContext: {},
+      editor: "text",
+      editValue: "value",
+      editaction: "dblclick",
+      on: {
+        onAfterLoad: () => {
+          if (
+            !$$("sidebar").getSelectedId() ||
+            $$("sidebar").getSelectedId() === "content"
+          ) {
+            $$("tree").data.attachEvent("onStoreUpdated", onChangeFnc);
+            $$("tinymce")
+              .getEditor(true)
+              .then((tinymce) => {
+                const id = $$("tree").getFirstId();
+                if (id) $$("tree").select(id);
+                else {
+                  tinymce.setMode("readonly");
+                  $$("ace-content")
+                    .getEditor(true)
+                    .then((ace) => ace.setReadOnly(true));
+                }
+              });
+          }
+        },
+        onItemCheck: onChangeFnc,
+        onAfterSelect: async (id) => {
+          const item = $$("tree").getItem(id);
+          let result = "";
+          this.getParentView().lockProperties = true;
+          $$("contentItem").define(
+            "header",
+            `<span class='mdi mdi-file-document-outline'></span> ${item.value}`
+          );
+          $$("contentItem").refresh();
+          item.lastmod = new Date().toISOString();
+          item.date = item.date ? item.date : item.lastmod;
+          $$("tree").updateItem(id, item);
+          $$("url").setValue(item.url);
+          $$("date").setValue(new Date(item.date));
+          $$("changefreq").setValue(
+            item.changefreq ? item.changefreq : "always"
+          );
+          $$("priority").setValue(
+            item.priority ? Number(item.priority).toFixed(1) : "0.5"
+          );
+          $$("description").setValue(item.description);
+          $$("keywords").setValue(item.keywords);
+          $$("title").setValue(item.title);
+          $$("icon").setValue(item.icon);
+          $$("uploader").files.data.clearAll();
+          if (item.image) {
+            $$("uploader").addFile(
+              {
+                name: item.image.split("/").pop(),
+                sname: item.image,
+              },
+              0
+            );
+          }
+          this.getParentView().lockProperties = false;
+          try {
+            result = new TextDecoder().decode(
+              (
+                await (
+                  await (
+                    await this.app.s3Client.send(
+                      new GetObjectCommand({
+                        Bucket: this.app.bucket,
+                        ResponseCacheControl: "no-store",
+                        Key: `${id}.htm`,
+                      })
+                    )
+                  ).Body.getReader()
+                ).read()
+              ).value
+            );
+          } finally {
+            if ($$("sidebar").getSelectedId() === "content") {
+              $$("tinymce").$scope.setValue(result);
+              $$("ace-content").$scope.setValue(result);
+            }
+          }
+        },
+        onBeforeEditStop: (state, editor, ignore) => {
+          if (!(ignore && state.old)) {
+            if (/[";,//?:@&=+$_]/.test(state.value)) {
+              webix.message("Prohibited symbols are used", "debug");
+              return false;
+            }
+            if (!state.value) {
+              webix.message("Can't be empty", "debug");
+              return false;
+            }
+          }
+          $$("contentItem").define(
+            "header",
+            `<span class='mdi mdi-file-document-outline'></span> ${state.value}`
+          );
+          $$("contentItem").refresh();
+          return true;
+        },
+      },
+    };
+  }
+
+  async init() {
+    if (
+      !$$("sidebar").getSelectedId() ||
+      $$("sidebar").getSelectedId() === "content"
+    ) {
+      $$("tree").clearAll();
+      $$("tree").parse(
+        new TextDecoder().decode(
+          (
+            await (
+              await (
+                await this.app.s3Client.send(
+                  new GetObjectCommand({
+                    Bucket: this.app.bucket,
+                    ResponseCacheControl: "no-store",
+                    Key: "index.json",
+                  })
+                )
+              ).Body.getReader()
+            ).read()
+          ).value
+        )
+      );
+    }
+  }
+}

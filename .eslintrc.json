@@ -1,0 +1,36 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jquery": true,
+    "node": true
+  },
+  "globals": {
+    "webix": true,
+    "$$": true,
+    "tinymce": true,
+    "scheduler": true,
+    "fabric": true,
+    "init": true,
+    "AOS": true,
+    "jsel": true,
+    "APPNAME": true,
+    "VERSION": true,
+    "PRODUCTION": true,
+    "BUILD_AS_MODULE": true
+  },
+  "extends": [
+    "airbnb-base",
+    "plugin:prettier/recommended",
+    "plugin:jsdoc/recommended"
+  ],
+  "plugins": ["jsdoc"],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "parser": "@babel/eslint-parser"
+}

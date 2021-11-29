@@ -1,0 +1,76 @@
+.signInView {
+  background: url(bg.jpg) 100% 100% no-repeat;
+  background-size: cover;
+}
+
+.signInViewRight {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.signInViewField {
+  background-color: white;
+  border-left: 4px solid #027bc7;
+}
+
+.mainHeader {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 2.15rem;
+  font-weight: 300;
+  padding-left: 20px;
+}
+
+.mainHeader,
+div[view_id="www"] button,
+div[view_id="www"] span {
+  color: white !important;
+  text-shadow: -1px -1px 1px rgba(255, 255, 255, 0.1),
+    1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.mce-edit-area,
+.mce-edit-area > iframe,
+.mce-stack-layout,
+div[view_id="tinymce"],
+div[view_id="tinymce"] > div {
+  height: 100% !important;
+  width: 100% !important;
+  border: 0 !important;
+}
+
+.mce-stack-layout {
+  display: table !important;
+}
+
+.mce-edit-area {
+  display: table-row !important;
+}
+
+.check:hover {
+  color: #3498db;
+}
+
+div[view_id="header_template"] {
+  background-color: transparent;
+}
+
+div[view_id="fabric"] > iframe::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+
+div[view_id="fabric"] > iframe::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.ace_editor {
+  font: 12px / normal "Monaco", "Menlo", "Ubuntu Mono", "Consolas",
+    "source-code-pro", monospace !important;
+}
+
+.tox-edit-area {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
