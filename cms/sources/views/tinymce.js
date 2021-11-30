@@ -8,6 +8,114 @@ import tinymce from "tinymce";
 import contentUiCss from "tinymce/skins/ui/oxide/content.css";
 import contentCss from "tinymce/skins/content/default/content.css";
 
+/* Import fonts */
+import "@fontsource/alegreya";
+import "@fontsource/alegreya-sans";
+import "@fontsource/alegreya-sans-sc";
+import "@fontsource/alegreya-sc";
+import "@fontsource/alice";
+import "@fontsource/amatic-sc";
+import "@fontsource/andika";
+import "@fontsource/anonymous-pro";
+import "@fontsource/arimo";
+import "@fontsource/arsenal";
+import "@fontsource/bad-script";
+import "@fontsource/caveat";
+import "@fontsource/comfortaa";
+import "@fontsource/cormorant-garamond";
+import "@fontsource/cormorant-infant";
+import "@fontsource/cormorant-sc";
+import "@fontsource/cormorant-unicase";
+import "@fontsource/cormorant";
+import "@fontsource/cousine";
+import "@fontsource/cuprum";
+import "@fontsource/didact-gothic";
+import "@fontsource/eb-garamond";
+import "@fontsource/el-messiri";
+import "@fontsource/exo-2";
+import "@fontsource/fira-code";
+import "@fontsource/fira-mono";
+import "@fontsource/fira-sans-condensed";
+import "@fontsource/fira-sans-extra-condensed";
+import "@fontsource/fira-sans";
+import "@fontsource/forum";
+import "@fontsource/gabriela";
+import "@fontsource/ibm-plex-mono";
+import "@fontsource/ibm-plex-sans";
+import "@fontsource/ibm-plex-serif";
+import "@fontsource/istok-web";
+import "@fontsource/jura";
+import "@fontsource/kelly-slab";
+import "@fontsource/kosugi";
+import "@fontsource/kosugi-maru";
+import "@fontsource/kurale";
+import "@fontsource/ledger";
+import "@fontsource/literata";
+import "@fontsource/lobster";
+import "@fontsource/lora";
+import "@fontsource/m-plus-1p";
+import "@fontsource/m-plus-rounded-1c";
+import "@fontsource/marck-script";
+import "@fontsource/marmelad";
+import "@fontsource/merriweather";
+import "@fontsource/montserrat";
+import "@fontsource/montserrat-alternates";
+import "@fontsource/neucha";
+import "@fontsource/noto-sans";
+import "@fontsource/noto-sans-sc";
+import "@fontsource/noto-serif";
+import "@fontsource/noto-serif-sc";
+import "@fontsource/noto-serif-tc";
+import "@fontsource/old-standard-tt";
+import "@fontsource/open-sans-condensed";
+import "@fontsource/open-sans";
+import "@fontsource/oranienbaum";
+import "@fontsource/oswald";
+import "@fontsource/pacifico";
+import "@fontsource/pangolin";
+import "@fontsource/pattaya";
+import "@fontsource/philosopher";
+import "@fontsource/play";
+import "@fontsource/playfair-display-sc";
+import "@fontsource/playfair-display";
+import "@fontsource/podkova";
+import "@fontsource/poiret-one";
+import "@fontsource/prata";
+import "@fontsource/press-start-2p";
+import "@fontsource/prosto-one";
+import "@fontsource/pt-mono";
+import "@fontsource/pt-sans-caption";
+import "@fontsource/pt-sans-narrow";
+import "@fontsource/pt-sans";
+import "@fontsource/pt-serif-caption";
+import "@fontsource/pt-serif";
+import "@fontsource/roboto-condensed";
+import "@fontsource/roboto-mono";
+import "@fontsource/roboto-slab";
+import "@fontsource/roboto";
+import "@fontsource/rubik-mono-one";
+import "@fontsource/rubik";
+import "@fontsource/ruslan-display";
+import "@fontsource/russo-one";
+import "@fontsource/sawarabi-gothic";
+import "@fontsource/scada";
+import "@fontsource/seymour-one";
+import "@fontsource/source-code-pro";
+import "@fontsource/source-sans-pro";
+import "@fontsource/spectral";
+import "@fontsource/spectral-sc";
+import "@fontsource/stalinist-one";
+import "@fontsource/tenor-sans";
+import "@fontsource/tinos";
+import "@fontsource/ubuntu-condensed";
+import "@fontsource/ubuntu-mono";
+import "@fontsource/ubuntu";
+import "@fontsource/underdog";
+import "@fontsource/vollkorn";
+import "@fontsource/vollkorn-sc";
+import "@fontsource/yanone-kaffeesatz";
+import "@fontsource/yeseva-one";
+
 /**
  *
  */
@@ -130,17 +238,14 @@ export default class TinymceView extends JetView {
           "ltr rtl",
         toolbar_sticky: true,
         content_css_cors: true,
-        content_css: `https://s3.${this.app.region}.amazonaws.com/${
-          this.app.bucket
-        }/index.cdn.css,${Object.values(
+        content_css: `index.cdn.css,${Object.values(
           await (
             await fetch("assets-manifest.json", { cache: "no-store" })
           ).json()
         )
           .filter((element) => /.\.css$/.test(element))
-          .join(",")},https://s3.${this.app.region}.amazonaws.com/${
-          this.app.bucket
-        }/index.css`,
+          .map((element) => `${window.location.origin}/${element}`)
+          .join(",")},index.css`,
         skin: false,
         content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
         templates: [
@@ -392,131 +497,114 @@ export default class TinymceView extends JetView {
           },
         ],
         font_formats:
-          "Andale Mono=andale mono,times;" +
-          "Arial=arial,helvetica,sans-serif;" +
-          "Arial Black=arial black,avant garde;" +
-          "Book Antiqua=book antiqua,palatino;" +
-          "Comic Sans MS=comic sans ms,sans-serif;" +
-          "Courier New=courier new,courier;" +
-          "Georgia=georgia,palatino;" +
-          "Helvetica=helvetica;" +
-          "Impact=impact,chicago;" +
-          "Symbol=symbol;" +
-          "Tahoma=tahoma,arial,helvetica,sans-serif;" +
-          "Terminal=terminal,monaco;" +
-          "Times New Roman=times new roman,times;" +
-          "Trebuchet MS=trebuchet ms,geneva;" +
-          "Verdana=verdana,geneva;" +
-          "Webdings=webdings;" +
-          "Wingdings=wingdings,zapf dingbats;" +
-          'Alegreya="Alegreya", serif;' + // google
-          'Alegreya Sans="Alegreya Sans", sans-serif;' + // google
-          'Alegreya Sans SC="Alegreya Sans SC", sans-serif;' + // google
-          'Alegreya SC="Alegreya SC", serif;' + // google
-          'Alice="Alice", serif;' + // google
-          'Amatic SC="Amatic SC", cursive;' + // google
-          'Andika="Andika", sans-serif;' + // google
-          'Anonymous Pro="Anonymous Pro", monospace;' + // google
-          'Arimo="Arimo", sans-serif;' + // google
-          'Arsenal="Arsenal", sans-serif;' + // google
-          'Bad Script="Bad Script", cursive;' + // google
-          'Caveat="Caveat", cursive;' + // google
-          'Comfortaa="Comfortaa", cursive;' + // google
-          'Cormorant Garamond="Cormorant Garamond", serif;' + // google
-          'Cormorant Infant="Cormorant Infant", serif;' + // google
-          'Cormorant SC="Cormorant SC", serif;' + // google
-          'Cormorant Unicase="Cormorant Unicase", serif;' + // google
-          'Cormorant="Cormorant", serif;' + // google
-          'Cousine="Cousine", monospace;' + // google
-          'Cuprum="Cuprum", sans-serif;' + // google
-          'Didact Gothic="Didact Gothic", sans-serif;' + // google
-          'EB Garamond="EB Garamond", serif;' + // google
-          'El Messiri="El Messiri", sans-serif;' + // google
-          'Exo 2="Exo 2", sans-serif;' + // google
-          'Fira Code="Fira Code", monospace;' + // google
-          'Fira Mono="Fira Mono", monospace;' + // google
-          'Fira Sans Condensed="Fira Sans Condensed", sans-serif;' + // google
-          "Fira Sans Extra Condensed=" +
-          '"Fira Sans Extra Condensed", sans-serif;' + // google
-          'Fira Sans="Fira Sans", sans-serif;' + // google
-          'Forum="Forum", cursive;' + // google
-          'Gabriela="Gabriela", serif;' + // google
-          'IBM Plex Mono="IBM Plex Mono", monospace;' + // google
-          'IBM Plex Sans="IBM Plex Sans", sans-serif;' + // google
-          'IBM Plex Serif="IBM Plex Serif", serif;' + // google
-          'Istok Web="Istok Web", sans-serif;' + // google
-          'Jura="Jura", sans-serif;' + // google
-          'Kelly Slab="Kelly Slab", cursive;' + // google
-          'Kosugi="Kosugi", sans-serif;' + // google
-          'Kosugi Maru="Kosugi Maru", sans-serif;' + // google
-          'Kurale="Kurale", serif;' + // google
-          'Ledger="Ledger", serif;' + // google
-          'Literata="Literata", serif;' + // google
-          'Lobster="Lobster", cursive;' + // google
-          'Lora="Lora", serif;' + // google
-          'M PLUS 1p="M PLUS 1p", sans-serif;' + // google
-          'M PLUS Rounded 1c="M PLUS Rounded 1c", sans-serif;' + // google
-          'Marck Script="Marck Script", cursive;' + // google
-          'Marmelad="Marmelad", sans-serif;' + // google
-          'Merriweather="Merriweather", serif;' + // google
-          'Montserrat="Montserrat", sans-serif;' + // google
-          "Montserrat Alternates=" +
-          '"Montserrat Alternates", sans-serif;' + // google
-          'Neucha="Neucha", cursive;' + // google
-          'Noto Sans="Noto Sans", sans-serif;' + // google
-          'Noto Sans SC="Noto Sans SC", sans-serif;' + // google
-          'Noto Serif="Noto Serif", serif;' + // google
-          'Noto Serif SC="Noto Serif SC", serif;' + // google
-          'Noto Serif TC="Noto Serif TC", serif;' + // google
-          'Old Standard TT="Old Standard TT", serif;' + // google
-          'Open Sans Condensed="Open Sans Condensed", sans-serif;' + // google
-          'Open Sans="Open Sans", sans-serif;' + // google
-          'Oranienbaum="Oranienbaum", serif;' + // google
-          'Oswald="Oswald", sans-serif;' + // google
-          'Pacifico="Pacifico", cursive;' + // google
-          'Pangolin="Pangolin", cursive;' + // google
-          'Pattaya="Pattaya", sans-serif;' + // google
-          'Philosopher="Philosopher", sans-serif;' + // google
-          'Play="Play", sans-serif;' + // google
-          'Playfair Display SC="Playfair Display SC", serif;' + // google
-          'Playfair Display="Playfair Display", serif;' + // google
-          'Podkova="Podkova", serif;' + // google
-          'Poiret One="Poiret One", cursive;' + // google
-          'Prata="Prata", serif;' + // google
-          'Press Start 2P="Press Start 2P", cursive;' + // google
-          'Prosto One="Prosto One", cursive;' + // google
-          'PT Mono="PT Mono", monospace;' + // google
-          'PT Sans Caption="PT Sans Caption", sans-serif;' + // google
-          'PT Sans Narrow="PT Sans Narrow", sans-serif;' + // google
-          'PT Sans="PT Sans", sans-serif;' + // google
-          'PT Serif Caption="PT Serif Caption", serif;' + // google
-          'PT Serif="PT Serif", serif;' + // google
-          'Roboto Condensed="Roboto Condensed", sans-serif;' + // google
-          'Roboto Mono="Roboto Mono", monospace;' + // google
-          'Roboto Slab="Roboto Slab", serif;' + // google
-          'Roboto="Roboto", sans-serif;' + // google
-          'Rubik Mono One="Rubik Mono One", sans-serif;' + // google
-          'Rubik="Rubik", sans-serif;' + // google
-          'Ruslan Display="Ruslan Display", cursive;' + // google
-          'Russo One="Russo One", sans-serif;' + // google
-          'Sawarabi Gothic="Sawarabi Gothic", sans-serif;' + // google
-          'Scada="Scada", sans-serif;' + // google
-          'Seymour One="Seymour One", sans-serif;' + // google
-          'Source Code Pro="Source Code Pro", monospace;' + // google
-          'Source Sans Pro="Source Sans Pro", sans-serif;' + // google
-          'Spectral="Spectral", serif;' + // google
-          'Spectral SC="Spectral SC", serif;' + // google
-          'Stalinist One="Stalinist One", cursive;' + // google
-          'Tenor Sans="Tenor Sans", sans-serif;' + // google
-          'Tinos="Tinos", serif;' + // google
-          'Ubuntu Condensed="Ubuntu Condensed", sans-serif;' + // google
-          'Ubuntu Mono="Ubuntu Mono", monospace;' + // google
-          'Ubuntu="Ubuntu", sans-serif;' + // google
-          'Underdog="Underdog", cursive;' + // google
-          'Vollkorn="Vollkorn", serif;' + // google
-          'Vollkorn SC="Vollkorn SC", serif;' + // google
-          'Yanone Kaffeesatz="Yanone Kaffeesatz", sans-serif;' + // google
-          'Yeseva One="Yeseva One", cursive;', // google
+          "Andale Mono=andale mono,times; Arial=arial,helvetica,sans-serif; Arial Black=arial black,avant garde; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats" +
+          ";" +
+          'Alegreya="Alegreya";' +
+          'Alegreya Sans="Alegreya Sans";' +
+          'Alegreya Sans SC="Alegreya Sans SC";' +
+          'Alegreya SC="Alegreya SC";' +
+          'Alice="Alice";' +
+          'Amatic SC="Amatic SC";' +
+          'Andika="Andika";' +
+          'Anonymous Pro="Anonymous Pro";' +
+          'Arimo="Arimo";' +
+          'Arsenal="Arsenal";' +
+          'Bad Script="Bad Script";' +
+          'Caveat="Caveat";' +
+          'Comfortaa="Comfortaa";' +
+          'Cormorant Garamond="Cormorant Garamond";' +
+          'Cormorant Infant="Cormorant Infant";' +
+          'Cormorant SC="Cormorant SC";' +
+          'Cormorant Unicase="Cormorant Unicase";' +
+          'Cormorant="Cormorant";' +
+          'Cousine="Cousine";' +
+          'Cuprum="Cuprum";' +
+          'Didact Gothic="Didact Gothic";' +
+          'EB Garamond="EB Garamond";' +
+          'El Messiri="El Messiri";' +
+          'Exo 2="Exo 2";' +
+          'Fira Code="Fira Code";' +
+          'Fira Mono="Fira Mono";' +
+          'Fira Sans Condensed="Fira Sans Condensed";' +
+          'Fira Sans Extra Condensed="Fira Sans Extra Condensed";' +
+          'Fira Sans="Fira Sans";' +
+          'Forum="Forum";' +
+          'Gabriela="Gabriela";' +
+          'IBM Plex Mono="IBM Plex Mono";' +
+          'IBM Plex Sans="IBM Plex Sans";' +
+          'IBM Plex Serif="IBM Plex Serif";' +
+          'Istok Web="Istok Web";' +
+          'Jura="Jura";' +
+          'Kelly Slab="Kelly Slab";' +
+          'Kosugi="Kosugi";' +
+          'Kosugi Maru="Kosugi Maru";' +
+          'Kurale="Kurale";' +
+          'Ledger="Ledger";' +
+          'Literata="Literata";' +
+          'Lobster="Lobster";' +
+          'Lora="Lora";' +
+          'M PLUS 1p="M PLUS 1p";' +
+          'M PLUS Rounded 1c="M PLUS Rounded 1c";' +
+          'Marck Script="Marck Script";' +
+          'Marmelad="Marmelad";' +
+          'Merriweather="Merriweather";' +
+          'Montserrat="Montserrat";' +
+          'Montserrat Alternates="Montserrat Alternates";' +
+          'Neucha="Neucha";' +
+          'Noto Sans="Noto Sans";' +
+          'Noto Sans SC="Noto Sans SC";' +
+          'Noto Serif="Noto Serif";' +
+          'Noto Serif SC="Noto Serif SC";' +
+          'Noto Serif TC="Noto Serif TC";' +
+          'Old Standard TT="Old Standard TT";' +
+          'Open Sans Condensed="Open Sans Condensed";' +
+          'Open Sans="Open Sans";' +
+          'Oranienbaum="Oranienbaum";' +
+          'Oswald="Oswald";' +
+          'Pacifico="Pacifico";' +
+          'Pangolin="Pangolin";' +
+          'Pattaya="Pattaya";' +
+          'Philosopher="Philosopher";' +
+          'Play="Play";' +
+          'Playfair Display SC="Playfair Display SC";' +
+          'Playfair Display="Playfair Display";' +
+          'Podkova="Podkova";' +
+          'Poiret One="Poiret One";' +
+          'Prata="Prata";' +
+          'Press Start 2P="Press Start 2P";' +
+          'Prosto One="Prosto One";' +
+          'PT Mono="PT Mono";' +
+          'PT Sans Caption="PT Sans Caption";' +
+          'PT Sans Narrow="PT Sans Narrow";' +
+          'PT Sans="PT Sans";' +
+          'PT Serif Caption="PT Serif Caption";' +
+          'PT Serif="PT Serif";' +
+          'Roboto Condensed="Roboto Condensed";' +
+          'Roboto Mono="Roboto Mono";' +
+          'Roboto Slab="Roboto Slab";' +
+          'Roboto="Roboto";' +
+          'Rubik Mono One="Rubik Mono One";' +
+          'Rubik="Rubik";' +
+          'Ruslan Display="Ruslan Display";' +
+          'Russo One="Russo One";' +
+          'Sawarabi Gothic="Sawarabi Gothic";' +
+          'Scada="Scada";' +
+          'Seymour One="Seymour One";' +
+          'Source Code Pro="Source Code Pro";' +
+          'Source Sans Pro="Source Sans Pro";' +
+          'Spectral="Spectral";' +
+          'Spectral SC="Spectral SC";' +
+          'Stalinist One="Stalinist One";' +
+          'Tenor Sans="Tenor Sans";' +
+          'Tinos="Tinos";' +
+          'Ubuntu Condensed="Ubuntu Condensed";' +
+          'Ubuntu Mono="Ubuntu Mono";' +
+          'Ubuntu="Ubuntu";' +
+          'Underdog="Underdog";' +
+          'Vollkorn="Vollkorn";' +
+          'Vollkorn SC="Vollkorn SC";' +
+          'Yanone Kaffeesatz="Yanone Kaffeesatz";' +
+          'Yeseva One="Yeseva One";',
         style_formats: [
           {
             title: "Animation",
