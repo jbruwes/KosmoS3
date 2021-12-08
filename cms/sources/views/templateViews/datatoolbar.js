@@ -39,7 +39,5 @@ export default class DataToolbarView extends JetView {
     };
   }
 
-  config() {
-    return this.#config;
-  }
+  config = () => this.#config;
 }
