@@ -70,9 +70,7 @@ export default class SettingsView extends JetView {
     };
   }
 
-  config() {
-    return this.#config;
-  }
+  config = () => this.#config;
 
   async init() {
     try {
