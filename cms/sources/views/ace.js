@@ -14,9 +14,7 @@ export default class AceView extends JetView {
     };
   }
 
-  config() {
-    return this.#config;
-  }
+  config = () => this.#config;
 
   init(ace) {
     ace.getEditor(true).then((editor) => {
