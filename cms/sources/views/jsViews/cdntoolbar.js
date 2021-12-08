@@ -49,7 +49,5 @@ export default class CdnToolbarView extends JetView {
     };
   }
 
-  config() {
-    return this.#config;
-  }
+  config = () => this.#config;
 }
