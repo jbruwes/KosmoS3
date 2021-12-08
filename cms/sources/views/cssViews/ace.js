@@ -16,9 +16,7 @@ export default class AceView extends JetView {
     };
   }
 
-  config() {
-    return this.#config;
-  }
+  config = () => this.#config;
 
   async init() {
     /**
