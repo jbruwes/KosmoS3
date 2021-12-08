@@ -145,7 +145,5 @@ export default class ToolbarView extends JetView {
     };
   }
 
-  config() {
-    return this.#config;
-  }
+  config = () => this.#config;
 }
