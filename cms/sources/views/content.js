@@ -112,9 +112,7 @@ export default class ContentView extends JetView {
     };
   }
 
-  config() {
-    return this.#config;
-  }
+  config = () => this.#config;
 
   init() {
     this.pageWorker = new Worker(
