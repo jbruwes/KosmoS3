@@ -23,9 +23,7 @@ export default class CdnView extends JetView {
     };
   }
 
-  config() {
-    return this.#config;
-  }
+  config = () => this.#config;
 
   async init() {
     const onStoreUpdated = async () => {
