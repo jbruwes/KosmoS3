@@ -525,8 +525,8 @@ export default class TemplateView extends JetView {
     fabric.util.removeListener(document.body, "wheel", this.wheelEvent);
   }
 
-  wheelEvent = (eo) => {
-    const s = $($$("fabric").getIframe()).contents();
+  wheelEvent(eo) {
+    const s = $(this.$$("fabric").getIframe()).contents();
     switch (eo.deltaMode) {
       case 0: // DOM_DELTA_PIXEL		Chrome
         s.scrollTop(eo.deltaY + s.scrollTop());
@@ -542,15 +542,15 @@ export default class TemplateView extends JetView {
         break;
       default:
     }
-  };
+  }
 
-  getMode = (item) => {
+  getMode(item) {
     if (item.parent("div[data-absolute]:not([id])").parent(".pusher").length)
       return 1;
     if (item.parent("div[data-fixed]:not([id])").parent(".pusher").length)
       return 2;
     return 3;
-  };
+  }
 
   async loadSite() {
     const { document } = $$("fabric").getWindow();
@@ -587,7 +587,7 @@ export default class TemplateView extends JetView {
       .replace(/^\s*$[\n\r]{1,}/gm, "");
   }
 
-  zIndex = (body, prefix) => {
+  zIndex(body, prefix) {
     let i = $$("layers").count();
     $.each($$("layers").serialize(), (index, value) => {
       body.find(`#${value.value}`).parent().css("z-index", i);
@@ -603,9 +603,233 @@ export default class TemplateView extends JetView {
         })
     );
     // body.find(prefix + 'body:first>.pusher>div[data-static]:not([id])').each((index, element) => $(element).css('z-index', -$(element).css('z-index')));
-  };
+  }
 
   async redraw(pThat, layers) {
+    /**
+     * @param {object} item current object
+     * @param {string} body body selector
+     * @param {object} object object to save
+     */
+    function saveStage(item, body, object) {
+      item.attr("style", "");
+      const fixed = Number($$("mode").getValue());
+      const dock = $$("dock").getValue() - 1;
+      const hidden = item.parent().attr("hidden");
+      object.find(body).append(item);
+      if (dock) {
+        switch (fixed) {
+          case 1:
+            item.wrap('<div data-absolute class="ui fluid container">');
+            break;
+          case 2:
+            item.wrap('<div data-fixed class="ui fluid container">');
+            break;
+          case 3:
+            item.wrap('<div data-static class="ui fluid container">');
+            break;
+          default:
+        }
+      } else {
+        switch (fixed) {
+          case 1:
+            item.wrap('<div data-absolute class="ui container">');
+            break;
+          case 2:
+            item.wrap('<div data-fixed class="ui container">');
+            break;
+          case 3:
+            item.wrap('<div data-static class="ui container">');
+            break;
+          default:
+        }
+      }
+      item.parent().attr("hidden", hidden);
+      object.find(`${body}>div:not([id]):empty`).remove();
+      const marginLeft = $$("marginLeft").getValue();
+      const width = $$("width").getValue();
+      const marginRight = $$("marginRight").getValue();
+      const pmarginLeft = $$("pmarginLeft").getValue();
+      const pmarginRight = $$("pmarginRight").getValue();
+      const pwidth = $$("pwidth").getValue();
+      // pmarginRight = pmarginRight === '%' ? 'vw' : pmarginRight;
+      // pmarginLeft = pmarginLeft === '%' ? 'vw' : pmarginLeft;
+      // pwidth = pwidth === '%' ? 'vw' : pwidth;
+      if (marginLeft !== "") item.css("margin-left", marginLeft + pmarginLeft);
+      if (marginRight !== "")
+        item.css("margin-right", marginRight + pmarginRight);
+      if (width !== "") item.css("min-width", width + pwidth);
+      if (!(marginLeft !== "" && marginRight !== "")) {
+        item.css("align-self", "center").css("-ms-flex-item-align", "center");
+      }
+      const marginTop = $$("marginTop").getValue();
+      const height = $$("height").getValue();
+      const marginBottom = $$("marginBottom").getValue();
+      let pmarginTop = $$("pmarginTop").getValue();
+      let pmarginBottom = $$("pmarginBottom").getValue();
+      let pheight = $$("pheight").getValue();
+      pmarginTop = pmarginTop === "%" ? "vh" : pmarginTop;
+      pmarginBottom = pmarginBottom === "%" ? "vh" : pmarginBottom;
+      pheight = pheight === "%" ? "vh" : pheight;
+      if (marginTop !== "") item.css("margin-top", marginTop + pmarginTop);
+      if (marginBottom !== "")
+        item.css("margin-bottom", marginBottom + pmarginBottom);
+      if (height !== "") item.css("min-height", height + pheight);
+      if (marginTop !== "" && marginBottom !== "") item.css("flex", "1 1 auto");
+      const angle = $$("angle").getValue();
+      if (angle) item.css("transform", `rotate(${angle}deg)`);
+      const paddingLeft = $$("paddingLeft").getValue();
+      if (paddingLeft !== "") item.css("padding-left", `${paddingLeft}px`);
+      const paddingRight = $$("paddingRight").getValue();
+      if (paddingRight !== "") item.css("padding-right", `${paddingRight}px`);
+      const paddingTop = $$("paddingTop").getValue();
+      if (paddingTop !== "") item.css("padding-top", `${paddingTop}px`);
+      const paddingBottom = $$("paddingBottom").getValue();
+      if (paddingBottom !== "")
+        item.css("padding-bottom", `${paddingBottom}px`);
+      const borderLeftWidth = $$("borderLeftWidth").getValue();
+      if (borderLeftWidth !== "")
+        item.css("border-left-width", `${borderLeftWidth}px`);
+      const borderRightWidth = $$("borderRightWidth").getValue();
+      if (borderRightWidth !== "")
+        item.css("border-right-width", `${borderRightWidth}px`);
+      const borderTopWidth = $$("borderTopWidth").getValue();
+      if (borderTopWidth !== "")
+        item.css("border-top-width", `${borderTopWidth}px`);
+      const borderBottomWidth = $$("borderBottomWidth").getValue();
+      if (borderBottomWidth !== "")
+        item.css("border-bottom-width", `${borderBottomWidth}px`);
+      item.css("border-left-style", $$("borderLeftStyle").getValue());
+      item.css("border-right-style", $$("borderRightStyle").getValue());
+      item.css("border-top-style", $$("borderTopStyle").getValue());
+      item.css("border-bottom-style", $$("borderBottomStyle").getValue());
+      const borderLeftColor = $$("borderLeftColor").getValue();
+      if (borderLeftColor !== "") {
+        item.css(
+          "border-left-color",
+          borderLeftColor +
+            webix.color.toHex(
+              Math.round(2.55 * $$("borderLeftTransparency").getValue()),
+              2
+            )
+        );
+      }
+      const borderRightColor = $$("borderRightColor").getValue();
+      if (borderRightColor !== "") {
+        item.css(
+          "border-right-color",
+          borderRightColor +
+            webix.color.toHex(
+              Math.round(2.55 * $$("borderRightTransparency").getValue()),
+              2
+            )
+        );
+      }
+      const borderTopColor = $$("borderTopColor").getValue();
+      if (borderTopColor !== "") {
+        item.css(
+          "border-top-color",
+          borderTopColor +
+            webix.color.toHex(
+              Math.round(2.55 * $$("borderTopTransparency").getValue()),
+              2
+            )
+        );
+      }
+      const borderBottomColor = $$("borderBottomColor").getValue();
+      if (borderBottomColor !== "") {
+        item.css(
+          "border-bottom-color",
+          borderBottomColor +
+            webix.color.toHex(
+              Math.round(2.55 * $$("borderBottomTransparency").getValue()),
+              2
+            )
+        );
+      }
+      const borderTopLeftRadius = $$("borderTopLeftRadius").getValue();
+      if (borderTopLeftRadius !== "") {
+        item.css("border-top-left-radius", `${borderTopLeftRadius}px`);
+      }
+      const borderTopRightRadius = $$("borderTopRightRadius").getValue();
+      if (borderTopRightRadius !== "") {
+        item.css("border-top-right-radius", `${borderTopRightRadius}px`);
+      }
+      const borderBottomLeftRadius = $$("borderBottomLeftRadius").getValue();
+      if (borderBottomLeftRadius !== "") {
+        item.css("border-bottom-left-radius", `${borderBottomLeftRadius}px`);
+      }
+      const borderBottomRightRadius = $$("borderBottomRightRadius").getValue();
+      if (borderBottomRightRadius !== "") {
+        item.css("border-bottom-right-radius", `${borderBottomRightRadius}px`);
+      }
+      const textColor = $$("textColor").getValue();
+      if (textColor !== "") {
+        item.css(
+          "color",
+          textColor +
+            webix.color.toHex(
+              Math.round(2.55 * $$("textTransparency").getValue()),
+              2
+            )
+        );
+      }
+      item.css("opacity", $$("transparency").getValue() / 100);
+      const backgroundColor = $$("backgroundColor").getValue();
+      if (backgroundColor !== "") {
+        item.css(
+          "background-color",
+          backgroundColor +
+            webix.color.toHex(
+              Math.round(2.55 * $$("backgroundTransparency").getValue()),
+              2
+            )
+        );
+      }
+      item.css("background-position", $$("backgroundPosition").getValue());
+      item.css(
+        "background-repeat",
+        `${$$("repeat-x").getValue()} ${$$("repeat-y").getValue()}`
+      );
+      item.css("background-attachment", $$("attachment").getValue());
+      item.css("background-size", $$("backgroundSize").getValue());
+      const shadows = [];
+      $.each($$("shadows").serialize(), (index, value) =>
+        shadows.push(
+          `${(value.inset ? "inset " : "") + Number(value.x)}px ${Number(
+            value.y
+          )}px ${Number(value.blur)}px ${Number(value.spread)}px ${value.color}`
+        )
+      );
+      item.css("box-shadow", shadows.join());
+      const classes = [];
+      $.each($$("class").serialize(), (index, value) =>
+        classes.push(value.class)
+      );
+      item.removeClass().addClass(classes.join(" "));
+      $.each(item.data(), (i) =>
+        item.removeAttr(`data-${i.replace(/[A-Z]/g, "-$&").toLowerCase()}`)
+      );
+      $.each($$("data").serialize(), (index, value) => {
+        if (value.data) {
+          item
+            .data(
+              value.data
+                .toLowerCase()
+                .replace(/-([a-z])/g, function valueDataToUpperCase(g) {
+                  return g[1].toUpperCase();
+                }),
+              value.value
+            )
+            .attr(`data-${value.data.toLowerCase()}`, value.value);
+        }
+      });
+      const backgroundImage = $$("bglist").getItem($$("bglist").getFirstId());
+      if (backgroundImage && backgroundImage.file.sname) {
+        item.css("background-image", `url("${backgroundImage.file.sname}")`);
+      }
+    }
+
     const that = pThat || this;
     if (!that.lockRedraw && that.body) {
       const fabricDocument = $($$("fabric").getIframe()).contents();
@@ -621,13 +845,13 @@ export default class TemplateView extends JetView {
             $$("layers").getSelectedId(),
           ]);
         }
-        that.saveStage(
+        saveStage(
           that.body.find(`#${item.value}`),
           "#body:first>.pusher",
           that.body
         );
         that.zIndex(that.body, "#", that);
-        that.saveStage(
+        saveStage(
           fabricDocument.find(`#${item.value}`),
           "body:first>.pusher",
           fabricDocument
@@ -681,224 +905,6 @@ export default class TemplateView extends JetView {
       });
     }
   }
-
-  saveStage = (item, body, object) => {
-    item.attr("style", "");
-    const fixed = Number($$("mode").getValue());
-    const dock = $$("dock").getValue() - 1;
-    const hidden = item.parent().attr("hidden");
-    object.find(body).append(item);
-    if (dock) {
-      switch (fixed) {
-        case 1:
-          item.wrap('<div data-absolute class="ui fluid container">');
-          break;
-        case 2:
-          item.wrap('<div data-fixed class="ui fluid container">');
-          break;
-        case 3:
-          item.wrap('<div data-static class="ui fluid container">');
-          break;
-        default:
-      }
-    } else {
-      switch (fixed) {
-        case 1:
-          item.wrap('<div data-absolute class="ui container">');
-          break;
-        case 2:
-          item.wrap('<div data-fixed class="ui container">');
-          break;
-        case 3:
-          item.wrap('<div data-static class="ui container">');
-          break;
-        default:
-      }
-    }
-    item.parent().attr("hidden", hidden);
-    object.find(`${body}>div:not([id]):empty`).remove();
-    const marginLeft = $$("marginLeft").getValue();
-    const width = $$("width").getValue();
-    const marginRight = $$("marginRight").getValue();
-    const pmarginLeft = $$("pmarginLeft").getValue();
-    const pmarginRight = $$("pmarginRight").getValue();
-    const pwidth = $$("pwidth").getValue();
-    // pmarginRight = pmarginRight === '%' ? 'vw' : pmarginRight;
-    // pmarginLeft = pmarginLeft === '%' ? 'vw' : pmarginLeft;
-    // pwidth = pwidth === '%' ? 'vw' : pwidth;
-    if (marginLeft !== "") item.css("margin-left", marginLeft + pmarginLeft);
-    if (marginRight !== "")
-      item.css("margin-right", marginRight + pmarginRight);
-    if (width !== "") item.css("min-width", width + pwidth);
-    if (!(marginLeft !== "" && marginRight !== "")) {
-      item.css("align-self", "center").css("-ms-flex-item-align", "center");
-    }
-    const marginTop = $$("marginTop").getValue();
-    const height = $$("height").getValue();
-    const marginBottom = $$("marginBottom").getValue();
-    let pmarginTop = $$("pmarginTop").getValue();
-    let pmarginBottom = $$("pmarginBottom").getValue();
-    let pheight = $$("pheight").getValue();
-    pmarginTop = pmarginTop === "%" ? "vh" : pmarginTop;
-    pmarginBottom = pmarginBottom === "%" ? "vh" : pmarginBottom;
-    pheight = pheight === "%" ? "vh" : pheight;
-    if (marginTop !== "") item.css("margin-top", marginTop + pmarginTop);
-    if (marginBottom !== "")
-      item.css("margin-bottom", marginBottom + pmarginBottom);
-    if (height !== "") item.css("min-height", height + pheight);
-    if (marginTop !== "" && marginBottom !== "") item.css("flex", "1 1 auto");
-    const angle = $$("angle").getValue();
-    if (angle) item.css("transform", `rotate(${angle}deg)`);
-    const paddingLeft = $$("paddingLeft").getValue();
-    if (paddingLeft !== "") item.css("padding-left", `${paddingLeft}px`);
-    const paddingRight = $$("paddingRight").getValue();
-    if (paddingRight !== "") item.css("padding-right", `${paddingRight}px`);
-    const paddingTop = $$("paddingTop").getValue();
-    if (paddingTop !== "") item.css("padding-top", `${paddingTop}px`);
-    const paddingBottom = $$("paddingBottom").getValue();
-    if (paddingBottom !== "") item.css("padding-bottom", `${paddingBottom}px`);
-    const borderLeftWidth = $$("borderLeftWidth").getValue();
-    if (borderLeftWidth !== "")
-      item.css("border-left-width", `${borderLeftWidth}px`);
-    const borderRightWidth = $$("borderRightWidth").getValue();
-    if (borderRightWidth !== "")
-      item.css("border-right-width", `${borderRightWidth}px`);
-    const borderTopWidth = $$("borderTopWidth").getValue();
-    if (borderTopWidth !== "")
-      item.css("border-top-width", `${borderTopWidth}px`);
-    const borderBottomWidth = $$("borderBottomWidth").getValue();
-    if (borderBottomWidth !== "")
-      item.css("border-bottom-width", `${borderBottomWidth}px`);
-    item.css("border-left-style", $$("borderLeftStyle").getValue());
-    item.css("border-right-style", $$("borderRightStyle").getValue());
-    item.css("border-top-style", $$("borderTopStyle").getValue());
-    item.css("border-bottom-style", $$("borderBottomStyle").getValue());
-    const borderLeftColor = $$("borderLeftColor").getValue();
-    if (borderLeftColor !== "") {
-      item.css(
-        "border-left-color",
-        borderLeftColor +
-          webix.color.toHex(
-            Math.round(2.55 * $$("borderLeftTransparency").getValue()),
-            2
-          )
-      );
-    }
-    const borderRightColor = $$("borderRightColor").getValue();
-    if (borderRightColor !== "") {
-      item.css(
-        "border-right-color",
-        borderRightColor +
-          webix.color.toHex(
-            Math.round(2.55 * $$("borderRightTransparency").getValue()),
-            2
-          )
-      );
-    }
-    const borderTopColor = $$("borderTopColor").getValue();
-    if (borderTopColor !== "") {
-      item.css(
-        "border-top-color",
-        borderTopColor +
-          webix.color.toHex(
-            Math.round(2.55 * $$("borderTopTransparency").getValue()),
-            2
-          )
-      );
-    }
-    const borderBottomColor = $$("borderBottomColor").getValue();
-    if (borderBottomColor !== "") {
-      item.css(
-        "border-bottom-color",
-        borderBottomColor +
-          webix.color.toHex(
-            Math.round(2.55 * $$("borderBottomTransparency").getValue()),
-            2
-          )
-      );
-    }
-    const borderTopLeftRadius = $$("borderTopLeftRadius").getValue();
-    if (borderTopLeftRadius !== "") {
-      item.css("border-top-left-radius", `${borderTopLeftRadius}px`);
-    }
-    const borderTopRightRadius = $$("borderTopRightRadius").getValue();
-    if (borderTopRightRadius !== "") {
-      item.css("border-top-right-radius", `${borderTopRightRadius}px`);
-    }
-    const borderBottomLeftRadius = $$("borderBottomLeftRadius").getValue();
-    if (borderBottomLeftRadius !== "") {
-      item.css("border-bottom-left-radius", `${borderBottomLeftRadius}px`);
-    }
-    const borderBottomRightRadius = $$("borderBottomRightRadius").getValue();
-    if (borderBottomRightRadius !== "") {
-      item.css("border-bottom-right-radius", `${borderBottomRightRadius}px`);
-    }
-    const textColor = $$("textColor").getValue();
-    if (textColor !== "") {
-      item.css(
-        "color",
-        textColor +
-          webix.color.toHex(
-            Math.round(2.55 * $$("textTransparency").getValue()),
-            2
-          )
-      );
-    }
-    item.css("opacity", $$("transparency").getValue() / 100);
-    const backgroundColor = $$("backgroundColor").getValue();
-    if (backgroundColor !== "") {
-      item.css(
-        "background-color",
-        backgroundColor +
-          webix.color.toHex(
-            Math.round(2.55 * $$("backgroundTransparency").getValue()),
-            2
-          )
-      );
-    }
-    item.css("background-position", $$("backgroundPosition").getValue());
-    item.css(
-      "background-repeat",
-      `${$$("repeat-x").getValue()} ${$$("repeat-y").getValue()}`
-    );
-    item.css("background-attachment", $$("attachment").getValue());
-    item.css("background-size", $$("backgroundSize").getValue());
-    const shadows = [];
-    $.each($$("shadows").serialize(), (index, value) =>
-      shadows.push(
-        `${(value.inset ? "inset " : "") + Number(value.x)}px ${Number(
-          value.y
-        )}px ${Number(value.blur)}px ${Number(value.spread)}px ${value.color}`
-      )
-    );
-    item.css("box-shadow", shadows.join());
-    const classes = [];
-    $.each($$("class").serialize(), (index, value) =>
-      classes.push(value.class)
-    );
-    item.removeClass().addClass(classes.join(" "));
-    $.each(item.data(), (i) =>
-      item.removeAttr(`data-${i.replace(/[A-Z]/g, "-$&").toLowerCase()}`)
-    );
-    $.each($$("data").serialize(), (index, value) => {
-      if (value.data) {
-        item
-          .data(
-            value.data
-              .toLowerCase()
-              .replace(/-([a-z])/g, function valueDataToUpperCase(g) {
-                return g[1].toUpperCase();
-              }),
-            value.value
-          )
-          .attr(`data-${value.data.toLowerCase()}`, value.value);
-      }
-    });
-    const backgroundImage = $$("bglist").getItem($$("bglist").getFirstId());
-    if (backgroundImage && backgroundImage.file.sname) {
-      item.css("background-image", `url("${backgroundImage.file.sname}")`);
-    }
-  };
 
   updateDND(oldRect, newRect) {
     this.lockRedraw = true;
