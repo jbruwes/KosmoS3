@@ -6,312 +6,306 @@ import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import "../fabricjs";
 
 export default class TemplateView extends JetView {
-  config() {
-    return {
-      id: "templateAccordion",
-      view: "accordion",
-      on: {
-        onAfterCollapse: (id) => {
-          if (id === "tools") {
-            $$("data").editCancel();
-            $$("shadows").editCancel();
-            $$("class").editCancel();
-            switch ($$("tabbar").getValue()) {
-              case "ace-template":
-                $$("ace-template").getEditor().resize();
-                break;
-              case "fabricCnt":
-                this.makeSelection(this);
-                break;
-              default:
-            }
+  config = () => ({
+    id: "templateAccordion",
+    view: "accordion",
+    on: {
+      onAfterCollapse: (id) => {
+        if (id === "tools") {
+          $$("data").editCancel();
+          $$("shadows").editCancel();
+          $$("class").editCancel();
+          switch ($$("tabbar").getValue()) {
+            case "ace-template":
+              $$("ace-template").getEditor().resize();
+              break;
+            case "fabricCnt":
+              this.makeSelection(this);
+              break;
+            default:
           }
+        }
+      },
+    },
+    cols: [
+      {
+        view: "accordionitem",
+        id: "templateItem",
+        header: "<span class='mdi mdi-postage-stamp'></span>",
+        body: {
+          rows: [
+            {
+              id: "views",
+              animate: false,
+              keepViews: true,
+              cells: [
+                {
+                  id: "fabricCnt",
+                  rows: [
+                    {
+                      view: "toolbar",
+                      cols: [
+                        {
+                          view: "icon",
+                          icon: "mdi mdi-undo",
+                          click: () => {
+                            const pop = this.undo.pop();
+                            if (pop) {
+                              const fabricDocument = $(
+                                $$("fabric").getIframe()
+                              ).contents();
+                              this.redo.push([
+                                this.body.find("#body:first>.pusher").html(),
+                                fabricDocument
+                                  .find("body:first>.pusher")
+                                  .html(),
+                                webix
+                                  .ajax()
+                                  .stringify($$("fabric").getCanvas()),
+                                $$("layers").serialize(),
+                                $$("layers").getSelectedId(),
+                              ]);
+                              this.body
+                                .find("#body:first>.pusher")
+                                .html(pop[0]);
+                              fabricDocument
+                                .find("body:first>.pusher")
+                                .html(pop[1]);
+                              $$("fabric")
+                                .getCanvas()
+                                .loadFromJSON(
+                                  pop[2],
+                                  () =>
+                                    $$("fabric").getCanvas().requestRenderAll(),
+                                  (o, rect) => {
+                                    const lRect = rect;
+                                    lRect.toObject = (function pRectToObject(
+                                      toObject
+                                    ) {
+                                      return function lRectToObject() {
+                                        return fabric.util.object.extend(
+                                          toObject.call(this),
+                                          {
+                                            id: this.id,
+                                          }
+                                        );
+                                      };
+                                    })(lRect.toObject);
+                                  }
+                                );
+                              $$("layers").clearAll();
+                              $$("layers").parse(pop[3]);
+                              $$("layers").select(pop[4]);
+                              this.save2();
+                            }
+                          },
+                        },
+                        {
+                          view: "icon",
+                          icon: "mdi mdi-redo",
+                          click: () => {
+                            const pop = this.redo.pop();
+                            if (pop) {
+                              const fabricDocument = $(
+                                $$("fabric").getIframe()
+                              ).contents();
+                              this.undo.push([
+                                this.body.find("#body:first>.pusher").html(),
+                                fabricDocument
+                                  .find("body:first>.pusher")
+                                  .html(),
+                                webix
+                                  .ajax()
+                                  .stringify($$("fabric").getCanvas()),
+                                $$("layers").serialize(),
+                                $$("layers").getSelectedId(),
+                              ]);
+                              this.body
+                                .find("#body:first>.pusher")
+                                .html(pop[0]);
+                              fabricDocument
+                                .find("body:first>.pusher")
+                                .html(pop[1]);
+                              $$("fabric")
+                                .getCanvas()
+                                .loadFromJSON(
+                                  pop[2],
+                                  () =>
+                                    $$("fabric").getCanvas().requestRenderAll(),
+                                  (o, rect) => {
+                                    const lRect = rect;
+                                    lRect.toObject = (function pRectToObject(
+                                      toObject
+                                    ) {
+                                      return function lRectToObject() {
+                                        return fabric.util.object.extend(
+                                          toObject.call(this),
+                                          {
+                                            id: this.id,
+                                          }
+                                        );
+                                      };
+                                    })(lRect.toObject);
+                                  }
+                                );
+                              $$("layers").clearAll();
+                              $$("layers").parse(pop[3]);
+                              $$("layers").select(pop[4]);
+                              this.save2();
+                            }
+                          },
+                        },
+                        {},
+                      ],
+                    },
+                    {
+                      id: "fabric",
+                      view: "fabric",
+                      canvas: "fabric",
+                    },
+                  ],
+                },
+                {
+                  $subview: "tinymce",
+                  id: "tinymce",
+                },
+                {
+                  $subview: "ace",
+                  id: "ace-template",
+                },
+              ],
+            },
+            {
+              view: "tabbar",
+              id: "tabbar",
+              options: [
+                {
+                  value: "Layout",
+                  id: "fabricCnt",
+                  icon: "mdi mdi-ungroup",
+                },
+                {
+                  value: "Visual",
+                  id: "tinymce",
+                  icon: "mdi mdi-eye-outline",
+                },
+                {
+                  value: "Source",
+                  id: "ace-template",
+                  icon: "mdi mdi-code-tags",
+                },
+              ],
+              multiview: "true",
+              type: "bottom",
+              on: {
+                onChange: () => {
+                  switch ($$("tabbar").getValue()) {
+                    case "ace-template":
+                      $$("ace-template").$scope.setValue(
+                        $$("tinymce").getValue()
+                      );
+                      break;
+                    case "fabricCnt":
+                      this.makeSelection(this);
+                      break;
+                    default:
+                  }
+                },
+              },
+            },
+          ],
         },
       },
-      cols: [
-        {
-          view: "accordionitem",
-          id: "templateItem",
-          header: "<span class='mdi mdi-postage-stamp'></span>",
-          body: {
-            rows: [
-              {
-                id: "views",
-                animate: false,
-                keepViews: true,
-                cells: [
+      {
+        view: "accordionitem",
+        collapsed: true,
+        id: "tools",
+        header: "<span class='mdi mdi-wrench-outline'></span> Tools",
+        body: {
+          id: "accordionRight",
+          view: "accordion",
+          type: "line",
+          rows: [
+            {
+              view: "accordionitem",
+              header: "<span class='mdi mdi-layers-outline'></span> Layers",
+              body: {
+                rows: [
                   {
-                    id: "fabricCnt",
-                    rows: [
-                      {
-                        view: "toolbar",
-                        cols: [
-                          {
-                            view: "icon",
-                            icon: "mdi mdi-undo",
-                            click: () => {
-                              const pop = this.undo.pop();
-                              if (pop) {
-                                const fabricDocument = $(
-                                  $$("fabric").getIframe()
-                                ).contents();
-                                this.redo.push([
-                                  this.body.find("#body:first>.pusher").html(),
-                                  fabricDocument
-                                    .find("body:first>.pusher")
-                                    .html(),
-                                  webix
-                                    .ajax()
-                                    .stringify($$("fabric").getCanvas()),
-                                  $$("layers").serialize(),
-                                  $$("layers").getSelectedId(),
-                                ]);
-                                this.body
-                                  .find("#body:first>.pusher")
-                                  .html(pop[0]);
-                                fabricDocument
-                                  .find("body:first>.pusher")
-                                  .html(pop[1]);
-                                $$("fabric")
-                                  .getCanvas()
-                                  .loadFromJSON(
-                                    pop[2],
-                                    () =>
-                                      $$("fabric")
-                                        .getCanvas()
-                                        .requestRenderAll(),
-                                    (o, rect) => {
-                                      const lRect = rect;
-                                      lRect.toObject = (function pRectToObject(
-                                        toObject
-                                      ) {
-                                        return function lRectToObject() {
-                                          return fabric.util.object.extend(
-                                            toObject.call(this),
-                                            {
-                                              id: this.id,
-                                            }
-                                          );
-                                        };
-                                      })(lRect.toObject);
-                                    }
-                                  );
-                                $$("layers").clearAll();
-                                $$("layers").parse(pop[3]);
-                                $$("layers").select(pop[4]);
-                                this.save2();
-                              }
-                            },
-                          },
-                          {
-                            view: "icon",
-                            icon: "mdi mdi-redo",
-                            click: () => {
-                              const pop = this.redo.pop();
-                              if (pop) {
-                                const fabricDocument = $(
-                                  $$("fabric").getIframe()
-                                ).contents();
-                                this.undo.push([
-                                  this.body.find("#body:first>.pusher").html(),
-                                  fabricDocument
-                                    .find("body:first>.pusher")
-                                    .html(),
-                                  webix
-                                    .ajax()
-                                    .stringify($$("fabric").getCanvas()),
-                                  $$("layers").serialize(),
-                                  $$("layers").getSelectedId(),
-                                ]);
-                                this.body
-                                  .find("#body:first>.pusher")
-                                  .html(pop[0]);
-                                fabricDocument
-                                  .find("body:first>.pusher")
-                                  .html(pop[1]);
-                                $$("fabric")
-                                  .getCanvas()
-                                  .loadFromJSON(
-                                    pop[2],
-                                    () =>
-                                      $$("fabric")
-                                        .getCanvas()
-                                        .requestRenderAll(),
-                                    (o, rect) => {
-                                      const lRect = rect;
-                                      lRect.toObject = (function pRectToObject(
-                                        toObject
-                                      ) {
-                                        return function lRectToObject() {
-                                          return fabric.util.object.extend(
-                                            toObject.call(this),
-                                            {
-                                              id: this.id,
-                                            }
-                                          );
-                                        };
-                                      })(lRect.toObject);
-                                    }
-                                  );
-                                $$("layers").clearAll();
-                                $$("layers").parse(pop[3]);
-                                $$("layers").select(pop[4]);
-                                this.save2();
-                              }
-                            },
-                          },
-                          {},
-                        ],
-                      },
-                      {
-                        id: "fabric",
-                        view: "fabric",
-                        canvas: "fabric",
-                      },
-                    ],
+                    $subview: "templateViews.layerstoolbar",
                   },
                   {
-                    $subview: "tinymce",
-                    id: "tinymce",
-                  },
-                  {
-                    $subview: "ace",
-                    id: "ace-template",
+                    $subview: "templateViews.layers",
                   },
                 ],
               },
-              {
-                view: "tabbar",
-                id: "tabbar",
-                options: [
+            },
+            {
+              view: "accordionitem",
+              header: "<span class='mdi mdi-move-resize'></span> Geometry",
+              collapsed: true,
+              body: {
+                $subview: "templateViews.geometry",
+              },
+            },
+            {
+              view: "accordionitem",
+              collapsed: true,
+              header: "<span class='mdi mdi-format-paint'></span> Appearance",
+              body: {
+                $subview: "templateViews.appearance",
+              },
+            },
+            {
+              view: "accordionitem",
+              collapsed: true,
+              header: "<span class='mdi mdi-box-shadow'></span> Shadow",
+              body: {
+                rows: [
                   {
-                    value: "Layout",
-                    id: "fabricCnt",
-                    icon: "mdi mdi-ungroup",
+                    $subview: "templateViews.shadowstoolbar",
                   },
                   {
-                    value: "Visual",
-                    id: "tinymce",
-                    icon: "mdi mdi-eye-outline",
-                  },
-                  {
-                    value: "Source",
-                    id: "ace-template",
-                    icon: "mdi mdi-code-tags",
+                    $subview: "templateViews.shadows",
                   },
                 ],
-                multiview: "true",
-                type: "bottom",
-                on: {
-                  onChange: () => {
-                    switch ($$("tabbar").getValue()) {
-                      case "ace-template":
-                        $$("ace-template").$scope.setValue(
-                          $$("tinymce").getValue()
-                        );
-                        break;
-                      case "fabricCnt":
-                        this.makeSelection(this);
-                        break;
-                      default:
-                    }
+              },
+            },
+            {
+              view: "accordionitem",
+              collapsed: true,
+              header: "<span class='mdi mdi-database'></span> Data",
+              body: {
+                rows: [
+                  {
+                    $subview: "templateViews.datatoolbar",
                   },
-                },
+                  {
+                    $subview: "templateViews.data",
+                  },
+                ],
               },
-            ],
-          },
+            },
+            {
+              view: "accordionitem",
+              collapsed: true,
+              header: "<span class='mdi mdi-language-css3'></span> Class",
+              body: {
+                rows: [
+                  {
+                    $subview: "templateViews.classtoolbar",
+                  },
+                  {
+                    $subview: "templateViews.class",
+                  },
+                ],
+              },
+            },
+          ],
         },
-        {
-          view: "accordionitem",
-          collapsed: true,
-          id: "tools",
-          header: "<span class='mdi mdi-wrench-outline'></span> Tools",
-          body: {
-            id: "accordionRight",
-            view: "accordion",
-            type: "line",
-            rows: [
-              {
-                view: "accordionitem",
-                header: "<span class='mdi mdi-layers-outline'></span> Layers",
-                body: {
-                  rows: [
-                    {
-                      $subview: "templateViews.layerstoolbar",
-                    },
-                    {
-                      $subview: "templateViews.layers",
-                    },
-                  ],
-                },
-              },
-              {
-                view: "accordionitem",
-                header: "<span class='mdi mdi-move-resize'></span> Geometry",
-                collapsed: true,
-                body: {
-                  $subview: "templateViews.geometry",
-                },
-              },
-              {
-                view: "accordionitem",
-                collapsed: true,
-                header: "<span class='mdi mdi-format-paint'></span> Appearance",
-                body: {
-                  $subview: "templateViews.appearance",
-                },
-              },
-              {
-                view: "accordionitem",
-                collapsed: true,
-                header: "<span class='mdi mdi-box-shadow'></span> Shadow",
-                body: {
-                  rows: [
-                    {
-                      $subview: "templateViews.shadowstoolbar",
-                    },
-                    {
-                      $subview: "templateViews.shadows",
-                    },
-                  ],
-                },
-              },
-              {
-                view: "accordionitem",
-                collapsed: true,
-                header: "<span class='mdi mdi-database'></span> Data",
-                body: {
-                  rows: [
-                    {
-                      $subview: "templateViews.datatoolbar",
-                    },
-                    {
-                      $subview: "templateViews.data",
-                    },
-                  ],
-                },
-              },
-              {
-                view: "accordionitem",
-                collapsed: true,
-                header: "<span class='mdi mdi-language-css3'></span> Class",
-                body: {
-                  rows: [
-                    {
-                      $subview: "templateViews.classtoolbar",
-                    },
-                    {
-                      $subview: "templateViews.class",
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      ],
-    };
-  }
+      },
+    ],
+  });
 
   async ready() {
     $('[view_id="tinymce"]').css("display", "none"); // хак: потому что у subview не выставляется display:none в tabbar
