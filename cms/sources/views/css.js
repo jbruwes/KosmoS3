@@ -40,7 +40,5 @@ export default class CssView extends JetView {
     };
   }
 
-  config() {
-    return this.#config;
-  }
+  config = () => this.#config;
 }
