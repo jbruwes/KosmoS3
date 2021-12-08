@@ -1733,19 +1733,23 @@ export default class TinymceView extends JetView {
     };
   }
 
-  onAction = (that) => {
-    if (tinymce.activeEditor.selection.getContent() === "")
-      tinymce.execCommand(
-        "mceInsertContent",
-        !1,
-        `<a href="${that.path}/${that.text.replace(/ /g, "_")}/">${
-          that.text
-        }</a>`
-      );
-    else tinymce.execCommand("mceInsertLink", !1, `${that.path}/${that.text}/`);
-  };
-
   getSubmenuItems(pId, pPath) {
+    /**
+     * @param {object} that указатель на объект
+     */
+    function onAction(that) {
+      if (tinymce.activeEditor.selection.getContent() === "")
+        tinymce.execCommand(
+          "mceInsertContent",
+          !1,
+          `<a href="${that.path}/${that.text.replace(/ /g, "_")}/">${
+            that.text
+          }</a>`
+        );
+      else
+        tinymce.execCommand("mceInsertLink", !1, `${that.path}/${that.text}/`);
+    }
+
     let lId = $$("tree").getFirstChildId(pId);
     const items = [];
     while (lId) {
@@ -1754,7 +1758,7 @@ export default class TinymceView extends JetView {
         type: "menuitem",
         text: item.value.replace(/[""]/g, '\\"'),
         path: pPath,
-        onAction: () => this.onAction(lItem),
+        onAction: () => onAction(lItem),
       };
       if ($$("tree").getFirstChildId(lId)) {
         lItem.icon = "chevron-right";
