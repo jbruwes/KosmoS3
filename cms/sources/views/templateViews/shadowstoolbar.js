@@ -59,7 +59,5 @@ export default class ShadowToolbarView extends JetView {
     };
   }
 
-  config() {
-    return this.#config;
-  }
+  config = () => this.#config;
 }
