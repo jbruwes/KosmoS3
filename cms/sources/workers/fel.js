@@ -18,27 +18,29 @@ onmessage = async ({
   });
   Object.values(
     await (await fetch("assets-manifest.json", { cache: "no-store" })).json()
-  ).forEach(async (element) => {
+  ).forEach((element, index) => {
     if (element !== "index.htm")
-      try {
-        await s3Client.send(
-          new HeadObjectCommand({
-            Bucket: pBucketName,
-            Key: `${element}`,
-          })
-        );
-      } catch (err) {
-        const body = await (
-          await fetch(`${element}`, { cache: "no-store" })
-        ).blob();
-        await s3Client.send(
-          new PutObjectCommand({
-            Bucket: pBucketName,
-            Key: `${element}`,
-            ContentType: body.type,
-            Body: body,
-          })
-        );
-      }
+      setTimeout(async () => {
+        try {
+          await s3Client.send(
+            new HeadObjectCommand({
+              Bucket: pBucketName,
+              Key: `${element}`,
+            })
+          );
+        } catch (err) {
+          const body = await (
+            await fetch(`${element}`, { cache: "no-store" })
+          ).blob();
+          await s3Client.send(
+            new PutObjectCommand({
+              Bucket: pBucketName,
+              Key: `${element}`,
+              ContentType: body.type,
+              Body: body,
+            })
+          );
+        }
+      }, (index + 1) * 1000);
   });
 };
