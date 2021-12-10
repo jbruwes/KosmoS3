@@ -18,22 +18,15 @@ onmessage = async ({
       secretAccessKey: pSecretAccessKey,
     },
   });
+  const { Body } = await s3Client.send(
+    new GetObjectCommand({
+      Bucket: pBucketName,
+      ResponseCacheControl: "no-store",
+      Key: "index.json",
+    })
+  );
   const [lJson] = JSON.parse(
-    new TextDecoder().decode(
-      (
-        await (
-          await (
-            await s3Client.send(
-              new GetObjectCommand({
-                Bucket: pBucketName,
-                ResponseCacheControl: "no-store",
-                Key: "index.json",
-              })
-            )
-          ).Body.getReader()
-        ).read()
-      ).value
-    )
+    new TextDecoder().decode((await (await Body.getReader()).read()).value)
   );
   const lHtml = (
     await (await fetch("index.htm", { cache: "no-store" })).text()
@@ -56,7 +49,7 @@ onmessage = async ({
     )
   );
   const lMap = jsel(lJson).selectAll("//*[@id]");
-  lMap.forEach((item) => {
+  lMap.forEach((item, index) => {
     const lNode = item;
     lNode.path = jsel(lJson)
       .selectAll(`//*[@id="${lNode.id}"]/ancestor-or-self::*[@id]`)
@@ -65,7 +58,15 @@ onmessage = async ({
       );
     lNode.path.shift();
     lNode.path = lNode.path.join("/");
-    html(lNode.path, lHtml, s3Client, pBucketName, lNode);
+    setTimeout(
+      html,
+      index * 100,
+      lNode.path,
+      lHtml,
+      s3Client,
+      pBucketName,
+      lNode
+    );
   });
   await s3Client.send(
     new PutObjectCommand({
