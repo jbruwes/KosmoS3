@@ -1,8 +1,14 @@
 import { JetView } from "webix-jet";
 
+/**
+ *
+ */
 export default class JsView extends JetView {
   #config;
 
+  /**
+   * @param app
+   */
   constructor(app) {
     super(app);
     this.#config = {
@@ -40,5 +46,8 @@ export default class JsView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   config = () => this.#config;
 }

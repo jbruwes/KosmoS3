@@ -1,9 +1,15 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
 
+/**
+ *
+ */
 export default class ToolbarView extends JetView {
   #config;
 
+  /**
+   * @param app
+   */
   constructor(app) {
     super(app);
     this.#config = {
@@ -12,6 +18,9 @@ export default class ToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-file-document-outline",
+          /**
+           *
+           */
           click: () => {
             const sel = $$("tree").getSelectedId();
             const curDate = new Date().toISOString();
@@ -60,11 +69,17 @@ export default class ToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-pencil",
+          /**
+           *
+           */
           click: () => $$("tree").edit($$("tree").getSelectedId()),
         },
         {
           view: "icon",
           icon: "mdi mdi-delete-outline",
+          /**
+           *
+           */
           click: () => {
             const sel = $$("tree").getSelectedId();
             const sel2 =
@@ -89,6 +104,9 @@ export default class ToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-arrow-up-bold-box-outline",
+          /**
+           *
+           */
           click: () => {
             const sel = $$("tree").getSelectedId();
             if ($$("tree").getPrevSiblingId(sel)) {
@@ -101,6 +119,9 @@ export default class ToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-arrow-down-bold-box-outline",
+          /**
+           *
+           */
           click: () => {
             const sel = $$("tree").getSelectedId();
             if ($$("tree").getNextSiblingId(sel)) {
@@ -113,6 +134,9 @@ export default class ToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-arrow-left-bold-box-outline",
+          /**
+           *
+           */
           click: () => {
             const sel = $$("tree").getSelectedId();
             const par = $$("tree").getParentId(sel);
@@ -129,6 +153,9 @@ export default class ToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-arrow-right-bold-box-outline",
+          /**
+           *
+           */
           click: () => {
             const sel = $$("tree").getSelectedId();
             const sib = $$("tree").getPrevSiblingId(sel);
@@ -145,5 +172,8 @@ export default class ToolbarView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   config = () => this.#config;
 }

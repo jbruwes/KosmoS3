@@ -1,8 +1,14 @@
 import { JetView } from "webix-jet";
 
+/**
+ *
+ */
 export default class CdnToolbarView extends JetView {
   #config;
 
+  /**
+   * @param app
+   */
   constructor(app) {
     super(app);
     this.#config = {
@@ -11,6 +17,9 @@ export default class CdnToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-file-document-outline",
+          /**
+           *
+           */
           click: () => {
             $$("cdn").select($$("cdn").add({ url: "" }));
           },
@@ -18,6 +27,9 @@ export default class CdnToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-delete-outline",
+          /**
+           *
+           */
           click: () => {
             const id = $$("cdn").getSelectedId();
             if (id) {
@@ -31,6 +43,9 @@ export default class CdnToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-arrow-up-bold-box-outline",
+          /**
+           *
+           */
           click: () => {
             const id = $$("cdn").getSelectedId();
             if (id) $$("cdn").moveUp(id);
@@ -39,6 +54,9 @@ export default class CdnToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-arrow-down-bold-box-outline",
+          /**
+           *
+           */
           click: () => {
             const id = $$("cdn").getSelectedId();
             if (id) $$("cdn").moveDown(id);
@@ -49,5 +67,8 @@ export default class CdnToolbarView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   config = () => this.#config;
 }

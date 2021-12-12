@@ -3,9 +3,15 @@ import * as webix from "webix";
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import "../../ace";
 
+/**
+ *
+ */
 export default class AceView extends JetView {
   #config;
 
+  /**
+   * @param app
+   */
   constructor(app) {
     super(app);
     this.#config = {
@@ -16,8 +22,14 @@ export default class AceView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   config = () => this.#config;
 
+  /**
+   *
+   */
   async init() {
     /**
      * @param {object} e an event
@@ -55,6 +67,9 @@ export default class AceView extends JetView {
         )
       );
     }
+    /**
+     * @param text
+     */
     const cb = async (text) => {
       if ($$("sidebar").getSelectedId() === "js") {
         const editor = await $$("ace-js").getEditor(true);

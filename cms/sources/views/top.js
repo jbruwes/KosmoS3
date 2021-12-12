@@ -5,6 +5,9 @@ import * as webix from "webix";
  * Ксласс описания формы заголовка начальной страницы
  */
 export default class TopView extends JetView {
+  /**
+   *
+   */
   config = () => ({
     rows: [
       {
@@ -16,6 +19,9 @@ export default class TopView extends JetView {
           {
             view: "icon",
             icon: "mdi mdi-menu",
+            /**
+             *
+             */
             click: () => {
               $$("sidebar").toggle();
             },
@@ -34,6 +40,9 @@ export default class TopView extends JetView {
             id: "sidebar",
             // css: "webix_dark",
             data: [],
+            /**
+             * @param id
+             */
             click: (id) => {
               if (id === "signout") {
                 webix.delay(() => {

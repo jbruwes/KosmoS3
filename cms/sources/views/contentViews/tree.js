@@ -3,8 +3,17 @@ import * as webix from "webix";
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import "../../edittree";
 
+/**
+ *
+ */
 export default class TreeView extends JetView {
+  /**
+   *
+   */
   config() {
+    /**
+     *
+     */
     const onChangeFnc = async () => {
       const tree = $$("tree").data.serialize();
       const editors0 = await $$("tinymce").getEditor(true);
@@ -51,6 +60,9 @@ export default class TreeView extends JetView {
       select: true,
       activeTitle: true,
       type: {
+        /**
+         * @param obj
+         */
         visible(obj) {
           return `<span class='check mdi mdi-18px mdi-checkbox-${
             obj.visible ? "marked-" : "blank-"
@@ -58,6 +70,10 @@ export default class TreeView extends JetView {
         },
       },
       onClick: {
+        /**
+         * @param e
+         * @param id
+         */
         check(e, id) {
           const item = this.getItem(id);
           item.visible = !item.visible;
@@ -72,6 +88,9 @@ export default class TreeView extends JetView {
       editValue: "value",
       editaction: "dblclick",
       on: {
+        /**
+         *
+         */
         onAfterLoad: () => {
           if (
             !$$("sidebar").getSelectedId() ||
@@ -93,6 +112,9 @@ export default class TreeView extends JetView {
           }
         },
         onItemCheck: onChangeFnc,
+        /**
+         * @param id
+         */
         onAfterSelect: async (id) => {
           const item = $$("tree").getItem(id);
           let result = "";
@@ -151,6 +173,11 @@ export default class TreeView extends JetView {
             }
           }
         },
+        /**
+         * @param state
+         * @param editor
+         * @param ignore
+         */
         onBeforeEditStop: (state, editor, ignore) => {
           if (!(ignore && state.old)) {
             if (/[";,//?:@&=+$_]/.test(state.value)) {
@@ -173,6 +200,9 @@ export default class TreeView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   async init() {
     if (
       !$$("sidebar").getSelectedId() ||

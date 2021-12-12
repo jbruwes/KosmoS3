@@ -1438,6 +1438,9 @@ export default class TinymceView extends JetView {
             ],
           },
         ],
+        /**
+         * @param editor
+         */
         setup: (editor) => {
           if (
             !$$("sidebar").getSelectedItem() ||
@@ -1446,6 +1449,9 @@ export default class TinymceView extends JetView {
             editor.ui.registry.addMenuButton("rlink", {
               icon: "link",
               tooltip: "Insert/edit link",
+              /**
+               * @param callback
+               */
               fetch: (callback) => {
                 const item = $$("tree").getFirstId();
                 if (item) callback(this.getSubmenuItems(item, ""));
@@ -1454,13 +1460,22 @@ export default class TinymceView extends JetView {
           }
         },
         file_picker_types: "image media file",
+        /**
+         * @param cb
+         */
         file_picker_callback: (cb) => {
           const input = document.createElement("input");
           input.setAttribute("type", "file");
           input.setAttribute("accept", "image/*,video/*");
+          /**
+           *
+           */
           input.onchange = () => {
             const file = input.files[0];
             const reader = new FileReader();
+            /**
+             *
+             */
             reader.onload = async () => {
               const id = `blobid${webix.uid()}`;
               const { blobCache } = tinymce.activeEditor.editorUpload;
@@ -1524,6 +1539,11 @@ export default class TinymceView extends JetView {
         paste_data_images: true,
         importcss_append: true,
         images_reuse_filename: true,
+        /**
+         * @param blobInfo
+         * @param success
+         * @param failure
+         */
         images_upload_handler: async (blobInfo, success, failure) => {
           const filePath = `${webix.uid()}.${decodeURI(blobInfo.filename())
             .split(".")
@@ -1733,6 +1753,10 @@ export default class TinymceView extends JetView {
     };
   }
 
+  /**
+   * @param pId
+   * @param pPath
+   */
   getSubmenuItems(pId, pPath) {
     /**
      * @param {object} that указатель на объект
@@ -1758,10 +1782,16 @@ export default class TinymceView extends JetView {
         type: "menuitem",
         text: item.value.replace(/[""]/g, '\\"'),
         path: pPath,
+        /**
+         *
+         */
         onAction: () => onAction(lItem),
       };
       if ($$("tree").getFirstChildId(lId)) {
         lItem.icon = "chevron-right";
+        /**
+         *
+         */
         lItem.getSubmenuItems = () =>
           this.getSubmenuItems(
             item.id,
@@ -1789,6 +1819,9 @@ export default class TinymceView extends JetView {
         pTinymce.setContent(val);
         pTinymce.undoManager.clear();
         pTinymce.nodeChanged();
+        /**
+         *
+         */
         const save = () =>
           this.getParentView().save(null, this.getParentView());
         pTinymce.on("Change", save);

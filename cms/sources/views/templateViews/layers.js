@@ -4,7 +4,13 @@ import * as webix from "webix";
 import "../../editlist";
 import "../../fabricjs";
 
+/**
+ *
+ */
 export default class LayersView extends JetView {
+  /**
+   *
+   */
   config = () => ({
     view: "editlist",
     id: "layers",
@@ -14,6 +20,9 @@ export default class LayersView extends JetView {
     editor: "text",
     editValue: "value",
     type: {
+      /**
+       * @param obj
+       */
       markCheckbox(obj) {
         return `<span class='check mdi mdi-18px mdi-checkbox-${
           obj.markCheckbox ? "marked-" : "blank-"
@@ -21,6 +30,10 @@ export default class LayersView extends JetView {
       },
     },
     onClick: {
+      /**
+       * @param e
+       * @param id
+       */
       check: (e, id) => {
         const item = $$("layers").getItem(id);
         const item1 = this.getParentView().body.find(`#${item.value}`);
@@ -45,10 +58,21 @@ export default class LayersView extends JetView {
     template:
       "<span class='mdi mdi-dark mdi-inactive mdi-18px mdi-#icon#'></span> {common.markCheckbox()} #value#",
     on: {
+      /**
+       *
+       */
       onSelectChange: () =>
         this.getParentView().makeSelection(this.getParentView(), true),
+      /**
+       *
+       */
       "data->onStoreUpdated": () =>
         this.getParentView().redraw(this.getParentView(), true),
+      /**
+       * @param state
+       * @param editor
+       * @param ignore
+       */
       onBeforeEditStop: (state, editor, ignore) => {
         const that = this.getParentView();
         const fabricDocument = $($$("fabric").getIframe()).contents();
@@ -80,6 +104,9 @@ export default class LayersView extends JetView {
         $$("templateItem").refresh();
         return true;
       },
+      /**
+       * @param id
+       */
       onBeforeEditStart: (id) => {
         if ($$("layers").getItem(id).value === "content") {
           webix.message("Rename is prohibited", "debug");

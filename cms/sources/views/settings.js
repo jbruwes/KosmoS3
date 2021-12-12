@@ -7,9 +7,15 @@ import {
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 
+/**
+ *
+ */
 export default class SettingsView extends JetView {
   #config;
 
+  /**
+   * @param app
+   */
   constructor(app) {
     super(app);
     this.#config = {
@@ -70,8 +76,14 @@ export default class SettingsView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   config = () => this.#config;
 
+  /**
+   *
+   */
   async init() {
     try {
       await this.app.s3Client.send(
@@ -162,6 +174,9 @@ export default class SettingsView extends JetView {
     }
   }
 
+  /**
+   *
+   */
   onChange() {
     $$("metrika").attachEvent("onChange", (value) => {
       this.prop[0].metrika = value;
@@ -173,6 +188,9 @@ export default class SettingsView extends JetView {
     });
   }
 
+  /**
+   *
+   */
   async save() {
     try {
       await this.app.s3Client.send(

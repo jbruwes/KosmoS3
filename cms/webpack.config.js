@@ -13,6 +13,9 @@ const babelSettings = {
   extends: path.join(__dirname, "../.babelrc.json"),
 };
 
+/**
+ * @param env
+ */
 module.exports = function exports(env) {
   const production = !!(env && env.production === "true");
   const asmodule = !!(env && env.module === "true");
@@ -59,6 +62,9 @@ module.exports = function exports(env) {
         cacheGroups: {
           commons: {
             test: /[\\/]node_modules[\\/]/,
+            /**
+             * @param module
+             */
             name(module) {
               return `${module
                 .identifier()

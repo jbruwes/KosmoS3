@@ -6,6 +6,14 @@ import {
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
 
+/**
+ * @param root0
+ * @param root0.data
+ * @param root0.data.pAccessKeyId
+ * @param root0.data.pSecretAccessKey
+ * @param root0.data.pBucketName
+ * @param root0.data.pRegion
+ */
 onmessage = async ({
   data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion },
 }) => {

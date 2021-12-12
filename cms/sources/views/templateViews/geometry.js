@@ -1,6 +1,12 @@
 import { JetView } from "webix-jet";
 
+/**
+ *
+ */
 export default class GeometryView extends JetView {
+  /**
+   *
+   */
   config = () => ({
     view: "form",
     scroll: true,
@@ -34,6 +40,9 @@ export default class GeometryView extends JetView {
               },
             ],
             on: {
+              /**
+               * @param id
+               */
               onChange: (id) => {
                 const item = $$("layers").getSelectedItem();
                 item.icon = $$("mode").getList().getItem(id).icon;
@@ -57,6 +66,9 @@ export default class GeometryView extends JetView {
               },
             ],
             on: {
+              /**
+               *
+               */
               onChange: () => this.getParentView().redraw(this.getParentView()),
             },
           },
@@ -78,6 +90,9 @@ export default class GeometryView extends JetView {
                 label: "<span class='mdi mdi-dark mdi-24px mdi-pan-up'></span>",
                 labelWidth: 33,
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -98,6 +113,9 @@ export default class GeometryView extends JetView {
                   },
                 ],
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -114,6 +132,9 @@ export default class GeometryView extends JetView {
                   "<span class='mdi mdi-dark mdi-24px mdi-pan-vertical'></span>",
                 labelWidth: 33,
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -134,6 +155,9 @@ export default class GeometryView extends JetView {
                   },
                 ],
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -150,6 +174,9 @@ export default class GeometryView extends JetView {
                   "<span class='mdi mdi-dark mdi-24px mdi-pan-down'></span>",
                 labelWidth: 33,
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -170,6 +197,9 @@ export default class GeometryView extends JetView {
                   },
                 ],
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -195,6 +225,9 @@ export default class GeometryView extends JetView {
                   "<span class='mdi mdi-dark mdi-24px mdi-pan-left'></span>",
                 labelWidth: 33,
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -215,6 +248,9 @@ export default class GeometryView extends JetView {
                   },
                 ],
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -231,6 +267,9 @@ export default class GeometryView extends JetView {
                   "<span class='mdi mdi-dark mdi-24px mdi-pan-horizontal'></span>",
                 labelWidth: 33,
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -251,6 +290,9 @@ export default class GeometryView extends JetView {
                   },
                 ],
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -267,6 +309,9 @@ export default class GeometryView extends JetView {
                   "<span class='mdi mdi-dark mdi-24px mdi-pan-right'></span>",
                 labelWidth: 33,
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -287,6 +332,9 @@ export default class GeometryView extends JetView {
                   },
                 ],
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () =>
                     this.getParentView().redraw(this.getParentView()),
                 },
@@ -310,6 +358,9 @@ export default class GeometryView extends JetView {
               "<span class='mdi mdi-dark mdi-24px mdi-screen-rotation'></span>",
             labelWidth: 33,
             on: {
+              /**
+               *
+               */
               onChange: () => this.getParentView().redraw(this.getParentView()),
             },
           },

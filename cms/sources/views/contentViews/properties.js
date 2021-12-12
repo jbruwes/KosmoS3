@@ -2,7 +2,13 @@ import { JetView } from "webix-jet";
 import * as webix from "webix";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
+/**
+ *
+ */
 export default class PropertiesView extends JetView {
+  /**
+   *
+   */
   config = () => ({
     view: "form",
     id: "propForm",
@@ -22,6 +28,9 @@ export default class PropertiesView extends JetView {
               "<span class='mdi mdi-dark mdi-24px mdi-window-maximize'></span>",
             labelWidth: 33,
             on: {
+              /**
+               * @param value
+               */
               onChange: (value) => {
                 let id;
                 let item;
@@ -47,6 +56,9 @@ export default class PropertiesView extends JetView {
             labelWidth: 33,
             height: 100,
             on: {
+              /**
+               * @param value
+               */
               onChange: (value) => {
                 let id;
                 let item;
@@ -71,6 +83,9 @@ export default class PropertiesView extends JetView {
             labelWidth: 33,
             height: 100,
             on: {
+              /**
+               * @param value
+               */
               onChange: (value) => {
                 let id;
                 let item;
@@ -97,6 +112,9 @@ export default class PropertiesView extends JetView {
             invalidMessage: "Prohibited symbols are used",
             labelWidth: 33,
             on: {
+              /**
+               * @param value
+               */
               onChange: (value) => {
                 let id;
                 let item;
@@ -123,6 +141,9 @@ export default class PropertiesView extends JetView {
             label: "<span class='mdi mdi-dark mdi-24px mdi-calendar'></span>",
             labelWidth: 33,
             on: {
+              /**
+               * @param value
+               */
               onChange: (value) => {
                 let id;
                 let item;
@@ -157,6 +178,9 @@ export default class PropertiesView extends JetView {
               "never",
             ],
             on: {
+              /**
+               * @param value
+               */
               onChange: (value) => {
                 let id;
                 let item;
@@ -186,6 +210,9 @@ export default class PropertiesView extends JetView {
             value: "0.5",
             type: "alt",
             on: {
+              /**
+               * @param value
+               */
               onChange: (value) => {
                 let id;
                 let item;
@@ -211,6 +238,9 @@ export default class PropertiesView extends JetView {
               '<span class="mdi mdi-dark mdi-24px mdi-postage-stamp"></span>',
             labelWidth: 33,
             on: {
+              /**
+               * @param value
+               */
               onChange: (value) => {
                 let id;
                 let item;
@@ -3433,6 +3463,9 @@ export default class PropertiesView extends JetView {
             link: "bglist",
             accept: "image/png, image/gif, image/jpeg",
             on: {
+              /**
+               * @param pFile
+               */
               onBeforeFileAdd: async (pFile) => {
                 const file = pFile;
                 if (!this.getParentView().lockProperties) {
@@ -3457,6 +3490,9 @@ export default class PropertiesView extends JetView {
                   }
                 }
               },
+              /**
+               *
+               */
               "files->onAfterDelete": () => this.image(),
             },
           },
@@ -3473,12 +3509,18 @@ export default class PropertiesView extends JetView {
       {},
     ],
     rules: {
+      /**
+       * @param value
+       */
       url: (value) => {
         return !value || !/[\s;,?:@&=+$]/.test(value);
       },
     },
   });
 
+  /**
+   *
+   */
   image() {
     let image;
     const id = $$("tree").getSelectedId();

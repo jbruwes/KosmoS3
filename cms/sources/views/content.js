@@ -2,15 +2,24 @@ import { JetView } from "webix-jet";
 import * as webix from "webix";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
+/**
+ *
+ */
 export default class ContentView extends JetView {
   #config;
 
+  /**
+   * @param app
+   */
   constructor(app) {
     super(app);
     this.#config = {
       id: "accordion",
       view: "accordion",
       on: {
+        /**
+         * @param id
+         */
         onAfterCollapse: (id) => {
           if (id === "tools") {
             switch ($$("tabbar").getValue()) {
@@ -61,6 +70,9 @@ export default class ContentView extends JetView {
                 multiview: "true",
                 type: "bottom",
                 on: {
+                  /**
+                   *
+                   */
                   onChange: () => {
                     if ($$("tabbar").getValue() === "ace-content")
                       $$("ace-content").$scope.setValue(
@@ -112,14 +124,23 @@ export default class ContentView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   config = () => this.#config;
 
+  /**
+   *
+   */
   init() {
     this.pageWorker = new Worker(
       new URL("../workers/page.js", import.meta.url)
     );
   }
 
+  /**
+   *
+   */
   async save() {
     try {
       await this.app.s3Client.send(

@@ -2,7 +2,13 @@ import { JetView } from "webix-jet";
 import * as webix from "webix";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
+/**
+ *
+ */
 export default class AppearanceView extends JetView {
+  /**
+   *
+   */
   config = () => ({
     view: "form",
     scroll: true,
@@ -19,6 +25,9 @@ export default class AppearanceView extends JetView {
         label: "<span class='mdi mdi-dark mdi-24px mdi-pan-left'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -29,6 +38,9 @@ export default class AppearanceView extends JetView {
         label: "<span class='mdi mdi-dark mdi-24px mdi-pan-right'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -39,6 +51,9 @@ export default class AppearanceView extends JetView {
         label: "<span class='mdi mdi-dark mdi-24px mdi-pan-up'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -49,6 +64,9 @@ export default class AppearanceView extends JetView {
         label: "<span class='mdi mdi-dark mdi-24px mdi-pan-down'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -104,6 +122,9 @@ export default class AppearanceView extends JetView {
           "<span class='mdi mdi-dark mdi-24px mdi-border-left-variant'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -114,6 +135,9 @@ export default class AppearanceView extends JetView {
         label: "<span class='mdi mdi-dark mdi-24px mdi-pan-horizontal'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -125,6 +149,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         editable: true,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -139,6 +166,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         title: webix.template("#value#"),
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -191,6 +221,9 @@ export default class AppearanceView extends JetView {
           "<span class='mdi mdi-dark mdi-24px mdi-border-right-variant'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -201,6 +234,9 @@ export default class AppearanceView extends JetView {
         label: "<span class='mdi mdi-dark mdi-24px mdi-pan-horizontal'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -212,6 +248,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         editable: true,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -226,6 +265,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         title: webix.template("#value#"),
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -278,6 +320,9 @@ export default class AppearanceView extends JetView {
           "<span class='mdi mdi-dark mdi-24px mdi-border-top-variant'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -288,6 +333,9 @@ export default class AppearanceView extends JetView {
         label: "<span class='mdi mdi-dark mdi-24px mdi-pan-horizontal'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -299,6 +347,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         editable: true,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -313,6 +364,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         title: webix.template("#value#"),
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -365,6 +419,9 @@ export default class AppearanceView extends JetView {
           "<span class='mdi mdi-dark mdi-24px mdi-border-bottom-variant'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -375,6 +432,9 @@ export default class AppearanceView extends JetView {
         label: "<span class='mdi mdi-dark mdi-24px mdi-pan-horizontal'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -386,6 +446,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         editable: true,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -400,6 +463,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         title: webix.template("#value#"),
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -416,6 +482,9 @@ export default class AppearanceView extends JetView {
         label: "<span class='mdi mdi-dark mdi-24px mdi-pan-top-left'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -426,6 +495,9 @@ export default class AppearanceView extends JetView {
         label: "<span class='mdi mdi-dark mdi-24px mdi-pan-top-right'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -437,6 +509,9 @@ export default class AppearanceView extends JetView {
           "<span class='mdi mdi-dark mdi-24px mdi-pan-bottom-left'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -448,6 +523,9 @@ export default class AppearanceView extends JetView {
           "<span class='mdi mdi-dark mdi-24px mdi-pan-bottom-right'></span>",
         labelWidth: 33,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -465,6 +543,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         editable: true,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -479,6 +560,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         title: webix.template("#value#"),
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -497,6 +581,9 @@ export default class AppearanceView extends JetView {
         link: "bglist",
         accept: "image/png, image/gif, image/jpeg",
         on: {
+          /**
+           * @param pFile
+           */
           onBeforeFileAdd: async (pFile) => {
             const file = pFile;
             if (!this.getParentView().lockRedraw) {
@@ -519,6 +606,9 @@ export default class AppearanceView extends JetView {
               }
             }
           },
+          /**
+           *
+           */
           "files->onAfterDelete": () =>
             this.getParentView().redraw(this.getParentView()),
         },
@@ -538,6 +628,9 @@ export default class AppearanceView extends JetView {
         value: "scroll",
         options: ["scroll", "fixed", "local"],
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -547,6 +640,9 @@ export default class AppearanceView extends JetView {
         value: "auto",
         options: ["auto", "cover", "contain"],
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -558,6 +654,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         editable: true,
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -572,6 +671,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         title: webix.template("#value#"),
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },
@@ -592,6 +694,9 @@ export default class AppearanceView extends JetView {
             value: "repeat",
             options: ["no-repeat", "repeat", "round", "space"],
             on: {
+              /**
+               *
+               */
               onChange: () => this.getParentView().redraw(this.getParentView()),
             },
           },
@@ -606,6 +711,9 @@ export default class AppearanceView extends JetView {
             value: "repeat",
             options: ["no-repeat", "repeat", "round", "space"],
             on: {
+              /**
+               *
+               */
               onChange: () => this.getParentView().redraw(this.getParentView()),
             },
           },
@@ -617,6 +725,9 @@ export default class AppearanceView extends JetView {
             label: "<span class='mdi mdi-dark mdi-24px mdi-pan'></span>",
             labelPosition: "top",
             on: {
+              /**
+               *
+               */
               onChange: () => this.getParentView().redraw(this.getParentView()),
             },
             options: [
@@ -681,6 +792,9 @@ export default class AppearanceView extends JetView {
         labelWidth: 33,
         title: webix.template("#value#"),
         on: {
+          /**
+           *
+           */
           onChange: () => this.getParentView().redraw(this.getParentView()),
         },
       },

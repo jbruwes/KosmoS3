@@ -1,6 +1,12 @@
 import { JetView } from "webix-jet";
 
+/**
+ *
+ */
 export default class ClassView extends JetView {
+  /**
+   *
+   */
   config = () => ({
     id: "class",
     view: "datatable",
@@ -10,6 +16,9 @@ export default class ClassView extends JetView {
     ],
     editable: true,
     on: {
+      /**
+       *
+       */
       "data->onStoreUpdated": () =>
         this.getParentView().redraw(this.getParentView()),
     },

@@ -1,8 +1,14 @@
 import { JetView } from "webix-jet";
 
+/**
+ *
+ */
 export default class ShadowToolbarView extends JetView {
   #config;
 
+  /**
+   * @param app
+   */
   constructor(app) {
     super(app);
     this.#config = {
@@ -11,6 +17,9 @@ export default class ShadowToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-file-document-outline",
+          /**
+           *
+           */
           click: () => {
             $$("shadows").select(
               $$("shadows").add({
@@ -27,6 +36,9 @@ export default class ShadowToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-delete-outline",
+          /**
+           *
+           */
           click: () => {
             const id = $$("shadows").getSelectedId();
             if (id) {
@@ -41,6 +53,9 @@ export default class ShadowToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-arrow-up-bold-box-outline",
+          /**
+           *
+           */
           click: () => {
             const id = $$("shadows").getSelectedId();
             if (id) $$("shadows").moveUp(id);
@@ -49,6 +64,9 @@ export default class ShadowToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-arrow-down-bold-box-outline",
+          /**
+           *
+           */
           click: () => {
             const id = $$("shadows").getSelectedId();
             if (id) $$("shadows").moveDown(id);
@@ -59,5 +77,8 @@ export default class ShadowToolbarView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   config = () => this.#config;
 }

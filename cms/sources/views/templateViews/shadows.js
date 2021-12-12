@@ -1,10 +1,19 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
 
+/**
+ *
+ */
 export default class ShadowView extends JetView {
+  /**
+   *
+   */
   config() {
     webix.editors.number = webix.extend(
       {
+        /**
+         *
+         */
         render() {
           return webix.html.create(
             "div",
@@ -64,6 +73,9 @@ export default class ShadowView extends JetView {
       ],
       editable: true,
       on: {
+        /**
+         *
+         */
         "data->onStoreUpdated": () =>
           this.getParentView().redraw(this.getParentView()),
       },

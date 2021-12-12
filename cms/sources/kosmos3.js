@@ -8,7 +8,13 @@ import "@mdi/font/css/materialdesignicons.css";
 import { JetApp, EmptyRouter } from "webix-jet";
 import * as webix from "webix";
 
+/**
+ *
+ */
 export default class KosmoS3 extends JetApp {
+  /**
+   * @param config
+   */
   constructor(config) {
     const defaults = {
       id: APPNAME,
@@ -29,6 +35,9 @@ if (!BUILD_AS_MODULE) {
     webix.i18n.setLocale("ru-RU");
     webix.ui.fullScreen();
     const app = new KosmoS3();
+    /**
+     *
+     */
     const size = () => (document.body.offsetWidth > 964 ? "wide" : "small");
     app.config.size = size();
     app.render();

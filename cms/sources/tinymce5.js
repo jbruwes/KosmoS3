@@ -54,6 +54,9 @@ webix.protoUI(
       config: { theme: "silver", statusbar: false },
       value: "",
     },
+    /**
+     *
+     */
     $init() {
       webix.html.addStyle(".tox-tinymce{ border:0px !important}");
 
@@ -64,9 +67,15 @@ webix.protoUI(
 
       this.$ready.push(this.require_tinymce_once);
     },
+    /**
+     *
+     */
     render() {
       this.set_inner_size();
     },
+    /**
+     *
+     */
     require_tinymce_once() {
       if (!tinymce.dom.Event.domLoaded) {
         // woraround event logic in tinymce
@@ -95,6 +104,9 @@ webix.protoUI(
         tinymce.init(editorConfig);
       }, this);
     },
+    /**
+     * @param event
+     */
     mce_editor_ready(event) {
       this.editor = event.target;
 
@@ -102,6 +114,9 @@ webix.protoUI(
       this.set_inner_size();
       this.waitEditor.resolve(this.editor);
     },
+    /**
+     *
+     */
     set_inner_size() {
       if (this.editor) {
         this.$view.querySelector(
@@ -109,25 +124,41 @@ webix.protoUI(
         ).style.height = `${this.$height}px`;
       }
     },
+    /**
+     * @param x
+     * @param y
+     */
     $setSize(x, y) {
       if (webix.ui.view.prototype.$setSize.call(this, x, y)) {
         this.set_inner_size();
       }
     },
+    /**
+     * @param value
+     */
     setValue(value) {
       this.config.value = value;
       this.waitEditor.then(function onWaitEditor(editor) {
         editor.setContent(value);
       });
     },
+    /**
+     *
+     */
     getValue() {
       return this.editor ? this.editor.getContent() : this.config.value;
     },
+    /**
+     *
+     */
     focus() {
       this.waitEditor.then(function onWaitEditor(editor) {
         editor.focus();
       });
     },
+    /**
+     * @param wait
+     */
     getEditor(wait) {
       return wait ? this.waitEditor : this.editor;
     },

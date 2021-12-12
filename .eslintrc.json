@@ -19,6 +19,20 @@
     "PRODUCTION": true,
     "BUILD_AS_MODULE": true
   },
+  "rules": {
+    "jsdoc/require-jsdoc": [
+      "error",
+      {
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true,
+          "ArrowFunctionExpression": true,
+          "FunctionExpression": true
+        }
+      }
+    ]
+  },
   "extends": [
     "airbnb-base",
     "plugin:prettier/recommended",

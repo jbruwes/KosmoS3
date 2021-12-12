@@ -2,9 +2,15 @@ import { JetView } from "webix-jet";
 import * as webix from "webix";
 import "../ace";
 
+/**
+ *
+ */
 export default class AceView extends JetView {
   #config;
 
+  /**
+   * @param app
+   */
   constructor(app) {
     super(app);
     this.#config = {
@@ -14,8 +20,14 @@ export default class AceView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   config = () => this.#config;
 
+  /**
+   * @param ace
+   */
   init(ace) {
     ace.getEditor(true).then((editor) => {
       const session = editor.getSession();
@@ -37,6 +49,9 @@ export default class AceView extends JetView {
     });
   }
 
+  /**
+   * @param html
+   */
   setValue(html) {
     /**
      * @param {object} e an event

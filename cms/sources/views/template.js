@@ -5,11 +5,20 @@ import { fabric } from "fabric";
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import "../fabricjs";
 
+/**
+ *
+ */
 export default class TemplateView extends JetView {
+  /**
+   *
+   */
   config = () => ({
     id: "templateAccordion",
     view: "accordion",
     on: {
+      /**
+       * @param id
+       */
       onAfterCollapse: (id) => {
         if (id === "tools") {
           $$("data").editCancel();
@@ -48,6 +57,9 @@ export default class TemplateView extends JetView {
                         {
                           view: "icon",
                           icon: "mdi mdi-undo",
+                          /**
+                           *
+                           */
                           click: () => {
                             const pop = this.undo.pop();
                             if (pop) {
@@ -103,6 +115,9 @@ export default class TemplateView extends JetView {
                         {
                           view: "icon",
                           icon: "mdi mdi-redo",
+                          /**
+                           *
+                           */
                           click: () => {
                             const pop = this.redo.pop();
                             if (pop) {
@@ -198,6 +213,9 @@ export default class TemplateView extends JetView {
               multiview: "true",
               type: "bottom",
               on: {
+                /**
+                 *
+                 */
                 onChange: () => {
                   switch ($$("tabbar").getValue()) {
                     case "ace-template":
@@ -307,6 +325,9 @@ export default class TemplateView extends JetView {
     ],
   });
 
+  /**
+   *
+   */
   async ready() {
     $('[view_id="tinymce"]').css("display", "none"); // хак: потому что у subview не выставляется display:none в tabbar
     $('[view_id="fabric"]').css("position", "absolute");
@@ -521,10 +542,16 @@ export default class TemplateView extends JetView {
     }
   }
 
+  /**
+   *
+   */
   destroy() {
     fabric.util.removeListener(document.body, "wheel", this.wheelEvent);
   }
 
+  /**
+   * @param eo
+   */
   wheelEvent(eo) {
     const s = $(this.$$("fabric").getIframe()).contents();
     switch (eo.deltaMode) {
@@ -544,6 +571,9 @@ export default class TemplateView extends JetView {
     }
   }
 
+  /**
+   * @param item
+   */
   getMode(item) {
     if (item.parent("div[data-absolute]:not([id])").parent(".pusher").length)
       return 1;
@@ -552,6 +582,9 @@ export default class TemplateView extends JetView {
     return 3;
   }
 
+  /**
+   *
+   */
   async loadSite() {
     const { document } = $$("fabric").getWindow();
     document.open();
@@ -569,6 +602,9 @@ export default class TemplateView extends JetView {
     document.close();
   }
 
+  /**
+   *
+   */
   genHtml() {
     return this.body
       .find("#body:first>.pusher")
@@ -587,6 +623,10 @@ export default class TemplateView extends JetView {
       .replace(/^\s*$[\n\r]{1,}/gm, "");
   }
 
+  /**
+   * @param body
+   * @param prefix
+   */
   zIndex(body, prefix) {
     let i = $$("layers").count();
     $.each($$("layers").serialize(), (index, value) => {
@@ -605,6 +645,10 @@ export default class TemplateView extends JetView {
     // body.find(prefix + 'body:first>.pusher>div[data-static]:not([id])').each((index, element) => $(element).css('z-index', -$(element).css('z-index')));
   }
 
+  /**
+   * @param pThat
+   * @param layers
+   */
   async redraw(pThat, layers) {
     /**
      * @param {object} item current object
@@ -863,6 +907,10 @@ export default class TemplateView extends JetView {
     }
   }
 
+  /**
+   * @param e
+   * @param self
+   */
   async save(e, self) {
     const that = e ? this.that.getParentView() : self;
     const fabricDocument = $($$("fabric").getIframe()).contents();
@@ -876,6 +924,9 @@ export default class TemplateView extends JetView {
     }
   }
 
+  /**
+   * @param pThat
+   */
   async save2(pThat) {
     const that = pThat || this;
     try {
@@ -906,6 +957,10 @@ export default class TemplateView extends JetView {
     }
   }
 
+  /**
+   * @param oldRect
+   * @param newRect
+   */
   updateDND(oldRect, newRect) {
     this.lockRedraw = true;
     let deltaAngle = oldRect.angle - newRect.angle;
@@ -1019,6 +1074,10 @@ export default class TemplateView extends JetView {
     this.lockRedraw = false;
   }
 
+  /**
+   * @param pThat
+   * @param resetDimension
+   */
   makeSelection(pThat, resetDimension = false) {
     const that = pThat || this;
 

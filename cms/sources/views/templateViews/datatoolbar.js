@@ -1,8 +1,14 @@
 import { JetView } from "webix-jet";
 
+/**
+ *
+ */
 export default class DataToolbarView extends JetView {
   #config;
 
+  /**
+   * @param app
+   */
   constructor(app) {
     super(app);
     this.#config = {
@@ -11,6 +17,9 @@ export default class DataToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-file-document-outline",
+          /**
+           *
+           */
           click: () => {
             $$("data").select(
               $$("data").add({
@@ -23,6 +32,9 @@ export default class DataToolbarView extends JetView {
         {
           view: "icon",
           icon: "mdi mdi-delete-outline",
+          /**
+           *
+           */
           click: () => {
             const id = $$("data").getSelectedId();
             if (id) {
@@ -39,5 +51,8 @@ export default class DataToolbarView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   config = () => this.#config;
 }

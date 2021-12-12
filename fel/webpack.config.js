@@ -51,6 +51,9 @@ module.exports = {
       cacheGroups: {
         commons: {
           test: /[\\/]node_modules[\\/]/,
+          /**
+           * @param module
+           */
           name(module) {
             return `${module
               .identifier()

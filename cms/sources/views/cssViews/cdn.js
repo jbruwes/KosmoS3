@@ -2,9 +2,15 @@ import { JetView } from "webix-jet";
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import * as webix from "webix";
 
+/**
+ *
+ */
 export default class CdnView extends JetView {
   #config;
 
+  /**
+   * @param app
+   */
   constructor(app) {
     super(app);
     this.#config = {
@@ -23,9 +29,18 @@ export default class CdnView extends JetView {
     };
   }
 
+  /**
+   *
+   */
   config = () => this.#config;
 
+  /**
+   *
+   */
   async init() {
+    /**
+     *
+     */
     const onStoreUpdated = async () => {
       const url = [];
       $$("cdn")

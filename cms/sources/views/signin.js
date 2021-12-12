@@ -3,7 +3,13 @@ import * as webix from "webix";
 import { S3Client, HeadBucketCommand } from "@aws-sdk/client-s3";
 import { IAMClient, GetUserCommand } from "@aws-sdk/client-iam";
 
+/**
+ *
+ */
 export default class SignInView extends JetView {
+  /**
+   *
+   */
   config() {
     const result = {
       css: "signInView",
@@ -155,6 +161,9 @@ export default class SignInView extends JetView {
     return result;
   }
 
+  /**
+   *
+   */
   clickLogin = async () => {
     const felWorker = new Worker(new URL("../workers/fel.js", import.meta.url));
     const initWorker = new Worker(
@@ -227,6 +236,9 @@ export default class SignInView extends JetView {
           id: "play",
           view: "icon",
           icon: "mdi mdi-play-circle",
+          /**
+           *
+           */
           click: () => window.open(openUrl, "_tab"),
         });
         await this.show("content");
@@ -288,6 +300,9 @@ export default class SignInView extends JetView {
     }
   };
 
+  /**
+   *
+   */
   init = () => {
     /**
      * Обработчик выбора сохраненных кредов

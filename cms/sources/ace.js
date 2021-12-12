@@ -12,11 +12,18 @@ webix.protoUI(
       mode: "javascript",
       theme: "monokai",
     },
+    /**
+     *
+     */
     $init() {
       this.$view.innerHTML = "<div style='width:100%;height:100%'></div>";
       this.waitEditor = webix.promise.defer();
       this.$ready.push(this.render_cm_editor);
     },
+    /**
+     * @param w
+     * @param h
+     */
     $setSize(w, h) {
       if (webix.ui.view.prototype.$setSize.call(this, w, h)) {
         if (this.editor) {
@@ -24,6 +31,9 @@ webix.protoUI(
         }
       }
     },
+    /**
+     *
+     */
     render_cm_editor() {
       this.editor = ace.edit(this.$view.firstChild);
 
@@ -49,6 +59,9 @@ webix.protoUI(
       this.editor.navigateFileStart();
       this.waitEditor.resolve(this.editor);
     },
+    /**
+     * @param pValue
+     */
     setValue(pValue) {
       let value = pValue;
       if (!value && value !== 0) {
@@ -60,15 +73,24 @@ webix.protoUI(
         this.editor.setValue(value);
       }
     },
+    /**
+     *
+     */
     getValue() {
       return this.editor ? this.editor.getValue() : this.config.value;
     },
+    /**
+     *
+     */
     focus() {
       this.focus_await = true;
       if (this.editor) {
         this.editor.focus();
       }
     },
+    /**
+     * @param waitEditor
+     */
     getEditor(waitEditor) {
       return waitEditor ? this.waitEditor : this.editor;
     },

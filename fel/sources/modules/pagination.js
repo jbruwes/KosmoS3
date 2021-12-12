@@ -155,6 +155,9 @@ export default function pagination(index, sel) {
                 ".@href": href,
                 ".@class+": visible,
               },
+              /**
+               * @param a
+               */
               filter(a) {
                 /**
                  * Проверочный сдвиг слева

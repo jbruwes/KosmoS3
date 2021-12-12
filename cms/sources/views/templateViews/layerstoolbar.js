@@ -4,13 +4,22 @@ import * as webix from "webix";
 import { fabric } from "fabric";
 import "../../fabricjs";
 
+/**
+ *
+ */
 export default class LayersToolbarView extends JetView {
+  /**
+   *
+   */
   config = () => ({
     view: "toolbar",
     cols: [
       {
         view: "icon",
         icon: "mdi mdi-file-document-outline",
+        /**
+         *
+         */
         click: () => {
           const id = webix.uid().toString();
           const that = this.getParentView();
@@ -65,6 +74,9 @@ export default class LayersToolbarView extends JetView {
       {
         view: "icon",
         icon: "mdi mdi-pencil",
+        /**
+         *
+         */
         click: () => {
           const id = $$("layers").getSelectedId();
           if (id) {
@@ -76,6 +88,9 @@ export default class LayersToolbarView extends JetView {
       {
         view: "icon",
         icon: "mdi mdi-delete-outline",
+        /**
+         *
+         */
         click: () => {
           const item = $$("layers").getSelectedItem();
           const that = this.getParentView();
@@ -112,6 +127,9 @@ export default class LayersToolbarView extends JetView {
       {
         view: "icon",
         icon: "mdi mdi-arrow-up-bold-box-outline",
+        /**
+         *
+         */
         click: () => {
           const id = $$("layers").getSelectedId();
           if (id) {
@@ -123,6 +141,9 @@ export default class LayersToolbarView extends JetView {
       {
         view: "icon",
         icon: "mdi mdi-arrow-down-bold-box-outline",
+        /**
+         *
+         */
         click: () => {
           const id = $$("layers").getSelectedId();
           if (id) {
@@ -135,6 +156,9 @@ export default class LayersToolbarView extends JetView {
     ],
   });
 
+  /**
+   *
+   */
   undo() {
     const that = this.getParentView();
     const fabricDocument = $($$("fabric").getIframe()).contents();
