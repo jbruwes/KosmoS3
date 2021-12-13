@@ -28,57 +28,54 @@ export default class AceView extends JetView {
   /**
    * @param ace
    */
-  init(ace) {
-    ace.getEditor(true).then((editor) => {
-      const session = editor.getSession();
-      this.timeoutId = [];
-      session.that = this;
-      // session.setUseWorker(false);
-      session.on("changeAnnotation", function onChangeAnnotation() {
-        const annotations = session.getAnnotations() || [];
-        const len = annotations.length;
-        let i = len;
-        while (i) {
-          i -= 1;
-          if (/doctype first\. Expected/.test(annotations[i].text))
-            annotations.splice(i, 1);
-        }
-        if (len > annotations.length) session.setAnnotations(annotations);
-      });
-      session.setUseWrapMode(true);
+  async init(ace) {
+    const editor = await ace.getEditor(true);
+    const session = editor.getSession();
+    this.timeoutId = [];
+    session.that = this;
+    // session.setUseWorker(false);
+    session.on("changeAnnotation", function onChangeAnnotation() {
+      const annotations = session.getAnnotations() || [];
+      const len = annotations.length;
+      let i = len;
+      while (i) {
+        i -= 1;
+        if (/doctype first\. Expected/.test(annotations[i].text))
+          annotations.splice(i, 1);
+      }
+      if (len > annotations.length) session.setAnnotations(annotations);
     });
+    session.setUseWrapMode(true);
+  }
+
+  /**
+   * @param {object} e an event
+   * @param {object} session a session
+   */
+  aceChange(e, session) {
+    session.that.timeoutId.push(
+      webix.delay(
+        function webixDelay() {
+          this.timeoutId.pop();
+          if (!this.timeoutId.length)
+            $$("tinymce").setValue(this.getRoot().getEditor().getValue());
+        },
+        session.that,
+        [],
+        1000
+      )
+    );
   }
 
   /**
    * @param html
    */
-  setValue(html) {
-    /**
-     * @param {object} e an event
-     * @param {object} session a session
-     */
-    function aceChange(e, session) {
-      session.that.timeoutId.push(
-        webix.delay(
-          function webixDelay() {
-            this.timeoutId.pop();
-            if (!this.timeoutId.length)
-              $$("tinymce").setValue(this.getRoot().getEditor().getValue());
-          },
-          session.that,
-          [],
-          1000
-        )
-      );
-    }
-    this.getRoot()
-      .getEditor(true)
-      .then((editor) => {
-        const session = editor.getSession();
-        session.off("change", aceChange, this);
-        session.setValue(html, -1);
-        session.on("change", aceChange, this);
-        editor.resize();
-      });
+  async setValue(html) {
+    const editor = await this.getRoot().getEditor(true);
+    const session = editor.getSession();
+    session.off("change", this.aceChange, this);
+    session.setValue(html, -1);
+    session.on("change", this.aceChange, this);
+    editor.resize();
   }
 }
