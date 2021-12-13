@@ -47,7 +47,7 @@ export default class GeometryView extends JetView {
                 const item = $$("layers").getSelectedItem();
                 item.icon = $$("mode").getList().getItem(id).icon;
                 $$("layers").updateItem($$("layers").getSelectedId(), item);
-                this.getParentView().redraw(this.getParentView());
+                this.getParentView().redraw.call(this.getParentView());
               },
             },
           },
@@ -69,7 +69,8 @@ export default class GeometryView extends JetView {
               /**
                *
                */
-              onChange: () => this.getParentView().redraw(this.getParentView()),
+              onChange: () =>
+                this.getParentView().redraw.call(this.getParentView()),
             },
           },
         ],
@@ -94,7 +95,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
               {
@@ -117,7 +118,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
             ],
@@ -136,7 +137,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
               {
@@ -159,7 +160,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
             ],
@@ -178,7 +179,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
               {
@@ -201,7 +202,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
             ],
@@ -229,7 +230,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
               {
@@ -252,7 +253,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
             ],
@@ -271,7 +272,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
               {
@@ -294,7 +295,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
             ],
@@ -313,7 +314,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
               {
@@ -336,7 +337,7 @@ export default class GeometryView extends JetView {
                    *
                    */
                   onChange: () =>
-                    this.getParentView().redraw(this.getParentView()),
+                    this.getParentView().redraw.call(this.getParentView()),
                 },
               },
             ],
@@ -361,7 +362,8 @@ export default class GeometryView extends JetView {
               /**
                *
                */
-              onChange: () => this.getParentView().redraw(this.getParentView()),
+              onChange: () =>
+                this.getParentView().redraw.call(this.getParentView()),
             },
           },
         ],
