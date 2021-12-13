@@ -62,12 +62,12 @@ export default class LayersView extends JetView {
        *
        */
       onSelectChange: () =>
-        this.getParentView().makeSelection(this.getParentView(), true),
+        this.getParentView().makeSelection.call(this.getParentView(), true),
       /**
        *
        */
       "data->onStoreUpdated": () =>
-        this.getParentView().redraw(this.getParentView(), true),
+        this.getParentView().redraw.call(this.getParentView(), true),
       /**
        * @param state
        * @param editor
