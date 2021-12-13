@@ -908,19 +908,17 @@ export default class TemplateView extends JetView {
   }
 
   /**
-   * @param e
-   * @param self
+   *
    */
-  async save(e, self) {
-    const that = e ? this.that.getParentView() : self;
+  async save() {
     const fabricDocument = $($$("fabric").getIframe()).contents();
     const item = $$("layers").getSelectedItem();
     if (item) {
       await $$("tinymce").getEditor(true);
-      that.body.find(`#${item.value}`).html($$("tinymce").getValue());
+      this.body.find(`#${item.value}`).html($$("tinymce").getValue());
       fabricDocument.find(`#${item.value}`).html($$("tinymce").getValue());
-      // that.genHtml();
-      that.save2(that);
+      // this.genHtml();
+      this.save2(this);
     }
   }
 
@@ -1078,7 +1076,7 @@ export default class TemplateView extends JetView {
    * @param pThat
    * @param resetDimension
    */
-  makeSelection(pThat, resetDimension = false) {
+  async makeSelection(pThat, resetDimension = false) {
     const that = pThat || this;
 
     /**
@@ -1202,23 +1200,17 @@ export default class TemplateView extends JetView {
       if (item.length) {
         that.lockRedraw = true;
         if (selectedItem.value === "content") {
-          $$("tinymce")
-            .getEditor(true)
-            .then(() => {
-              $$("tinymce").$scope.setValue("");
-              $$("tinymce").disable();
-              $$("ace-template").$scope.setValue("");
-              $$("ace-template").disable();
-            });
+          await $$("tinymce").getEditor(true);
+          $$("tinymce").$scope.setValue("");
+          $$("tinymce").disable();
+          $$("ace-template").$scope.setValue("");
+          $$("ace-template").disable();
         } else {
-          $$("tinymce")
-            .getEditor(true)
-            .then(() => {
-              $$("tinymce").$scope.setValue(item.html());
-              $$("tinymce").enable();
-              $$("ace-template").$scope.setValue(item.html());
-              $$("ace-template").enable();
-            });
+          await $$("tinymce").getEditor(true);
+          $$("tinymce").$scope.setValue(item.html());
+          $$("tinymce").enable();
+          $$("ace-template").$scope.setValue(item.html());
+          $$("ace-template").enable();
         }
         $$("mode").setValue(that.getMode(item));
         $$("dock").setValue(
