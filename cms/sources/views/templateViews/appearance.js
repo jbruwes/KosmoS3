@@ -28,7 +28,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -41,7 +42,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -54,7 +56,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -67,7 +70,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
 
@@ -125,7 +129,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -138,7 +143,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -152,7 +158,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -169,7 +176,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -224,7 +232,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -237,7 +246,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -251,7 +261,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -268,7 +279,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -323,7 +335,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -336,7 +349,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -350,7 +364,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -367,7 +382,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -422,7 +438,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -435,7 +452,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -449,7 +467,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -466,7 +485,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
 
@@ -485,7 +505,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -498,7 +519,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -512,7 +534,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -526,7 +549,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
 
@@ -546,7 +570,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -563,7 +588,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -597,7 +623,7 @@ export default class AppearanceView extends JetView {
                     Body: file.file,
                   })
                 );
-                this.getParentView().redraw(this.getParentView());
+                this.getParentView().redraw.call(this.getParentView());
               } catch (err) {
                 webix.message({
                   text: err.message,
@@ -610,7 +636,7 @@ export default class AppearanceView extends JetView {
            *
            */
           "files->onAfterDelete": () =>
-            this.getParentView().redraw(this.getParentView()),
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -631,7 +657,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -643,7 +670,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -657,7 +685,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -674,7 +703,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {
@@ -697,7 +727,8 @@ export default class AppearanceView extends JetView {
               /**
                *
                */
-              onChange: () => this.getParentView().redraw(this.getParentView()),
+              onChange: () =>
+                this.getParentView().redraw.call(this.getParentView()),
             },
           },
           {
@@ -714,7 +745,8 @@ export default class AppearanceView extends JetView {
               /**
                *
                */
-              onChange: () => this.getParentView().redraw(this.getParentView()),
+              onChange: () =>
+                this.getParentView().redraw.call(this.getParentView()),
             },
           },
           {
@@ -728,7 +760,8 @@ export default class AppearanceView extends JetView {
               /**
                *
                */
-              onChange: () => this.getParentView().redraw(this.getParentView()),
+              onChange: () =>
+                this.getParentView().redraw.call(this.getParentView()),
             },
             options: [
               {
@@ -795,7 +828,8 @@ export default class AppearanceView extends JetView {
           /**
            *
            */
-          onChange: () => this.getParentView().redraw(this.getParentView()),
+          onChange: () =>
+            this.getParentView().redraw.call(this.getParentView()),
         },
       },
       {},
