@@ -21,7 +21,7 @@ export default class DataView extends JetView {
        *
        */
       "data->onStoreUpdated": () =>
-        this.getParentView().redraw(this.getParentView()),
+        this.getParentView().redraw.call(this.getParentView()),
     },
   });
 }
