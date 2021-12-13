@@ -29,7 +29,7 @@ export default class TemplateView extends JetView {
               $$("ace-template").getEditor().resize();
               break;
             case "fabricCnt":
-              this.makeSelection(this);
+              this.makeSelection();
               break;
             default:
           }
@@ -224,7 +224,7 @@ export default class TemplateView extends JetView {
                       );
                       break;
                     case "fabricCnt":
-                      this.makeSelection(this);
+                      this.makeSelection();
                       break;
                     default:
                   }
@@ -343,9 +343,9 @@ export default class TemplateView extends JetView {
           canvas.setHeight(
             $$("fabric").getWindow().document.documentElement.clientHeight
           );
-          $($$("fabric").getWindow()).scroll(() => this.makeSelection(this));
-          $($$("fabric").getWindow()).resize(() => this.makeSelection(this));
-          const observer = new MutationObserver(() => this.makeSelection(this));
+          $($$("fabric").getWindow()).scroll(() => this.makeSelection());
+          $($$("fabric").getWindow()).resize(() => this.makeSelection());
+          const observer = new MutationObserver(() => this.makeSelection());
           observer.observe($$("fabric").getWindow().document.body, {
             // 'attributes': true, // подвисает на сложных сайтах, падлюка
             childList: true,
@@ -553,7 +553,7 @@ export default class TemplateView extends JetView {
    * @param eo
    */
   wheelEvent(eo) {
-    const s = $(this.$$("fabric").getIframe()).contents();
+    const s = $($$("fabric").getIframe()).contents();
     switch (eo.deltaMode) {
       case 0: // DOM_DELTA_PIXEL		Chrome
         s.scrollTop(eo.deltaY + s.scrollTop());
@@ -646,10 +646,9 @@ export default class TemplateView extends JetView {
   }
 
   /**
-   * @param pThat
    * @param layers
    */
-  async redraw(pThat, layers) {
+  async redraw(layers) {
     /**
      * @param {object} item current object
      * @param {string} body body selector
@@ -874,15 +873,14 @@ export default class TemplateView extends JetView {
       }
     }
 
-    const that = pThat || this;
-    if (!that.lockRedraw && that.body) {
+    if (!this.lockRedraw && this.body) {
       const fabricDocument = $($$("fabric").getIframe()).contents();
       const item = $$("layers").getSelectedItem();
       if (item) {
         if (!layers) {
-          that.redo = [];
-          that.undo.push([
-            that.body.find("#body:first>.pusher").html(),
+          this.redo = [];
+          this.undo.push([
+            this.body.find("#body:first>.pusher").html(),
             fabricDocument.find("body:first>.pusher").html(),
             webix.ajax().stringify($$("fabric").getCanvas()),
             $$("layers").serialize(),
@@ -890,19 +888,19 @@ export default class TemplateView extends JetView {
           ]);
         }
         saveStage(
-          that.body.find(`#${item.value}`),
+          this.body.find(`#${item.value}`),
           "#body:first>.pusher",
-          that.body
+          this.body
         );
-        that.zIndex(that.body, "#", that);
+        this.zIndex(this.body, "#", this);
         saveStage(
           fabricDocument.find(`#${item.value}`),
           "body:first>.pusher",
           fabricDocument
         );
-        that.zIndex(fabricDocument, "", that);
-        // that.genHtml();
-        that.save2(that);
+        this.zIndex(fabricDocument, "", this);
+        // this.genHtml();
+        this.save2();
       }
     }
   }
@@ -918,34 +916,33 @@ export default class TemplateView extends JetView {
       this.body.find(`#${item.value}`).html($$("tinymce").getValue());
       fabricDocument.find(`#${item.value}`).html($$("tinymce").getValue());
       // this.genHtml();
-      this.save2(this);
+      this.save2();
     }
   }
 
   /**
-   * @param pThat
+   *
    */
-  async save2(pThat) {
-    const that = pThat || this;
+  async save2() {
     try {
-      await that.app.s3Client.send(
+      await this.app.s3Client.send(
         new PutObjectCommand({
-          Bucket: that.app.bucket,
+          Bucket: this.app.bucket,
           Key: "index.htm",
           ContentType: "text/html",
-          Body: that.genHtml(),
+          Body: this.genHtml(),
         })
       );
       webix.message("Template save complete");
-      if (that.siteWorker) that.siteWorker.terminate();
-      that.siteWorker = new Worker(
+      if (this.siteWorker) this.siteWorker.terminate();
+      this.siteWorker = new Worker(
         new URL("../workers/site.js", import.meta.url)
       );
-      that.siteWorker.postMessage({
-        pAccessKeyId: that.app.authenticationData.username,
-        pSecretAccessKey: that.app.authenticationData.password,
-        pBucketName: that.app.bucket,
-        pRegion: that.app.region,
+      this.siteWorker.postMessage({
+        pAccessKeyId: this.app.authenticationData.username,
+        pSecretAccessKey: this.app.authenticationData.password,
+        pBucketName: this.app.bucket,
+        pRegion: this.app.region,
       });
     } catch (err) {
       webix.message({
@@ -1073,12 +1070,9 @@ export default class TemplateView extends JetView {
   }
 
   /**
-   * @param pThat
    * @param resetDimension
    */
-  async makeSelection(pThat, resetDimension = false) {
-    const that = pThat || this;
-
+  async makeSelection(resetDimension = false) {
     /**
      * @param {*} pElem Элемент
      * @param {*} options Свойства
@@ -1102,9 +1096,11 @@ export default class TemplateView extends JetView {
 
     /**
      * @param {*} pThose Те объекты
+     * @param that
+     * @param pThat
      */
-    function doLayers(pThose) {
-      const those = pThose;
+    function doLayers(pThat) {
+      const that = pThat;
       let layer = null;
       let map = null;
       let selObj = null;
@@ -1163,10 +1159,10 @@ export default class TemplateView extends JetView {
           if (rect.id && rect.id === selectedId) {
             selectedRect = rect;
             $$("fabric").getCanvas().setActiveObject(rect);
-            those.oCoords = rect.oCoords;
-            those.top = rect.top;
-            those.left = rect.left;
-            those.angle = rect.angle;
+            that.oCoords = rect.oCoords;
+            that.top = rect.top;
+            that.left = rect.left;
+            that.angle = rect.angle;
           }
         });
       if (selectedRect) $$("fabric").getCanvas().bringToFront(selectedRect);
@@ -1179,7 +1175,7 @@ export default class TemplateView extends JetView {
     ) {
       const isHidden = $($$("fabric").getIframe()).parent(":hidden");
       const selectedItem = $$("layers").getSelectedItem();
-      const item = that.body.find(`#${selectedItem.value}`);
+      const item = this.body.find(`#${selectedItem.value}`);
       $$("templateItem").define(
         "header",
         `<span class='mdi mdi-postage-stamp'></span> ${selectedItem.value}`
@@ -1194,11 +1190,11 @@ export default class TemplateView extends JetView {
             display: "block",
           },
           doLayers,
-          that
+          this
         );
-      } else doLayers(that);
+      } else doLayers(this);
       if (item.length) {
-        that.lockRedraw = true;
+        this.lockRedraw = true;
         if (selectedItem.value === "content") {
           await $$("tinymce").getEditor(true);
           $$("tinymce").$scope.setValue("");
@@ -1212,7 +1208,7 @@ export default class TemplateView extends JetView {
           $$("ace-template").$scope.setValue(item.html());
           $$("ace-template").enable();
         }
-        $$("mode").setValue(that.getMode(item));
+        $$("mode").setValue(this.getMode(item));
         $$("dock").setValue(
           !item.parent("div.container:not(.fluid):not([id])").length + 1
         );
@@ -1495,7 +1491,7 @@ export default class TemplateView extends JetView {
           });
         });
         if (classRow.length) $$("class").select($$("class").getFirstId());
-        that.lockRedraw = false;
+        this.lockRedraw = false;
       }
     }
   }
