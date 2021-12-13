@@ -26,15 +26,22 @@ onmessage = async ({
       secretAccessKey: pSecretAccessKey,
     },
   });
-  const { Body } = await s3Client.send(
-    new GetObjectCommand({
-      Bucket: pBucketName,
-      ResponseCacheControl: "no-store",
-      Key: "index.json",
-    })
-  );
   const [lJson] = JSON.parse(
-    new TextDecoder().decode((await (await Body.getReader()).read()).value)
+    new TextDecoder().decode(
+      (
+        await (
+          await (
+            await s3Client.send(
+              new GetObjectCommand({
+                Bucket: pBucketName,
+                ResponseCacheControl: "no-store",
+                Key: "index.json",
+              })
+            )
+          ).Body.getReader()
+        ).read()
+      ).value
+    )
   );
   const lHtml = (
     await (await fetch("index.htm", { cache: "no-store" })).text()
