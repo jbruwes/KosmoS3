@@ -61,8 +61,11 @@ export default class LayersView extends JetView {
       /**
        *
        */
-      onSelectChange: () =>
-        this.getParentView().makeSelection.call(this.getParentView(), true),
+      onSelectChange: () => {
+        const that = this.getParentView();
+        const selectedItem = that.makeSelection.call(that);
+        if (selectedItem) that.setParams.call(that, selectedItem);
+      },
       /**
        *
        */
