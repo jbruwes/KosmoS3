@@ -7,11 +7,14 @@ import { IAMClient, GetUserCommand } from "@aws-sdk/client-iam";
  *
  */
 export default class SignInView extends JetView {
+  #config;
+
   /**
-   *
+   * @param app
    */
-  config() {
-    const result = {
+  constructor(app) {
+    super(app);
+    this.#config = {
       css: "signInView",
       cols: [
         {
@@ -147,7 +150,7 @@ export default class SignInView extends JetView {
       ],
     };
     if (this.app.config.size === "wide") {
-      result.cols[1].rows.unshift({
+      this.#config.cols[1].rows.unshift({
         // id: "header_template",
         view: "template",
         template: "<h1 class='mainHeader'>KosmoS3 CMS</h1>",
@@ -155,11 +158,15 @@ export default class SignInView extends JetView {
         type: "clean",
       });
     }
-    result.cols[1].rows.unshift({
+    this.#config.cols[1].rows.unshift({
       gravity: this.app.config.size === "wide" ? 2 : 1,
     });
-    return result;
   }
+
+  /**
+   *
+   */
+  config = () => this.#config;
 
   /**
    *
