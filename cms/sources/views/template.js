@@ -1070,9 +1070,11 @@ export default class TemplateView extends JetView {
   }
 
   /**
-   * @param resetDimension
+   *
    */
-  async makeSelection(resetDimension = false) {
+  makeSelection() {
+    let selectedItem = null;
+
     /**
      * @param {*} pElem Элемент
      * @param {*} options Свойства
@@ -1171,11 +1173,10 @@ export default class TemplateView extends JetView {
     if (
       ($$("tools").config.collapsed &&
         $$("tabbar").getValue() === "fabricCnt") ||
-      (!$$("tools").config.collapsed && resetDimension)
+      !$$("tools").config.collapsed
     ) {
       const isHidden = $($$("fabric").getIframe()).parent(":hidden");
-      const selectedItem = $$("layers").getSelectedItem();
-      const item = this.body.find(`#${selectedItem.value}`);
+      selectedItem = $$("layers").getSelectedItem();
       $$("templateItem").define(
         "header",
         `<span class='mdi mdi-postage-stamp'></span> ${selectedItem.value}`
@@ -1193,306 +1194,306 @@ export default class TemplateView extends JetView {
           this
         );
       } else doLayers(this);
-      if (item.length) {
-        this.lockRedraw = true;
-        if (selectedItem.value === "content") {
-          await $$("tinymce").getEditor(true);
-          $$("tinymce").$scope.setValue("");
-          $$("tinymce").disable();
-          $$("ace-template").$scope.setValue("");
-          $$("ace-template").disable();
-        } else {
-          await $$("tinymce").getEditor(true);
-          $$("tinymce").$scope.setValue(item.html());
-          $$("tinymce").enable();
-          $$("ace-template").$scope.setValue(item.html());
-          $$("ace-template").enable();
-        }
-        $$("mode").setValue(this.getMode(item));
-        $$("dock").setValue(
-          !item.parent("div.container:not(.fluid):not([id])").length + 1
-        );
-        $$("angle").setValue(
-          ((item.attr("style") || "").match(/rotate\(-?\d+deg\)/g) || [""])[0]
-            .replace("rotate(", "")
-            .replace("deg)", "")
-        );
-        $$("paddingLeft").setValue(parseInt(item[0].style.paddingLeft, 10));
-        $$("paddingRight").setValue(parseInt(item[0].style.paddingRight, 10));
-        $$("paddingTop").setValue(parseInt(item[0].style.paddingTop, 10));
-        $$("paddingBottom").setValue(parseInt(item[0].style.paddingBottom, 10));
-        $$("borderLeftWidth").setValue(
-          parseInt(item[0].style.borderLeftWidth, 10)
-        );
-        $$("borderRightWidth").setValue(
-          parseInt(item[0].style.borderRightWidth, 10)
-        );
-        $$("borderTopWidth").setValue(
-          parseInt(item[0].style.borderTopWidth, 10)
-        );
-        $$("borderBottomWidth").setValue(
-          parseInt(item[0].style.borderBottomWidth, 10)
-        );
-        $$("borderLeftStyle").setValue(
-          item[0].style.borderLeftStyle ? item[0].style.borderLeftStyle : "none"
-        );
-        $$("borderRightStyle").setValue(
-          item[0].style.borderRightStyle
-            ? item[0].style.borderRightStyle
-            : "none"
-        );
-        $$("borderTopStyle").setValue(
-          item[0].style.borderTopStyle ? item[0].style.borderTopStyle : "none"
-        );
-        $$("borderBottomStyle").setValue(
-          item[0].style.borderBottomStyle
-            ? item[0].style.borderBottomStyle
-            : "none"
-        );
-        $$("borderLeftColor").setValue(
-          webix.color.rgbToHex(item[0].style.borderLeftColor)
-        );
-        $$("borderRightColor").setValue(
-          webix.color.rgbToHex(item[0].style.borderRightColor)
-        );
-        $$("borderTopColor").setValue(
-          webix.color.rgbToHex(item[0].style.borderTopColor)
-        );
-        $$("borderBottomColor").setValue(
-          webix.color.rgbToHex(item[0].style.borderBottomColor)
-        );
-        $$("borderLeftTransparency").setValue(
-          item[0].style.borderLeftColor.indexOf("rgba")
-            ? 100
-            : Math.round(
-                100 * item[0].style.borderLeftColor.replace(/^.*,(.+)\)/, "$1")
-              )
-        );
-        $$("borderRightTransparency").setValue(
-          item[0].style.borderRightColor.indexOf("rgba")
-            ? 100
-            : Math.round(
-                100 * item[0].style.borderRightColor.replace(/^.*,(.+)\)/, "$1")
-              )
-        );
-        $$("borderTopTransparency").setValue(
-          item[0].style.borderTopColor.indexOf("rgba")
-            ? 100
-            : Math.round(
-                100 * item[0].style.borderTopColor.replace(/^.*,(.+)\)/, "$1")
-              )
-        );
-        $$("borderBottomTransparency").setValue(
-          item[0].style.borderBottomColor.indexOf("rgba")
-            ? 100
-            : Math.round(
-                100 *
-                  item[0].style.borderBottomColor.replace(/^.*,(.+)\)/, "$1")
-              )
-        );
-        const { marginTop } = item[0].style;
-        const parseMarginTop = parseInt(marginTop, 10);
-        $$("marginTop").setValue(parseMarginTop);
-        if (parseMarginTop) {
-          $$("pmarginTop").setValue(
-            marginTop.match(/\D+$/)[0] === "px" ? "px" : "%"
-          );
-        } else if (resetDimension) $$("pmarginTop").setValue("px");
-        const height = item[0].style.minHeight
-          ? item[0].style.minHeight
-          : item[0].style.height;
-        const parseHeight = parseInt(height, 10);
-        $$("height").setValue(parseHeight);
-        if (parseHeight) {
-          $$("pheight").setValue(height.match(/\D+$/)[0] === "px" ? "px" : "%");
-        } else if (resetDimension) $$("pheight").setValue("px");
-        const { marginBottom } = item[0].style;
-        const parseMarginBottom = parseInt(marginBottom, 10);
-        $$("marginBottom").setValue(parseMarginBottom);
-        if (parseMarginBottom) {
-          $$("pmarginBottom").setValue(
-            marginBottom.match(/\D+$/)[0] === "px" ? "px" : "%"
-          );
-        } else if (resetDimension) $$("pmarginBottom").setValue("px");
-        const { marginLeft } = item[0].style;
-        const parseMarginLeft = parseInt(marginLeft, 10);
-        $$("marginLeft").setValue(parseMarginLeft);
-        if (parseMarginLeft) {
-          $$("pmarginLeft").setValue(
-            marginLeft.match(/\D+$/)[0] === "px" ? "px" : "%"
-          );
-        } else if (resetDimension) $$("pmarginLeft").setValue("px");
-        const width = item[0].style.minWidth
-          ? item[0].style.minWidth
-          : item[0].style.width;
-        const parseWidth = parseInt(width, 10);
-        $$("width").setValue(parseWidth);
-        if (parseWidth)
-          $$("pwidth").setValue(width.match(/\D+$/)[0] === "px" ? "px" : "%");
-        else if (resetDimension) $$("pwidth").setValue("px");
-        const { marginRight } = item[0].style;
-        const parseMarginRight = parseInt(marginRight, 10);
-        $$("marginRight").setValue(parseMarginRight);
-        if (parseMarginRight) {
-          $$("pmarginRight").setValue(
-            marginRight.match(/\D+$/)[0] === "px" ? "px" : "%"
-          );
-        } else if (resetDimension) $$("pmarginRight").setValue("px");
-        $$("borderTopLeftRadius").setValue(
-          parseInt(item[0].style.borderTopLeftRadius, 10)
-        );
-        $$("borderTopRightRadius").setValue(
-          parseInt(item[0].style.borderTopRightRadius, 10)
-        );
-        $$("borderBottomLeftRadius").setValue(
-          parseInt(item[0].style.borderBottomLeftRadius, 10)
-        );
-        $$("borderBottomRightRadius").setValue(
-          parseInt(item[0].style.borderBottomRightRadius, 10)
-        );
-        $$("textColor").setValue(webix.color.rgbToHex(item[0].style.color));
-        $$("textTransparency").setValue(
-          item[0].style.color.indexOf("rgba")
-            ? 100
-            : Math.round(100 * item[0].style.color.replace(/^.*,(.+)\)/, "$1"))
-        );
-        let { backgroundImage } = item[0].style;
-        backgroundImage = backgroundImage || "";
-        backgroundImage =
-          backgroundImage !== "" && backgroundImage !== "none"
-            ? backgroundImage
-                .replace("url(", "")
-                .replace(")", "")
-                .replace(/"/g, "")
-                .replace(
-                  new RegExp(
-                    `${window.location.protocol}//${window.location.host}${window.location.pathname}`.replace(
-                      /[^/]*$/,
-                      ""
-                    ),
-                    "g"
-                  ),
-                  ""
-                )
-            : "";
-        $$("uploader").files.data.clearAll();
-        if (backgroundImage) {
-          $$("uploader").addFile(
-            {
-              name: backgroundImage.split("/").pop(),
-              sname: backgroundImage,
-            },
-            0
-          );
-        }
-        $$("backgroundPosition").setValue(item[0].style.backgroundPosition);
-        if (!$$("backgroundPosition").getValue()) {
-          $$("backgroundPosition").setValue("0% 0%");
-        }
-        let backgroundRepeat = item[0].style.backgroundRepeat
-          ? item[0].style.backgroundRepeat
-          : "repeat";
-        if (backgroundRepeat === "repeat-x")
-          backgroundRepeat = "repeat no-repeat";
-        if (backgroundRepeat === "repeat-y")
-          backgroundRepeat = "no-repeat repeat";
-        backgroundRepeat = backgroundRepeat.split(" ");
-        $$("repeat-x").setValue(backgroundRepeat[0]);
-        $$("repeat-y").setValue(backgroundRepeat[backgroundRepeat.length - 1]);
-        $$("attachment").setValue(
-          item[0].style.backgroundAttachment
-            ? item[0].style.backgroundAttachment
-            : "scroll"
-        );
-        $$("backgroundSize").setValue(
-          item[0].style.backgroundSize ? item[0].style.backgroundSize : "auto"
-        );
-        $$("backgroundColor").setValue(
-          webix.color.rgbToHex(item[0].style.backgroundColor)
-        );
-        $$("backgroundTransparency").setValue(
-          item[0].style.backgroundColor.indexOf("rgba")
-            ? 100
-            : Math.round(
-                100 * item[0].style.backgroundColor.replace(/^.*,(.+)\)/, "$1")
-              )
-        );
-        const transparency = item[0].style.opacity;
-        $$("transparency").setValue(
-          transparency === "" ? 100 : Math.round(transparency * 100)
-        );
-        $$("shadows").clearAll();
-        let { boxShadow } = item[0].style;
-        boxShadow = boxShadow === "none" ? null : boxShadow;
-        if (boxShadow) {
-          boxShadow = boxShadow.split(/,(?![^(]*\))/);
-          $.each(boxShadow, (index, element) => {
-            const cur = element.trim().split(/ (?![^(]*\))/g);
-            const boxShadowGeom = cur.filter((val) => {
-              return val.match(/^-?\d+/);
-            });
-            const boxShadowParams = cur.filter((val) => {
-              return !val.match(/^-?\d+/);
-            });
-            let inset = null;
-            let color = null;
-            const [boxShadowParams0, boxShadowParams1] = boxShadowParams;
-            if (boxShadowParams0) {
-              switch (boxShadowParams0) {
-                case "inset":
-                  inset = true;
-                  break;
-                default:
-                  color = boxShadowParams0;
-                  break;
-              }
-            }
-            if (boxShadowParams1) {
-              switch (boxShadowParams1) {
-                case "inset":
-                  inset = true;
-                  break;
-                default:
-                  color = boxShadowParams1;
-                  break;
-              }
-            }
-            $$("shadows").add({
-              x: boxShadowGeom[0] ? parseFloat(boxShadowGeom[0]) : 0,
-              y: boxShadowGeom[1] ? parseFloat(boxShadowGeom[1]) : 0,
-              blur: boxShadowGeom[2] ? parseFloat(boxShadowGeom[2]) : 0,
-              spread: boxShadowGeom[3] ? parseFloat(boxShadowGeom[3]) : 0,
-              inset: inset || false,
-              color: `#${webix.color.rgbToHex(color)}`,
-            });
-          });
-          $$("shadows").select($$("shadows").getFirstId());
-        }
-        $$("data").clearAll();
-        const data = item.data();
-        Object.keys(data).forEach((x) => {
-          // for (const x in data) {
-          // if (data.hasOwnProperty(x)) {
-          if (Object.prototype.hasOwnProperty.call(data, x)) {
-            $$("data").add({
-              data: x.replace(/[A-Z]/g, "-$&").toLowerCase(),
-              value: data[x],
-            });
-          }
-        });
-        if (data.length) $$("data").select($$("data").getFirstId());
-        $$("class").clearAll();
-        let classRow = item.attr("class");
-        classRow = classRow ? classRow.split(/\s+/) : [];
-        Object.keys(classRow).forEach((y) => {
-          // for (const y in classRow) {
-          $$("class").add({
-            class: classRow[y],
-          });
-        });
-        if (classRow.length) $$("class").select($$("class").getFirstId());
-        this.lockRedraw = false;
+    }
+    return selectedItem;
+  }
+
+  /**
+   * @param selectedItem
+   */
+  async setParams(selectedItem) {
+    const item = this.body.find(`#${selectedItem.value}`);
+    if (item.length) {
+      this.lockRedraw = true;
+      if (selectedItem.value === "content") {
+        await $$("tinymce").getEditor(true);
+        $$("tinymce").$scope.setValue("");
+        $$("tinymce").disable();
+        $$("ace-template").$scope.setValue("");
+        $$("ace-template").disable();
+      } else {
+        await $$("tinymce").getEditor(true);
+        $$("tinymce").$scope.setValue(item.html());
+        $$("tinymce").enable();
+        $$("ace-template").$scope.setValue(item.html());
+        $$("ace-template").enable();
       }
+      $$("mode").setValue(this.getMode(item));
+      $$("dock").setValue(
+        !item.parent("div.container:not(.fluid):not([id])").length + 1
+      );
+      $$("angle").setValue(
+        ((item.attr("style") || "").match(/rotate\(-?\d+deg\)/g) || [""])[0]
+          .replace("rotate(", "")
+          .replace("deg)", "")
+      );
+      $$("paddingLeft").setValue(parseInt(item[0].style.paddingLeft, 10));
+      $$("paddingRight").setValue(parseInt(item[0].style.paddingRight, 10));
+      $$("paddingTop").setValue(parseInt(item[0].style.paddingTop, 10));
+      $$("paddingBottom").setValue(parseInt(item[0].style.paddingBottom, 10));
+      $$("borderLeftWidth").setValue(
+        parseInt(item[0].style.borderLeftWidth, 10)
+      );
+      $$("borderRightWidth").setValue(
+        parseInt(item[0].style.borderRightWidth, 10)
+      );
+      $$("borderTopWidth").setValue(parseInt(item[0].style.borderTopWidth, 10));
+      $$("borderBottomWidth").setValue(
+        parseInt(item[0].style.borderBottomWidth, 10)
+      );
+      $$("borderLeftStyle").setValue(
+        item[0].style.borderLeftStyle ? item[0].style.borderLeftStyle : "none"
+      );
+      $$("borderRightStyle").setValue(
+        item[0].style.borderRightStyle ? item[0].style.borderRightStyle : "none"
+      );
+      $$("borderTopStyle").setValue(
+        item[0].style.borderTopStyle ? item[0].style.borderTopStyle : "none"
+      );
+      $$("borderBottomStyle").setValue(
+        item[0].style.borderBottomStyle
+          ? item[0].style.borderBottomStyle
+          : "none"
+      );
+      $$("borderLeftColor").setValue(
+        webix.color.rgbToHex(item[0].style.borderLeftColor)
+      );
+      $$("borderRightColor").setValue(
+        webix.color.rgbToHex(item[0].style.borderRightColor)
+      );
+      $$("borderTopColor").setValue(
+        webix.color.rgbToHex(item[0].style.borderTopColor)
+      );
+      $$("borderBottomColor").setValue(
+        webix.color.rgbToHex(item[0].style.borderBottomColor)
+      );
+      $$("borderLeftTransparency").setValue(
+        item[0].style.borderLeftColor.indexOf("rgba")
+          ? 100
+          : Math.round(
+              100 * item[0].style.borderLeftColor.replace(/^.*,(.+)\)/, "$1")
+            )
+      );
+      $$("borderRightTransparency").setValue(
+        item[0].style.borderRightColor.indexOf("rgba")
+          ? 100
+          : Math.round(
+              100 * item[0].style.borderRightColor.replace(/^.*,(.+)\)/, "$1")
+            )
+      );
+      $$("borderTopTransparency").setValue(
+        item[0].style.borderTopColor.indexOf("rgba")
+          ? 100
+          : Math.round(
+              100 * item[0].style.borderTopColor.replace(/^.*,(.+)\)/, "$1")
+            )
+      );
+      $$("borderBottomTransparency").setValue(
+        item[0].style.borderBottomColor.indexOf("rgba")
+          ? 100
+          : Math.round(
+              100 * item[0].style.borderBottomColor.replace(/^.*,(.+)\)/, "$1")
+            )
+      );
+      const { marginTop } = item[0].style;
+      const parseMarginTop = parseInt(marginTop, 10);
+      $$("marginTop").setValue(parseMarginTop);
+      if (parseMarginTop) {
+        $$("pmarginTop").setValue(
+          marginTop.match(/\D+$/)[0] === "px" ? "px" : "%"
+        );
+      } else $$("pmarginTop").setValue("px");
+      const height = item[0].style.minHeight
+        ? item[0].style.minHeight
+        : item[0].style.height;
+      const parseHeight = parseInt(height, 10);
+      $$("height").setValue(parseHeight);
+      if (parseHeight) {
+        $$("pheight").setValue(height.match(/\D+$/)[0] === "px" ? "px" : "%");
+      } else $$("pheight").setValue("px");
+      const { marginBottom } = item[0].style;
+      const parseMarginBottom = parseInt(marginBottom, 10);
+      $$("marginBottom").setValue(parseMarginBottom);
+      if (parseMarginBottom) {
+        $$("pmarginBottom").setValue(
+          marginBottom.match(/\D+$/)[0] === "px" ? "px" : "%"
+        );
+      } else $$("pmarginBottom").setValue("px");
+      const { marginLeft } = item[0].style;
+      const parseMarginLeft = parseInt(marginLeft, 10);
+      $$("marginLeft").setValue(parseMarginLeft);
+      if (parseMarginLeft) {
+        $$("pmarginLeft").setValue(
+          marginLeft.match(/\D+$/)[0] === "px" ? "px" : "%"
+        );
+      } else $$("pmarginLeft").setValue("px");
+      const width = item[0].style.minWidth
+        ? item[0].style.minWidth
+        : item[0].style.width;
+      const parseWidth = parseInt(width, 10);
+      $$("width").setValue(parseWidth);
+      if (parseWidth)
+        $$("pwidth").setValue(width.match(/\D+$/)[0] === "px" ? "px" : "%");
+      else $$("pwidth").setValue("px");
+      const { marginRight } = item[0].style;
+      const parseMarginRight = parseInt(marginRight, 10);
+      $$("marginRight").setValue(parseMarginRight);
+      if (parseMarginRight) {
+        $$("pmarginRight").setValue(
+          marginRight.match(/\D+$/)[0] === "px" ? "px" : "%"
+        );
+      } else $$("pmarginRight").setValue("px");
+      $$("borderTopLeftRadius").setValue(
+        parseInt(item[0].style.borderTopLeftRadius, 10)
+      );
+      $$("borderTopRightRadius").setValue(
+        parseInt(item[0].style.borderTopRightRadius, 10)
+      );
+      $$("borderBottomLeftRadius").setValue(
+        parseInt(item[0].style.borderBottomLeftRadius, 10)
+      );
+      $$("borderBottomRightRadius").setValue(
+        parseInt(item[0].style.borderBottomRightRadius, 10)
+      );
+      $$("textColor").setValue(webix.color.rgbToHex(item[0].style.color));
+      $$("textTransparency").setValue(
+        item[0].style.color.indexOf("rgba")
+          ? 100
+          : Math.round(100 * item[0].style.color.replace(/^.*,(.+)\)/, "$1"))
+      );
+      let { backgroundImage } = item[0].style;
+      backgroundImage = backgroundImage || "";
+      backgroundImage =
+        backgroundImage !== "" && backgroundImage !== "none"
+          ? backgroundImage
+              .replace("url(", "")
+              .replace(")", "")
+              .replace(/"/g, "")
+              .replace(
+                new RegExp(
+                  `${window.location.protocol}//${window.location.host}${window.location.pathname}`.replace(
+                    /[^/]*$/,
+                    ""
+                  ),
+                  "g"
+                ),
+                ""
+              )
+          : "";
+      $$("uploader").files.data.clearAll();
+      if (backgroundImage) {
+        $$("uploader").addFile(
+          {
+            name: backgroundImage.split("/").pop(),
+            sname: backgroundImage,
+          },
+          0
+        );
+      }
+      $$("backgroundPosition").setValue(item[0].style.backgroundPosition);
+      if (!$$("backgroundPosition").getValue()) {
+        $$("backgroundPosition").setValue("0% 0%");
+      }
+      let backgroundRepeat = item[0].style.backgroundRepeat
+        ? item[0].style.backgroundRepeat
+        : "repeat";
+      if (backgroundRepeat === "repeat-x")
+        backgroundRepeat = "repeat no-repeat";
+      if (backgroundRepeat === "repeat-y")
+        backgroundRepeat = "no-repeat repeat";
+      backgroundRepeat = backgroundRepeat.split(" ");
+      $$("repeat-x").setValue(backgroundRepeat[0]);
+      $$("repeat-y").setValue(backgroundRepeat[backgroundRepeat.length - 1]);
+      $$("attachment").setValue(
+        item[0].style.backgroundAttachment
+          ? item[0].style.backgroundAttachment
+          : "scroll"
+      );
+      $$("backgroundSize").setValue(
+        item[0].style.backgroundSize ? item[0].style.backgroundSize : "auto"
+      );
+      $$("backgroundColor").setValue(
+        webix.color.rgbToHex(item[0].style.backgroundColor)
+      );
+      $$("backgroundTransparency").setValue(
+        item[0].style.backgroundColor.indexOf("rgba")
+          ? 100
+          : Math.round(
+              100 * item[0].style.backgroundColor.replace(/^.*,(.+)\)/, "$1")
+            )
+      );
+      const transparency = item[0].style.opacity;
+      $$("transparency").setValue(
+        transparency === "" ? 100 : Math.round(transparency * 100)
+      );
+      $$("shadows").clearAll();
+      let { boxShadow } = item[0].style;
+      boxShadow = boxShadow === "none" ? null : boxShadow;
+      if (boxShadow) {
+        boxShadow = boxShadow.split(/,(?![^(]*\))/);
+        $.each(boxShadow, (index, element) => {
+          const cur = element.trim().split(/ (?![^(]*\))/g);
+          const boxShadowGeom = cur.filter((val) => {
+            return val.match(/^-?\d+/);
+          });
+          const boxShadowParams = cur.filter((val) => {
+            return !val.match(/^-?\d+/);
+          });
+          let inset = null;
+          let color = null;
+          const [boxShadowParams0, boxShadowParams1] = boxShadowParams;
+          if (boxShadowParams0) {
+            switch (boxShadowParams0) {
+              case "inset":
+                inset = true;
+                break;
+              default:
+                color = boxShadowParams0;
+                break;
+            }
+          }
+          if (boxShadowParams1) {
+            switch (boxShadowParams1) {
+              case "inset":
+                inset = true;
+                break;
+              default:
+                color = boxShadowParams1;
+                break;
+            }
+          }
+          $$("shadows").add({
+            x: boxShadowGeom[0] ? parseFloat(boxShadowGeom[0]) : 0,
+            y: boxShadowGeom[1] ? parseFloat(boxShadowGeom[1]) : 0,
+            blur: boxShadowGeom[2] ? parseFloat(boxShadowGeom[2]) : 0,
+            spread: boxShadowGeom[3] ? parseFloat(boxShadowGeom[3]) : 0,
+            inset: inset || false,
+            color: `#${webix.color.rgbToHex(color)}`,
+          });
+        });
+        $$("shadows").select($$("shadows").getFirstId());
+      }
+      $$("data").clearAll();
+      const data = item.data();
+      Object.keys(data).forEach((x) => {
+        if (Object.prototype.hasOwnProperty.call(data, x)) {
+          $$("data").add({
+            data: x.replace(/[A-Z]/g, "-$&").toLowerCase(),
+            value: data[x],
+          });
+        }
+      });
+      if (data.length) $$("data").select($$("data").getFirstId());
+      $$("class").clearAll();
+      let classRow = item.attr("class");
+      classRow = classRow ? classRow.split(/\s+/) : [];
+      Object.keys(classRow).forEach((y) => {
+        $$("class").add({
+          class: classRow[y],
+        });
+      });
+      if (classRow.length) $$("class").select($$("class").getFirstId());
+      this.lockRedraw = false;
     }
   }
 }
