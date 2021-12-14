@@ -11,7 +11,9 @@
     "all": "npm run clean && npm run fel && npm start",
     "start": "webpack serve --mode development --open --config ./cms/webpack.config.js",
     "cms": "webpack --env production=true --config ./cms/webpack.config.js",
-    "fel": "webpack --config ./fel/webpack.config.js"
+    "fel": "webpack --config ./fel/webpack.config.js",
+    "fdocs": "jsdoc -c ./.jsdoc.conf.fel.json",
+    "cdocs": "jsdoc -c ./.jsdoc.conf.cms.json"
   },
   "keywords": [
     "kosmos3"
