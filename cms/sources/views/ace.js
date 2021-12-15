@@ -6,7 +6,9 @@ import "../ace";
  *
  */
 export default class AceView extends JetView {
-  #config;
+  #config = null;
+
+  #timeoutId = [];
 
   /**
    * @param app
@@ -26,14 +28,11 @@ export default class AceView extends JetView {
   config = () => this.#config;
 
   /**
-   * @param ace
+   *
    */
-  async init(ace) {
-    const editor = await ace.getEditor(true);
+  async init() {
+    const editor = await this.getRoot().getEditor(true);
     const session = editor.getSession();
-    this.timeoutId = [];
-    session.that = this;
-    // session.setUseWorker(false);
     session.on("changeAnnotation", function onChangeAnnotation() {
       const annotations = session.getAnnotations() || [];
       const len = annotations.length;
@@ -49,23 +48,21 @@ export default class AceView extends JetView {
   }
 
   /**
-   * @param {object} e an event
-   * @param {object} session a session
    */
-  aceChange(e, session) {
-    session.that.timeoutId.push(
+  aceChange = () => {
+    this.#timeoutId.push(
       webix.delay(
-        function webixDelay() {
-          this.timeoutId.pop();
-          if (!this.timeoutId.length)
+        () => {
+          this.#timeoutId.pop();
+          if (!this.#timeoutId.length)
             $$("tinymce").setValue(this.getRoot().getEditor().getValue());
         },
-        session.that,
+        this,
         [],
         1000
       )
     );
-  }
+  };
 
   /**
    * @param html
