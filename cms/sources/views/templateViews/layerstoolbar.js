@@ -32,7 +32,7 @@ export default class LayersToolbarView extends JetView {
                 `${'<div data-fixed><div id="layer-'}${id}" style=margin-left:0;margin-right:0;margin-top:0;height:100px;"></div></div>`
               )
             );
-          that.zIndex(that.body, "#", that);
+          that.zIndex.call(that, that.body, "#");
           fabricDocument
             .find("body:first>.pusher")
             .append(
@@ -40,7 +40,7 @@ export default class LayersToolbarView extends JetView {
                 `${'<div data-fixed><div id="layer-'}${id}" style="margin-left:0;margin-right:0;margin-top:0;height:100px;"></div></div>`
               )
             );
-          that.zIndex(fabricDocument, "", that);
+          that.zIndex.call(that, fabricDocument, "");
           $$("layers").add({
             id,
             value: `layer-${id}`,
@@ -106,12 +106,12 @@ export default class LayersToolbarView extends JetView {
               that.body
                 .find("#body:first>.pusher>div:not([id]):empty")
                 .remove();
-              that.zIndex(that.body, "#", that);
+              that.zIndex.call(that, that.body, "#");
               fabricDocument.find(`#${item.value}`).remove();
               fabricDocument
                 .find("body:first>.pusher>div:not([id]):empty")
                 .remove();
-              that.zIndex(fabricDocument, "", that);
+              that.zIndex.call(that, fabricDocument, "");
               if (newId) $$("layers").select(newId);
               $$("fabric")
                 .getCanvas()
