@@ -254,6 +254,7 @@ export default class TemplateView extends JetView {
                   },
                   {
                     $subview: "templateViews.layers",
+                    name: "templateViewsLayers",
                   },
                 ],
               },
@@ -343,9 +344,9 @@ export default class TemplateView extends JetView {
           canvas.setHeight(
             $$("fabric").getWindow().document.documentElement.clientHeight
           );
-          $($$("fabric").getWindow()).scroll(() => this.makeSelection());
-          $($$("fabric").getWindow()).resize(() => this.makeSelection());
-          const observer = new MutationObserver(() => this.makeSelection());
+          $($$("fabric").getWindow()).scroll(this.makeSelection);
+          $($$("fabric").getWindow()).resize(this.makeSelection);
+          const observer = new MutationObserver(this.makeSelection);
           observer.observe($$("fabric").getWindow().document.body, {
             // 'attributes': true, // подвисает на сложных сайтах, падлюка
             childList: true,
@@ -550,26 +551,27 @@ export default class TemplateView extends JetView {
   }
 
   /**
-   * @param eo
+   * @param event
    */
-  wheelEvent(eo) {
-    const s = $($$("fabric").getIframe()).contents();
-    switch (eo.deltaMode) {
+  wheelEvent = (event) => {
+    const scrollable =
+      this.$$("fabric").getIframe().contentDocument.documentElement;
+    switch (event.deltaMode) {
       case 0: // DOM_DELTA_PIXEL		Chrome
-        s.scrollTop(eo.deltaY + s.scrollTop());
-        s.scrollLeft(eo.deltaX + s.scrollLeft());
+        scrollable.scrollTop += event.deltaY;
+        scrollable.scrollLeft += event.deltaX;
         break;
       case 1: // DOM_DELTA_LINE		Firefox
-        s.scrollTop(15 * eo.deltaY + s.scrollTop()); // scroll(e.deltaX, e.deltaY); 	Just a random small amount of scrolling
-        s.scrollLeft(15 * eo.deltaX + s.scrollLeft());
+        scrollable.scrollTop += 15 * event.deltaY;
+        scrollable.scrollLeft += 15 * event.deltaX;
         break;
       case 2: // DOM_DELTA_PAGE
-        s.scrollTop(0.03 * eo.deltaY + s.scrollTop());
-        s.scrollLeft(0.03 * eo.deltaX + s.scrollLeft());
+        scrollable.scrollTop += 0.03 * event.deltaY;
+        scrollable.scrollLeft += 0.03 * event.deltaX;
         break;
       default:
     }
-  }
+  };
 
   /**
    * @param item
@@ -627,12 +629,16 @@ export default class TemplateView extends JetView {
    * @param body
    * @param prefix
    */
-  zIndex(body, prefix) {
-    let i = $$("layers").count();
-    $.each($$("layers").serialize(), (index, value) => {
-      body.find(`#${value.value}`).parent().css("z-index", i);
-      i -= 1;
-    });
+  zIndex = (body, prefix) => {
+    const that = this.getSubView("templateViewsLayers");
+    let i = that.$$("layers").count();
+    that
+      .$$("layers")
+      .serialize()
+      .forEach((value) => {
+        body.find(`#${value.value}`).parent().css("z-index", i);
+        i -= 1;
+      });
     body.find(`${prefix}body:first>.pusher`).append(
       body
         .find(
@@ -643,7 +649,7 @@ export default class TemplateView extends JetView {
         })
     );
     // body.find(prefix + 'body:first>.pusher>div[data-static]:not([id])').each((index, element) => $(element).css('z-index', -$(element).css('z-index')));
-  }
+  };
 
   /**
    * @param layers
@@ -892,13 +898,13 @@ export default class TemplateView extends JetView {
           "#body:first>.pusher",
           this.body
         );
-        this.zIndex(this.body, "#", this);
+        this.zIndex(this.body, "#");
         saveStage(
           fabricDocument.find(`#${item.value}`),
           "body:first>.pusher",
           fabricDocument
         );
-        this.zIndex(fabricDocument, "", this);
+        this.zIndex(fabricDocument, "");
         // this.genHtml();
         this.save2();
       }
@@ -1072,7 +1078,7 @@ export default class TemplateView extends JetView {
   /**
    *
    */
-  makeSelection() {
+  makeSelection = () => {
     let selectedItem = null;
 
     /**
@@ -1196,7 +1202,7 @@ export default class TemplateView extends JetView {
       } else doLayers(this);
     }
     return selectedItem;
-  }
+  };
 
   /**
    * @param selectedItem
