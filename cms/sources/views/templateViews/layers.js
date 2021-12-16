@@ -96,9 +96,9 @@ export default class LayersView extends JetView {
             return false;
           }
           that.body.find(`#${state.old}`).attr("id", state.value);
-          that.zIndex(that.body, "#", that);
+          that.zIndex.call(that, that.body, "#");
           fabricDocument.find(`#${state.old}`).attr("id", state.value);
-          that.zIndex(fabricDocument, "", that);
+          that.zIndex.call(that, fabricDocument, "");
         }
         $$("templateItem").define(
           "header",
