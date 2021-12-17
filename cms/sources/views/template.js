@@ -330,6 +330,16 @@ export default class TemplateView extends JetView {
    *
    */
   async ready() {
+    /**
+     * @param item
+     */
+    function getMode(item) {
+      if (item.parent("div[data-absolute]:not([id])").parent(".pusher").length)
+        return 1;
+      if (item.parent("div[data-fixed]:not([id])").parent(".pusher").length)
+        return 2;
+      return 3;
+    }
     $('[view_id="tinymce"]').css("display", "none"); // хак: потому что у subview не выставляется display:none в tabbar
     $('[view_id="fabric"]').css("position", "absolute");
     this.undo = [];
@@ -410,7 +420,7 @@ export default class TemplateView extends JetView {
       });
       list.each((i, e) => {
         let icon = "mdi mdi-monitor-off";
-        switch (this.getMode($(e))) {
+        switch (getMode($(e))) {
           case 1:
             icon = "mdi mdi-monitor-dashboard";
             break;
@@ -572,17 +582,6 @@ export default class TemplateView extends JetView {
       default:
     }
   };
-
-  /**
-   * @param item
-   */
-  getMode(item) {
-    if (item.parent("div[data-absolute]:not([id])").parent(".pusher").length)
-      return 1;
-    if (item.parent("div[data-fixed]:not([id])").parent(".pusher").length)
-      return 2;
-    return 3;
-  }
 
   /**
    *
@@ -1208,6 +1207,17 @@ export default class TemplateView extends JetView {
    * @param selectedItem
    */
   async setParams(selectedItem) {
+    /**
+     * @param item
+     */
+    function getMode(item) {
+      if (item.parent("div[data-absolute]:not([id])").parent(".pusher").length)
+        return 1;
+      if (item.parent("div[data-fixed]:not([id])").parent(".pusher").length)
+        return 2;
+      return 3;
+    }
+
     const item = this.body.find(`#${selectedItem.value}`);
     if (item.length) {
       this.lockRedraw = true;
@@ -1224,7 +1234,7 @@ export default class TemplateView extends JetView {
         $$("ace-template").$scope.setValue(item.html());
         $$("ace-template").enable();
       }
-      $$("mode").setValue(this.getMode(item));
+      $$("mode").setValue(getMode(item));
       $$("dock").setValue(
         !item.parent("div.container:not(.fluid):not([id])").length + 1
       );
