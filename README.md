@@ -6,4 +6,4 @@ npm run build
 
 ### License
 
-GNU GENERAL PUBLIC LICENSE
+MIT License
