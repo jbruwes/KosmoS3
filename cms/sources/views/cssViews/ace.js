@@ -1,6 +1,6 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import "../../ace";
 
 /**
@@ -81,23 +81,7 @@ export default class AceView extends JetView {
       }
     };
     try {
-      cb(
-        new TextDecoder().decode(
-          (
-            await (
-              await (
-                await this.app.s3Client.send(
-                  new GetObjectCommand({
-                    Bucket: this.app.bucket,
-                    ResponseCacheControl: "no-store",
-                    Key: "index.css",
-                  })
-                )
-              ).Body.getReader()
-            ).read()
-          ).value
-        )
-      );
+      cb(await this.app.io.getObject("index.css"));
     } catch (err) {
       cb("");
     }
