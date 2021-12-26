@@ -1,5 +1,5 @@
 import { JetView } from "webix-jet";
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import * as webix from "webix";
 
 /**
@@ -64,21 +64,7 @@ export default class CdnView extends JetView {
       }
     };
     try {
-      const result = new TextDecoder().decode(
-        (
-          await (
-            await (
-              await this.app.s3Client.send(
-                new GetObjectCommand({
-                  Bucket: this.app.bucket,
-                  ResponseCacheControl: "no-store",
-                  Key: "index.cdn.css",
-                })
-              )
-            ).Body.getReader()
-          ).read()
-        ).value
-      );
+      const result = await this.app.io.getObject("index.cdn.css") 
       if ($$("sidebar").getSelectedId() === "css") {
         $$("cdn").clearAll();
         const url = result ? result.split("\n") : [];
