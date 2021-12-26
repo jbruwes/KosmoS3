@@ -2,7 +2,6 @@ import { JetView } from "webix-jet";
 import * as webix from "webix";
 import {
   HeadObjectCommand,
-  GetObjectCommand,
   PutObjectCommand,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
@@ -143,23 +142,7 @@ export default class SettingsView extends JetView {
       });
     }
     try {
-      this.prop = JSON.parse(
-        new TextDecoder().decode(
-          (
-            await (
-              await (
-                await this.app.s3Client.send(
-                  new GetObjectCommand({
-                    Bucket: this.app.bucket,
-                    ResponseCacheControl: "no-store",
-                    Key: "index.json",
-                  })
-                )
-              ).Body.getReader()
-            ).read()
-          ).value
-        )
-      );
+      this.prop = JSON.parse(await this.app.io.getObject("index.json"));
       if (this.prop[0].metrika) $$("metrika").setValue(this.prop[0].metrika);
       if (this.prop[0].analytics)
         $$("analytics").setValue(this.prop[0].analytics);
