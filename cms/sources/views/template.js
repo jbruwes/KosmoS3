@@ -2,7 +2,7 @@ import $ from "jquery/dist/jquery.slim";
 import { JetView } from "webix-jet";
 import * as webix from "webix";
 import { fabric } from "fabric";
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import "../fabricjs";
 
 /**
@@ -370,23 +370,7 @@ export default class TemplateView extends JetView {
       this.body = $("<div/>").append(
         $("<div/>")
           .attr("id", "body")
-          .html(
-            new TextDecoder().decode(
-              (
-                await (
-                  await (
-                    await this.app.s3Client.send(
-                      new GetObjectCommand({
-                        Bucket: this.app.bucket,
-                        ResponseCacheControl: "no-store",
-                        Key: "index.htm",
-                      })
-                    )
-                  ).Body.getReader()
-                ).read()
-              ).value
-            )
-          )
+          .html(await this.app.io.getObject("index.htm"))
       );
       let pusher = this.body.find("#body:first>.pusher");
       if (!pusher.length)
