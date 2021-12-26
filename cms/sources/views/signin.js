@@ -2,6 +2,7 @@ import { JetView } from "webix-jet";
 import * as webix from "webix";
 import { S3Client, HeadBucketCommand } from "@aws-sdk/client-s3";
 import { IAMClient, GetUserCommand } from "@aws-sdk/client-iam";
+import S3 from "../s3";
 
 /**
  *
@@ -197,6 +198,12 @@ export default class SignInView extends JetView {
       });
       try {
         const resIamClient = await iamClient.send(new GetUserCommand({}));
+        this.app.io = new S3(
+          $$("username").getValue(),
+          $$("password").getValue(),
+          resIamClient.User.UserName,
+          $$("region").getValue()
+        );
         this.app.s3Client = new S3Client({
           region: this.app.region,
           credentials: {
