@@ -1,6 +1,5 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import "../../edittree";
 
 /**
@@ -105,21 +104,7 @@ export default class TreeView extends JetView {
         }
         this.getParentView().lockProperties = false;
         try {
-          result = new TextDecoder().decode(
-            (
-              await (
-                await (
-                  await this.app.s3Client.send(
-                    new GetObjectCommand({
-                      Bucket: this.app.bucket,
-                      ResponseCacheControl: "no-store",
-                      Key: `${id}.htm`,
-                    })
-                  )
-                ).Body.getReader()
-              ).read()
-            ).value
-          );
+          result = await this.app.io.getObject(`${id}.htm`);
         } finally {
           if ($$("sidebar").getSelectedId() === "content") {
             $$("tinymce").$scope.setValue(result);
@@ -162,23 +147,7 @@ export default class TreeView extends JetView {
       $$("sidebar").getSelectedId() === "content"
     ) {
       $$("tree").clearAll();
-      $$("tree").parse(
-        new TextDecoder().decode(
-          (
-            await (
-              await (
-                await this.app.s3Client.send(
-                  new GetObjectCommand({
-                    Bucket: this.app.bucket,
-                    ResponseCacheControl: "no-store",
-                    Key: "index.json",
-                  })
-                )
-              ).Body.getReader()
-            ).read()
-          ).value
-        )
-      );
+      $$("tree").parse(await this.app.io.getObject("index.json"));
     }
   }
 
@@ -199,13 +168,10 @@ export default class TreeView extends JetView {
       editors1.setReadOnly(false);
     }
     try {
-      await this.app.s3Client.send(
-        new PutObjectCommand({
-          Bucket: this.app.bucket,
-          Key: `index.json`,
-          ContentType: "application/json",
-          Body: webix.ajax().stringify(tree),
-        })
+      await this.app.io.putObject(
+        "index.json",
+        "application/json",
+        webix.ajax().stringify(tree)
       );
       webix.message("Tree save complete");
       if (this.siteWorker) this.siteWorker.terminate();
