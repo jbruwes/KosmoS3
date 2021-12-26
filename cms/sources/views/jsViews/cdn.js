@@ -1,5 +1,5 @@
 import { JetView } from "webix-jet";
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import * as webix from "webix";
 
 /**
@@ -63,23 +63,7 @@ export default class CdnView extends JetView {
     try {
       if ($$("sidebar").getSelectedId() === "js") {
         $$("cdn").clearAll();
-        $$("cdn").parse(
-          new TextDecoder().decode(
-            (
-              await (
-                await (
-                  await this.app.s3Client.send(
-                    new GetObjectCommand({
-                      Bucket: this.app.bucket,
-                      ResponseCacheControl: "no-store",
-                      Key: "index.cdn.json",
-                    })
-                  )
-                ).Body.getReader()
-              ).read()
-            ).value
-          )
-        );
+        $$("cdn").parse(await this.app.io.getObject("index.cdn.json"));
         $$("cdn").data.attachEvent("onStoreUpdated", onStoreUpdated);
       }
     } catch (err) {
