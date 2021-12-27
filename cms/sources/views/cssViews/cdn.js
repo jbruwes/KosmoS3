@@ -64,7 +64,7 @@ export default class CdnView extends JetView {
       }
     };
     try {
-      const result = await this.app.io.getObject("index.cdn.css") 
+      const result = await this.app.io.getObject("index.cdn.css");
       if ($$("sidebar").getSelectedId() === "css") {
         $$("cdn").clearAll();
         const url = result ? result.split("\n") : [];
