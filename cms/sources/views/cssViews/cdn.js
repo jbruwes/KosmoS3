@@ -1,5 +1,4 @@
 import { JetView } from "webix-jet";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import * as webix from "webix";
 
 /**
@@ -47,13 +46,10 @@ export default class CdnView extends JetView {
         .serialize()
         .forEach((value) => url.push(`@import url(${value.url});`));
       try {
-        await this.app.s3Client.send(
-          new PutObjectCommand({
-            Bucket: this.app.bucket,
-            Key: `index.cdn.css`,
-            ContentType: "text/css",
-            Body: url.join("\n"),
-          })
+        await this.app.io.putObject(
+          "index.cdn.css",
+          "text/css",
+          url.join("\n")
         );
         webix.message("CSS cdn list save complete");
       } catch (err) {
