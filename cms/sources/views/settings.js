@@ -1,10 +1,6 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
-import {
-  HeadObjectCommand,
-  PutObjectCommand,
-  DeleteObjectCommand,
-} from "@aws-sdk/client-s3";
+import { HeadObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 /**
  *
@@ -108,14 +104,7 @@ export default class SettingsView extends JetView {
         const file = pFile;
         // file.file.sname = "favicon.ico";
         try {
-          await this.app.s3Client.send(
-            new PutObjectCommand({
-              Bucket: this.app.bucket,
-              Key: "favicon.ico",
-              ContentType: file.file.type,
-              Body: file.file,
-            })
-          );
+          await this.app.io.putObject("favicon.ico", file.file.type, file.file);
           webix.message("Settings save complete");
         } catch (err) {
           webix.message({
@@ -176,13 +165,10 @@ export default class SettingsView extends JetView {
    */
   async save() {
     try {
-      await this.app.s3Client.send(
-        new PutObjectCommand({
-          Bucket: this.app.bucket,
-          Key: "index.json",
-          ContentType: "application/json",
-          Body: webix.ajax().stringify(this.prop),
-        })
+      await this.app.io.putObject(
+        "index.json",
+        "application/json",
+        webix.ajax().stringify(this.prop)
       );
       webix.message("Settings save complete");
       if (this.siteWorker) this.siteWorker.terminate();
