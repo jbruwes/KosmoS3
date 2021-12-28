@@ -1,6 +1,5 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 /**
  *
@@ -143,13 +142,10 @@ export default class ContentView extends JetView {
    */
   async save() {
     try {
-      await this.app.s3Client.send(
-        new PutObjectCommand({
-          Bucket: this.app.bucket,
-          ContentType: "text/html",
-          Key: `${$$("tree").getSelectedId()}.htm`,
-          Body: $$("tinymce").getValue(),
-        })
+      await this.app.io.putObject(
+        `${$$("tree").getSelectedId()}.htm`,
+        "text/html",
+        $$("tinymce").getValue()
       );
       webix.message("Content save complete");
       this.pageWorker.postMessage({
