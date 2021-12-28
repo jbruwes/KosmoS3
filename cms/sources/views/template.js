@@ -2,7 +2,6 @@ import $ from "jquery/dist/jquery.slim";
 import { JetView } from "webix-jet";
 import * as webix from "webix";
 import { fabric } from "fabric";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import "../fabricjs";
 
 /**
@@ -914,14 +913,7 @@ export default class TemplateView extends JetView {
    */
   async save2() {
     try {
-      await this.app.s3Client.send(
-        new PutObjectCommand({
-          Bucket: this.app.bucket,
-          Key: "index.htm",
-          ContentType: "text/html",
-          Body: this.genHtml(),
-        })
-      );
+      await this.app.io.putObject("index.htm", "text/html", this.genHtml());
       webix.message("Template save complete");
       if (this.siteWorker) this.siteWorker.terminate();
       this.siteWorker = new Worker(
