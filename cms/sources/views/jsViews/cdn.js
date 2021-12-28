@@ -1,5 +1,4 @@
 import { JetView } from "webix-jet";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import * as webix from "webix";
 
 /**
@@ -43,13 +42,10 @@ export default class CdnView extends JetView {
      */
     const onStoreUpdated = async () => {
       try {
-        await this.app.s3Client.send(
-          new PutObjectCommand({
-            Bucket: this.app.bucket,
-            Key: `index.cdn.json`,
-            ContentType: "application/json",
-            Body: webix.ajax().stringify($$("cdn").serialize()),
-          })
+        await this.app.io.putObject(
+          "index.cdn.json",
+          "application/json",
+          webix.ajax().stringify($$("cdn").serialize())
         );
         webix.message("JS cdn list save complete");
       } catch (err) {
