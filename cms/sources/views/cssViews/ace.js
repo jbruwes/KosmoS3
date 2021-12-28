@@ -1,6 +1,5 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import "../../ace";
 
 /**
@@ -42,13 +41,10 @@ export default class AceView extends JetView {
             this.timeoutId.pop();
             if (!this.timeoutId.length) {
               try {
-                await this.app.s3Client.send(
-                  new PutObjectCommand({
-                    Bucket: this.app.bucket,
-                    ContentType: "text/css",
-                    Key: "index.css",
-                    Body: $$("ace-css").getEditor().getValue(),
-                  })
+                await this.app.io.putObject(
+                  "index.css",
+                  "text/css",
+                  $$("ace-css").getEditor().getValue()
                 );
                 webix.message("CSS save complete");
               } catch (err) {
