@@ -1,6 +1,5 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 /**
  *
@@ -3473,13 +3472,10 @@ export default class PropertiesView extends JetView {
                     .split(".")
                     .pop()}`;
                   try {
-                    await this.app.s3Client.send(
-                      new PutObjectCommand({
-                        Bucket: this.app.bucket,
-                        Key: `${file.file.sname}`,
-                        ContentType: file.file.type,
-                        Body: file.file,
-                      })
+                    await this.app.io.putObject(
+                      file.file.sname,
+                      file.file.type,
+                      file.file
                     );
                     this.image();
                   } catch (err) {
