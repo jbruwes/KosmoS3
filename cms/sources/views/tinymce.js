@@ -1,6 +1,5 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import "../tinymce5";
 import tinymce from "tinymce";
 
@@ -1525,14 +1524,7 @@ export default class TinymceView extends JetView {
               .split(".")
               .pop()}`;
             try {
-              await this.app.s3Client.send(
-                new PutObjectCommand({
-                  Bucket: this.app.bucket,
-                  Key: `${filePath}`,
-                  ContentType: file.type,
-                  Body: blobInfo.blob(),
-                })
-              );
+              await this.app.io.putObject(filePath, file.type, blobInfo.blob());
               cb(filePath, { alt: decodeURI(file.name) });
             } catch (err) {
               webix.message({
@@ -1588,13 +1580,10 @@ export default class TinymceView extends JetView {
           .split(".")
           .pop()}`;
         try {
-          await this.app.s3Client.send(
-            new PutObjectCommand({
-              Bucket: this.app.bucket,
-              Key: `${filePath}`,
-              ContentType: blobInfo.blob().type,
-              Body: blobInfo.blob(),
-            })
+          await this.app.io.putObject(
+            filePath,
+            blobInfo.blob().type,
+            blobInfo.blob()
           );
           success(filePath);
         } catch (err) {
