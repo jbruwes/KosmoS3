@@ -1,8 +1,10 @@
 import {
   S3Client,
-  // HeadBucketCommand,
+  DeleteObjectCommand,
+  HeadObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
+  HeadBucketCommand,
 } from "@aws-sdk/client-s3";
 
 /**
@@ -28,6 +30,41 @@ export default class S3 {
         secretAccessKey: password,
       },
     });
+  }
+
+  /**
+   *
+   */
+  async headBucket() {
+    await this.#s3Client.send(
+      new HeadBucketCommand({
+        Bucket: this.#bucket,
+      })
+    );
+  }
+
+  /**
+   * @param key
+   */
+  async deleteObject(key) {
+    await this.#s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: this.#bucket,
+        Key: key,
+      })
+    );
+  }
+
+  /**
+   * @param key
+   */
+  async headObject(key) {
+    await this.#s3Client.send(
+      new HeadObjectCommand({
+        Bucket: this.#bucket,
+        Key: key,
+      })
+    );
   }
 
   /**
