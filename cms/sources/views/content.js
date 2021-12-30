@@ -149,10 +149,10 @@ export default class ContentView extends JetView {
       );
       webix.message("Content save complete");
       this.pageWorker.postMessage({
-        pAccessKeyId: this.app.authenticationData.username,
-        pSecretAccessKey: this.app.authenticationData.password,
-        pBucketName: this.app.bucket,
-        pRegion: this.app.region,
+        pAccessKeyId: this.app.io.getAccessKeyId(),
+        pSecretAccessKey: this.app.io.getSecretAccessKey(),
+        pBucketName: this.app.io.getBucket(),
+        pRegion: this.app.io.getRegion(),
         pId: $$("tree").getSelectedId(),
       });
     } catch (err) {
