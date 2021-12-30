@@ -179,10 +179,10 @@ export default class TreeView extends JetView {
         new URL("../../workers/site.js", import.meta.url)
       );
       this.siteWorker.postMessage({
-        pAccessKeyId: this.app.authenticationData.username,
-        pSecretAccessKey: this.app.authenticationData.password,
-        pBucketName: this.app.bucket,
-        pRegion: this.app.region,
+        pAccessKeyId: this.app.io.getAccessKeyId(),
+        pSecretAccessKey: this.app.io.getSecretAccessKey(),
+        pBucketName: this.app.io.getBucket(),
+        pRegion: this.app.io.getRegion(),
       });
     } catch (err) {
       webix.message({
