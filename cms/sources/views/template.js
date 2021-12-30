@@ -576,7 +576,7 @@ export default class TemplateView extends JetView {
       (await (await fetch("index.htm", { cache: "no-store" })).text())
         .replace(
           /#base#/g,
-          `http://${this.app.bucket}.s3-website.${this.app.region}.amazonaws.com/`
+          `http://${this.app.io.getBucket()}.s3-website.${this.app.io.getBucket()}.amazonaws.com/`
         )
         .replace("#pusher#", this.genHtml())
         .replace(/<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi, "")
@@ -920,10 +920,10 @@ export default class TemplateView extends JetView {
         new URL("../workers/site.js", import.meta.url)
       );
       this.siteWorker.postMessage({
-        pAccessKeyId: this.app.authenticationData.username,
-        pSecretAccessKey: this.app.authenticationData.password,
-        pBucketName: this.app.bucket,
-        pRegion: this.app.region,
+        pAccessKeyId: this.app.io.getAccessKeyId(),
+        pSecretAccessKey: this.app.io.getSecretAccessKey(),
+        pBucketName: this.app.io.getBucket(),
+        pRegion: this.app.io.getRegion(),
       });
     } catch (err) {
       webix.message({
