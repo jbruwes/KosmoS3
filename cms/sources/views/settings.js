@@ -1,6 +1,5 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
-import { HeadObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 /**
  *
@@ -81,12 +80,7 @@ export default class SettingsView extends JetView {
    */
   async init() {
     try {
-      await this.app.s3Client.send(
-        new HeadObjectCommand({
-          Bucket: this.app.bucket,
-          Key: `favicon.ico`,
-        })
-      );
+      await this.app.io.headObject("favicon.ico");
       if ($$("sidebar").getSelectedId() === "settings") {
         $$("uploader").files.data.clearAll();
         $$("uploader").addFile(
@@ -115,12 +109,7 @@ export default class SettingsView extends JetView {
       });
       $$("uploader").files.attachEvent("onAfterDelete", async () => {
         try {
-          await this.app.s3Client.send(
-            new DeleteObjectCommand({
-              Bucket: this.app.bucket,
-              Key: "favicon.ico",
-            })
-          );
+          await this.app.io.deleteObject("favicon.ico");
           webix.message("Settings save complete");
         } catch (err) {
           webix.message({
@@ -176,10 +165,10 @@ export default class SettingsView extends JetView {
         new URL("../workers/site.js", import.meta.url)
       );
       this.siteWorker.postMessage({
-        pAccessKeyId: this.app.authenticationData.username,
-        pSecretAccessKey: this.app.authenticationData.password,
-        pBucketName: this.app.bucket,
-        pRegion: this.app.region,
+        pAccessKeyId: this.app.io.getAccessKeyId(),
+        pSecretAccessKey: this.app.io.getSecretAccessKey(),
+        pBucketName: this.app.io.getBucket(),
+        pRegion: this.app.io.getRegion(),
       });
     } catch (err) {
       webix.message({
