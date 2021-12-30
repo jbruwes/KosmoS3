@@ -1,6 +1,5 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix";
-import { S3Client, HeadBucketCommand } from "@aws-sdk/client-s3";
 import { IAMClient, GetUserCommand } from "@aws-sdk/client-iam";
 import S3 from "../s3";
 
@@ -188,39 +187,27 @@ export default class SignInView extends JetView {
         username: $$("username").getValue(),
         password: $$("password").getValue(),
       };
-      this.app.region = $$("region").getValue();
       const iamClient = new IAMClient({
-        region: this.app.region,
+        region: $$("region").getValue(),
         credentials: {
-          accessKeyId: this.app.authenticationData.username,
-          secretAccessKey: this.app.authenticationData.password,
+          accessKeyId: $$("username").getValue(),
+          secretAccessKey: $$("password").getValue(),
         },
       });
       try {
-        const resIamClient = await iamClient.send(new GetUserCommand({}));
         this.app.io = new S3(
           $$("username").getValue(),
           $$("password").getValue(),
-          resIamClient.User.UserName,
+          (await iamClient.send(new GetUserCommand({}))).User.UserName,
           $$("region").getValue()
         );
-        this.app.s3Client = new S3Client({
-          region: this.app.region,
-          credentials: {
-            accessKeyId: this.app.authenticationData.username,
-            secretAccessKey: this.app.authenticationData.password,
-          },
-        });
-        await this.app.s3Client.send(
-          new HeadBucketCommand({ Bucket: resIamClient.User.UserName })
-        );
+        await this.app.io.headBucket();
         webix.UIManager.removeHotKey("enter", this.clickLogin);
-        this.app.bucket = resIamClient.User.UserName;
         const message = {
-          pAccessKeyId: this.app.authenticationData.username,
-          pSecretAccessKey: this.app.authenticationData.password,
-          pBucketName: this.app.bucket,
-          pRegion: this.app.region,
+          pAccessKeyId: this.app.io.getAccessKeyId(),
+          pSecretAccessKey: this.app.io.getSecretAccessKey(),
+          pBucketName: this.app.io.getBucket(),
+          pRegion: this.app.io.getRegion(),
         };
         initWorker.postMessage(message);
         let storageLocal = webix.storage.local.get("keys");
@@ -245,7 +232,7 @@ export default class SignInView extends JetView {
         }
         webix.storage.local.put("keys", storageLocal);
         $$("sidebar").clearAll();
-        const openUrl = `http://${this.app.bucket}.s3-website.${this.app.region}.amazonaws.com/`;
+        const openUrl = `http://${this.app.io.getBucket()}.s3-website.${this.app.io.getRegion()}.amazonaws.com/`;
         $$("toolbar").addView({
           id: "play",
           view: "icon",
