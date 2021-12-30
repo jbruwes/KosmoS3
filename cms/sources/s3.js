@@ -15,21 +15,56 @@ export default class S3 {
 
   #bucket;
 
+  #region;
+
+  #accessKeyId;
+
+  #secretAccessKey;
+
   /**
-   * @param username
-   * @param password
+   * @param accessKeyId
+   * @param secretAccessKey
    * @param bucket
    * @param region
    */
-  constructor(username, password, bucket, region) {
+  constructor(accessKeyId, secretAccessKey, bucket, region) {
     this.#bucket = bucket;
+    this.#region = region;
     this.#s3Client = new S3Client({
       region,
       credentials: {
-        accessKeyId: username,
-        secretAccessKey: password,
+        accessKeyId,
+        secretAccessKey,
       },
     });
+  }
+
+  /**
+   *
+   */
+  getAccessKeyId() {
+    return this.#accessKeyId;
+  }
+
+  /**
+   *
+   */
+  getSecretAccessKey() {
+    return this.#secretAccessKey;
+  }
+
+  /**
+   *
+   */
+  getBucket() {
+    return this.#bucket;
+  }
+
+  /**
+   *
+   */
+  getRegion() {
+    return this.#region;
   }
 
   /**
