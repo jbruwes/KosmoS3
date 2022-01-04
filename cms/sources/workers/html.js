@@ -1,18 +1,10 @@
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 /**
  * @param {string} pPath Путь
  * @param {string} pHtml Объект для чтения шаблона сайта
- * @param {object} pS3Client Клиент S3
- * @param {string} pBucketName Имя корзинки
+ * @param {object} pIo Клиент S3
  * @param {object} pNode Текущий узел
  */
-export default async function html(
-  pPath,
-  pHtml,
-  pS3Client,
-  pBucketName,
-  pNode
-) {
+export default async function html(pPath, pHtml, pIo, pNode) {
   let lHtml = pHtml;
   lHtml = lHtml.replace(/#base#/g, "/");
   lHtml = lHtml.replace(
@@ -26,7 +18,7 @@ export default async function html(
   const lImage = pNode.image;
   lHtml = lHtml.replace(
     /#image#/g,
-    lImage ? `https://${pBucketName}/${encodeURI(lImage)}` : ""
+    lImage ? `https://${pIo.getBucket()}/${encodeURI(lImage)}` : ""
   );
   if (pNode.metrika) lHtml = lHtml.replace(/#metrika#/g, pNode.metrika);
   else
@@ -41,21 +33,7 @@ export default async function html(
       .replace(/<script id="analytics"[^>]*>([\s\S]*?)<\/script>/gi, "");
   let lHtm = "";
   try {
-    lHtm = new TextDecoder().decode(
-      (
-        await (
-          await (
-            await pS3Client.send(
-              new GetObjectCommand({
-                Bucket: pBucketName,
-                ResponseCacheControl: "no-store",
-                Key: `${pNode.id}.htm`,
-              })
-            )
-          ).Body.getReader()
-        ).read()
-      ).value
-    );
+    lHtm = await pIo.getObject(`${pNode.id}.htm`);
   } finally {
     lHtml = lHtml.replace(/<main><\/main>/g, `<main>${lHtm}</main>`);
     if (pNode.url) {
@@ -64,29 +42,17 @@ export default async function html(
         "_"
       );
       lUrl = lUrl ? `${lUrl}/` : "";
-      await pS3Client.send(
-        new PutObjectCommand({
-          Bucket: pBucketName,
-          Key: `${lUrl}index.html`,
-          ContentType: "text/html",
-          Body: lHtml.replace(
-            /#url#/g,
-            `https://${pBucketName}/${encodeURI(lUrl)}`
-          ),
-        })
+      await pIo.putObject(
+        `${lUrl}index.html`,
+        "text/html",
+        lHtml.replace(/#url#/g, `https://${pIo.getBucket()}/${encodeURI(lUrl)}`)
       );
     }
     const lPath = pPath ? `${pPath}/` : "";
-    await pS3Client.send(
-      new PutObjectCommand({
-        Bucket: pBucketName,
-        Key: `${lPath}index.html`,
-        ContentType: "text/html",
-        Body: lHtml.replace(
-          /#url#/g,
-          `https://${pBucketName}/${encodeURI(lPath)}`
-        ),
-      })
+    await pIo.putObject(
+      `${lPath}index.html`,
+      "text/html",
+      lHtml.replace(/#url#/g, `https://${pIo.getBucket()}/${encodeURI(lPath)}`)
     );
   }
 }
