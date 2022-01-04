@@ -1,10 +1,6 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import {
-  S3Client,
-  HeadObjectCommand,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
+import S3 from "../s3";
 
 /**
  * @param root0
@@ -17,37 +13,19 @@ import {
 onmessage = async ({
   data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion },
 }) => {
-  const s3Client = new S3Client({
-    region: pRegion,
-    credentials: {
-      accessKeyId: pAccessKeyId,
-      secretAccessKey: pSecretAccessKey,
-    },
-  });
+  const io = new S3(pAccessKeyId, pSecretAccessKey, pBucketName, pRegion);
   Object.values(
     await (await fetch("assets-manifest.json", { cache: "no-store" })).json()
   ).forEach((element, index) => {
     if (element !== "index.htm")
       setTimeout(async () => {
         try {
-          await s3Client.send(
-            new HeadObjectCommand({
-              Bucket: pBucketName,
-              Key: `${element}`,
-            })
-          );
+          await io.headObject(`${element}`);
         } catch (err) {
           const body = await (
             await fetch(`${element}`, { cache: "no-store" })
           ).blob();
-          await s3Client.send(
-            new PutObjectCommand({
-              Bucket: pBucketName,
-              Key: `${element}`,
-              ContentType: body.type,
-              Body: body,
-            })
-          );
+          await io.putObject(`${element}`, body.type, body);
         }
       }, (index + 1) * 1000);
   });
