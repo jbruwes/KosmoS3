@@ -1,11 +1,7 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import {
-  S3Client,
-  GetObjectCommand,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
 import jsel from "jsel";
+import S3 from "../s3";
 import html from "./html";
 
 /**
@@ -19,50 +15,11 @@ import html from "./html";
 onmessage = async ({
   data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion },
 }) => {
-  const s3Client = new S3Client({
-    region: pRegion,
-    credentials: {
-      accessKeyId: pAccessKeyId,
-      secretAccessKey: pSecretAccessKey,
-    },
-  });
-  const [lJson] = JSON.parse(
-    new TextDecoder().decode(
-      (
-        await (
-          await (
-            await s3Client.send(
-              new GetObjectCommand({
-                Bucket: pBucketName,
-                ResponseCacheControl: "no-store",
-                Key: "index.json",
-              })
-            )
-          ).Body.getReader()
-        ).read()
-      ).value
-    )
-  );
+  const io = new S3(pAccessKeyId, pSecretAccessKey, pBucketName, pRegion);
+  const [lJson] = JSON.parse(await io.getObject("index.json"));
   const lHtml = (
     await (await fetch("index.htm", { cache: "no-store" })).text()
-  ).replace(
-    /#pusher#/g,
-    new TextDecoder().decode(
-      (
-        await (
-          await (
-            await s3Client.send(
-              new GetObjectCommand({
-                Bucket: pBucketName,
-                ResponseCacheControl: "no-store",
-                Key: "index.htm",
-              })
-            )
-          ).Body.getReader()
-        ).read()
-      ).value
-    )
-  );
+  ).replace(/#pusher#/g, await io.getObject("index.htm"));
   const lMap = jsel(lJson).selectAll("//*[@id]");
   lMap.forEach((item, index) => {
     const lNode = item;
@@ -73,36 +30,22 @@ onmessage = async ({
       );
     lNode.path.shift();
     lNode.path = lNode.path.join("/");
-    setTimeout(
-      html,
-      index * 100,
-      lNode.path,
-      lHtml,
-      s3Client,
-      pBucketName,
-      lNode
-    );
+    setTimeout(html, index * 100, lNode.path, lHtml, io, lNode);
   });
-  await s3Client.send(
-    new PutObjectCommand({
-      Bucket: pBucketName,
-      Key: "sitemap.xml",
-      ContentType: "application/xml",
-      Body: `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${lMap
-        .map((e) => {
-          const lUrl = e.url
-            ? decodeURI(e.url.trim().replace(/^\/+|\/+$/g, "")).replace(
-                / /g,
-                "_"
-              )
-            : e.path;
-          return `<url><loc>https://${pBucketName}/${
-            lUrl ? `${lUrl}/` : ""
-          }</loc>${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ""}${
-            e.changefreq ? `<changefreq>${e.changefreq}</changefreq>` : ""
-          }${e.priority ? `<priority>${e.priority}</priority>` : ""}</url>`;
-        })
-        .join("")}</urlset>`,
-    })
+  await io.putObject(
+    "sitemap.xml",
+    "application/xml",
+    `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${lMap
+      .map((e) => {
+        const lUrl = e.url
+          ? decodeURI(e.url.trim().replace(/^\/+|\/+$/g, "")).replace(/ /g, "_")
+          : e.path;
+        return `<url><loc>https://${pBucketName}/${
+          lUrl ? `${lUrl}/` : ""
+        }</loc>${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ""}${
+          e.changefreq ? `<changefreq>${e.changefreq}</changefreq>` : ""
+        }${e.priority ? `<priority>${e.priority}</priority>` : ""}</url>`;
+      })
+      .join("")}</urlset>`
   );
 };
