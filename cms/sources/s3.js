@@ -28,6 +28,8 @@ export default class S3 {
    * @param region
    */
   constructor(accessKeyId, secretAccessKey, bucket, region) {
+    this.#accessKeyId = accessKeyId;
+    this.#secretAccessKey = secretAccessKey;
     this.#bucket = bucket;
     this.#region = region;
     this.#s3Client = new S3Client({
