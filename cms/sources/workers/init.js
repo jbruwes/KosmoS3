@@ -1,10 +1,6 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import {
-  S3Client,
-  HeadObjectCommand,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
+import S3 from "../s3";
 
 /**
  * @param root0
@@ -17,127 +13,52 @@ import {
 onmessage = async ({
   data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion },
 }) => {
-  const s3Client = new S3Client({
-    region: pRegion,
-    credentials: {
-      accessKeyId: pAccessKeyId,
-      secretAccessKey: pSecretAccessKey,
-    },
-  });
+  const io = new S3(pAccessKeyId, pSecretAccessKey, pBucketName, pRegion);
   try {
-    await s3Client.send(
-      new HeadObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.json`,
-      })
-    );
+    io.headObject("index.json");
   } catch (err) {
     const id = new Date().valueOf();
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.json`,
-        ContentType: "application/json",
-        Body: `{"link":"","text":"","date":"","image":"","visible":true,"value":"${pBucketName}","id":${id}}`,
-      })
+    io.putObject(
+      "index.json",
+      "application/json",
+      `{"link":"","text":"","date":"","image":"","visible":true,"value":"${pBucketName}","id":${id}}`
     );
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: pBucketName,
-        Key: `${id}.htm`,
-        ContentType: "text/html",
-        Body: "",
-      })
+    io.putObject(`${id}.htm`, "text/html", "");
+  }
+  try {
+    io.headObject("index.cdn.json");
+  } catch (err) {
+    io.putObject("index.cdn.json", "application/json", "[]");
+  }
+  try {
+    io.headObject("index.js");
+  } catch (err) {
+    io.putObject(
+      "index.js",
+      "application/javascript",
+      "function init(){try{}catch(e){}}"
     );
   }
   try {
-    await s3Client.send(
-      new HeadObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.cdn.json`,
-      })
-    );
+    io.headObject("index.css");
   } catch (err) {
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.cdn.json`,
-        ContentType: "application/json",
-        Body: "[]",
-      })
-    );
+    io.putObject("index.css", "text/css", "");
   }
   try {
-    await s3Client.send(
-      new HeadObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.js`,
-      })
-    );
+    io.headObject("index.cdn.css");
   } catch (err) {
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.js`,
-        ContentType: "application/javascript",
-        Body: "function init(){try{}catch(e){}}",
-      })
-    );
+    io.putObject("index.cdn.css", "text/css", "");
   }
   try {
-    await s3Client.send(
-      new HeadObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.css`,
-      })
-    );
+    io.headObject("index.htm");
   } catch (err) {
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.css`,
-        ContentType: "text/css",
-        Body: "",
-      })
-    );
-  }
-  try {
-    await s3Client.send(
-      new HeadObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.cdn.css`,
-      })
-    );
-  } catch (err) {
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.cdn.css`,
-        ContentType: "text/css",
-        Body: "",
-      })
-    );
-  }
-  try {
-    await s3Client.send(
-      new HeadObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.htm`,
-      })
-    );
-  } catch (err) {
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: pBucketName,
-        Key: `index.htm`,
-        ContentType: "text/html",
-        Body: (
-          await (await fetch("index.htm", { cache: "no-store" })).text()
-        ).replace(
-          "{pusher}",
-          '<div data-static="" class="ui container" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><main></main></div></div>'
-        ),
-      })
+    io.putObject(
+      "index.htm",
+      "text/html",
+      (await (await fetch("index.htm", { cache: "no-store" })).text()).replace(
+        "{pusher}",
+        '<div data-static="" class="ui container" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><main></main></div></div>'
+      )
     );
   }
 };
