@@ -1,7 +1,7 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import jsel from "jsel";
+import S3 from "../s3";
 import html from "./html";
 
 /**
@@ -16,30 +16,8 @@ import html from "./html";
 onmessage = async ({
   data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion, pId },
 }) => {
-  const s3Client = new S3Client({
-    region: pRegion,
-    credentials: {
-      accessKeyId: pAccessKeyId,
-      secretAccessKey: pSecretAccessKey,
-    },
-  });
-  const [lJson] = JSON.parse(
-    new TextDecoder().decode(
-      (
-        await (
-          await (
-            await s3Client.send(
-              new GetObjectCommand({
-                Bucket: pBucketName,
-                ResponseCacheControl: "no-store",
-                Key: "index.json",
-              })
-            )
-          ).Body.getReader()
-        ).read()
-      ).value
-    )
-  );
+  const io = new S3(pAccessKeyId, pSecretAccessKey, pBucketName, pRegion);
+  const [lJson] = JSON.parse(await io.getObject("index.json"));
   const lNode = jsel(lJson).select(`//*[@id="${pId}"]`);
   if (lNode) {
     const lPath = jsel(lJson)
@@ -52,24 +30,9 @@ onmessage = async ({
       lPath.join("/"),
       (await (await fetch("index.htm", { cache: "no-store" })).text()).replace(
         /#pusher#/g,
-        new TextDecoder().decode(
-          (
-            await (
-              await (
-                await s3Client.send(
-                  new GetObjectCommand({
-                    Bucket: pBucketName,
-                    ResponseCacheControl: "no-store",
-                    Key: "index.htm",
-                  })
-                )
-              ).Body.getReader()
-            ).read()
-          ).value
-        )
+        await io.getObject("index.htm")
       ),
-      s3Client,
-      pBucketName,
+      io,
       lNode
     );
   }
