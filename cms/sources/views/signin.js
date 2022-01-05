@@ -177,16 +177,12 @@ export default class SignInView extends JetView {
       new URL("../workers/init.js", import.meta.url)
     );
     if (
-      !this.app.authenticationData ||
+      !this.app.io ||
       !(
-        this.app.authenticationData.username === $$("username").getValue() &&
-        this.app.authenticationData.password === $$("password").getValue()
+        this.io.getAccessKeyId() === $$("username").getValue() &&
+        this.io.getSecretAccessKey() === $$("password").getValue()
       )
     ) {
-      this.app.authenticationData = {
-        username: $$("username").getValue(),
-        password: $$("password").getValue(),
-      };
       const iamClient = new IAMClient({
         region: $$("region").getValue(),
         credentials: {
@@ -292,7 +288,7 @@ export default class SignInView extends JetView {
         $$("sidebar").select("content");
         felWorker.postMessage(message);
       } catch (err) {
-        this.app.authenticationData = null;
+        this.app.io = null;
         webix.message({
           text: err.message,
           type: "error",
