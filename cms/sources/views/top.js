@@ -46,7 +46,7 @@ export default class TopView extends JetView {
             click: (id) => {
               if (id === "signout") {
                 webix.delay(() => {
-                  this.app.authenticationData = null;
+                  this.app.io = null;
                   this.show("signin");
                   this.resetSidebar();
                 });
