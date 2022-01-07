@@ -20,20 +20,32 @@ export default class SettingsView extends JetView {
           scroll: true,
           elements: [
             {
-              template: "Yandex Metrika",
+              template: "Yandex",
               type: "section",
+            },
+            {
+              id: "yandex",
+              view: "text",
+              placeholder: "Yandex Verification ID",
             },
             {
               id: "metrika",
               view: "text",
+              placeholder: "Yandex Metrika ID",
             },
             {
-              template: "Google Analytics",
+              template: "Google",
               type: "section",
+            },
+            {
+              id: "google",
+              view: "text",
+              placeholder: "Google Verification ID",
             },
             {
               id: "analytics",
               view: "text",
+              placeholder: "Google Analytics ID",
             },
             {
               template: "Icon",
@@ -121,6 +133,8 @@ export default class SettingsView extends JetView {
     }
     try {
       this.prop = JSON.parse(await this.app.io.getObject("index.json"));
+      if (this.prop[0].yandex) $$("yandex").setValue(this.prop[0].yandex);
+      if (this.prop[0].google) $$("google").setValue(this.prop[0].google);
       if (this.prop[0].metrika) $$("metrika").setValue(this.prop[0].metrika);
       if (this.prop[0].analytics)
         $$("analytics").setValue(this.prop[0].analytics);
@@ -139,6 +153,14 @@ export default class SettingsView extends JetView {
    *
    */
   onChange() {
+    $$("yandex").attachEvent("onChange", (value) => {
+      this.prop[0].yandex = value;
+      this.save();
+    });
+    $$("google").attachEvent("onChange", (value) => {
+      this.prop[0].google = value;
+      this.save();
+    });
     $$("metrika").attachEvent("onChange", (value) => {
       this.prop[0].metrika = value;
       this.save();
