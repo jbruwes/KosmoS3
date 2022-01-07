@@ -17,7 +17,7 @@ export default class JsView extends JetView {
       rows: [
         {
           view: "timeline",
-          height: 150,
+          height: 180,
           type: {
             templateDate: "#name#",
           },
@@ -41,7 +41,7 @@ export default class JsView extends JetView {
           gravity: 1,
           type: "clean",
           scroll: "auto",
-          template: `Copyright (c) 2021 Jerry Bruwes<br>
+          template: `Copyright (c) 2022 Jerry Bruwes<br>
           <br>
           Permission is hereby granted, free of charge, to any person obtaining a copy<br>
           of this software and associated documentation files (the "Software"), to deal<br>
