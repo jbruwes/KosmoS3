@@ -3,6 +3,7 @@
  * @param {string} pHtml Объект для чтения шаблона сайта
  * @param {object} pIo Клиент S3
  * @param {object} pNode Текущий узел
+ * @see https://github.com/joshbuchea/HEAD
  */
 export default async function html(pPath, pHtml, pIo, pNode) {
   let lHtml = pHtml;
@@ -14,6 +15,14 @@ export default async function html(pPath, pHtml, pIo, pNode) {
   lHtml = lHtml.replace(
     /#description#/g,
     pNode.description ? pNode.description.replace(/"/g, "&quot;") : ""
+  );
+  lHtml = lHtml.replace(
+    /#yandex#/g,
+    pNode.yandex ? pNode.yandex.replace(/"/g, "&quot;") : ""
+  );
+  lHtml = lHtml.replace(
+    /#google#/g,
+    pNode.google ? pNode.google.replace(/"/g, "&quot;") : ""
   );
   const lImage = pNode.image;
   lHtml = lHtml.replace(
