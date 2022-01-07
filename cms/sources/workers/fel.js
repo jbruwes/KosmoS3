@@ -27,6 +27,6 @@ onmessage = async ({
           ).blob();
           await io.putObject(`${element}`, body.type, body);
         }
-      }, (index + 1) * 1000);
+      }, (index + 1) * 100);
   });
 };
