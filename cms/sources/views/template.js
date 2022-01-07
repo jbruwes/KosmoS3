@@ -576,7 +576,7 @@ export default class TemplateView extends JetView {
       (await (await fetch("index.htm", { cache: "no-store" })).text())
         .replace(
           /#base#/g,
-          `http://${this.app.io.getBucket()}.s3-website.${this.app.io.getBucket()}.amazonaws.com/`
+          `https://s3.${this.app.io.getRegion()}.amazonaws.com/${this.app.io.getBucket()}/`
         )
         .replace("#pusher#", this.genHtml())
         .replace(/<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi, "")
