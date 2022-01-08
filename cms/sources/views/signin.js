@@ -151,10 +151,9 @@ export default class SignInView extends JetView {
     };
     if (this.app.config.size === "wide") {
       this.#config.cols[1].rows.unshift({
-        // id: "header_template",
         view: "template",
         template: "<h1 class='mainHeader'>KosmoS3 CMS</h1>",
-        // minHeight: 150,
+        minHeight: 90,
         type: "clean",
       });
     }
