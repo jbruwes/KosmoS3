@@ -200,7 +200,6 @@ export default class TinymceView extends JetView {
         "print " +
         "preview " +
         "paste " +
-        "importcss " +
         "searchreplace " +
         "autolink " +
         "autosave " +
@@ -732,10 +731,7 @@ export default class TinymceView extends JetView {
       image_caption: true,
       image_title: true,
       allow_script_urls: true,
-      style_formats_autohide: true,
-      style_formats_merge: true,
       paste_data_images: true,
-      importcss_append: true,
       images_reuse_filename: true,
       /**
        * @param blobInfo
