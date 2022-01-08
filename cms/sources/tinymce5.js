@@ -61,7 +61,7 @@ webix.protoUI(
       webix.html.addStyle(".tox-tinymce{ border:0px !important}");
 
       this.mce_id = `webix_mce_${this.config.id || webix.uid()}`;
-      this.$view.innerHTML = `<textarea id='${this.mce_id}' style='width:100%; height:100%'></textarea>`;
+      this.$view.innerHTML = `<textarea id='${this.mce_id}' style='border:none;outline:none;width:100%;height:100%'></textarea>`;
 
       this.waitEditor = webix.promise.defer();
 
