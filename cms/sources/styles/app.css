@@ -50,10 +50,6 @@ div[view_id="tinymce"] > div {
   color: #3498db;
 }
 
-div[view_id="header_template"] {
-  background-color: transparent;
-}
-
 div[view_id="fabric"] > iframe::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 7px;
