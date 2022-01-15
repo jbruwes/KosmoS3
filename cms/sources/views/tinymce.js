@@ -267,7 +267,7 @@ export default class TinymceView extends JetView {
         .map((element) => `${window.location.origin}/${element}`)
         .join(",")},index.css`,
       skin: false,
-      content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
+      content_style: `${contentUiCss.toString()}\n${contentCss.toString()}\n.mce-content-body{margin:0;padding:8px;}`,
       templates: [
         {
           title: "menu",
