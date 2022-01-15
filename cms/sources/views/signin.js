@@ -204,6 +204,71 @@ export default class SignInView extends JetView {
           pBucketName: this.app.io.getBucket(),
           pRegion: this.app.io.getRegion(),
         };
+        /**
+         *
+         */
+        initWorker.onmessage = async () => {
+          $$("sidebar").clearAll();
+          const openUrl = `http://${this.app.io.getBucket()}.s3-website.${this.app.io.getRegion()}.amazonaws.com/`;
+          $$("toolbar").addView({
+            id: "play",
+            view: "icon",
+            icon: "mdi mdi-play-circle",
+            /**
+             *
+             */
+            click: () => window.open(openUrl, "_tab"),
+          });
+          await this.show("content");
+          await $$("tinymce").getEditor(true);
+          $$("sidebar").add(
+            {
+              id: "content",
+              icon: "mdi mdi-book-open-page-variant",
+              value: "Content",
+            },
+            0
+          );
+          $$("sidebar").add(
+            {
+              id: "template",
+              icon: "mdi mdi-language-html5",
+              value: "Template",
+            },
+            1
+          );
+          $$("sidebar").add(
+            {
+              id: "css",
+              icon: "mdi mdi-language-css3",
+              value: "CSS",
+            },
+            2
+          );
+          $$("sidebar").add(
+            {
+              id: "js",
+              icon: "mdi mdi-language-javascript",
+              value: "JavaScript",
+            },
+            3
+          );
+          $$("sidebar").add(
+            {
+              id: "settings",
+              icon: "mdi mdi-cog",
+              value: "Settings",
+            },
+            4
+          );
+          $$("sidebar").add({
+            id: "signout",
+            icon: "mdi mdi-logout-variant",
+            value: "Sign Out",
+          });
+          $$("sidebar").select("content");
+          felWorker.postMessage(message);
+        };
         initWorker.postMessage(message);
         let storageLocal = webix.storage.local.get("keys");
         if (!storageLocal) storageLocal = [];
@@ -226,66 +291,6 @@ export default class SignInView extends JetView {
           );
         }
         webix.storage.local.put("keys", storageLocal);
-        $$("sidebar").clearAll();
-        const openUrl = `http://${this.app.io.getBucket()}.s3-website.${this.app.io.getRegion()}.amazonaws.com/`;
-        $$("toolbar").addView({
-          id: "play",
-          view: "icon",
-          icon: "mdi mdi-play-circle",
-          /**
-           *
-           */
-          click: () => window.open(openUrl, "_tab"),
-        });
-        await this.show("content");
-        await $$("tinymce").getEditor(true);
-        $$("sidebar").add(
-          {
-            id: "content",
-            icon: "mdi mdi-book-open-page-variant",
-            value: "Content",
-          },
-          0
-        );
-        $$("sidebar").add(
-          {
-            id: "template",
-            icon: "mdi mdi-language-html5",
-            value: "Template",
-          },
-          1
-        );
-        $$("sidebar").add(
-          {
-            id: "css",
-            icon: "mdi mdi-language-css3",
-            value: "CSS",
-          },
-          2
-        );
-        $$("sidebar").add(
-          {
-            id: "js",
-            icon: "mdi mdi-language-javascript",
-            value: "JavaScript",
-          },
-          3
-        );
-        $$("sidebar").add(
-          {
-            id: "settings",
-            icon: "mdi mdi-cog",
-            value: "Settings",
-          },
-          4
-        );
-        $$("sidebar").add({
-          id: "signout",
-          icon: "mdi mdi-logout-variant",
-          value: "Sign Out",
-        });
-        $$("sidebar").select("content");
-        felWorker.postMessage(message);
       } catch (err) {
         this.app.io = null;
         webix.message({
