@@ -14,6 +14,7 @@ onmessage = async ({
   data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion },
 }) => {
   const io = new S3(pAccessKeyId, pSecretAccessKey, pBucketName, pRegion);
+  let j = 0;
   Object.values(
     await (await fetch("assets-manifest.json", { cache: "no-store" })).json()
   ).forEach((element, index) => {
@@ -22,11 +23,12 @@ onmessage = async ({
         try {
           await io.headObject(`${element}`);
         } catch (err) {
+          j += 200;
           const body = await (
             await fetch(`${element}`, { cache: "no-store" })
           ).blob();
           await io.putObject(`${element}`, body.type, body);
         }
-      }, index * 100);
+      }, index * 100 + j);
   });
 };
