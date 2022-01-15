@@ -146,17 +146,22 @@ export default class S3 {
         };
         reader.read().then(processRead);
       });
-    const bodyContents = await streamToString(
-      (
-        await this.#s3Client.send(
-          new GetObjectCommand({
-            ResponseCacheControl: "no-store",
-            Bucket: this.#bucket,
-            Key: key,
-          })
-        )
-      ).Body
-    );
+    let bodyContents = "";
+    try {
+      bodyContents = await streamToString(
+        (
+          await this.#s3Client.send(
+            new GetObjectCommand({
+              ResponseCacheControl: "no-store",
+              Bucket: this.#bucket,
+              Key: key,
+            })
+          )
+        ).Body
+      );
+    } catch (e) {
+      // console.log(e);
+    }
     return bodyContents;
   }
 }
