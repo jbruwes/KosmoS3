@@ -63,4 +63,5 @@ onmessage = async ({
       )
     );
   }
+  postMessage(null);
 };
