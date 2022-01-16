@@ -8,15 +8,6 @@ import contentUiCss from "tinymce/skins/ui/oxide/content.css";
 import contentCss from "tinymce/skins/content/default/content.css";
 
 /* Import fonts */
-import "@fontsource/alegreya";
-import "@fontsource/alegreya-sans";
-import "@fontsource/alegreya-sans-sc";
-import "@fontsource/alegreya-sc";
-import "@fontsource/alice";
-import "@fontsource/amatic-sc";
-import "@fontsource/andika";
-import "@fontsource/anonymous-pro";
-import "@fontsource/arimo";
 import "@fontsource/arsenal";
 import "@fontsource/bad-script";
 import "@fontsource/caveat";
@@ -26,94 +17,22 @@ import "@fontsource/cormorant-infant";
 import "@fontsource/cormorant-sc";
 import "@fontsource/cormorant-unicase";
 import "@fontsource/cormorant";
-import "@fontsource/cousine";
-import "@fontsource/cuprum";
-import "@fontsource/didact-gothic";
-import "@fontsource/eb-garamond";
-import "@fontsource/el-messiri";
-import "@fontsource/exo-2";
-import "@fontsource/fira-code";
-import "@fontsource/fira-mono";
-import "@fontsource/fira-sans-condensed";
-import "@fontsource/fira-sans-extra-condensed";
-import "@fontsource/fira-sans";
-import "@fontsource/forum";
-import "@fontsource/gabriela";
-import "@fontsource/ibm-plex-mono";
-import "@fontsource/ibm-plex-sans";
-import "@fontsource/ibm-plex-serif";
-import "@fontsource/istok-web";
 import "@fontsource/jura";
-import "@fontsource/kelly-slab";
-import "@fontsource/kosugi";
-import "@fontsource/kosugi-maru";
-import "@fontsource/kurale";
-import "@fontsource/ledger";
-import "@fontsource/literata";
-import "@fontsource/lobster";
-import "@fontsource/lora";
-import "@fontsource/m-plus-1p";
-import "@fontsource/m-plus-rounded-1c";
 import "@fontsource/marck-script";
-import "@fontsource/marmelad";
-import "@fontsource/merriweather";
 import "@fontsource/montserrat";
 import "@fontsource/montserrat-alternates";
-import "@fontsource/neucha";
-import "@fontsource/noto-sans";
-import "@fontsource/noto-sans-sc";
-import "@fontsource/noto-serif";
-import "@fontsource/noto-serif-sc";
-import "@fontsource/noto-serif-tc";
-import "@fontsource/old-standard-tt";
 import "@fontsource/open-sans-condensed";
 import "@fontsource/open-sans";
-import "@fontsource/oranienbaum";
 import "@fontsource/oswald";
-import "@fontsource/pacifico";
-import "@fontsource/pangolin";
 import "@fontsource/pattaya";
-import "@fontsource/philosopher";
-import "@fontsource/play";
-import "@fontsource/playfair-display-sc";
-import "@fontsource/playfair-display";
-import "@fontsource/podkova";
 import "@fontsource/poiret-one";
-import "@fontsource/prata";
-import "@fontsource/press-start-2p";
-import "@fontsource/prosto-one";
-import "@fontsource/pt-mono";
-import "@fontsource/pt-sans-caption";
-import "@fontsource/pt-sans-narrow";
-import "@fontsource/pt-sans";
-import "@fontsource/pt-serif-caption";
-import "@fontsource/pt-serif";
 import "@fontsource/roboto-condensed";
 import "@fontsource/roboto-mono";
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
 import "@fontsource/rubik-mono-one";
 import "@fontsource/rubik";
-import "@fontsource/ruslan-display";
-import "@fontsource/russo-one";
-import "@fontsource/sawarabi-gothic";
-import "@fontsource/scada";
-import "@fontsource/seymour-one";
-import "@fontsource/source-code-pro";
-import "@fontsource/source-sans-pro";
-import "@fontsource/spectral";
-import "@fontsource/spectral-sc";
-import "@fontsource/stalinist-one";
 import "@fontsource/tenor-sans";
-import "@fontsource/tinos";
-import "@fontsource/ubuntu-condensed";
-import "@fontsource/ubuntu-mono";
-import "@fontsource/ubuntu";
-import "@fontsource/underdog";
-import "@fontsource/vollkorn";
-import "@fontsource/vollkorn-sc";
-import "@fontsource/yanone-kaffeesatz";
-import "@fontsource/yeseva-one";
 
 /**
  *
@@ -536,15 +455,6 @@ export default class TinymceView extends JetView {
       font_formats:
         "Andale Mono=andale mono,times; Arial=arial,helvetica,sans-serif; Arial Black=arial black,avant garde; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats" +
         ";" +
-        'Alegreya="Alegreya";' +
-        'Alegreya Sans="Alegreya Sans";' +
-        'Alegreya Sans SC="Alegreya Sans SC";' +
-        'Alegreya SC="Alegreya SC";' +
-        'Alice="Alice";' +
-        'Amatic SC="Amatic SC";' +
-        'Andika="Andika";' +
-        'Anonymous Pro="Anonymous Pro";' +
-        'Arimo="Arimo";' +
         'Arsenal="Arsenal";' +
         'Bad Script="Bad Script";' +
         'Caveat="Caveat";' +
@@ -554,94 +464,22 @@ export default class TinymceView extends JetView {
         'Cormorant SC="Cormorant SC";' +
         'Cormorant Unicase="Cormorant Unicase";' +
         'Cormorant="Cormorant";' +
-        'Cousine="Cousine";' +
-        'Cuprum="Cuprum";' +
-        'Didact Gothic="Didact Gothic";' +
-        'EB Garamond="EB Garamond";' +
-        'El Messiri="El Messiri";' +
-        'Exo 2="Exo 2";' +
-        'Fira Code="Fira Code";' +
-        'Fira Mono="Fira Mono";' +
-        'Fira Sans Condensed="Fira Sans Condensed";' +
-        'Fira Sans Extra Condensed="Fira Sans Extra Condensed";' +
-        'Fira Sans="Fira Sans";' +
-        'Forum="Forum";' +
-        'Gabriela="Gabriela";' +
-        'IBM Plex Mono="IBM Plex Mono";' +
-        'IBM Plex Sans="IBM Plex Sans";' +
-        'IBM Plex Serif="IBM Plex Serif";' +
-        'Istok Web="Istok Web";' +
         'Jura="Jura";' +
-        'Kelly Slab="Kelly Slab";' +
-        'Kosugi="Kosugi";' +
-        'Kosugi Maru="Kosugi Maru";' +
-        'Kurale="Kurale";' +
-        'Ledger="Ledger";' +
-        'Literata="Literata";' +
-        'Lobster="Lobster";' +
-        'Lora="Lora";' +
-        'M PLUS 1p="M PLUS 1p";' +
-        'M PLUS Rounded 1c="M PLUS Rounded 1c";' +
         'Marck Script="Marck Script";' +
-        'Marmelad="Marmelad";' +
-        'Merriweather="Merriweather";' +
         'Montserrat="Montserrat";' +
         'Montserrat Alternates="Montserrat Alternates";' +
-        'Neucha="Neucha";' +
-        'Noto Sans="Noto Sans";' +
-        'Noto Sans SC="Noto Sans SC";' +
-        'Noto Serif="Noto Serif";' +
-        'Noto Serif SC="Noto Serif SC";' +
-        'Noto Serif TC="Noto Serif TC";' +
-        'Old Standard TT="Old Standard TT";' +
         'Open Sans Condensed="Open Sans Condensed";' +
         'Open Sans="Open Sans";' +
-        'Oranienbaum="Oranienbaum";' +
         'Oswald="Oswald";' +
-        'Pacifico="Pacifico";' +
-        'Pangolin="Pangolin";' +
         'Pattaya="Pattaya";' +
-        'Philosopher="Philosopher";' +
-        'Play="Play";' +
-        'Playfair Display SC="Playfair Display SC";' +
-        'Playfair Display="Playfair Display";' +
-        'Podkova="Podkova";' +
         'Poiret One="Poiret One";' +
-        'Prata="Prata";' +
-        'Press Start 2P="Press Start 2P";' +
-        'Prosto One="Prosto One";' +
-        'PT Mono="PT Mono";' +
-        'PT Sans Caption="PT Sans Caption";' +
-        'PT Sans Narrow="PT Sans Narrow";' +
-        'PT Sans="PT Sans";' +
-        'PT Serif Caption="PT Serif Caption";' +
-        'PT Serif="PT Serif";' +
         'Roboto Condensed="Roboto Condensed";' +
         'Roboto Mono="Roboto Mono";' +
         'Roboto Slab="Roboto Slab";' +
         'Roboto="Roboto";' +
         'Rubik Mono One="Rubik Mono One";' +
         'Rubik="Rubik";' +
-        'Ruslan Display="Ruslan Display";' +
-        'Russo One="Russo One";' +
-        'Sawarabi Gothic="Sawarabi Gothic";' +
-        'Scada="Scada";' +
-        'Seymour One="Seymour One";' +
-        'Source Code Pro="Source Code Pro";' +
-        'Source Sans Pro="Source Sans Pro";' +
-        'Spectral="Spectral";' +
-        'Spectral SC="Spectral SC";' +
-        'Stalinist One="Stalinist One";' +
-        'Tenor Sans="Tenor Sans";' +
-        'Tinos="Tinos";' +
-        'Ubuntu Condensed="Ubuntu Condensed";' +
-        'Ubuntu Mono="Ubuntu Mono";' +
-        'Ubuntu="Ubuntu";' +
-        'Underdog="Underdog";' +
-        'Vollkorn="Vollkorn";' +
-        'Vollkorn SC="Vollkorn SC";' +
-        'Yanone Kaffeesatz="Yanone Kaffeesatz";' +
-        'Yeseva One="Yeseva One";',
+        'Tenor Sans="Tenor Sans";',
       /**
        * @param editor
        */
