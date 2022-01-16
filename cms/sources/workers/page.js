@@ -26,12 +26,11 @@ onmessage = async ({
         decodeURI(e.value.trim().replace(/^\//, "")).replace(/ /g, "_")
       );
     lPath.shift();
-    html(
+    await html(
       lPath.join("/"),
-      (await (await fetch("index.htm", { cache: "no-store" })).text()).replace(
-        /#pusher#/g,
-        await io.getObject("index.htm")
-      ),
+      (
+        await (await fetch("index.htm", { cache: "no-store" })).text()
+      ).replace(/#pusher#/g, await io.getObject("index.htm")),
       io,
       lNode
     );
