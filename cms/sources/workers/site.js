@@ -21,8 +21,10 @@ onmessage = async ({
     await (await fetch("index.htm", { cache: "no-store" })).text()
   ).replace(/#pusher#/g, await io.getObject("index.htm"));
   const lMap = jsel(lJson).selectAll("//*[@id]");
-  lMap.forEach((item, index) => {
-    const lNode = item;
+  const lMapLength = lMap.length;
+  let i = 0;
+  setTimeout(async function run() {
+    const lNode = lMap[i];
     lNode.path = jsel(lJson)
       .selectAll(`//*[@id="${lNode.id}"]/ancestor-or-self::*[@id]`)
       .map((e) =>
@@ -30,7 +32,9 @@ onmessage = async ({
       );
     lNode.path.shift();
     lNode.path = lNode.path.join("/");
-    setTimeout(html, index * 100, lNode.path, lHtml, io, lNode);
+    await html(lNode.path, lHtml, io, lNode);
+    i += 1;
+    if (i < lMapLength) setTimeout(run);
   });
   await io.putObject(
     "sitemap.xml",
