@@ -58,7 +58,7 @@ onmessage = async ({
       (
         await (await fetch("index.htm", { cache: "no-store" })).text()
       ).replace(
-        "{pusher}",
+        "#pusher#",
         '<div data-static="" class="ui container" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><main></main></div></div>'
       )
     );
