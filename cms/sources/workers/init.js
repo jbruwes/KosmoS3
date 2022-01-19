@@ -55,12 +55,7 @@ onmessage = async ({
     await io.putObject(
       "index.htm",
       "text/html",
-      (
-        await (await fetch("index.htm", { cache: "no-store" })).text()
-      ).replace(
-        "#pusher#",
-        '<div data-static="" class="ui container" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><main></main></div></div>'
-      )
+      '<div data-static="" class="ui container" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><main></main></div></div>'
     );
   }
   postMessage(null);
