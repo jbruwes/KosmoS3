@@ -8,13 +8,7 @@ import lightcase from "./lightcase";
  * @param {object.<*>} scripts Объект с промисами подгружаемых скриптов
  * @param {object} index Структура сайта
  */
-export default function cont(usrScripts, scripts, index) {
-  /**
-   * Dom путь
-   *
-   * @constant {string}
-   */
-  const sel = "#content>main";
+export default async function cont(usrScripts, scripts, index) {
   /**
    * Строка пути относительно корня сайта
    *
@@ -53,11 +47,10 @@ export default function cont(usrScripts, scripts, index) {
   /**
    * Функция проверки соответствия текущего элемента сегменту из урла
    *
-   * @param {number} indexInArray Индекс
    * @param {object} valueOfElement Текущий элемент структуры сайта
    * @returns {boolean} Результат проверки
    */
-  function findId(indexInArray, valueOfElement) {
+  function findId(valueOfElement) {
     if (valueOfElement.value === splitHash[i]) {
       id = valueOfElement.id;
       value = valueOfElement.value;
@@ -66,21 +59,27 @@ export default function cont(usrScripts, scripts, index) {
     }
     return true;
   }
-  /**
-   * Обязательные действия после загрузки контента
-   */
-  function onLoad() {
-    document.title = value;
-    lightcase(sel);
-    onhashchange(usrScripts, scripts, index);
-    if (!window.location.hash) $(window).scrollTop(0);
-  }
   if (hash) {
     for (i = 0; i < splitHash.length; i += 1) {
       id = null;
-      $.each(child, findId);
+      child.forEach(findId);
       if (!id) break;
     }
   } else id = index[0].id;
-  if (id) $(sel).load(`${encodeURIComponent(id)}.htm`, onLoad);
+  if (id) {
+    let html = "";
+    try {
+      html = await fetch(`${encodeURIComponent(id)}.htm`, {
+        cache: "no-store",
+      });
+      html = html.status === 200 ? await html.text() : "";
+    } catch (err) {
+      html = "";
+    }
+    document.querySelector("#content>main").innerHTML = html;
+    document.title = value;
+    lightcase("#content>main");
+    onhashchange(usrScripts, scripts, index);
+    if (!window.location.hash) window.scrollTo(0, 0);
+  }
 }
