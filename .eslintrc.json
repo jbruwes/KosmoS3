@@ -27,18 +27,19 @@
           "FunctionDeclaration": true,
           "MethodDefinition": true,
           "ClassDeclaration": true,
+          "ClassExpression": true,
           "ArrowFunctionExpression": true,
           "FunctionExpression": true
         }
       }
     ]
   },
+  "plugins": ["jsdoc"],
   "extends": [
     "airbnb-base",
     "plugin:prettier/recommended",
     "plugin:jsdoc/recommended"
   ],
-  "plugins": ["jsdoc"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 6,
