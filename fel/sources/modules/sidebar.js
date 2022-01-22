@@ -93,21 +93,19 @@ export default function sidebar(index) {
     /**
      * Поиск хотя бы одного видимого дочернего элемента
      *
-     * @param {number} i Индекс
      * @param {object} val Объект структуры сайта
      * @returns {boolean} Прекращать или нет обход
      */
-    function initEmpty(i, val) {
+    function initEmpty(val) {
       if (val.visible) empty = false;
       return empty;
     }
     /**
      * Создание пунктов меню и вызов рекурсии
      *
-     * @param {number} i Индекс
      * @param {object} val Объект структуры сайта
      */
-    function eachIndex(i, val) {
+    function eachIndex(val) {
       if (val.visible) {
         href = `${phref + val.value}/`;
         id = `${pid} ${val.id.toString().replace(/\s/g, "_")}`;
@@ -115,7 +113,7 @@ export default function sidebar(index) {
           class: "field",
         });
         empty = true;
-        if (val.data) $.each(val.data, initEmpty);
+        if (val.data) val.data.forEach(initEmpty);
         checkbox = $("<div>", {
           class: "ui slider checkbox",
           html: `<input type="radio" name="${
@@ -132,7 +130,7 @@ export default function sidebar(index) {
       }
     }
     if (idx.data && idx.data.length) {
-      $.each(idx.data, initEmpty);
+      idx.data.forEach(initEmpty);
       if (!empty) {
         item = $("<div>", {
           class: "item",
@@ -163,7 +161,7 @@ export default function sidebar(index) {
         item.append(content);
         content.append(form);
         form.append(fields);
-        $.each(idx.data, eachIndex);
+        idx.data.forEach(eachIndex);
       }
     }
   }
@@ -255,7 +253,7 @@ export default function sidebar(index) {
    * @param {number} idx Индекс
    * @param {string} value Текущее айди
    */
-  function sidebarCheck(idx, value) {
+  function sidebarCheck(value) {
     $(`body>.ui.sidebar .ui.checkbox[data-id$="${value}"]`).checkbox(
       "set checked"
     );
@@ -290,7 +288,7 @@ export default function sidebar(index) {
       );
     }
     $("body>.ui.sidebar .item[data-id]").attr("hidden", true);
-    $.each(id, sidebarCheck);
+    id.forEach(sidebarCheck);
     $("body>.ui.sidebar.accordion").accordion("open", sel);
   }
   if (typeof flSidebar === "undefined" || Boolean(flSidebar)) {
