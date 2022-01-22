@@ -825,36 +825,44 @@ export default class TemplateView extends JetView {
       item.css("background-attachment", $$("attachment").getValue());
       item.css("background-size", $$("backgroundSize").getValue());
       const shadows = [];
-      $$("shadows").serialize().forEach((value) =>
-        shadows.push(
-          `${(value.inset ? "inset " : "") + Number(value.x)}px ${Number(
-            value.y
-          )}px ${Number(value.blur)}px ${Number(value.spread)}px ${value.color}`
-        )
-      );
+      $$("shadows")
+        .serialize()
+        .forEach((value) =>
+          shadows.push(
+            `${(value.inset ? "inset " : "") + Number(value.x)}px ${Number(
+              value.y
+            )}px ${Number(value.blur)}px ${Number(value.spread)}px ${
+              value.color
+            }`
+          )
+        );
       item.css("box-shadow", shadows.join());
       const classes = [];
-      $$("class").serialize().forEach((value) =>
-        classes.push(value.class)
-      );
+      $$("class")
+        .serialize()
+        .forEach((value) => classes.push(value.class));
       item.removeClass().addClass(classes.join(" "));
-      item.data().forEach((value, i) =>
-        item.removeAttr(`data-${i.replace(/[A-Z]/g, "-$&").toLowerCase()}`)
-      );
-      $$("data").serialize().forEach((value) => {
-        if (value.data) {
-          item
-            .data(
-              value.data
-                .toLowerCase()
-                .replace(/-([a-z])/g, function valueDataToUpperCase(g) {
-                  return g[1].toUpperCase();
-                }),
-              value.value
-            )
-            .attr(`data-${value.data.toLowerCase()}`, value.value);
-        }
-      });
+      item
+        .data()
+        .forEach((value, i) =>
+          item.removeAttr(`data-${i.replace(/[A-Z]/g, "-$&").toLowerCase()}`)
+        );
+      $$("data")
+        .serialize()
+        .forEach((value) => {
+          if (value.data) {
+            item
+              .data(
+                value.data
+                  .toLowerCase()
+                  .replace(/-([a-z])/g, function valueDataToUpperCase(g) {
+                    return g[1].toUpperCase();
+                  }),
+                value.value
+              )
+              .attr(`data-${value.data.toLowerCase()}`, value.value);
+          }
+        });
       const backgroundImage = $$("bglist").getItem($$("bglist").getFirstId());
       if (backgroundImage && backgroundImage.file.sname) {
         item.css("background-image", `url("${backgroundImage.file.sname}")`);
