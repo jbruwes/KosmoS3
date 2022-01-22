@@ -101,7 +101,7 @@ export default function getChildren(
    * @param {number} key Ключ пути
    * @param {string} dataHash Значение пути по которому ищутся дочерние объекты
    */
-  function eachDataHash(key, dataHash) {
+  function eachDataHash(dataHash) {
     /**
      * Пересчет аттрибутов для каждого дочернего объекта
      *
@@ -201,7 +201,7 @@ export default function getChildren(
   if (!lAttr) lAttr = "";
   if (!dataHashes) dataHashes = hash;
   dataHashes = $.map(dataHashes.split(","), mapDataHash);
-  $.each(dataHashes, eachDataHash);
+  dataHashes.forEach(eachDataHash);
   if (lAttr && !axe) {
     dataChildren = dataChildren.filter(
       (element) => element.$href.replace(/^\/|\/$/g, "") !== hash
