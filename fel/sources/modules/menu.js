@@ -126,7 +126,7 @@ export default function menu(index, sel) {
    * @param {number} pIndex Индекс
    * @param {string} value Значение
    */
-  function eachId(pIndex, value) {
+  function eachId(value) {
     $(`.k-item[data-id$="${value}"]`).addClass("k-state-selected");
   }
   /**
@@ -135,7 +135,7 @@ export default function menu(index, sel) {
    * @this HTMLElement
    */
   function eachItem() {
-    $.each($(this).data("id").toString().split(" "), eachId);
+    $(this).data("id").toString().split(" ").forEach(eachId);
   }
   /**
    * Инициализация меню по каждому найденному объекту
