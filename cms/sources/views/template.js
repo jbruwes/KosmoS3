@@ -825,7 +825,7 @@ export default class TemplateView extends JetView {
       item.css("background-attachment", $$("attachment").getValue());
       item.css("background-size", $$("backgroundSize").getValue());
       const shadows = [];
-      $.each($$("shadows").serialize(), (index, value) =>
+      $$("shadows").serialize().forEach((value) =>
         shadows.push(
           `${(value.inset ? "inset " : "") + Number(value.x)}px ${Number(
             value.y
@@ -834,14 +834,14 @@ export default class TemplateView extends JetView {
       );
       item.css("box-shadow", shadows.join());
       const classes = [];
-      $.each($$("class").serialize(), (index, value) =>
+      $$("class").serialize().forEach((value) =>
         classes.push(value.class)
       );
       item.removeClass().addClass(classes.join(" "));
-      $.each(item.data(), (i) =>
+      item.data().forEach((value, i) =>
         item.removeAttr(`data-${i.replace(/[A-Z]/g, "-$&").toLowerCase()}`)
       );
-      $.each($$("data").serialize(), (index, value) => {
+      $$("data").serialize().forEach((value) => {
         if (value.data) {
           item
             .data(
@@ -1423,7 +1423,7 @@ export default class TemplateView extends JetView {
       boxShadow = boxShadow === "none" ? null : boxShadow;
       if (boxShadow) {
         boxShadow = boxShadow.split(/,(?![^(]*\))/);
-        $.each(boxShadow, (index, element) => {
+        boxShadow.forEach((element) => {
           const cur = element.trim().split(/ (?![^(]*\))/g);
           const boxShadowGeom = cur.filter((val) => {
             return val.match(/^-?\d+/);
