@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin").default;
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -92,7 +92,19 @@ module.exports = {
       filename: "index.htm",
       template: "./resource/index.htm",
     }),
-    new WebpackAssetsManifest(),
+    new WebpackAssetsManifest({
+      /**
+       * @param a
+       * @param b
+       */
+      sortManifest(a, b) {
+        const extA = this.getExtension(a);
+        const extB = this.getExtension(b);
+        if (extA > extB) return 1;
+        if (extA < extB) return -1;
+        return a.localeCompare(b);
+      },
+    }),
     new MiniCssExtractPlugin({
       filename: "[contenthash].css",
     }),
