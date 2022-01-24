@@ -842,11 +842,9 @@ export default class TemplateView extends JetView {
         .serialize()
         .forEach((value) => classes.push(value.class));
       item.removeClass().addClass(classes.join(" "));
-      item
-        .data()
-        .forEach((value, i) =>
-          item.removeAttr(`data-${i.replace(/[A-Z]/g, "-$&").toLowerCase()}`)
-        );
+      $.each(item.data(), (i) =>
+        item.removeAttr(`data-${i.replace(/[A-Z]/g, "-$&").toLowerCase()}`)
+      );
       $$("data")
         .serialize()
         .forEach((value) => {
