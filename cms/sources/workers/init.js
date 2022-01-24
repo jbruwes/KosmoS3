@@ -14,49 +14,53 @@ onmessage = async ({
   data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion },
 }) => {
   const io = new S3(pAccessKeyId, pSecretAccessKey, pBucketName, pRegion);
-  try {
-    await io.headObject("index.json");
-  } catch (err) {
+  const head = await Promise.allSettled([
+    io.headObject("index.json"),
+    io.headObject("index.cdn.json"),
+    io.headObject("index.js"),
+    io.headObject("index.css"),
+    io.headObject("index.cdn.css"),
+    io.headObject("index.htm"),
+  ]);
+  const put = [];
+  if (head[0].status === "rejected") {
     const id = new Date().valueOf();
-    await io.putObject(
-      "index.json",
-      "application/json",
-      `{"link":"","text":"","date":"","image":"","visible":true,"value":"${pBucketName}","id":${id}}`
+    put.push(
+      io.putObject(
+        "index.json",
+        "application/json",
+        `{"link":"","text":"","date":"","image":"","visible":true,"value":"${pBucketName}","id":${id}}`
+      )
     );
-    await io.putObject(`${id}.htm`, "text/html", "");
+    put.push(io.putObject(`${id}.htm`, "text/html", ""));
   }
-  try {
-    await io.headObject("index.cdn.json");
-  } catch (err) {
-    await io.putObject("index.cdn.json", "application/json", "[]");
-  }
-  try {
-    await io.headObject("index.js");
-  } catch (err) {
-    await io.putObject(
-      "index.js",
-      "application/javascript",
-      "function init(){try{}catch(e){}}"
+  if (head[1].status === "rejected")
+    put.push(io.putObject("index.cdn.json", "application/json", "[]"));
+  if (head[2].status === "rejected")
+    put.push(
+      io.putObject(
+        "index.js",
+        "application/javascript",
+        "function init(){try{}catch(e){}}"
+      )
     );
-  }
-  try {
-    await io.headObject("index.css");
-  } catch (err) {
-    await io.putObject("index.css", "text/css", "");
-  }
-  try {
-    await io.headObject("index.cdn.css");
-  } catch (err) {
-    await io.putObject("index.cdn.css", "text/css", "");
-  }
-  try {
-    await io.headObject("index.htm");
-  } catch (err) {
-    await io.putObject(
-      "index.htm",
-      "text/html",
-      '<div data-static="" class="ui container" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><main></main></div></div>'
+  if (head[3].status === "rejected")
+    put.push(io.putObject("index.css", "text/css", ""));
+  if (head[4].status === "rejected")
+    put.push(io.putObject("index.cdn.css", "text/css", ""));
+  if (head[5].status === "rejected")
+    put.push(
+      io.putObject(
+        "index.htm",
+        "text/html",
+        '<div data-static="" class="ui container" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><main></main></div></div>'
+      )
     );
-  }
-  postMessage(null);
+  if (put.length)
+    try {
+      await Promise.all(put);
+    } finally {
+      postMessage(null);
+    }
+  else postMessage(null);
 };
