@@ -26,8 +26,6 @@ p:empty:before {
 body > .pusher {
   position: relative;
   height: auto;
-  /* Это для сафари */
-  min-height: 100%;
 }
 
 div[data-relative]:not([id]) {
@@ -46,22 +44,11 @@ div[data-fixed]:not([id]) {
   position: fixed;
 }
 
-div[data-relative]:not([id]),
-div[data-static]:not([id]),
-div[data-absolute]:not([id]),
-div[data-fixed]:not([id]) {
-  /*visibility: hidden;*/
-  pointer-events: none;
-}
-
 body > .pusher,
 div[data-relative]:not([id]),
 div[data-static]:not([id]),
 div[data-absolute]:not([id]),
 div[data-fixed]:not([id]) {
-  -ms-flex-direction: column;
-  -ms-flex: 1 1 auto;
-  display: -ms-flexbox;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -69,14 +56,7 @@ div[data-fixed]:not([id]) {
   left: 0;
   right: 0;
   bottom: 0;
-}
-
-div[data-relative]:not([id]),
-div[data-static]:not([id]),
-div[data-absolute]:not([id]),
-div[data-fixed]:not([id]) {
-  height: 100%;
-  /* для IE11 */
+  pointer-events: none;
 }
 
 div[data-relative]:not([id]) > div[id],
@@ -85,13 +65,8 @@ div[data-absolute]:not([id]) > div[id],
 div[data-fixed]:not([id]) > div[id] {
   position: relative;
   pointer-events: auto;
-  /*visibility: visible;*/
-  /*overflow: hidden;*/
   margin: auto;
 }
-
-/*div[data-relative]:not([id])>#content,
-div[data-static]:not([id])>#content,*/
 
 div[data-absolute]:not([id]) > #content,
 div[data-fixed]:not([id]) > #content {
@@ -102,7 +77,17 @@ div[data-fixed]:not([id]) > #content {
 
 /* tinyMCE */
 
-/* Image captions using the HTML5 figure element */
+/*
+* For rendering images inserted using the image plugin.
+* Includes image captions using the HTML5 figure element.
+*/
+
+figure.image {
+  display: inline-block;
+  border: 1px solid gray;
+  margin: 0 2px 0 1px;
+  background: #f5f2f0;
+}
 
 figure.align-left {
   float: left;
@@ -110,13 +95,6 @@ figure.align-left {
 
 figure.align-right {
   float: right;
-}
-
-figure.image {
-  display: inline-block;
-  border: 1px solid gray;
-  margin: 0 2px 0 1px;
-  background: #f5f2f0;
 }
 
 figure.image img {
@@ -127,6 +105,7 @@ figure.image figcaption {
   margin: 6px 8px 6px 8px;
   text-align: center;
 }
+
 
 /*
  Alignment using classes rather than inline styles
