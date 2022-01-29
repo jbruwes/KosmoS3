@@ -26,7 +26,7 @@ export default function corrector(sel) {
   $.expr.pseudos.regex = regex;
   $(sel)
     .find(
-      ':not([id|="lightcase"]) a:not(a:regex("href,(^(\\/|\\w+:))|(\\.\\w+((\\?|#).*)?$)"))'
+      ':not([class|="glightbox"]) a:not(a:regex("href,(^(\\/|\\w+:))|(\\.\\w+((\\?|#).*)?$)"))'
     )
     .each(toRoot);
 }
