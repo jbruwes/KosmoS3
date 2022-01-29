@@ -1,5 +1,5 @@
 import onhashchange from "./onhashchange";
-import lightcase from "./lightcase";
+import glightbox from "./glightbox";
 /**
  * Загрузка нужного контента в зависимости от урл
  *
@@ -78,7 +78,7 @@ export default async function cont(usrScripts, scripts, index) {
     }
     document.querySelector("#content>main").innerHTML = html;
     document.title = value;
-    lightcase("#content>main");
+    glightbox("#content>main");
     onhashchange(usrScripts, scripts, index);
     if (!window.location.hash) window.scrollTo(0, 0);
   }
