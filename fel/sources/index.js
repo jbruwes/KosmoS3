@@ -3,7 +3,7 @@ import "regenerator-runtime/runtime";
 
 import "kendo-ui-core/css/web/kendo.common.css";
 import "kendo-ui-core/css/web/kendo.default.css";
-import "lightcase/src/css/lightcase.css";
+import "glightbox/dist/css/glightbox.css";
 import "fomantic-ui-css/semantic.css";
 import "animate.css/animate.css";
 import "hover.css/css/hover.css";
@@ -41,12 +41,11 @@ import "./styles/index.css";
 
 import "fomantic-ui-css/semantic";
 import "kendo-ui-core/js/kendo.menu";
-import "lightcase";
 import "lightslider";
 import "pure";
 import "onpushstate";
 import onhashchange from "./modules/onhashchange";
-import lightcase from "./modules/lightcase";
+import glightbox from "./modules/glightbox";
 import cont from "./modules/cont";
 import sidebar from "./modules/sidebar";
 
@@ -124,7 +123,7 @@ window.jQuery = jQuery;
    * Обработчик, запускаемый после загрузки документа
    */
   function readyFn() {
-    lightcase("body");
+    glightbox("body");
     AOS.init();
     $.when(scripts.indexJson).done(indexJSONDone);
   }
