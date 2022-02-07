@@ -52,7 +52,7 @@
     "webpack-dev-server": "^4.7.4",
     "favicons-webpack-plugin": "^5.0.2",
     "mini-css-extract-plugin": "^2.5.3",
-    "css-loader": "^5.2.7"
+    "css-loader": "^6.6.0"
   },
   "dependencies": {
     "electron": "^17.0.0",
