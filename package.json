@@ -59,7 +59,7 @@
     "electron-serve": "^1.1.0",
     "core-js": "^3.21.0",
     "regenerator-runtime": "^0.13.9",
-    "kendo-ui-core": "^2019.1.220",
+    "kendo-ui-core": "^2022.1.119",
     "animate.css": "^4.1.1",
     "aos": "^2.3.4",
     "fomantic-ui-css": "^2.8.8",
