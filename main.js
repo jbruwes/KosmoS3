@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require("electron");
 const serve = require("electron-serve");
+
 const loadURL = serve({ directory: "dist" });
 (async () => {
   await app.whenReady();
