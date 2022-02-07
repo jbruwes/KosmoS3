@@ -449,7 +449,7 @@ export default class TemplateView extends JetView {
           rect.id = value.id;
         });
       canvas.on("selection:updated", (options) => {
-        $$("layers").select(options.target.id);
+        $$("layers").select(options.selected[0].id);
       });
       canvas.on("selection:cleared", (options) => {
         if (options.deselected !== undefined)
