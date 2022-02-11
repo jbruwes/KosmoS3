@@ -46,24 +46,20 @@ export default class TreeView extends JetView {
       /**
        *
        */
-      onAfterLoad: () => {
+      onAfterLoad: async () => {
         if (
           !$$("sidebar").getSelectedId() ||
           $$("sidebar").getSelectedId() === "content"
         ) {
           $$("tree").data.attachEvent("onStoreUpdated", this.onChangeFnc);
-          $$("tinymce")
-            .getEditor(true)
-            .then((tinymce) => {
-              const id = $$("tree").getFirstId();
-              if (id) $$("tree").select(id);
-              else {
-                tinymce.setMode("readonly");
-                $$("ace-content")
-                  .getEditor(true)
-                  .then((ace) => ace.setReadOnly(true));
-              }
-            });
+          const id = $$("tree").getFirstId();
+          const tinymce = await $$("tinymce").getEditor(true);
+          if (id) $$("tree").select(id);
+          else {
+            tinymce.setMode("readonly");
+            const ace = await $$("ace-content").getEditor(true);
+            ace.setReadOnly(true);
+          }
         }
       },
       onItemCheck: this.onChangeFnc,
