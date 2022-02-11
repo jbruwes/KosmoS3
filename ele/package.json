@@ -1,0 +1,17 @@
+{
+  "name": "kosmos3",
+  "version": "22.2.11",
+  "description": "KosmoS3",
+  "main": "main.js",
+  "repository": "https://github.com/jbruwes/kosmos3",
+  "keywords": [
+    "kosmos3",
+    "cms",
+    "s3"
+  ],
+  "author": "Jerry Bruwes",
+  "license": "MIT",
+  "dependencies": {
+    "electron-serve": "^1.1.0"
+ }
+}
