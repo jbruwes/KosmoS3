@@ -2,4 +2,6 @@ node_modules/
 dist/
 docs_cms/
 docs_fel/
+out/
+icons/
 .DS_Store
