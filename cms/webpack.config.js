@@ -111,7 +111,12 @@ module.exports = function exports(env) {
       new HtmlWebpackPlugin({
         title: "KosmoS3 CMS",
       }),
-      new FaviconsWebpackPlugin({ logo: "./resource/rocket.svg", prefix: "" }),
+      new FaviconsWebpackPlugin({
+        logo: "./resource/rocket.svg",
+        mode: "webapp",
+        devMode: "webapp",
+        prefix: "",
+      }),
       new MiniCssExtractPlugin({
         filename: "[contenthash].css",
       }),
