@@ -29,7 +29,7 @@
     "lin": "npm run linux && npm run deb",
     "macos-latest": "npm run all && npm run mac",
     "windows-latest": "npm run all && npm run win",
-    "ubuntu-latest": "npm run all && npm run lin", 
+    "ubuntu-latest": "npm run all && npm run lin",
     "start": "electron ."
   },
   "repository": "https://github.com/jbruwes/kosmos3",
@@ -44,10 +44,6 @@
     "svg2png": "^4.1.1",
     "electron-packager": "^15.4.0",
     "electron-icon-builder": "^2.0.1",
-    "electron-installer-dmg": "^3.0.0",
-    "electron-installer-debian": "^3.1.0",
-    "electron-installer-redhat": "^3.3.0",
-    "electron-installer-windows": "^3.0.0",
     "@babel/core": "^7.17.4",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
@@ -127,5 +123,11 @@
     "@fontsource/rubik-mono-one": "^4.5.1",
     "@fontsource/rubik": "^4.5.3",
     "@fontsource/tenor-sans": "^4.5.1"
+  },
+  "optionalDependencies": {
+    "electron-installer-dmg": "^3.0.0",
+    "electron-installer-debian": "^3.1.0",
+    "electron-installer-redhat": "^3.3.0",
+    "electron-installer-windows": "^3.0.0"
   }
 }
