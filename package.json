@@ -19,7 +19,7 @@
     "cdocs": "jsdoc -c ./.jsdoc.conf.cms.json",
     "darwin": "npx electron-packager dist KosmoS3 --platform=darwin --arch=all --overwrite --prune=true --asar --out=out --icon=./icons/icon",
     "win32": "npx electron-packager dist KosmoS3 --platform=win32 --arch=x64 --overwrite --prune=true --asar --out=out --icon=./icons/icon",
-    "linux": "npx electron-packager dist KosmoS3 --platform=linux --arch=x64 --overwrite --prune=true --asar --out=out --icon=./icons/icon",
+    "linux": "npx electron-packager dist --platform=linux --arch=x64 --overwrite --prune=true --asar --out=out --icon=./icons/icon",
     "dmg:x64": "./node_modules/.bin/electron-installer-dmg --overwrite --title=KosmoS3 --icon=./icons/icon.icns ./out/kosmos3-darwin-x64/KosmoS3.app ./out/KosmoS3-x64",
     "dmg:arm64": "./node_modules/.bin/electron-installer-dmg --overwrite --title=KosmoS3 --icon=./icons/icon.icns ./out/kosmos3-darwin-arm64/KosmoS3.app ./out/KosmoS3-arm64",
     "deb": "./node_modules/.bin/electron-installer-debian --src out/KosmoS3-linux-x64/ --dest out --arch amd64",
