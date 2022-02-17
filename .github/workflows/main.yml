@@ -57,6 +57,7 @@ jobs:
           path: |
             out
         
+        
       - name: Get version
         id: get_version
         run: echo ::set-output name=version::$(npm pkg get version | tr -d '"')
