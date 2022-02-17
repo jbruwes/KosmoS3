@@ -1,6 +1,6 @@
 {
   "name": "kosmos3",
-  "version": "22.2.14",
+  "version": "22.2.17",
   "description": "KosmoS3",
   "main": "main.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "all": "npm run clean && npm run build && npm run icons && npm run pkg",
     "serve": "webpack serve --mode development --open --config ./cms/webpack.config.js",
     "cms": "webpack --env production=true --config ./cms/webpack.config.js",
-    "icons": "npm run clean:icons && .\"/node_modules/.bin/svg2png\" .\"/rocket.svg\" --width=2048 --height=2048 --output=.\"/icon.png\" && .\"/node_modules/.bin/electron-icon-builder\" --flatten --input=.\"/icon.png\" --output=.",
+    "icons": "npm run clean:icons && .\"/node_modules/.bin/svg2png\" .\"/rocket.svg\" --output=.\"/icon.png\" && .\"/node_modules/.bin/electron-icon-builder\" --flatten --input=.\"/icon.png\" --output=.",
     "fel": "webpack --config ./fel/webpack.config.js",
     "pkg": "webpack --config ./pkg/webpack.config.js",
     "fdocs": "jsdoc -c ./.jsdoc.conf.fel.json",
