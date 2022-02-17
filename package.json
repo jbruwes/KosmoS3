@@ -4,6 +4,7 @@
   "description": "KosmoS3",
   "main": "main.js",
   "scripts": {
+    "version": "echo $npm_package_version",
     "format": "prettier -w .",
     "clean:icons": "rimraf icons icon.png",
     "clean": "rimraf dist out && npm run clean:icons",
