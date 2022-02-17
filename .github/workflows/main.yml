@@ -89,7 +89,7 @@ jobs:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_path: ./out/kosmos3-${{ steps.get_version.outputs.version }}-full.nupkg
           asset_name: kosmos3-${{ steps.get_version.outputs.version }}-full.nupkg
-          asset_content_type: application/vnd.debian.binary-package
+          asset_content_type: application/octet-stream
       - name: KosmoS3-setup.exe
         if: matrix.os == 'windows-latest'
         uses: actions/upload-release-asset@v1
@@ -99,7 +99,7 @@ jobs:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_path: ./out/kosmos3-${{ steps.get_version.outputs.version }}-setup.exe
           asset_name: kosmos3-${{ steps.get_version.outputs.version }}-setup.exe
-          asset_content_type: application/vnd.debian.binary-package
+          asset_content_type: application/octet-stream
       - name: KosmoS3-setup.msi
         if: matrix.os == 'windows-latest'
         uses: actions/upload-release-asset@v1
@@ -109,4 +109,4 @@ jobs:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_path: ./out/kosmos3-${{ steps.get_version.outputs.version }}-setup.msi
           asset_name: kosmos3-${{ steps.get_version.outputs.version }}-setup.msi
-          asset_content_type: application/vnd.debian.binary-package
+          asset_content_type: application/x-msi
