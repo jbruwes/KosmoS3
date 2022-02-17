@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -47,9 +48,6 @@ jobs:
         run: npm ci
       - name: Build project
         run: npm run ${{ matrix.os }}
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=version::$(npm run version --silent)
       - name: KosmoS3-arm64.dmg
         if: matrix.os == 'macos-latest'
         uses: actions/upload-release-asset@v1
@@ -77,8 +75,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ./out/kosmos3_${{ steps.get_version.outputs.version }}_amd64.deb
-          asset_name: kosmos3_${{ steps.get_version.outputs.version }}_amd64.deb
+          asset_path: ./out/kosmos3_${{ needs.create_release.outputs.version }}_amd64.deb
+          asset_name: kosmos3_${{ needs.create_release.outputs.version }}_amd64.deb
           asset_content_type: application/vnd.debian.binary-package
       - name: KosmoS3-full.nupkg
         if: matrix.os == 'windows-latest'
@@ -87,8 +85,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ./out/kosmos3-${{ steps.get_version.outputs.version }}-full.nupkg
-          asset_name: kosmos3-${{ steps.get_version.outputs.version }}-full.nupkg
+          asset_path: ./out/kosmos3-${{ needs.create_release.outputs.version }}-full.nupkg
+          asset_name: kosmos3-${{ needs.create_release.outputs.version }}-full.nupkg
           asset_content_type: application/octet-stream
       - name: KosmoS3-setup.exe
         if: matrix.os == 'windows-latest'
@@ -97,8 +95,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ./out/kosmos3-${{ steps.get_version.outputs.version }}-setup.exe
-          asset_name: kosmos3-${{ steps.get_version.outputs.version }}-setup.exe
+          asset_path: ./out/kosmos3-${{ needs.create_release.outputs.version }}-setup.exe
+          asset_name: kosmos3-${{ needs.create_release.outputs.version }}-setup.exe
           asset_content_type: application/octet-stream
       - name: KosmoS3-setup.msi
         if: matrix.os == 'windows-latest'
@@ -107,6 +105,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ./out/kosmos3-${{ steps.get_version.outputs.version }}-setup.msi
-          asset_name: kosmos3-${{ steps.get_version.outputs.version }}-setup.msi
+          asset_path: ./out/kosmos3-${{ needs.create_release.outputs.version }}-setup.msi
+          asset_name: kosmos3-${{ needs.create_release.outputs.version }}-setup.msi
           asset_content_type: application/x-msi
