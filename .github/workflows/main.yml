@@ -28,6 +28,7 @@ jobs:
         with:
           tag_name: ${{ steps.get_version.outputs.version }}
           release_name: Release ${{ steps.get_version.outputs.version }}
+          body: ${{ steps.get_version.outputs.version }}
           draft: false
           prerelease: false
   build:
@@ -38,6 +39,12 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     steps:
+
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.7"
+
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install Node.js
@@ -48,6 +55,34 @@ jobs:
         run: npm ci
       - name: Build project
         run: npm run ${{ matrix.os }}
+
+      - name: Fetch action
+        id: pl
+        uses: Rishabh510/Path-lister-action@master
+        with:
+          path: "out/"
+          type: ".exe"
+      - name: Output results
+        run: |
+          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
+          for i in ${{ steps.pl.outputs.paths }}; do
+          echo $i
+          done
+
+      - name: Fetch action
+        id: pl
+        uses: Rishabh510/Path-lister-action@master
+        with:
+          path: "out/"
+          type: ".msi"
+      - name: Output results
+        run: |
+          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
+          for i in ${{ steps.pl.outputs.paths }}; do
+          echo $i
+          done
+
+
       - name: Get version
         id: get_version
         run: echo ::set-output name=version::$(npm pkg get version | tr -d '"')
