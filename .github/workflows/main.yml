@@ -10,22 +10,24 @@ on:
 
 jobs:
   create_release:
-    name: Create release
+    name: Create Release
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=version::$(npm pkg get version | tr -d '"')
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: v${{ steps.get_version.outputs.version }}
+          release_name: Release v${{ steps.get_version.outputs.version }}
           draft: false
           prerelease: false
-
   build:
     name: Build
     needs: create_release
@@ -47,7 +49,7 @@ jobs:
       - name: Get version
         id: get_version
         run: echo ::set-output name=version::$(npm pkg get version | tr -d '"')
-      - name: Upload Release Asset
+      - name: KosmoS3-arm64.dmg
         if: matrix.os == 'macos-latest'
         uses: actions/upload-release-asset@v1
         env:
@@ -56,4 +58,14 @@ jobs:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_path: ./out/KosmoS3-arm64.dmg
           asset_name: KosmoS3-arm64.dmg
+          asset_content_type: application/octet-stream
+      - name: KosmoS3-x64.dmg
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./out/KosmoS3-x64.dmg
+          asset_name: KosmoS3-x64.dmg
           asset_content_type: application/octet-stream
