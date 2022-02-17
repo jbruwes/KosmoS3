@@ -70,7 +70,7 @@ jobs:
           done
 
       - name: Fetch action
-        id: pl
+        id: pl2
         uses: Rishabh510/Path-lister-action@master
         with:
           path: "out/"
