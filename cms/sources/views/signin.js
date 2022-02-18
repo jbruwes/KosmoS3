@@ -176,12 +176,15 @@ export default class SignInView extends JetView {
       new URL("../workers/init.js", import.meta.url)
     );
     if (
+      this.app.io === undefined ||
       !this.app.io ||
-      !(
-        this.io.getAccessKeyId() === $$("username").getValue() &&
-        this.io.getSecretAccessKey() === $$("password").getValue()
-      )
+      (this.app.io !== true &&
+        !(
+          this.app.io.getAccessKeyId() === $$("username").getValue() &&
+          this.app.io.getSecretAccessKey() === $$("password").getValue()
+        ))
     ) {
+      this.app.io = true;
       const iamClient = new IAMClient({
         region: $$("region").getValue(),
         credentials: {
@@ -220,7 +223,6 @@ export default class SignInView extends JetView {
             click: () => window.open(openUrl, "_tab"),
           });
           await this.show("content");
-          await $$("tinymce").getEditor(true);
           $$("sidebar").add(
             {
               id: "content",
