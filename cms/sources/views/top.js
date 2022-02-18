@@ -1,5 +1,4 @@
 import { JetView } from "webix-jet";
-import * as webix from "webix";
 
 /**
  * Ксласс описания формы заголовка начальной страницы
@@ -43,14 +42,13 @@ export default class TopView extends JetView {
             /**
              * @param id
              */
-            click: (id) => {
+            click: async (id) => {
               if (id === "signout") {
-                webix.delay(() => {
-                  this.app.io = null;
-                  this.show("signin");
-                  this.resetSidebar();
-                });
-              } else this.show(id);
+                this.app.io = null;
+                await this.show("signin");
+                await this.app.refresh();
+                this.resetSidebar();
+              } else await this.show(id);
             },
           },
           {
