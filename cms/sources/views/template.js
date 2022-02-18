@@ -570,20 +570,22 @@ export default class TemplateView extends JetView {
    *
    */
   async loadSite() {
-    const { document } = $$("fabric").getWindow();
-    document.open();
-    document.write(
-      (await (await fetch("index.htm", { cache: "no-store" })).text())
-        .replace(
-          /#base#/g,
-          `https://s3.${this.app.io.getRegion()}.amazonaws.com/${this.app.io.getBucket()}/`
-        )
-        .replace("#pusher#", this.genHtml())
-        .replace(/<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi, "")
-        .replace(/<script id="google"[^>]*>([\s\S]*?)<\/script>/gi, "")
-        .replace(/<script id="analytics"[^>]*>([\s\S]*?)<\/script>/gi, "")
-    );
-    document.close();
+    if (this.app && this.app.io) {
+      const { document } = $$("fabric").getWindow();
+      document.open();
+      document.write(
+        (await (await fetch("index.htm", { cache: "no-store" })).text())
+          .replace(
+            /#base#/g,
+            `https://s3.${this.app.io.getRegion()}.amazonaws.com/${this.app.io.getBucket()}/`
+          )
+          .replace("#pusher#", this.genHtml())
+          .replace(/<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi, "")
+          .replace(/<script id="google"[^>]*>([\s\S]*?)<\/script>/gi, "")
+          .replace(/<script id="analytics"[^>]*>([\s\S]*?)<\/script>/gi, "")
+      );
+      document.close();
+    }
   }
 
   /**
