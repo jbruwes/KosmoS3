@@ -30,16 +30,13 @@ export default class KosmoS3 extends JetApp {
     });
   }
 }
-if (!BUILD_AS_MODULE) {
-  webix.ready(() => {
-    webix.i18n.setLocale("ru-RU");
-    webix.ui.fullScreen();
-    const app = new KosmoS3();
-    /**
-     *
-     */
-    const size = () => (document.body.offsetWidth > 964 ? "wide" : "small");
-    app.config.size = size();
-    app.render();
-  });
-}
+webix.ready(() => {
+  webix.i18n.setLocale("ru-RU");
+  webix.ui.fullScreen();
+  const app = new KosmoS3();
+  /**
+   *
+   */
+  app.config.size = () => (document.body.offsetWidth > 964 ? "wide" : "small");
+  app.render();
+});
