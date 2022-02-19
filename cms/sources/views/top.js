@@ -48,7 +48,7 @@ export default class TopView extends JetView {
                 await this.show("signin");
                 await this.app.refresh();
                 this.resetSidebar();
-              } else await this.show(id);
+              } else this.show(id);
             },
           },
           {
