@@ -141,25 +141,27 @@ export default class ContentView extends JetView {
    *
    */
   async save() {
-    try {
-      await this.app.io.putObject(
-        `${$$("tree").getSelectedId()}.htm`,
-        "text/html",
-        $$("tinymce").getValue()
-      );
-      webix.message("Content save complete");
-      this.pageWorker.postMessage({
-        pAccessKeyId: this.app.io.getAccessKeyId(),
-        pSecretAccessKey: this.app.io.getSecretAccessKey(),
-        pBucketName: this.app.io.getBucket(),
-        pRegion: this.app.io.getRegion(),
-        pId: $$("tree").getSelectedId(),
-      });
-    } catch (err) {
-      webix.message({
-        text: err.message,
-        type: "error",
-      });
-    }
+    if (this.app)
+      try {
+        const message = {
+          pAccessKeyId: this.app.io.getAccessKeyId(),
+          pSecretAccessKey: this.app.io.getSecretAccessKey(),
+          pBucketName: this.app.io.getBucket(),
+          pRegion: this.app.io.getRegion(),
+          pId: $$("tree").getSelectedId(),
+        };
+        await this.app.io.putObject(
+          `${$$("tree").getSelectedId()}.htm`,
+          "text/html",
+          $$("tinymce").getValue()
+        );
+        webix.message("Content save complete");
+        this.pageWorker.postMessage(message);
+      } catch (err) {
+        webix.message({
+          text: err.message,
+          type: "error",
+        });
+      }
   }
 }
