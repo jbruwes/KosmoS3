@@ -1,4 +1,4 @@
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 import { fabric } from "fabric";
 
 webix.protoUI(
