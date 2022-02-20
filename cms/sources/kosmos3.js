@@ -6,7 +6,7 @@ import "./styles/app.css";
 import "fomantic-ui-css/components/icon.css";
 import "@mdi/font/css/materialdesignicons.css";
 import { JetApp, EmptyRouter } from "webix-jet";
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 
 /**
  *
