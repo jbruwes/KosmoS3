@@ -1,11 +1,20 @@
 import { JetView } from "webix-jet";
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 
 /**
  *
  */
 export default class CdnView extends JetView {
   #config;
+
+  #event = [];
+
+  /**
+   *
+   */
+  destroy() {
+    this.#event.forEach((event) => event.component.detachEvent(event.id));
+  }
 
   /**
    * @param app
@@ -36,47 +45,59 @@ export default class CdnView extends JetView {
   /**
    *
    */
-  async init() {
-    /**
-     *
-     */
-    const onStoreUpdated = async () => {
-      const url = [];
-      $$("cdn")
-        .serialize()
-        .forEach((value) => url.push(`@import url(${value.url});`));
+  init() {
+    this.main();
+  }
+
+  /**
+   *
+   */
+  async main() {
+    if (this.app)
       try {
-        await this.app.io.putObject(
-          "index.cdn.css",
-          "text/css",
-          url.join("\n")
-        );
-        webix.message("CSS cdn list save complete");
-      } catch (err) {
-        webix.message({
-          text: err.message,
-          type: "error",
-        });
-      }
-    };
-    try {
-      const result = await this.app.io.getObject("index.cdn.css");
-      if ($$("sidebar").getSelectedId() === "css") {
         $$("cdn").clearAll();
-        const url = result ? result.split("\n") : [];
-        Object.keys(url).forEach((x) => {
-          $$("cdn").add({
-            url: url[x].replace(/^@import url\(/, "").replace(/\);$/, ""),
+        const result = await this.app.io.getObject("index.cdn.css");
+        if (this.app) {
+          const url = result ? result.split("\n") : [];
+          Object.keys(url).forEach((x) => {
+            $$("cdn").add({
+              url: url[x].replace(/^@import url\(/, "").replace(/\);$/, ""),
+            });
           });
-        });
-        if (url.length) $$("cdn").select($$("cdn").getFirstId());
-        $$("cdn").data.attachEvent("onStoreUpdated", onStoreUpdated);
+          if (url.length) $$("cdn").select($$("cdn").getFirstId());
+          this.#event.push({
+            component: $$("cdn").data,
+            id: $$("cdn").data.attachEvent("onStoreUpdated", async () => {
+              if (this.app)
+                try {
+                  const lUrl = [];
+                  $$("cdn")
+                    .serialize()
+                    .forEach((value) =>
+                      lUrl.push(`@import url(${value.url});`)
+                    );
+                  await this.app.io.putObject(
+                    "index.cdn.css",
+                    "text/css",
+                    lUrl.join("\n")
+                  );
+                  if (this.app) webix.message("CSS cdn list save complete");
+                } catch (err) {
+                  if (this.app)
+                    webix.message({
+                      text: err.message,
+                      type: "error",
+                    });
+                }
+            }),
+          });
+        }
+      } catch (err) {
+        if (this.app)
+          webix.message({
+            text: err.message,
+            type: "error",
+          });
       }
-    } catch (err) {
-      webix.message({
-        text: err.message,
-        type: "error",
-      });
-    }
   }
 }
