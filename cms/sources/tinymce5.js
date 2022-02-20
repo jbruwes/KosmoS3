@@ -1,4 +1,4 @@
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 
 /* Import TinyMCE */
 import tinymce from "tinymce";
