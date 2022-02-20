@@ -20,9 +20,7 @@ export default class CdnToolbarView extends JetView {
           /**
            *
            */
-          click: () => {
-            $$("cdn").select($$("cdn").add({ url: "" }));
-          },
+          click: () => $$("cdn").select($$("cdn").add({ url: "" })),
         },
         {
           view: "icon",
