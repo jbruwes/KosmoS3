@@ -1,5 +1,3 @@
-import "core-js/stable";
-import "regenerator-runtime/runtime";
 import { app, BrowserWindow } from "electron";
 import serve from "electron-serve";
 
