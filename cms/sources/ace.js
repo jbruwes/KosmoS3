@@ -1,4 +1,4 @@
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 import ace from "ace-builds";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-html";
