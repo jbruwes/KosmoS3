@@ -56,6 +56,9 @@ export default class AceView extends JetView {
    * @param html
    */
   async setValue(html) {
+    /**
+     *
+     */
     const aceChange = () => {
       this.#timeoutId.push(
         webix.delay(
@@ -76,6 +79,9 @@ export default class AceView extends JetView {
     this.#editor.resize();
   }
 
+  /**
+   *
+   */
   async main() {
     this.#editor = await this.getRoot().getEditor(true);
     if (this.app) {
