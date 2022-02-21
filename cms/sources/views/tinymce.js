@@ -1,5 +1,5 @@
 import { JetView } from "webix-jet";
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 import "../tinymce5";
 import tinymce from "tinymce";
 
@@ -38,6 +38,8 @@ import "@fontsource/tenor-sans";
  *
  */
 export default class TinymceView extends JetView {
+  #tinymce;
+
   #itemsTemplate;
 
   #grid;
@@ -55,6 +57,23 @@ export default class TinymceView extends JetView {
   #multiData;
 
   #sliderData;
+
+  /**
+   *
+   */
+  destroy() {
+    if (this.#tinymce) this.#tinymce.off();
+    this.#tinymce = null;
+    this.#itemsTemplate = null;
+    this.#grid = null;
+    this.#segments = null;
+    this.#header = null;
+    this.#dimmedImage = null;
+    this.#commonData = null;
+    this.#singleData = null;
+    this.#multiData = null;
+    this.#sliderData = null;
+  }
 
   /**
    * @param app
@@ -529,12 +548,13 @@ export default class TinymceView extends JetView {
               .pop()}`;
             try {
               await this.app.io.putObject(filePath, file.type, blobInfo.blob());
-              cb(filePath, { alt: decodeURI(file.name) });
+              if (this.app) cb(filePath, { alt: decodeURI(file.name) });
             } catch (err) {
-              webix.message({
-                text: err.message,
-                type: "error",
-              });
+              if (this.app)
+                webix.message({
+                  text: err.message,
+                  type: "error",
+                });
             }
           };
           reader.readAsDataURL(file);
@@ -586,9 +606,9 @@ export default class TinymceView extends JetView {
             blobInfo.blob().type,
             blobInfo.blob()
           );
-          success(filePath);
+          if (this.app) success(filePath);
         } catch (err) {
-          failure(err.message);
+          if (this.app) failure(err.message);
         }
       },
       relative_urls: false,
@@ -784,10 +804,19 @@ export default class TinymceView extends JetView {
   /**
    *
    */
-  async ready() {
-    (await $$("tinymce").getEditor(true)).on("Change", () =>
-      this.getParentView().save.call(this.getParentView())
-    );
+  ready() {
+    this.main();
+  }
+
+  /**
+   *
+   */
+  async main() {
+    this.#tinymce = await $$("tinymce").getEditor(true);
+    if (this.app)
+      this.#tinymce.on("Change", () =>
+        this.getParentView().save.call(this.getParentView())
+      );
   }
 
   /**
@@ -846,18 +875,17 @@ export default class TinymceView extends JetView {
    *
    * @param {string} val Контент
    */
-  async setValue(val) {
-    const pTinymce = await $$("tinymce").getEditor(true);
-    pTinymce.off("SetContent");
-    pTinymce.off("Change");
-    pTinymce.getWin().scrollTo(0, 0);
-    pTinymce.setContent(val);
-    pTinymce.undoManager.clear();
-    pTinymce.nodeChanged();
-    pTinymce.on("Change", () =>
+  setValue(val) {
+    this.#tinymce.off("SetContent");
+    this.#tinymce.off("Change");
+    this.#tinymce.getWin().scrollTo(0, 0);
+    this.#tinymce.setContent(val);
+    this.#tinymce.undoManager.clear();
+    this.#tinymce.nodeChanged();
+    this.#tinymce.on("Change", () =>
       this.getParentView().save.call(this.getParentView())
     );
-    pTinymce.on("SetContent", () =>
+    this.#tinymce.on("SetContent", () =>
       this.getParentView().save.call(this.getParentView())
     );
   }
