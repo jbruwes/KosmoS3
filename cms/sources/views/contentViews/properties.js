@@ -3477,12 +3477,13 @@ export default class PropertiesView extends JetView {
                       file.file.type,
                       file.file
                     );
-                    this.image();
+                    if (this.app) this.image();
                   } catch (err) {
-                    webix.message({
-                      text: err.message,
-                      type: "error",
-                    });
+                    if (this.app)
+                      webix.message({
+                        text: err.message,
+                        type: "error",
+                      });
                   }
                 }
               },
