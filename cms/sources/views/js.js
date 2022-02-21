@@ -7,6 +7,13 @@ export default class JsView extends JetView {
   #config;
 
   /**
+   *
+   */
+  destroy() {
+    this.#config = null;
+  }
+
+  /**
    * @param app
    */
   constructor(app) {
