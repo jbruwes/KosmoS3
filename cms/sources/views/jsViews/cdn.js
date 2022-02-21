@@ -13,7 +13,9 @@ export default class CdnView extends JetView {
    *
    */
   destroy() {
-    this.#event.forEach((event) => event.component.detachEvent(event.id));
+    if (this.#event)
+      this.#event.forEach((event) => event.component.detachEvent(event.id));
+    this.#event = null;
   }
 
   /**
@@ -53,37 +55,35 @@ export default class CdnView extends JetView {
    *
    */
   async main() {
-    if (this.app)
-      try {
-        $$("cdn").clearAll();
-        $$("cdn").parse(await this.app.io.getObject("index.cdn.json"));
-        if (this.app)
-          this.#event.push({
-            component: $$("cdn").data,
-            id: $$("cdn").data.attachEvent("onStoreUpdated", async () => {
+    try {
+      $$("cdn").clearAll();
+      $$("cdn").parse(await this.app.io.getObject("index.cdn.json"));
+      if (this.app)
+        this.#event.push({
+          component: $$("cdn").data,
+          id: $$("cdn").data.attachEvent("onStoreUpdated", async () => {
+            try {
+              await this.app.io.putObject(
+                "index.cdn.json",
+                "application/json",
+                webix.ajax().stringify($$("cdn").serialize())
+              );
+              if (this.app) webix.message("JS cdn list save complete");
+            } catch (err) {
               if (this.app)
-                try {
-                  await this.app.io.putObject(
-                    "index.cdn.json",
-                    "application/json",
-                    webix.ajax().stringify($$("cdn").serialize())
-                  );
-                  if (this.app) webix.message("JS cdn list save complete");
-                } catch (err) {
-                  if (this.app)
-                    webix.message({
-                      text: err.message,
-                      type: "error",
-                    });
-                }
-            }),
-          });
-      } catch (err) {
-        if (this.app)
-          webix.message({
-            text: err.message,
-            type: "error",
-          });
-      }
+                webix.message({
+                  text: err.message,
+                  type: "error",
+                });
+            }
+          }),
+        });
+    } catch (err) {
+      if (this.app)
+        webix.message({
+          text: err.message,
+          type: "error",
+        });
+    }
   }
 }
