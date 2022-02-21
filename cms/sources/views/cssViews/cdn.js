@@ -15,6 +15,7 @@ export default class CdnView extends JetView {
   destroy() {
     if (this.#event)
       this.#event.forEach((event) => event.component.detachEvent(event.id));
+    this.#config = null;
     this.#event = null;
   }
 
