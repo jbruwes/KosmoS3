@@ -1,11 +1,30 @@
 import { JetView } from "webix-jet";
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 import "../../edittree";
 
 /**
  *
  */
 export default class TreeView extends JetView {
+  #siteWorker;
+
+  #tinymce;
+
+  #ace;
+
+  #event = [];
+
+  /**
+   *
+   */
+  destroy() {
+    if (this.#event)
+      this.#event.forEach((event) => event.component.detachEvent(event.id));
+    this.#event = null;
+    this.#tinymce = null;
+    this.#ace = null;
+  }
+
   /**
    *
    */
@@ -47,20 +66,21 @@ export default class TreeView extends JetView {
        *
        */
       onAfterLoad: async () => {
-        if (
-          !$$("sidebar").getSelectedId() ||
-          $$("sidebar").getSelectedId() === "content"
-        ) {
-          $$("tree").data.attachEvent("onStoreUpdated", this.onChangeFnc);
-          const id = $$("tree").getFirstId();
-          const tinymce = await $$("tinymce").getEditor(true);
+        this.#event.push({
+          component: $$("tree").data,
+          id: $$("tree").data.attachEvent("onStoreUpdated", this.onChangeFnc),
+        });
+        const id = $$("tree").getFirstId();
+        [this.#tinymce, this.#ace] = await Promise.all([
+          $$("tinymce").getEditor(true),
+          $$("ace-content").getEditor(true),
+        ]);
+        if (this.app)
           if (id) $$("tree").select(id);
           else {
-            tinymce.setMode("readonly");
-            const ace = await $$("ace-content").getEditor(true);
-            ace.setReadOnly(true);
+            this.#tinymce.setMode("readonly");
+            this.#ace.setReadOnly(true);
           }
-        }
       },
       onItemCheck: this.onChangeFnc,
       /**
@@ -99,15 +119,14 @@ export default class TreeView extends JetView {
           );
         }
         this.getParentView().lockProperties = false;
-        if (this.app.io)
-          try {
-            result = await this.app.io.getObject(`${id}.htm`);
-          } finally {
-            if ($$("sidebar").getSelectedId() === "content") {
-              $$("tinymce").$scope.setValue(result);
-              $$("ace-content").$scope.setValue(result);
-            }
+        try {
+          result = await this.app.io.getObject(`${id}.htm`);
+        } finally {
+          if (this.app) {
+            $$("tinymce").$scope.setValue(result);
+            $$("ace-content").$scope.setValue(result);
           }
+        }
       },
       /**
        * @param state
@@ -138,13 +157,24 @@ export default class TreeView extends JetView {
   /**
    *
    */
-  async init() {
-    if (
-      !$$("sidebar").getSelectedId() ||
-      $$("sidebar").getSelectedId() === "content"
-    ) {
+  init() {
+    this.main();
+  }
+
+  /**
+   *
+   */
+  async main() {
+    try {
       $$("tree").clearAll();
-      $$("tree").parse(await this.app.io.getObject("index.json"));
+      const indexJson = await this.app.io.getObject("index.json");
+      if (this.app) $$("tree").parse(indexJson);
+    } catch (err) {
+      if (this.app)
+        webix.message({
+          text: err.message,
+          type: "error",
+        });
     }
   }
 
@@ -153,43 +183,39 @@ export default class TreeView extends JetView {
    */
   onChangeFnc = async () => {
     const tree = $$("tree").data.serialize();
-    const [editors0, editors1] = await Promise.all([
-      $$("tinymce").getEditor(true),
-      $$("ace-content").getEditor(true),
-    ]);
     if (!tree.length) {
       $$("tinymce").$scope.setValue("");
-      editors0.setMode("readonly");
-      editors1.setValue("");
-      editors1.setReadOnly(true);
+      this.#tinymce.setMode("readonly");
+      this.#ace.setValue("");
+      this.#ace.setReadOnly(true);
     } else {
-      editors0.setMode("design");
-      editors1.setReadOnly(false);
+      this.#tinymce.setMode("design");
+      this.#ace.setReadOnly(false);
     }
-    if (this.app && this.app.io)
-      try {
-        const lMessage = {
-          pAccessKeyId: this.app.io.getAccessKeyId(),
-          pSecretAccessKey: this.app.io.getSecretAccessKey(),
-          pBucketName: this.app.io.getBucket(),
-          pRegion: this.app.io.getRegion(),
-        };
-        await this.app.io.putObject(
-          "index.json",
-          "application/json",
-          webix.ajax().stringify(tree)
-        );
-        webix.message("Tree save complete");
-        if (this.siteWorker) this.siteWorker.terminate();
-        this.siteWorker = new Worker(
-          new URL("../../workers/site.js", import.meta.url)
-        );
-        this.siteWorker.postMessage(lMessage);
-      } catch (err) {
+    try {
+      const lMessage = {
+        pAccessKeyId: this.app.io.getAccessKeyId(),
+        pSecretAccessKey: this.app.io.getSecretAccessKey(),
+        pBucketName: this.app.io.getBucket(),
+        pRegion: this.app.io.getRegion(),
+      };
+      await this.app.io.putObject(
+        "index.json",
+        "application/json",
+        webix.ajax().stringify(tree)
+      );
+      if (this.app) webix.message("Tree save complete");
+      if (this.#siteWorker) this.#siteWorker.terminate();
+      this.#siteWorker = new Worker(
+        new URL("../../workers/site.js", import.meta.url)
+      );
+      this.#siteWorker.postMessage(lMessage);
+    } catch (err) {
+      if (this.app)
         webix.message({
           text: err.message,
           type: "error",
         });
-      }
+    }
   };
 }
