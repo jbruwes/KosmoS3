@@ -8,6 +8,13 @@ export default class ToolbarView extends JetView {
   #config;
 
   /**
+   *
+   */
+  destroy() {
+    this.#config = null;
+  }
+
+  /**
    * @param app
    */
   constructor(app) {
