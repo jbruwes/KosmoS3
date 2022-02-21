@@ -8,6 +8,8 @@ import "../../ace";
 export default class AceView extends JetView {
   #config;
 
+  #editor;
+
   #session;
 
   /**
@@ -15,6 +17,8 @@ export default class AceView extends JetView {
    */
   destroy() {
     if (this.#session) this.#session.removeAllListeners("change");
+    this.#config = null;
+    this.#editor = null;
     this.#session = null;
   }
 
@@ -25,7 +29,6 @@ export default class AceView extends JetView {
     super(app);
     this.#config = {
       view: "ace-editor",
-      id: "ace-css",
       theme: "tomorrow",
       mode: "css",
     };
@@ -48,10 +51,9 @@ export default class AceView extends JetView {
    */
   async cb(text) {
     const timeoutId = [];
-    const that = this;
-    const editor = await $$("ace-css").getEditor(true);
+    this.#editor = await this.getRoot().getEditor(true);
     if (this.app) {
-      this.#session = editor.getSession();
+      this.#session = this.#editor.getSession();
       this.#session.setUseWrapMode(true);
       this.#session.setValue(text, -1);
       this.#session.on("change", () => {
@@ -64,7 +66,7 @@ export default class AceView extends JetView {
                   await this.app.io.putObject(
                     "index.css",
                     "text/css",
-                    $$("ace-css").getEditor().getValue()
+                    this.#editor.getValue()
                   );
                   if (this.app) webix.message("CSS save complete");
                 } catch (err) {
@@ -76,13 +78,13 @@ export default class AceView extends JetView {
                 }
               }
             },
-            that,
+            this,
             [],
             1000
           )
         );
       });
-      editor.resize();
+      this.#editor.resize();
     }
   }
 
