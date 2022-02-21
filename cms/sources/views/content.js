@@ -1,11 +1,20 @@
 import { JetView } from "webix-jet";
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 
 /**
  *
  */
 export default class ContentView extends JetView {
   #config;
+
+  #pageWorker;
+
+  /**
+   *
+   */
+  destroy() {
+    this.#config = null;
+  }
 
   /**
    * @param app
@@ -132,7 +141,7 @@ export default class ContentView extends JetView {
    *
    */
   init() {
-    this.pageWorker = new Worker(
+    this.#pageWorker = new Worker(
       new URL("../workers/page.js", import.meta.url)
     );
   }
@@ -141,27 +150,27 @@ export default class ContentView extends JetView {
    *
    */
   async save() {
-    if (this.app)
-      try {
-        const message = {
-          pAccessKeyId: this.app.io.getAccessKeyId(),
-          pSecretAccessKey: this.app.io.getSecretAccessKey(),
-          pBucketName: this.app.io.getBucket(),
-          pRegion: this.app.io.getRegion(),
-          pId: $$("tree").getSelectedId(),
-        };
-        await this.app.io.putObject(
-          `${$$("tree").getSelectedId()}.htm`,
-          "text/html",
-          $$("tinymce").getValue()
-        );
-        webix.message("Content save complete");
-        this.pageWorker.postMessage(message);
-      } catch (err) {
+    try {
+      const lMessage = {
+        pAccessKeyId: this.app.io.getAccessKeyId(),
+        pSecretAccessKey: this.app.io.getSecretAccessKey(),
+        pBucketName: this.app.io.getBucket(),
+        pRegion: this.app.io.getRegion(),
+        pId: $$("tree").getSelectedId(),
+      };
+      await this.app.io.putObject(
+        `${$$("tree").getSelectedId()}.htm`,
+        "text/html",
+        $$("tinymce").getValue()
+      );
+      this.#pageWorker.postMessage(lMessage);
+      if (this.app) webix.message("Content save complete");
+    } catch (err) {
+      if (this.app)
         webix.message({
           text: err.message,
           type: "error",
         });
-      }
+    }
   }
 }
