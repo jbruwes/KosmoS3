@@ -205,7 +205,10 @@ export default class TreeView extends JetView {
         webix.ajax().stringify(tree)
       );
       if (this.app) webix.message("Tree save complete");
-      if (this.#siteWorker) this.#siteWorker.terminate();
+      if (this.#siteWorker) {
+        this.#siteWorker.terminate();
+        this.#siteWorker = null;
+      }
       this.#siteWorker = new Worker(
         new URL("../../workers/site.js", import.meta.url)
       );
