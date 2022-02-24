@@ -7,8 +7,6 @@ import * as webix from "webix/webix.min";
 export default class ContentView extends JetView {
   #config;
 
-  #pageWorker;
-
   /**
    *
    */
@@ -140,15 +138,6 @@ export default class ContentView extends JetView {
   /**
    *
    */
-  init() {
-    this.#pageWorker = new Worker(
-      new URL("../workers/page.js", import.meta.url)
-    );
-  }
-
-  /**
-   *
-   */
   async save() {
     try {
       const lMessage = {
@@ -163,8 +152,11 @@ export default class ContentView extends JetView {
         "text/html",
         $$("tinymce").getValue()
       );
-      this.#pageWorker.postMessage(lMessage);
       if (this.app) webix.message("Content save complete");
+      const pageWorker = new Worker(
+        new URL("../workers/page.js", import.meta.url)
+      );
+      pageWorker.postMessage(lMessage);
     } catch (err) {
       if (this.app)
         webix.message({
