@@ -21,9 +21,7 @@ export default class TopView extends JetView {
             /**
              *
              */
-            click: () => {
-              $$("sidebar").toggle();
-            },
+            click: () => $$("sidebar").toggle(),
           },
           {
             view: "label",
@@ -46,8 +44,7 @@ export default class TopView extends JetView {
               if (id === "signout") {
                 this.app.io = null;
                 await this.show("signin");
-                await this.app.refresh();
-                this.resetSidebar();
+                this.app.refresh();
               } else this.show(id);
             },
           },
@@ -67,11 +64,12 @@ export default class TopView extends JetView {
   });
 
   /**
-   * Сброс сайдбара в состояние до логина
+   * The method is called once when a view is rendered
    */
-  resetSidebar() {
-    this.$$("sidebar").clearAll();
-    if (this.$$("play")) this.$$("toolbar").removeView("play");
+  init() {
+    this.$$("sidebar")
+      .getPopup()
+      .attachEvent("onBeforeShow", () => false);
     this.$$("sidebar").add({
       id: "signin",
       icon: "mdi mdi-login-variant",
@@ -83,17 +81,5 @@ export default class TopView extends JetView {
       value: "About",
     });
     this.$$("sidebar").select("signin");
-  }
-
-  /**
-   * The method is called once when a view is rendered
-   */
-  init() {
-    this.$$("sidebar")
-      .getPopup()
-      .attachEvent("onBeforeShow", () => {
-        return false;
-      });
-    this.resetSidebar();
   }
 }
