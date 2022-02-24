@@ -1,11 +1,25 @@
 import { JetView } from "webix-jet";
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 
 /**
  *
  */
 export default class SettingsView extends JetView {
   #config;
+
+  #siteWorker;
+
+  #event = [];
+
+  /**
+   *
+   */
+  destroy() {
+    if (this.#event)
+      this.#event.forEach((event) => event.component.detachEvent(event.id));
+    this.#event = null;
+    this.#config = null;
+  }
 
   /**
    * @param app
@@ -132,7 +146,7 @@ export default class SettingsView extends JetView {
   async doIcon(uploader, filename) {
     try {
       await this.app.io.headObject(filename);
-      if ($$("sidebar").getSelectedId() === "settings") {
+      if (this.app) {
         uploader.files.data.clearAll();
         uploader.addFile(
           {
@@ -143,56 +157,77 @@ export default class SettingsView extends JetView {
         );
       }
     } catch (err) {
-      // webix.message({text:err.message,type:"error"});
+      // if (this.app) webix.message({text:err.message,type:"error"});
     } finally {
-      uploader.attachEvent("onAfterFileAdd", async (pFile) => {
-        const file = pFile;
-        try {
-          await this.app.io.putObject(filename, file.file.type, file.file);
-          webix.message("Settings save complete");
-        } catch (err) {
-          webix.message({
-            text: err.message,
-            type: "error",
-          });
-        }
-      });
-      uploader.files.attachEvent("onAfterDelete", async () => {
-        try {
-          await this.app.io.deleteObject(filename);
-          webix.message("Settings save complete");
-        } catch (err) {
-          webix.message({
-            text: err.message,
-            type: "error",
-          });
-        }
-      });
+      if (this.app) {
+        this.#event.push({
+          component: uploader,
+          id: uploader.attachEvent("onAfterFileAdd", async (pFile) => {
+            const file = pFile;
+            try {
+              await this.app.io.putObject(filename, file.file.type, file.file);
+              if (this.app) webix.message("Settings save complete");
+            } catch (err) {
+              if (this.app)
+                webix.message({
+                  text: err.message,
+                  type: "error",
+                });
+            }
+          }),
+        });
+        this.#event.push({
+          component: uploader,
+          id: uploader.files.attachEvent("onAfterDelete", async () => {
+            try {
+              await this.app.io.deleteObject(filename);
+              if (this.app) webix.message("Settings save complete");
+            } catch (err) {
+              if (this.app)
+                webix.message({
+                  text: err.message,
+                  type: "error",
+                });
+            }
+          }),
+        });
+      }
     }
   }
 
   /**
    *
    */
-  async init() {
+  init() {
     this.doIcon($$("uploader"), "favicon.ico");
     this.doIcon($$("pngUploader"), "icon.png");
     this.doIcon($$("svgUploader"), "icon.svg");
+    this.main();
+  }
+
+  /**
+   *
+   */
+  async main() {
     try {
       this.prop = JSON.parse(await this.app.io.getObject("index.json"));
-      if (this.prop[0].yandex) $$("yandex").setValue(this.prop[0].yandex);
-      if (this.prop[0].google) $$("google").setValue(this.prop[0].google);
-      if (this.prop[0].metrika) $$("metrika").setValue(this.prop[0].metrika);
-      if (this.prop[0].analytics)
-        $$("analytics").setValue(this.prop[0].analytics);
-      this.onChange();
+      if (this.app) {
+        if (this.prop[0].yandex) $$("yandex").setValue(this.prop[0].yandex);
+        if (this.prop[0].google) $$("google").setValue(this.prop[0].google);
+        if (this.prop[0].metrika) $$("metrika").setValue(this.prop[0].metrika);
+        if (this.prop[0].analytics)
+          $$("analytics").setValue(this.prop[0].analytics);
+        this.onChange();
+      }
     } catch (err) {
-      webix.message({
-        text: err.message,
-        type: "error",
-      });
-      this.prop = [];
-      this.onChange();
+      if (this.app) {
+        webix.message({
+          text: err.message,
+          type: "error",
+        });
+        this.prop = [];
+        this.onChange();
+      }
     }
   }
 
@@ -200,21 +235,33 @@ export default class SettingsView extends JetView {
    *
    */
   onChange() {
-    $$("yandex").attachEvent("onChange", (value) => {
-      this.prop[0].yandex = value;
-      this.save();
+    this.#event.push({
+      component: $$("yandex"),
+      id: $$("yandex").attachEvent("onChange", (value) => {
+        this.prop[0].yandex = value;
+        this.save();
+      }),
     });
-    $$("google").attachEvent("onChange", (value) => {
-      this.prop[0].google = value;
-      this.save();
+    this.#event.push({
+      component: $$("google"),
+      id: $$("google").attachEvent("onChange", (value) => {
+        this.prop[0].google = value;
+        this.save();
+      }),
     });
-    $$("metrika").attachEvent("onChange", (value) => {
-      this.prop[0].metrika = value;
-      this.save();
+    this.#event.push({
+      component: $$("metrika"),
+      id: $$("metrika").attachEvent("onChange", (value) => {
+        this.prop[0].metrika = value;
+        this.save();
+      }),
     });
-    $$("analytics").attachEvent("onChange", (value) => {
-      this.prop[0].analytics = value;
-      this.save();
+    this.#event.push({
+      component: $$("analytics"),
+      id: $$("analytics").attachEvent("onChange", (value) => {
+        this.prop[0].analytics = value;
+        this.save();
+      }),
     });
   }
 
@@ -223,27 +270,29 @@ export default class SettingsView extends JetView {
    */
   async save() {
     try {
+      const lMessage = {
+        pAccessKeyId: this.app.io.getAccessKeyId(),
+        pSecretAccessKey: this.app.io.getSecretAccessKey(),
+        pBucketName: this.app.io.getBucket(),
+        pRegion: this.app.io.getRegion(),
+      };
       await this.app.io.putObject(
         "index.json",
         "application/json",
         webix.ajax().stringify(this.prop)
       );
-      webix.message("Settings save complete");
-      if (this.siteWorker) this.siteWorker.terminate();
-      this.siteWorker = new Worker(
+      if (this.app) webix.message("Settings save complete");
+      if (this.#siteWorker) this.#siteWorker.terminate();
+      this.#siteWorker = new Worker(
         new URL("../workers/site.js", import.meta.url)
       );
-      this.siteWorker.postMessage({
-        pAccessKeyId: this.app.io.getAccessKeyId(),
-        pSecretAccessKey: this.app.io.getSecretAccessKey(),
-        pBucketName: this.app.io.getBucket(),
-        pRegion: this.app.io.getRegion(),
-      });
+      this.#siteWorker.postMessage(lMessage);
     } catch (err) {
-      webix.message({
-        text: err.message,
-        type: "error",
-      });
+      if (this.app)
+        webix.message({
+          text: err.message,
+          type: "error",
+        });
     }
   }
 }
