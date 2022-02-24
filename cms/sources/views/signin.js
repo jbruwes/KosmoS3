@@ -1,5 +1,5 @@
 import { JetView } from "webix-jet";
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 import { IAMClient, GetUserCommand } from "@aws-sdk/client-iam";
 import S3 from "../s3";
 
@@ -8,6 +8,18 @@ import S3 from "../s3";
  */
 export default class SignInView extends JetView {
   #config;
+
+  #event = [];
+
+  /**
+   *
+   */
+  destroy() {
+    if (this.#event)
+      this.#event.forEach((event) => event.component.detachEvent(event.id));
+    this.#event = null;
+    this.#config = null;
+  }
 
   /**
    * @param app
@@ -193,112 +205,122 @@ export default class SignInView extends JetView {
         },
       });
       try {
-        this.app.io = new S3(
-          $$("username").getValue(),
-          $$("password").getValue(),
-          (await iamClient.send(new GetUserCommand({}))).User.UserName,
-          $$("region").getValue()
-        );
-        await this.app.io.headBucket();
-        webix.UIManager.removeHotKey("enter", this.clickLogin);
         const message = {
-          pAccessKeyId: this.app.io.getAccessKeyId(),
-          pSecretAccessKey: this.app.io.getSecretAccessKey(),
-          pBucketName: this.app.io.getBucket(),
-          pRegion: this.app.io.getRegion(),
+          pAccessKeyId: $$("username").getValue(),
+          pSecretAccessKey: $$("password").getValue(),
+          pBucketName: (await iamClient.send(new GetUserCommand({}))).User
+            .UserName,
+          pRegion: $$("region").getValue(),
         };
-        /**
-         *
-         */
-        initWorker.onmessage = async () => {
-          $$("sidebar").clearAll();
-          const openUrl = `http://${this.app.io.getBucket()}.s3-website.${this.app.io.getRegion()}.amazonaws.com/`;
-          $$("toolbar").addView({
-            id: "play",
-            view: "icon",
-            icon: "mdi mdi-play-circle",
+        if (this.app) {
+          this.app.io = new S3(
+            message.pAccessKeyId,
+            message.pSecretAccessKey,
+            message.pBucketName,
+            message.pRegion
+          );
+          await this.app.io.headBucket();
+          if (this.app) {
+            webix.UIManager.removeHotKey("enter", this.clickLogin);
             /**
              *
              */
-            click: () => window.open(openUrl, "_tab"),
-          });
-          await this.show("content");
-          $$("sidebar").add(
-            {
-              id: "content",
-              icon: "mdi mdi-book-open-page-variant",
-              value: "Content",
-            },
-            0
-          );
-          $$("sidebar").add(
-            {
-              id: "template",
-              icon: "mdi mdi-language-html5",
-              value: "Template",
-            },
-            1
-          );
-          $$("sidebar").add(
-            {
-              id: "css",
-              icon: "mdi mdi-language-css3",
-              value: "CSS",
-            },
-            2
-          );
-          $$("sidebar").add(
-            {
-              id: "js",
-              icon: "mdi mdi-language-javascript",
-              value: "JavaScript",
-            },
-            3
-          );
-          $$("sidebar").add(
-            {
-              id: "settings",
-              icon: "mdi mdi-cog",
-              value: "Settings",
-            },
-            4
-          );
-          $$("sidebar").add({
-            id: "signout",
-            icon: "mdi mdi-logout-variant",
-            value: "Sign Out",
-          });
-          $$("sidebar").select("content");
-          felWorker.postMessage(message);
-        };
-        initWorker.postMessage(message);
-        let storageLocal = webix.storage.local.get("keys");
-        if (!storageLocal) storageLocal = [];
-        else {
-          const oBucketName = $$("stored").getText();
-          if (message.pBucketName !== oBucketName)
-            storageLocal = storageLocal.filter(
-              (item) => item.pBucketName !== oBucketName
-            );
+            initWorker.onmessage = async () => {
+              $$("sidebar").clearAll();
+              $$("toolbar").addView({
+                id: "play",
+                view: "icon",
+                icon: "mdi mdi-play-circle",
+                /**
+                 *
+                 */
+                click: () =>
+                  window.open(
+                    `http://${message.pBucketName}.s3-website.${message.pRegion}.amazonaws.com/`,
+                    "_tab"
+                  ),
+              });
+              await this.show("content");
+              $$("sidebar").add(
+                {
+                  id: "content",
+                  icon: "mdi mdi-book-open-page-variant",
+                  value: "Content",
+                },
+                0
+              );
+              $$("sidebar").add(
+                {
+                  id: "template",
+                  icon: "mdi mdi-language-html5",
+                  value: "Template",
+                },
+                1
+              );
+              $$("sidebar").add(
+                {
+                  id: "css",
+                  icon: "mdi mdi-language-css3",
+                  value: "CSS",
+                },
+                2
+              );
+              $$("sidebar").add(
+                {
+                  id: "js",
+                  icon: "mdi mdi-language-javascript",
+                  value: "JavaScript",
+                },
+                3
+              );
+              $$("sidebar").add(
+                {
+                  id: "settings",
+                  icon: "mdi mdi-cog",
+                  value: "Settings",
+                },
+                4
+              );
+              $$("sidebar").add({
+                id: "signout",
+                icon: "mdi mdi-logout-variant",
+                value: "Sign Out",
+              });
+              $$("sidebar").select("content");
+              felWorker.postMessage(message);
+            };
+            initWorker.postMessage(message);
+            let storageLocal = webix.storage.local.get("keys");
+            if (!storageLocal) storageLocal = [];
+            else {
+              const oBucketName = $$("stored").getText();
+              if (message.pBucketName !== oBucketName)
+                storageLocal = storageLocal.filter(
+                  (item) => item.pBucketName !== oBucketName
+                );
+            }
+            if ($$("store").getValue()) {
+              let storageItem = storageLocal.find(
+                (item) => item.pBucketName === message.pBucketName
+              );
+              if (storageItem === undefined) storageLocal.push(message);
+              else storageItem = message;
+            } else {
+              storageLocal = storageLocal.filter(
+                (item) => item.pBucketName !== message.pBucketName
+              );
+            }
+            webix.storage.local.put("keys", storageLocal);
+          }
         }
-        if ($$("store").getValue()) {
-          let storageItem = storageLocal.find(
-            (item) => item.pBucketName === message.pBucketName
-          );
-          if (storageItem === undefined) storageLocal.push(message);
-          else storageItem = message;
-        } else {
-          storageLocal = storageLocal.filter(
-            (item) => item.pBucketName !== message.pBucketName
-          );
-        }
-        webix.storage.local.put("keys", storageLocal);
       } catch (err) {
-        this.app.io = null;
-        webix.message({
-          text: err.message,
-          type: "error",
-        });
+        if (this.app) {
+          this.app.io = null;
+          webix.message({
+            text: err.message,
+            type: "error",
+          });
+        }
       }
     }
   };
@@ -331,7 +353,10 @@ export default class SignInView extends JetView {
       options.push({ id: index + 1, value: value.pBucketName, creds: value });
     });
     $$("stored").getList().parse(options);
-    $$("stored").attachEvent("onChange", onChangeSored);
+    this.#event.push({
+      component: $$("stored"),
+      id: $$("stored").attachEvent("onChange", onChangeSored),
+    });
     webix.UIManager.addHotKey("enter", this.clickLogin, $$("username"));
     webix.UIManager.addHotKey("enter", this.clickLogin, $$("password"));
     webix.UIManager.addHotKey("enter", this.clickLogin, $$("login"));
