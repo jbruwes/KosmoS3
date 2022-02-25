@@ -19,6 +19,7 @@ export default class SignInView extends JetView {
       this.#event.forEach((event) => event.component.detachEvent(event.id));
     this.#event = null;
     this.#config = null;
+    if (this.app.io === true) this.app.io = null;
   }
 
   /**
@@ -183,10 +184,6 @@ export default class SignInView extends JetView {
    *
    */
   clickLogin = async () => {
-    const felWorker = new Worker(new URL("../workers/fel.js", import.meta.url));
-    const initWorker = new Worker(
-      new URL("../workers/init.js", import.meta.url)
-    );
     if (
       this.app.io === undefined ||
       !this.app.io ||
@@ -197,6 +194,12 @@ export default class SignInView extends JetView {
         ))
     ) {
       this.app.io = true;
+      const felWorker = new Worker(
+        new URL("../workers/fel.js", import.meta.url)
+      );
+      const initWorker = new Worker(
+        new URL("../workers/init.js", import.meta.url)
+      );
       const iamClient = new IAMClient({
         region: $$("region").getValue(),
         credentials: {
@@ -213,19 +216,19 @@ export default class SignInView extends JetView {
           pRegion: $$("region").getValue(),
         };
         if (this.app) {
-          this.app.io = new S3(
+          const io = new S3(
             message.pAccessKeyId,
             message.pSecretAccessKey,
             message.pBucketName,
             message.pRegion
           );
-          await this.app.io.headBucket();
+          await io.headBucket();
           if (this.app) {
             webix.UIManager.removeHotKey("enter", this.clickLogin);
             /**
              *
              */
-            initWorker.onmessage = async () => {
+            initWorker.onmessage = () => {
               $$("sidebar").clearAll();
               $$("toolbar").addView({
                 id: "play",
@@ -240,7 +243,6 @@ export default class SignInView extends JetView {
                     "_tab"
                   ),
               });
-              await this.show("content");
               $$("sidebar").add(
                 {
                   id: "content",
@@ -287,6 +289,8 @@ export default class SignInView extends JetView {
                 value: "Sign Out",
               });
               $$("sidebar").select("content");
+              this.app.io = io;
+              this.show("content");
               felWorker.postMessage(message);
             };
             initWorker.postMessage(message);
