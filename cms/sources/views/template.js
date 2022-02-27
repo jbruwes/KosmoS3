@@ -1,6 +1,6 @@
 import $ from "jquery/dist/jquery.slim";
 import { JetView } from "webix-jet";
-import * as webix from "webix";
+import * as webix from "webix/webix.min";
 import { fabric } from "fabric";
 import "../fabricjs";
 
@@ -8,6 +8,15 @@ import "../fabricjs";
  *
  */
 export default class TemplateView extends JetView {
+  lockRedraw = false;
+
+  /**
+   *
+   */
+  destroy() {
+    fabric.util.removeListener(document.body, "wheel", this.wheelEvent);
+  }
+
   /**
    *
    */
@@ -534,13 +543,6 @@ export default class TemplateView extends JetView {
       // this.genHtml();
       this.loadSite();
     }
-  }
-
-  /**
-   *
-   */
-  destroy() {
-    fabric.util.removeListener(document.body, "wheel", this.wheelEvent);
   }
 
   /**
@@ -1205,18 +1207,17 @@ export default class TemplateView extends JetView {
     const item = this.body.find(`#${selectedItem.value}`);
     if (item.length) {
       this.lockRedraw = true;
+      await $$("tinymce").getEditor(true);
       if (selectedItem.value === "content") {
-        await $$("tinymce").getEditor(true);
-        $$("tinymce").$scope.setValue("");
         $$("tinymce").disable();
-        $$("ace-template").$scope.setValue("");
+        $$("tinymce").$scope.setValue("");
         $$("ace-template").disable();
+        $$("ace-template").$scope.setValue("");
       } else {
-        await $$("tinymce").getEditor(true);
-        $$("tinymce").$scope.setValue(item.html());
         $$("tinymce").enable();
-        $$("ace-template").$scope.setValue(item.html());
+        $$("tinymce").$scope.setValue(item.html());
         $$("ace-template").enable();
+        $$("ace-template").$scope.setValue(item.html());
       }
       $$("mode").setValue(getMode(item));
       $$("dock").setValue(
