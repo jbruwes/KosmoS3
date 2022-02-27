@@ -53,29 +53,30 @@ export default class AceView extends JetView {
   }
 
   /**
+   *
+   */
+  aceChange = () => {
+    this.#timeoutId.push(
+      webix.delay(
+        () => {
+          this.#timeoutId.pop();
+          if (!this.#timeoutId.length)
+            $$("tinymce").setValue(this.#editor.getValue());
+        },
+        this,
+        [],
+        1000
+      )
+    );
+  };
+
+  /**
    * @param html
    */
   async setValue(html) {
-    /**
-     *
-     */
-    const aceChange = () => {
-      this.#timeoutId.push(
-        webix.delay(
-          () => {
-            this.#timeoutId.pop();
-            if (!this.#timeoutId.length)
-              $$("tinymce").setValue(this.#editor.getValue());
-          },
-          this,
-          [],
-          1000
-        )
-      );
-    };
-    this.#session.off("change", aceChange);
+    this.#session.off("change", this.aceChange);
     this.#session.setValue(html, -1);
-    this.#session.on("change", aceChange);
+    this.#session.on("change", this.aceChange);
     this.#editor.resize();
   }
 
