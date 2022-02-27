@@ -62,7 +62,10 @@ export default class TinymceView extends JetView {
    *
    */
   destroy() {
-    if (this.#tinymce) this.#tinymce.off();
+    if (this.#tinymce) {
+      this.#tinymce.off("SetContent");
+      this.#tinymce.off("Change");
+    }
     this.#tinymce = null;
     this.#itemsTemplate = null;
     this.#grid = null;
@@ -813,10 +816,7 @@ export default class TinymceView extends JetView {
    */
   async main() {
     this.#tinymce = await $$("tinymce").getEditor(true);
-    if (this.app)
-      this.#tinymce.on("Change", () =>
-        this.getParentView().save.call(this.getParentView())
-      );
+    if (this.app) this.#tinymce.on("Change", this.save);
   }
 
   /**
@@ -882,11 +882,12 @@ export default class TinymceView extends JetView {
     this.#tinymce.setContent(val);
     this.#tinymce.undoManager.clear();
     this.#tinymce.nodeChanged();
-    this.#tinymce.on("Change", () =>
-      this.getParentView().save.call(this.getParentView())
-    );
-    this.#tinymce.on("SetContent", () =>
-      this.getParentView().save.call(this.getParentView())
-    );
+    this.#tinymce.on("Change", this.save);
+    this.#tinymce.on("SetContent", this.save);
   }
+
+  /**
+   *
+   */
+  save = () => this.getParentView().save.call(this.getParentView());
 }
