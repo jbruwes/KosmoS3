@@ -28,6 +28,7 @@ export default class AceView extends JetView {
   constructor(app) {
     super(app);
     this.#config = {
+      id: "ace-js",
       view: "ace-editor",
       theme: "tomorrow",
       mode: "javascript",
@@ -51,7 +52,7 @@ export default class AceView extends JetView {
    */
   async cb(text) {
     const timeoutId = [];
-    this.#editor = await this.getRoot().getEditor(true);
+    this.#editor = await $$("ace-js").getEditor(true);
     if (this.app) {
       this.#session = this.#editor.getSession();
       this.#session.setUseWrapMode(true);
