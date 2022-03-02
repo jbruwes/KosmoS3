@@ -7,6 +7,13 @@ export default class ClassToolbarView extends JetView {
   #config;
 
   /**
+   * It destroys the config object.
+   */
+  destroy() {
+    this.#config = null;
+  }
+
+  /**
    * @param app
    */
   constructor(app) {
