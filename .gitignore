@@ -4,5 +4,6 @@ docs_cms/
 docs_fel/
 out/
 icons/
+.vscode/
 .DS_Store
 icon.png
