@@ -1196,6 +1196,7 @@ export default class TemplateView extends JetView {
   async setParams(selectedItem) {
     /**
      * Given an item, return the mode of the item
+     *
      * @param item - The element that is being scrolled.
      * @returns The mode of the item.
      */
