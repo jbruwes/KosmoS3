@@ -11,7 +11,7 @@ export default class TemplateView extends JetView {
   lockRedraw = false;
 
   /**
-   *
+   * It removes the event listener for the mouse wheel.
    */
   destroy() {
     fabric.util.removeListener(document.body, "wheel", this.wheelEvent);
@@ -569,7 +569,8 @@ export default class TemplateView extends JetView {
   };
 
   /**
-   *
+   * It loads the index.htm file from the S3 bucket, replaces the base URL with the correct one, and
+   * replaces the Pusher and Google Analytics scripts with the correct ones
    */
   async loadSite() {
     if (this.app && this.app.io) {
@@ -1194,7 +1195,9 @@ export default class TemplateView extends JetView {
    */
   async setParams(selectedItem) {
     /**
-     * @param item
+     * Given an item, return the mode of the item
+     * @param item - The element that is being scrolled.
+     * @returns The mode of the item.
      */
     function getMode(item) {
       if (item.parent("div[data-absolute]:not([id])").parent(".pusher").length)
