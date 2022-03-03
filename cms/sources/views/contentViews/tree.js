@@ -78,7 +78,7 @@ export default class TreeView extends JetView {
         if (this.app)
           if (id) $$("tree").select(id);
           else {
-            this.#tinymce.setMode("readonly");
+            this.#tinymce.mode.set("readonly");
             this.#ace.setReadOnly(true);
           }
       },
@@ -185,11 +185,11 @@ export default class TreeView extends JetView {
     const tree = $$("tree").data.serialize();
     if (!tree.length) {
       $$("tinymce").$scope.setValue("");
-      this.#tinymce.setMode("readonly");
+      this.#tinymce.mode.set("readonly");
       this.#ace.setValue("");
       this.#ace.setReadOnly(true);
     } else {
-      this.#tinymce.setMode("design");
+      this.#tinymce.mode.set("design");
       this.#ace.setReadOnly(false);
     }
     try {
