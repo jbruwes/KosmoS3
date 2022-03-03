@@ -13,9 +13,7 @@ import "tinymce/themes/silver";
 import "tinymce/skins/ui/oxide/skin.css";
 
 /* Import plugins */
-import "tinymce/plugins/print";
 import "tinymce/plugins/preview";
-import "tinymce/plugins/paste";
 import "tinymce/plugins/importcss";
 import "tinymce/plugins/searchreplace";
 import "tinymce/plugins/autolink";
@@ -33,7 +31,6 @@ import "tinymce/plugins/template";
 import "tinymce/plugins/codesample";
 import "tinymce/plugins/table";
 import "tinymce/plugins/charmap";
-import "tinymce/plugins/hr";
 import "tinymce/plugins/pagebreak";
 import "tinymce/plugins/nonbreaking";
 import "tinymce/plugins/anchor";
@@ -41,11 +38,11 @@ import "tinymce/plugins/insertdatetime";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/wordcount";
-import "tinymce/plugins/textpattern";
-import "tinymce/plugins/noneditable";
 import "tinymce/plugins/quickbars";
 import "tinymce/plugins/emoticons";
 import "tinymce/plugins/emoticons/js/emojis";
+
+import "tinymce/models/dom";
 
 webix.protoUI(
   {
