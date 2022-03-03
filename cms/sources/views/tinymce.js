@@ -138,9 +138,7 @@ export default class TinymceView extends JetView {
         menubar: false,
       },
       plugins:
-        "print " +
         "preview " +
-        "paste " +
         "searchreplace " +
         "autolink " +
         "autosave " +
@@ -157,7 +155,6 @@ export default class TinymceView extends JetView {
         "codesample " +
         "table " +
         "charmap " +
-        "hr " +
         "pagebreak " +
         "nonbreaking " +
         "anchor " +
@@ -165,8 +162,6 @@ export default class TinymceView extends JetView {
         "advlist " +
         "lists " +
         "wordcount " +
-        "textpattern " +
-        "noneditable " +
         "charmap " +
         "quickbars " +
         "emoticons ",
