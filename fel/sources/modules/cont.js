@@ -76,7 +76,7 @@ export default async function cont(usrScripts, scripts, index) {
     } catch (err) {
       html = "";
     }
-    document.querySelector("#content>main").innerHTML = html;
+    $("#content>main").html(html);
     document.title = value;
     glightbox("#content>main");
     onhashchange(usrScripts, scripts, index);
