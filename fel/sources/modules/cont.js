@@ -76,6 +76,7 @@ export default async function cont(usrScripts, scripts, index) {
     } catch (err) {
       html = "";
     }
+    // inlineHTML не умеет запускать скрипты в подключаемом коде
     $("#content>main").html(html);
     document.title = value;
     glightbox("#content>main");
