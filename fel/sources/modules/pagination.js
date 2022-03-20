@@ -116,7 +116,7 @@ export default function pagination(index, sel) {
       const right = $(
         '<a class="item"><i class="angle right icon"><!-- --></i></a>'
       );
-      if (curIndex > 3) {
+      if (curIndex > 2 && dataChildren.length > 4) {
         $(this).prepend(
           '<a class="disabled item"><i class="ellipsis horizontal icon"><!-- --></i></a>'
         );
@@ -130,7 +130,7 @@ export default function pagination(index, sel) {
       }
       $(this).prepend(left);
       $(this).prepend(doubleLeft);
-      if (curIndex < dataChildren.length - 3) {
+      if (curIndex < dataChildren.length - 3 && dataChildren.length > 4) {
         $(this).append(
           '<a class="disabled item"><i class="ellipsis horizontal icon"><!-- --></i></a>'
         );
