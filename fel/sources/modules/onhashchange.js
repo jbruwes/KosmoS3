@@ -2,6 +2,7 @@ import { jarallax, jarallaxVideo } from "jarallax";
 import deck from "./deck";
 import carousel from "./carousel";
 import cardgrid from "./cardgrid";
+import card from "./card";
 import list from "./list";
 import breadcrumbs from "./breadcrumbs";
 import icongrid from "./icongrid";
@@ -54,6 +55,7 @@ export default function onhashchange(usrScripts, scripts, index, sel) {
   carousel(index, pSel);
   deck(index, pSel);
   cardgrid(index, pSel);
+  card(index, pSel);
   list(index, pSel);
   header(index, pSel);
   pageheader(index, pSel);
