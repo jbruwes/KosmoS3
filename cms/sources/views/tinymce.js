@@ -344,6 +344,17 @@ export default class TinymceView extends JetView {
           ].join(" ")}>${this.#header}</div>`,
         },
         {
+          title: "card",
+          description: "одиночная карточка",
+          content: `<div class="ui raised link card mceNonEditable" ${[
+            'data-id="card"',
+            this.#commonData,
+            this.#singleData,
+          ].join(" ")}>${this.#dimmedImage
+            .replace("#{loading}", "eager")
+            .replace("#{size}", "")}${this.#header}</div>`,
+        },
+        {
           title: "doubleheader",
           description: "двойной заголовок",
           content: `<div class="ui placeholder segment mceNonEditable">${this.#grid
