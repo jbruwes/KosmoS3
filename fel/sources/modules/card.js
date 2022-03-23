@@ -67,16 +67,29 @@ export default function card(index, sel) {
      * @param {object} a Текущий объект требующий обшаблонивания
      * @returns {string} Ссылка
      */
-    function aUiHeader(a) {
-      return unlink ? a.context.$href : "";
-    }
+    const aUiHeader = (a) => {
+      return unlink
+        ? a.context.$href
+        : $(this).find("a.ui.header").attr("href");
+    };
+    /**
+     * Подстановка ссылки в шаблон на кнопку
+     *
+     * @param {object} a Текущий объект требующий обшаблонивания
+     * @returns {string} Ссылка
+     */
+    const aUiButton = (a) => {
+      return unlink
+        ? a.context.$href
+        : $(this).find("a.ui.button").attr("href");
+    };
     if (dataChildren.length) {
       try {
         $(this)
           .removeData("auto")
           .removeAttr("data-auto")
           .render(dataChildren[0], {
-            "a.ui.button@href": "$href",
+            "a.ui.button@href": aUiButton,
             "img.ui.image@src": "image",
             // Заголовок минимум
             "+span.ui": "$header",
