@@ -67,9 +67,11 @@ export default function pageheader(index, sel) {
      * @param {object} a Текущий объект требующий обшаблонивания
      * @returns {string} Ссылка
      */
-    function aUiHeader(a) {
-      return unlink ? a.context.$href : "";
-    }
+    const aUiHeader = (a) => {
+      return unlink
+        ? a.context.$href
+        : $(this).find("a.ui.header").attr("href");
+    };
     if (dataChildren.length) {
       try {
         $(this)
