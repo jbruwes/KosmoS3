@@ -843,7 +843,11 @@ export default class TinymceView extends JetView {
           }</a>`
         );
       else
-        tinymce.execCommand("mceInsertLink", !1, `${that.path}/${that.text}/`);
+        tinymce.execCommand(
+          "mceInsertLink",
+          !1,
+          `${that.path}/${that.text.replace(/ /g, "_")}/`
+        );
     }
 
     let lId = $$("tree").getFirstChildId(pId);
