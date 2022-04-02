@@ -5,7 +5,7 @@ import glightbox from "./glightbox";
  *
  * @param {*[]} usrScripts Массив промисов пользовательских подгружаемых
  *  скриптов
- * @param {object.<*>} scripts Объект с промисами подгружаемых скриптов
+ * @param {Object<*>} scripts Объект с промисами подгружаемых скриптов
  * @param {object} index Структура сайта
  */
 export default async function cont(usrScripts, scripts, index) {
