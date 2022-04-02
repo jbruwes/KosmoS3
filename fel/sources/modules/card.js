@@ -109,9 +109,9 @@ export default function card(index, sel) {
   }
   $(`${sel} [data-id=card][data-auto]`).each(eachCard);
   $(`${sel} [data-id=card] div.image:not([contenteditable])`)
-  .attr("contenteditable", "false")
-  .dimmer({
-    transition: "fade up",
-    on: "hover",
-  });
+    .attr("contenteditable", "false")
+    .dimmer({
+      transition: "fade up",
+      on: "hover",
+    });
 }
