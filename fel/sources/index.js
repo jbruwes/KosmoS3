@@ -55,7 +55,7 @@ window.jQuery = jQuery;
   /**
    * Объект с промисами подгружаемых скриптов
    *
-   * @constant {object.<*>}
+   * @constant {Object<*>}
    */
   const scripts = {
     indexJs: $.Deferred(),
@@ -75,57 +75,21 @@ window.jQuery = jQuery;
    */
   let usrScripts = [];
   /**
-   * Функция загрузки пользовательских скриптов
-   *
-   * @param {object} val Объект с путем для загрузки скрипта
-   * @returns {*} Обещание загрузки скрипта
-   */
-  function getScriptFromArray(val) {
-    if (Object.prototype.hasOwnProperty.call(val, "url") && val.url)
-      return $.getScript(val.url);
-    return false;
-  }
-  /**
-   * Наполнения массива обещаниями загрузки пользовательских скриптов
-   *
-   * @param {object} data Загруженный index.cdn.json
-   */
-  function defIndexCdnJsonDone(data) {
-    usrScripts = $.map(data, getScriptFromArray);
-  }
-  /**
-   * Присвоение структуры сайта
-   *
-   * @param {object} data Загруженный index.json
-   */
-  function defIndexJsonDone(data) {
-    index = data;
-  }
-  /**
-   * Обработчик события popstate & pushstate
-   */
-  function onChangeState() {
-    cont(usrScripts, scripts, index);
-  }
-  /**
-   * Обработчик, запускаемый после загрузки структуры сайта
-   */
-  function indexJSONDone() {
-    sidebar(index);
-    $(window).on("popstate", onChangeState);
-    $(window).on("pushstate", onChangeState);
-    if (window.location !== window.parent.location) {
-      $(window).trigger("popstate");
-    }
-    onhashchange(usrScripts, scripts, index, "body>.pusher");
-  }
-  /**
    * Обработчик, запускаемый после загрузки документа
    */
   function readyFn() {
     glightbox("body");
     AOS.init();
-    $.when(scripts.indexJson).done(indexJSONDone);
+    $.when(scripts.indexJson, scripts.indexCdnJson).done(() => {
+      sidebar(index);
+      $(window).on("popstate pushstate", () => {
+        cont(usrScripts, scripts, index);
+      });
+      if (window.location !== window.parent.location) {
+        $(window).trigger("popstate");
+      }
+      onhashchange(usrScripts, scripts, index, "body>.pusher");
+    });
   }
   // jarallaxVideo();
   if (!window.location.origin) {
@@ -143,10 +107,18 @@ window.jQuery = jQuery;
     .attr("href", "index.css");
   $.ajaxSetup({ cache: false });
   $.getScript("index.js").done(scripts.indexJs.resolve);
-  $.getJSON("index.json", defIndexJsonDone).done(scripts.indexJson.resolve);
-  $.getJSON("index.cdn.json", defIndexCdnJsonDone).done(
-    scripts.indexCdnJson.resolve
-  );
+  $.getJSON("index.json").done((data) => {
+    index = data;
+    scripts.indexJson.resolve();
+  });
+  $.getJSON("index.cdn.json").done((data) => {
+    usrScripts = data.map((val) =>
+      Object.prototype.hasOwnProperty.call(val, "url") && val.url
+        ? $.getScript(val.url)
+        : false
+    );
+    scripts.indexCdnJson.resolve();
+  });
   if (document.readyState !== "loading") {
     readyFn();
   } else {
