@@ -6,4 +6,4 @@ npm run build
 
 ### License
 
-MIT License
+AGPL-3.0 License
