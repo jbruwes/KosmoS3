@@ -622,7 +622,7 @@ export default class TinymceView extends JetView {
       },
       relative_urls: false,
       remove_script_host: false,
-      document_base_url: `${this.app.io.getWendpoint()}/`,
+      document_base_url: `${this.app.io.getWendpoint()}/${this.app.io.getBucket()}/`,
       statusbar: false,
       resize: false,
       link_class_list: [
