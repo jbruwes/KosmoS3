@@ -145,6 +145,7 @@ export default class ContentView extends JetView {
         pSecretAccessKey: this.app.io.getSecretAccessKey(),
         pBucketName: this.app.io.getBucket(),
         pRegion: this.app.io.getRegion(),
+        pEndpoint: this.app.io.getEndpoint(),
         pId: $$("tree").getSelectedId(),
       };
       await this.app.io.putObject(
