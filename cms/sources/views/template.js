@@ -578,10 +578,7 @@ export default class TemplateView extends JetView {
       document.open();
       document.write(
         (await (await fetch("index.htm", { cache: "no-store" })).text())
-          .replace(
-            /#base#/g,
-            `https://s3.${this.app.io.getRegion()}.amazonaws.com/${this.app.io.getBucket()}/`
-          )
+          .replace(/#base#/g, `${this.app.io.getWendpoint()}/`)
           .replace("#pusher#", this.genHtml())
           .replace(/<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi, "")
           .replace(/<script id="google"[^>]*>([\s\S]*?)<\/script>/gi, "")
@@ -935,6 +932,7 @@ export default class TemplateView extends JetView {
         pSecretAccessKey: this.app.io.getSecretAccessKey(),
         pBucketName: this.app.io.getBucket(),
         pRegion: this.app.io.getRegion(),
+        pEndpoint: this.app.io.getEndpoint(),
       });
     } catch (err) {
       webix.message({
