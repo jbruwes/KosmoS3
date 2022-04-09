@@ -12,11 +12,25 @@ import html from "./html";
  * @param root0.data.pBucketName
  * @param root0.data.pRegion
  * @param root0.data.pId
+ * @param root0.data.pEndpoint
  */
 onmessage = async ({
-  data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion, pId },
+  data: {
+    pAccessKeyId,
+    pSecretAccessKey,
+    pBucketName,
+    pRegion,
+    pEndpoint,
+    pId,
+  },
 }) => {
-  const io = new S3(pAccessKeyId, pSecretAccessKey, pBucketName, pRegion);
+  const io = new S3(
+    pAccessKeyId,
+    pSecretAccessKey,
+    pBucketName,
+    pRegion,
+    pEndpoint
+  );
   const [lJson] = JSON.parse(await io.getObject("index.json"));
   const lNode = jsel(lJson).select(`//*[@id="${pId}"]`);
   if (lNode) {
