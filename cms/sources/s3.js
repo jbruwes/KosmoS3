@@ -17,6 +17,10 @@ export default class S3 {
 
   #region;
 
+  #endpoint;
+
+  #wendpoint;
+
   #accessKeyId;
 
   #secretAccessKey;
@@ -26,19 +30,32 @@ export default class S3 {
    * @param secretAccessKey
    * @param bucket
    * @param region
+   * @param endpoint
+   * @param wendpoint
    */
-  constructor(accessKeyId, secretAccessKey, bucket, region) {
+  constructor(
+    accessKeyId,
+    secretAccessKey,
+    bucket,
+    region,
+    endpoint = null,
+    wendpoint = null
+  ) {
     this.#accessKeyId = accessKeyId;
     this.#secretAccessKey = secretAccessKey;
     this.#bucket = bucket;
     this.#region = region;
-    this.#s3Client = new S3Client({
+    this.#wendpoint = wendpoint;
+    this.#endpoint = endpoint;
+    const config = {
       region,
       credentials: {
         accessKeyId,
         secretAccessKey,
       },
-    });
+    };
+    if (endpoint) config.endpoint = endpoint;
+    this.#s3Client = new S3Client(config);
   }
 
   /**
@@ -67,6 +84,20 @@ export default class S3 {
    */
   getRegion() {
     return this.#region;
+  }
+
+  /**
+   *
+   */
+  getEndpoint() {
+    return this.#endpoint;
+  }
+
+  /**
+   *
+   */
+  getWendpoint() {
+    return this.#wendpoint;
   }
 
   /**
