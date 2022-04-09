@@ -9,11 +9,18 @@ import S3 from "../s3";
  * @param root0.data.pSecretAccessKey
  * @param root0.data.pBucketName
  * @param root0.data.pRegion
+ * @param root0.data.pEndpoint
  */
 onmessage = async ({
-  data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion },
+  data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion, pEndpoint },
 }) => {
-  const io = new S3(pAccessKeyId, pSecretAccessKey, pBucketName, pRegion);
+  const io = new S3(
+    pAccessKeyId,
+    pSecretAccessKey,
+    pBucketName,
+    pRegion,
+    pEndpoint
+  );
   const head = await Promise.allSettled([
     io.headObject("index.json"),
     io.headObject("index.cdn.json"),
