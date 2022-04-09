@@ -198,6 +198,7 @@ export default class TreeView extends JetView {
         pSecretAccessKey: this.app.io.getSecretAccessKey(),
         pBucketName: this.app.io.getBucket(),
         pRegion: this.app.io.getRegion(),
+        pEndpoint: this.app.io.getEndpoint(),
       };
       await this.app.io.putObject(
         "index.json",
