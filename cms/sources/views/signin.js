@@ -1,6 +1,5 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
-import { IAMClient, GetUserCommand } from "@aws-sdk/client-iam";
 import S3 from "../s3";
 
 /**
@@ -27,8 +26,32 @@ export default class SignInView extends JetView {
    */
   constructor(app) {
     super(app);
+    /**
+     *
+     */
+    function wendbpoint() {
+      switch ($$("cloud").getValue()) {
+        case "2":
+          $$("wendpoint").setValue(
+            `http://${$$("domain").getValue()}.s3-website.${$$(
+              "region"
+            ).getValue()}.amazonaws.com`
+          );
+          break;
+        case "3":
+          $$("wendpoint").setValue(
+            `http://${$$("domain").getValue()}.website.yandexcloud.net`
+          );
+          break;
+        default:
+      }
+    }
+
     this.#config = {
       css: "signInView",
+      view: "form",
+      margin: 0,
+      padding: 0,
       cols: [
         {
           gravity: 0.38,
@@ -41,19 +64,6 @@ export default class SignInView extends JetView {
               padding: 4,
               rows: [
                 {
-                  cols: [
-                    {
-                      view: "richselect",
-                      width: 272,
-                      clear: true,
-                      id: "stored",
-                      placeholder: "Select saved credential",
-                      options: [],
-                    },
-                    {},
-                  ],
-                },
-                {
                   id: "responsive",
                   rows: [
                     {
@@ -63,15 +73,35 @@ export default class SignInView extends JetView {
                           rows: [
                             {
                               width: 272,
-                              template: "Required",
+                              template: "website",
                               type: "section",
                               css: "webix_section",
+                            },
+                            {
+                              view: "richselect",
+                              width: 272,
+                              clear: true,
+                              id: "stored",
+                              placeholder: "Select saved credential",
+                              options: [],
+                            },
+                            {
+                              width: 272,
+                              view: "text",
+                              placeholder: "example.com",
+                              name: "domain",
+                              id: "domain",
+                              required: true,
+                              on: {
+                                onChange: wendbpoint,
+                                onTimedKeyPress: wendbpoint,
+                              },
                             },
                             {
                               width: 272,
                               view: "text",
                               required: true,
-                              placeholder: "Access key ID",
+                              placeholder: "access key id",
                               name: "username",
                               id: "username",
                             },
@@ -80,7 +110,7 @@ export default class SignInView extends JetView {
                               view: "text",
                               required: true,
                               type: "password",
-                              placeholder: "Secret access key",
+                              placeholder: "secret access key",
                               name: "password",
                               id: "password",
                             },
@@ -90,18 +120,114 @@ export default class SignInView extends JetView {
                           width: 272,
                           rows: [
                             {
-                              template: "Optional",
+                              template: "cloud",
                               type: "section",
                               css: "webix_section",
                             },
                             {
+                              view: "richselect",
+                              name: "cloud",
+                              id: "cloud",
+                              value: 1,
+                              options: [
+                                { id: 1, value: "custom..." },
+                                { id: 2, value: "aws" },
+                                { id: 3, value: "yandex" },
+                              ],
+                              on: {
+                                /**
+                                 * @param {*} pValue
+                                 */
+                                onChange: (pValue) => {
+                                  switch (pValue) {
+                                    case "2":
+                                      $$($$("region").config.suggest)
+                                        .getList()
+                                        .parse([
+                                          "us-east-2",
+                                          "us-east-1",
+                                          "us-west-1",
+                                          "us-west-2",
+                                          "af-south-1",
+                                          "ap-east-1",
+                                          "ap-southeast-3",
+                                          "ap-south-1",
+                                          "ap-northeast-3",
+                                          "ap-northeast-2",
+                                          "ap-southeast-1",
+                                          "ap-southeast-2",
+                                          "ap-northeast-1",
+                                          "ca-central-1",
+                                          "cn-north-1",
+                                          "cn-northwest-1",
+                                          "eu-central-1",
+                                          "eu-west-1",
+                                          "eu-west-2",
+                                          "eu-south-1",
+                                          "eu-west-3",
+                                          "eu-north-1",
+                                          "me-south-1",
+                                          "sa-east-1",
+                                        ]);
+                                      $$("region").setValue("us-east-1");
+                                      $$("region").enable();
+                                      $$("endpoint").setValue("");
+                                      $$("endpoint").disable();
+                                      $$("wendpoint").disable();
+                                      break;
+                                    case "3":
+                                      $$($$("region").config.suggest)
+                                        .getList()
+                                        .parse(["ru-central1"]);
+                                      $$("region").setValue("ru-central1");
+                                      $$("region").disable();
+                                      $$("endpoint").setValue(
+                                        "https://storage.yandexcloud.net"
+                                      );
+                                      $$("endpoint").disable();
+                                      $$("wendpoint").disable();
+                                      break;
+                                    default:
+                                      $$($$("region").config.suggest)
+                                        .getList()
+                                        .clearAll();
+                                      $$("region").setValue("");
+                                      $$("region").enable();
+                                      $$("endpoint").setValue("");
+                                      $$("endpoint").enable();
+                                      $$("wendpoint").setValue("");
+                                      $$("wendpoint").enable();
+                                      break;
+                                  }
+                                  wendbpoint();
+                                },
+                              },
+                            },
+                            {
                               view: "text",
-                              placeholder: "Region",
-                              value: "us-east-1",
-                              readonly: true,
-                              disabled: true,
+                              placeholder: "region",
                               name: "region",
                               id: "region",
+                              required: true,
+                              suggest: [],
+                              on: {
+                                onChange: wendbpoint,
+                                onTimedKeyPress: wendbpoint,
+                              },
+                            },
+                            {
+                              view: "text",
+                              placeholder: "endpoint url",
+                              name: "endpoint",
+                              id: "endpoint",
+                              required: true,
+                            },
+                            {
+                              view: "text",
+                              placeholder: "website endpoint url",
+                              name: "wendpoint",
+                              id: "wendpoint",
+                              required: true,
                             },
                           ],
                         },
@@ -144,18 +270,21 @@ export default class SignInView extends JetView {
               cols: [
                 {},
                 {},
-                /* {
-                  id: 'www',
-                  view: 'button',
-                  css: 'webix_transparent',
-                  type: 'icon',
+                {
+                  id: "www",
+                  view: "button",
+                  css: "webix_transparent",
+                  type: "icon",
                   width: 268,
-                  label: '𝔚𝔢𝔫𝔦𝔤 𝔚𝔢𝔟 𝔚𝔬𝔯𝔨𝔰𝔥𝔬𝔭',
-                  icon: 'mdi mdi-cursor-default-click-outline',
+                  label: "KosmoS3 CMS",
+                  icon: "mdi mdi-cursor-default-click-outline",
+                  /**
+                   *
+                   */
                   click: () => {
-                    window.open('https://w--w--w.com', '_blank');
+                    window.open("https://kosmos3.com", "_blank");
                   },
-                }, */
+                },
               ],
             },
           ],
@@ -185,13 +314,20 @@ export default class SignInView extends JetView {
    */
   clickLogin = async () => {
     if (
-      this.app.io === undefined ||
-      !this.app.io ||
-      (this.app.io !== true &&
-        !(
-          this.app.io.getAccessKeyId() === $$("username").getValue() &&
-          this.app.io.getSecretAccessKey() === $$("password").getValue()
-        ))
+      this.form.validate() &&
+      (this.app.io === undefined ||
+        !this.app.io ||
+        (this.app.io !== true &&
+          !(
+            this.app.io.getAccessKeyId() === $$("username").getValue() &&
+            this.app.io.getSecretAccessKey() === $$("password").getValue() &&
+            this.app.io.getBucket() === $$("domain").getValue() &&
+            this.app.io.getRegion === $$("region").getValue() &&
+            this.app.io.getEndpoint ===
+              $$("endpoint").getValue().replace(/\/$/, "") &&
+            this.app.io.getWendpoint ===
+              $$("wendpoint").getValue().replace(/\/$/, "")
+          )))
     ) {
       this.app.io = true;
       const felWorker = new Worker(
@@ -200,31 +336,27 @@ export default class SignInView extends JetView {
       const initWorker = new Worker(
         new URL("../workers/init.js", import.meta.url)
       );
-      const iamClient = new IAMClient({
-        region: $$("region").getValue(),
-        credentials: {
-          accessKeyId: $$("username").getValue(),
-          secretAccessKey: $$("password").getValue(),
-        },
-      });
-      try {
-        const message = {
-          pAccessKeyId: $$("username").getValue(),
-          pSecretAccessKey: $$("password").getValue(),
-          pBucketName: (await iamClient.send(new GetUserCommand({}))).User
-            .UserName,
-          pRegion: $$("region").getValue(),
-        };
-        if (this.app) {
+      if (this.app) {
+        try {
+          const message = {
+            pAccessKeyId: $$("username").getValue(),
+            pSecretAccessKey: $$("password").getValue(),
+            pBucketName: $$("domain").getValue(),
+            pRegion: $$("region").getValue(),
+            pEndpoint: $$("endpoint").getValue().replace(/\/$/, ""),
+            pWendpoint: $$("wendpoint").getValue().replace(/\/$/, ""),
+          };
           const io = new S3(
             message.pAccessKeyId,
             message.pSecretAccessKey,
             message.pBucketName,
-            message.pRegion
+            message.pRegion,
+            message.pEndpoint,
+            message.pWendpoint
           );
           await io.headBucket();
           if (this.app) {
-            webix.UIManager.removeHotKey("enter", this.clickLogin);
+            // webix.UIManager.removeHotKey("enter", this.clickLogin);
             /**
              *
              */
@@ -237,11 +369,7 @@ export default class SignInView extends JetView {
                 /**
                  *
                  */
-                click: () =>
-                  window.open(
-                    `http://${message.pBucketName}.s3-website.${message.pRegion}.amazonaws.com/`,
-                    "_tab"
-                  ),
+                click: () => window.open(message.pWendpoint, "_tab"),
               });
               $$("sidebar").add(
                 {
@@ -304,11 +432,12 @@ export default class SignInView extends JetView {
                 );
             }
             if ($$("store").getValue()) {
-              let storageItem = storageLocal.find(
+              message.pCloud = $$("cloud").getValue();
+              const storageItem = storageLocal.findIndex(
                 (item) => item.pBucketName === message.pBucketName
               );
-              if (storageItem === undefined) storageLocal.push(message);
-              else storageItem = message;
+              if (storageItem === -1) storageLocal.push(message);
+              else storageLocal[storageItem] = message;
             } else {
               storageLocal = storageLocal.filter(
                 (item) => item.pBucketName !== message.pBucketName
@@ -316,14 +445,14 @@ export default class SignInView extends JetView {
             }
             webix.storage.local.put("keys", storageLocal);
           }
-        }
-      } catch (err) {
-        if (this.app) {
-          this.app.io = null;
-          webix.message({
-            text: err.message,
-            type: "error",
-          });
+        } catch (err) {
+          if (this.app) {
+            this.app.io = null;
+            webix.message({
+              text: err.message,
+              type: "error",
+            });
+          }
         }
       }
     }
@@ -331,23 +460,33 @@ export default class SignInView extends JetView {
 
   /**
    *
+   * @param view
    */
-  init = () => {
+  init = (view) => {
+    this.form = view;
     /**
      * Обработчик выбора сохраненных кредов
      *
      * @param {number} value id в списке
      */
-    function onChangeSored(value) {
+    function onChangeStored(value) {
       if (value) {
         const { creds } = this.getList().getItem(value);
+        $$("domain").setValue(creds.pBucketName);
         $$("username").setValue(creds.pAccessKeyId);
         $$("password").setValue(creds.pSecretAccessKey);
         $$("region").setValue(creds.pRegion);
+        $$("endpoint").setValue(creds.pEndpoint);
+        $$("wendpoint").setValue(creds.pWendpoint);
+        $$("cloud").setValue(creds.pCloud);
       } else {
+        $$("domain").setValue("");
         $$("username").setValue("");
         $$("password").setValue("");
-        $$("region").setValue("us-east-1");
+        $$("region").setValue("");
+        $$("endpoint").setValue("");
+        $$("wendpoint").setValue("");
+        $$("cloud").setValue(1);
       }
     }
     let storageLocal = webix.storage.local.get("keys");
@@ -359,10 +498,10 @@ export default class SignInView extends JetView {
     $$("stored").getList().parse(options);
     this.#event.push({
       component: $$("stored"),
-      id: $$("stored").attachEvent("onChange", onChangeSored),
+      id: $$("stored").attachEvent("onChange", onChangeStored),
     });
-    webix.UIManager.addHotKey("enter", this.clickLogin, $$("username"));
-    webix.UIManager.addHotKey("enter", this.clickLogin, $$("password"));
-    webix.UIManager.addHotKey("enter", this.clickLogin, $$("login"));
+    // webix.UIManager.addHotKey("enter", this.clickLogin, $$("username"));
+    // webix.UIManager.addHotKey("enter", this.clickLogin, $$("password"));
+    // webix.UIManager.addHotKey("enter", this.clickLogin, $$("login"));
   };
 }
