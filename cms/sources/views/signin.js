@@ -33,15 +33,11 @@ export default class SignInView extends JetView {
       switch ($$("cloud").getValue()) {
         case "2":
           $$("wendpoint").setValue(
-            `http://${$$("domain").getValue()}.s3-website.${$$(
-              "region"
-            ).getValue()}.amazonaws.com`
+            `https://s3.${$$("region").getValue()}.amazonaws.com`
           );
           break;
         case "3":
-          $$("wendpoint").setValue(
-            `http://${$$("domain").getValue()}.website.yandexcloud.net`
-          );
+          $$("wendpoint").setValue("https://website.yandexcloud.net");
           break;
         default:
       }
@@ -92,10 +88,6 @@ export default class SignInView extends JetView {
                               name: "domain",
                               id: "domain",
                               required: true,
-                              on: {
-                                onChange: wendbpoint,
-                                onTimedKeyPress: wendbpoint,
-                              },
                             },
                             {
                               width: 272,
@@ -369,7 +361,7 @@ export default class SignInView extends JetView {
                 /**
                  *
                  */
-                click: () => window.open(message.pWendpoint, "_tab"),
+                click: () => window.open(message.pBucket, "_tab"),
               });
               $$("sidebar").add(
                 {
