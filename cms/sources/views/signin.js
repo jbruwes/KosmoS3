@@ -361,7 +361,8 @@ export default class SignInView extends JetView {
                 /**
                  *
                  */
-                click: () => window.open(message.pBucket, "_tab"),
+                click: () =>
+                  window.open(`https://${message.pBucketName}`, "_tab"),
               });
               $$("sidebar").add(
                 {
