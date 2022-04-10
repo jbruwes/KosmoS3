@@ -65,8 +65,22 @@ export default class TreeView extends JetView {
       /**
        *
        */
-      onAfterLoad: () => {
-        this.afterLoad();
+      onAfterLoad: async () => {
+        this.#event.push({
+          component: $$("tree").data,
+          id: $$("tree").data.attachEvent("onStoreUpdated", this.onChangeFnc),
+        });
+        const id = $$("tree").getFirstId();
+        [this.#tinymce, this.#ace] = await Promise.all([
+          $$("tinymce").getEditor(true),
+          $$("ace-content").getEditor(true),
+        ]);
+        if (this.app)
+          if (id) $$("tree").select(id);
+          else {
+            this.#tinymce.mode.set("readonly");
+            this.#ace.setReadOnly(true);
+          }
       },
       onItemCheck: this.onChangeFnc,
       /**
@@ -143,29 +157,8 @@ export default class TreeView extends JetView {
   /**
    *
    */
-  init() {
+  ready() {
     this.main();
-  }
-
-  /**
-   *
-   */
-  async afterLoad() {
-    this.#event.push({
-      component: $$("tree").data,
-      id: $$("tree").data.attachEvent("onStoreUpdated", this.onChangeFnc),
-    });
-    const id = $$("tree").getFirstId();
-    [this.#tinymce, this.#ace] = await Promise.all([
-      $$("tinymce").getEditor(true),
-      $$("ace-content").getEditor(true),
-    ]);
-    if (this.app)
-      if (id) $$("tree").select(id);
-      else {
-        this.#tinymce.mode.set("readonly");
-        this.#ace.setReadOnly(true);
-      }
   }
 
   /**
@@ -209,7 +202,7 @@ export default class TreeView extends JetView {
       };
       await this.app.io.putObject(
         "index.json",
-        "application/json",
+        "application/json;charset=utf-8",
         webix.ajax().stringify(tree)
       );
       if (this.app) webix.message("Tree save complete");
