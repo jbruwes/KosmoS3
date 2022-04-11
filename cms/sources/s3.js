@@ -146,7 +146,7 @@ export default class S3 {
         Bucket: this.#bucket,
         Key: key,
         ContentType: contentType,
-        Body: new TextEncoder().encode(body),
+        Body: typeof body === "string" ? new TextEncoder().encode(body) : body,
       })
     );
   }
