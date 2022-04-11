@@ -41,13 +41,6 @@ export default class AceView extends JetView {
   config = () => this.#config;
 
   /**
-   *
-   */
-  init() {
-    this.main();
-  }
-
-  /**
    * @param text
    */
   async cb(text) {
@@ -92,7 +85,7 @@ export default class AceView extends JetView {
   /**
    *
    */
-  async main() {
+  async ready() {
     try {
       const indexCss = await this.app.io.getObject("index.css");
       if (this.app) this.cb(indexCss);
