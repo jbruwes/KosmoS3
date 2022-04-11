@@ -48,14 +48,7 @@ export default class CdnView extends JetView {
   /**
    *
    */
-  init() {
-    this.main();
-  }
-
-  /**
-   *
-   */
-  async main() {
+  async ready() {
     try {
       $$("cdn").clearAll();
       const result = await this.app.io.getObject("index.cdn.css");
