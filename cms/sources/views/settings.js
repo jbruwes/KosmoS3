@@ -198,7 +198,7 @@ export default class SettingsView extends JetView {
   /**
    *
    */
-  init() {
+  ready() {
     this.doIcon($$("uploader"), "favicon.ico");
     this.doIcon($$("pngUploader"), "icon.png");
     this.doIcon($$("svgUploader"), "icon.svg");
