@@ -156,7 +156,7 @@ export default class TreeView extends JetView {
             this.#tinymce.mode.set("readonly");
             this.#ace.setReadOnly(true);
           }
-      });  
+      });
       const indexJson = await this.app.io.getObject("index.json");
       if (this.app) $$("tree").parse(indexJson);
     } catch (err) {
