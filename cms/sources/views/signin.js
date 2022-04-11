@@ -453,6 +453,7 @@ export default class SignInView extends JetView {
 
   /**
    *
+   * @param view
    */
   ready(view) {
     this.form = view;
