@@ -66,7 +66,7 @@ export default class TopView extends JetView {
   /**
    * The method is called once when a view is rendered
    */
-  init() {
+  ready() {
     this.$$("sidebar")
       .getPopup()
       .attachEvent("onBeforeShow", () => false);
