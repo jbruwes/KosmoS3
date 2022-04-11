@@ -48,13 +48,6 @@ export default class AceView extends JetView {
   /**
    *
    */
-  init() {
-    this.main();
-  }
-
-  /**
-   *
-   */
   aceChange = () => {
     this.#timeoutId.push(
       webix.delay(
@@ -83,7 +76,7 @@ export default class AceView extends JetView {
   /**
    *
    */
-  async main() {
+  async ready() {
     this.#editor = await this.getRoot().getEditor(true);
     if (this.app) {
       this.#session = this.#editor.getSession();
