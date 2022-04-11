@@ -453,9 +453,8 @@ export default class SignInView extends JetView {
 
   /**
    *
-   * @param view
    */
-  init = (view) => {
+  ready(view) {
     this.form = view;
     /**
      * Обработчик выбора сохраненных кредов
@@ -496,5 +495,5 @@ export default class SignInView extends JetView {
     // webix.UIManager.addHotKey("enter", this.clickLogin, $$("username"));
     // webix.UIManager.addHotKey("enter", this.clickLogin, $$("password"));
     // webix.UIManager.addHotKey("enter", this.clickLogin, $$("login"));
-  };
+  }
 }
