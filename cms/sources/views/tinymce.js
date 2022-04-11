@@ -813,14 +813,7 @@ export default class TinymceView extends JetView {
   /**
    *
    */
-  ready() {
-    this.main();
-  }
-
-  /**
-   *
-   */
-  async main() {
+  async ready() {
     this.#tinymce = await $$("tinymce").getEditor(true);
     if (this.app) this.#tinymce.on("Change", this.save);
   }
