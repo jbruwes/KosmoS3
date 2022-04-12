@@ -128,7 +128,7 @@ export default class TinymceView extends JetView {
   /**
    *
    */
-  config = async () => ({
+  config = () => ({
     id: "tinymce",
     view: "tinymce5-editor",
     apiKey: "r2lw5k8fd0gyrwrhztc4ie6zdmanh9ovn6c38xwh8ujjimpw",
@@ -138,72 +138,20 @@ export default class TinymceView extends JetView {
         menubar: false,
       },
       plugins:
-        "preview " +
-        "searchreplace " +
-        "autolink " +
-        "autosave " +
-        "save " +
-        "directionality " +
-        "code " +
-        "visualblocks " +
-        "visualchars " +
-        "fullscreen " +
-        "image " +
-        "link " +
-        "media " +
-        "template " +
-        "codesample " +
-        "table " +
-        "charmap " +
-        "pagebreak " +
-        "nonbreaking " +
-        "anchor " +
-        "insertdatetime " +
-        "advlist " +
-        "lists " +
-        "wordcount " +
-        "charmap " +
-        "quickbars " +
-        "emoticons ",
+        "preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount charmap quickbars emoticons",
       menubar: "file edit view insert format tools table",
       toolbar:
-        "undo redo" +
-        " | " +
-        "rlink" +
-        " | " +
-        "bold italic underline strikethrough" +
-        " | " +
-        "fontselect fontsizeselect formatselect" +
-        " | " +
-        "alignleft aligncenter alignright alignjustify" +
-        " | " +
-        "outdent indent" +
-        " |  " +
-        "numlist bullist" +
-        " | " +
-        "forecolor backcolor removeformat" +
-        " | " +
-        "pagebreak" +
-        " | " +
-        "charmap emoticons" +
-        " | " +
-        "fullscreen preview print" +
-        " | " +
-        "insertfile image media template link unlink anchor codesample" +
-        " | " +
-        "ltr rtl",
+        "undo redo | rlink | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview print | insertfile image media template link anchor codesample | ltr rtl",
       toolbar_sticky: true,
       content_css_cors: true,
-      content_css: `index.cdn.css,${Object.values(
-        await (
-          await fetch("assets-manifest.json", { cache: "no-store" })
-        ).json()
-      )
-        .filter((element) => /.\.css$/.test(element))
-        .map((element) => `${window.location.origin}/${element}`)
-        .join(",")},index.css`,
+      content_css: "index.cdn.css,index.css",
       skin: false,
       content_style: `${contentUiCss.toString()}\n${contentCss.toString()}\n.mce-content-body{margin:0;padding:8px;}`,
+      autosave_ask_before_unload: true,
+      autosave_interval: "30s",
+      autosave_prefix: "{path}{query}-{id}-",
+      autosave_restore_when_empty: false,
+      autosave_retention: "2m",
       templates: [
         {
           title: "menu",
@@ -480,7 +428,7 @@ export default class TinymceView extends JetView {
           ].join(" ")}><i class="left arrow icon"></i>Back</a>`,
         },
       ],
-      font_formats:
+      font_family_formats:
         "Andale Mono=andale mono,times; Arial=arial,helvetica,sans-serif; Arial Black=arial black,avant garde; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats" +
         ";" +
         'Arsenal="Arsenal";' +
@@ -576,9 +524,7 @@ export default class TinymceView extends JetView {
       element_format: "html",
       quickbars_insert_toolbar: false,
       quickbars_selection_toolbar:
-        "bold italic" +
-        " | " +
-        "quicklink h2 h3 blockquote quickimage quicktable",
+        "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
       toolbar_mode: "sliding",
       contextmenu: "link image table",
       extended_valid_elements: "script[*],i[*],span[*],img[*]",
@@ -592,6 +538,7 @@ export default class TinymceView extends JetView {
         "+h5[div]," +
         "+h6[div]",
       branding: false,
+      noneditable_class: "mceNonEditable",
       browser_spellcheck: true,
       convert_urls: false,
       image_advtab: true,
@@ -815,7 +762,19 @@ export default class TinymceView extends JetView {
    */
   async ready() {
     this.#tinymce = await $$("tinymce").getEditor(true);
-    if (this.app) this.#tinymce.on("Change", this.save);
+    if (this.app) {
+      this.#tinymce.on("Change", this.save);
+      this.#tinymce.dom.loadCSS(
+        `${Object.values(
+          await (
+            await fetch("assets-manifest.json", { cache: "no-store" })
+          ).json()
+        )
+          .filter((element) => /.\.css$/.test(element))
+          .map((element) => `${window.location.origin}/${element}`)
+          .join(",")}`
+      );
+    }
   }
 
   /**
