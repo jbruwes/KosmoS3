@@ -33,6 +33,7 @@ import "@fontsource/roboto";
 import "@fontsource/rubik-mono-one";
 import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
+import "@fontsource/neucha";
 
 /**
  *
@@ -444,6 +445,7 @@ export default class TinymceView extends JetView {
         'Marck Script="Marck Script";' +
         'Montserrat="Montserrat";' +
         'Montserrat Alternates="Montserrat Alternates";' +
+        'Neucha="Neucha";' +
         'Open Sans Condensed="Open Sans Condensed";' +
         'Open Sans="Open Sans";' +
         'Oswald="Oswald";' +
