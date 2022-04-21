@@ -31,9 +31,7 @@ onmessage = async ({
     try {
       await io.headObject(`${lObjects[i]}`);
     } catch (err) {
-      const body = await (
-        await fetch(`${lObjects[i]}`, { cache: "no-store" })
-      ).blob();
+      const body = await (await fetch(`${lObjects[i]}`)).blob();
       await io.putObject(`${lObjects[i]}`, body.type, body);
     } finally {
       i += 1;
