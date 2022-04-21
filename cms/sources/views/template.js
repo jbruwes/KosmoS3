@@ -577,7 +577,7 @@ export default class TemplateView extends JetView {
       const { document } = $$("fabric").getWindow();
       document.open();
       document.write(
-        (await (await fetch("index.htm", { cache: "no-store" })).text())
+        (await (await fetch("index.htm")).text())
           .replace(
             /#base#/g,
             `${this.app.io.getWendpoint()}/${this.app.io.getBucket()}/`
