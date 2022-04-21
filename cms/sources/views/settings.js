@@ -73,17 +73,7 @@ export default class SettingsView extends JetView {
               multiple: false,
               autosend: false,
               name: "files",
-              link: "bglist",
               accept: "image/vnd.microsoft.icon",
-            },
-            {
-              view: "list",
-              id: "bglist",
-              type: "uploader",
-              template:
-                "{common.removeIcon()}{common.percent()}{common.fileName()}",
-              autoheight: true,
-              borderless: true,
             },
             {
               view: "uploader",
@@ -92,17 +82,7 @@ export default class SettingsView extends JetView {
               multiple: false,
               autosend: false,
               name: "files",
-              link: "svgBglist",
               accept: "image/svg+xml",
-            },
-            {
-              view: "list",
-              id: "svgBglist",
-              type: "uploader",
-              template:
-                "{common.removeIcon()}{common.percent()}{common.fileName()}",
-              autoheight: true,
-              borderless: true,
             },
             {
               view: "uploader",
@@ -111,17 +91,7 @@ export default class SettingsView extends JetView {
               multiple: false,
               autosend: false,
               name: "files",
-              link: "pngBglist",
               accept: "image/png",
-            },
-            {
-              view: "list",
-              id: "pngBglist",
-              type: "uploader",
-              template:
-                "{common.removeIcon()}{common.percent()}{common.fileName()}",
-              autoheight: true,
-              borderless: true,
             },
             {},
             {},
@@ -143,72 +113,40 @@ export default class SettingsView extends JetView {
    * @param uploader
    * @param filename
    */
-  async doIcon(uploader, filename) {
-    try {
-      await this.app.io.headObject(filename);
-      if (this.app) {
-        uploader.files.data.clearAll();
-        uploader.addFile(
-          {
-            name: filename,
-            sname: filename,
-          },
-          0
-        );
-      }
-    } catch (err) {
-      // if (this.app) webix.message({text:err.message,type:"error"});
-    } finally {
-      if (this.app) {
-        this.#event.push({
-          component: uploader,
-          id: uploader.attachEvent("onAfterFileAdd", async (pFile) => {
-            const file = pFile;
-            try {
-              await this.app.io.putObject(filename, file.file.type, file.file);
-              if (this.app) webix.message("Settings save complete");
-            } catch (err) {
-              if (this.app)
-                webix.message({
-                  text: err.message,
-                  type: "error",
-                });
-            }
-          }),
-        });
-        this.#event.push({
-          component: uploader,
-          id: uploader.files.attachEvent("onAfterDelete", async () => {
-            try {
-              await this.app.io.deleteObject(filename);
-              if (this.app) webix.message("Settings save complete");
-            } catch (err) {
-              if (this.app)
-                webix.message({
-                  text: err.message,
-                  type: "error",
-                });
-            }
-          }),
-        });
-      }
-    }
+  doIcon(uploader, filename) {
+    uploader.files.data.clearAll();
+    uploader.addFile(
+      {
+        name: filename,
+        sname: filename,
+      },
+      0
+    );
+    this.#event.push({
+      component: uploader,
+      id: uploader.attachEvent("onAfterFileAdd", async (pFile) => {
+        const file = pFile;
+        try {
+          await this.app.io.putObject(filename, file.file.type, file.file);
+          if (this.app) webix.message("Settings save complete");
+        } catch (err) {
+          if (this.app)
+            webix.message({
+              text: err.message,
+              type: "error",
+            });
+        }
+      }),
+    });
   }
 
   /**
    *
    */
-  ready() {
+  async ready() {
     this.doIcon($$("uploader"), "favicon.ico");
-    this.doIcon($$("pngUploader"), "icon.png");
-    this.doIcon($$("svgUploader"), "icon.svg");
-    this.main();
-  }
-
-  /**
-   *
-   */
-  async main() {
+    this.doIcon($$("pngUploader"), "favicon.png");
+    this.doIcon($$("svgUploader"), "favicon.svg");
     try {
       this.prop = JSON.parse(await this.app.io.getObject("index.json"));
       if (this.app) {
