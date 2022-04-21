@@ -43,7 +43,7 @@ onmessage = async ({
     await html(
       lPath.join("/"),
       (
-        await (await fetch("index.htm", { cache: "no-store" })).text()
+        await (await fetch("index.htm")).text()
       ).replace(/#pusher#/g, await io.getObject("index.htm")),
       io,
       lNode
