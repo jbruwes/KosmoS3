@@ -124,6 +124,7 @@ module.exports = function exports(env) {
         patterns: [
           { from: "./resource/404.html" },
           { from: "./resource/CNAME" },
+          { from: "./resource/rocket.svg" },
         ],
       }),
       new webpack.DefinePlugin({
