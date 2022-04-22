@@ -28,9 +28,9 @@ onmessage = async ({
     io.headObject("index.css"),
     io.headObject("index.cdn.css"),
     io.headObject("index.htm"),
-    io.headObject("favicon.ico"),
-    io.headObject("favicon.png"),
-    io.headObject("favicon.svg"),
+    io.headObject("index.ico"),
+    io.headObject("index.png"),
+    io.headObject("index.svg"),
   ]);
   const put = [];
   if (head[0].status === "rejected") {
@@ -70,16 +70,16 @@ onmessage = async ({
   if (head[6].status === "rejected")
     put.push(
       io.putObject(
-        "favicon.ico",
+        "index.ico",
         "image/vnd.microsoft",
-        await (await fetch("favicon.ico")).blob()
+        await (await fetch("index.ico")).blob()
       )
     );
 
   if (head[7].status === "rejected")
     put.push(
       io.putObject(
-        "favicon.png",
+        "index.png",
         "image/x-png",
         await (await fetch("apple-touch-icon.png")).blob()
       )
@@ -88,7 +88,7 @@ onmessage = async ({
   if (head[8].status === "rejected")
     put.push(
       io.putObject(
-        "favicon.svg",
+        "index.svg",
         "image/svg+xml",
         await (await fetch("rocket.svg")).blob()
       )
