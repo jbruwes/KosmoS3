@@ -110,7 +110,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: "./resource/404.html" },
+        { from: "./resource/error.html" },
         { from: "./resource/robots.txt" },
       ],
     }),
