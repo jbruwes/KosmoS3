@@ -72,7 +72,7 @@ onmessage = async ({
       io.putObject(
         "index.ico",
         "image/vnd.microsoft",
-        await (await fetch("index.ico")).blob()
+        await (await fetch("favicon.ico")).blob()
       )
     );
 
