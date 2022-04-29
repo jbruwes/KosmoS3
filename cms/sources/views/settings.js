@@ -144,9 +144,9 @@ export default class SettingsView extends JetView {
    *
    */
   async ready() {
-    this.doIcon($$("uploader"), "index.ico");
-    this.doIcon($$("pngUploader"), "index.png");
-    this.doIcon($$("svgUploader"), "index.svg");
+    this.doIcon($$("uploader"), "favicon.ico");
+    this.doIcon($$("pngUploader"), "icon.png");
+    this.doIcon($$("svgUploader"), "icon.svg");
     try {
       this.prop = JSON.parse(await this.app.io.getObject("index.json"));
       if (this.app) {
