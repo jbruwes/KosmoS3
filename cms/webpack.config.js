@@ -138,7 +138,7 @@ module.exports = function exports(env) {
         directory: path.join(__dirname, "../dist"),
       },
       compress: true,
-      http2: true,
+      server: "http",
     },
     performance: { hints: false },
   };
