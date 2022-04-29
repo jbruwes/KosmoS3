@@ -3519,11 +3519,10 @@ export default class PropertiesView extends JetView {
    *
    */
   image() {
-    let image;
     const id = $$("tree").getSelectedId();
     const item = $$("tree").getItem(id);
     if (!this.getParentView().lockProperties && item) {
-      image = $$("bglist").getItem($$("bglist").getFirstId());
+      const image = $$("bglist").getItem($$("bglist").getFirstId());
       if (image && image.file.sname) item.image = image.file.sname;
       else item.image = "";
       $$("tree").updateItem(id, item);
