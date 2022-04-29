@@ -18,7 +18,6 @@ const babelSettings = {
  */
 module.exports = function exports(env) {
   const production = !!(env && env.production === "true");
-  const asmodule = !!(env && env.module === "true");
   const standalone = !!(env && env.standalone === "true");
   const config = {
     mode: production ? "production" : "development",
@@ -131,7 +130,7 @@ module.exports = function exports(env) {
         VERSION: `"${pack.version}"`,
         APPNAME: `"${pack.name}"`,
         PRODUCTION: production,
-        BUILD_AS_MODULE: asmodule || standalone,
+        BUILD_AS_MODULE: standalone,
       }),
     ],
     devServer: {
@@ -139,27 +138,12 @@ module.exports = function exports(env) {
         directory: path.join(__dirname, "../dist"),
       },
       compress: true,
-      // http2: true,
+      http2: true,
     },
     performance: { hints: false },
   };
   if (!production) {
     config.devtool = "inline-source-map";
-  }
-
-  if (asmodule) {
-    if (!standalone) {
-      config.externals = config.externals || {};
-      config.externals = ["webix-jet"];
-    }
-
-    const out = config.output;
-    const sub = standalone ? "full" : "module";
-
-    out.library = pack.name.replace(/[^a-z0-9]/gi, "");
-    out.libraryTarget = "umd";
-    out.path = path.join(__dirname, "dist", sub);
-    out.publicPath = `/dist/${sub}/`;
   }
 
   return config;
