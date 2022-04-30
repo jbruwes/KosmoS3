@@ -25,7 +25,7 @@ onmessage = async ({
   );
   const [lJson] = JSON.parse(await io.getObject("index.json"));
   const lHtml = (await (await fetch("index.htm")).text()).replace(
-    /#pusher#/g,
+    /{{ pusher }}/g,
     await io.getObject("index.htm")
   );
   const lMap = jsel(lJson).selectAll("//*[@id]");
