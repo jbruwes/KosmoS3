@@ -44,7 +44,7 @@ onmessage = async ({
       lPath.join("/"),
       (
         await (await fetch("index.htm")).text()
-      ).replace(/#pusher#/g, await io.getObject("index.htm")),
+      ).replace(/{{ pusher }}/g, await io.getObject("index.htm")),
       io,
       lNode
     );
