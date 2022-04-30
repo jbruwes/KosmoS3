@@ -579,13 +579,12 @@ export default class TemplateView extends JetView {
       document.write(
         (await (await fetch("index.htm")).text())
           .replace(
-            /#base#/g,
+            /{{ base }}/g,
             `${this.app.io.getWendpoint()}/${this.app.io.getBucket()}/`
           )
           .replace("#pusher#", this.genHtml())
           .replace(/<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi, "")
           .replace(/<script id="google"[^>]*>([\s\S]*?)<\/script>/gi, "")
-          .replace(/<script id="analytics"[^>]*>([\s\S]*?)<\/script>/gi, "")
       );
       document.close();
     }
