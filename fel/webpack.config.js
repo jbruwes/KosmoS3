@@ -22,8 +22,6 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [
-      // For webpack@5 you can use the `...` syntax to extend existing minimizers
-      // '...',
       new TerserPlugin({
         terserOptions: {
           format: {
@@ -52,16 +50,18 @@ module.exports = {
         commons: {
           test: /[\\/]node_modules[\\/]/,
           /**
-           * @param module
+           * Возвращает название модуля для чанка
+           *
+           * @param {object} module Модуль
+           * @returns {string} Название модуля
            */
-          name(module) {
-            return `${module
+          name: (module) =>
+            `${module
               .identifier()
               .split("!")
               .pop()
               .match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
-              .replace("@", "")}`;
-          },
+              .replace("@", "")}`,
         },
       },
     },
@@ -94,8 +94,11 @@ module.exports = {
     }),
     new WebpackAssetsManifest({
       /**
-       * @param a
-       * @param b
+       * Сортировка строк в манифесте по расширениям файлов
+       *
+       * @param {string} a Первый файл
+       * @param {string} b Второй файл
+       * @returns {number} Возвращает -1, 0, или 1
        */
       sortManifest(a, b) {
         const extA = this.getExtension(a);
@@ -121,12 +124,5 @@ module.exports = {
       AOS: "aos",
     }),
   ],
-  devServer: {
-    static: {
-      directory: path.join(__dirname, "../dist"),
-    },
-    compress: true,
-    // http2: true,
-  },
   performance: { hints: false },
 };
