@@ -3,29 +3,30 @@
   <head>
     <meta name="generator" content="kosmos3.com" />
     <meta charset="utf-8" />
-    <title>#title#</title>
-    <meta name="description" content="#description#" />
+    <title>{{ title }}</title>
+    <meta name="description" content="{{ description }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <base href="#base#" />
-    <meta property="og:title" content="#title#" />
+    <base href="{{ base }}" />
+    <meta property="og:title" content="{{ title }}" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="#url#" />
-    <meta property="og:image" content="#image#" />
+    <meta property="og:url" content="{{ url }}" />
+    <meta property="og:image" content=" {{ image }}" />
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="icon.png" />
     <meta name="theme-color" content="#fafafa" />
-    <meta name="google-site-verification" content="#google#" />
-    <meta name="yandex-verification" content="#yandex#" />
+    <meta name="google-site-verification" content="{{ google }}" />
+    <meta name="yandex-verification" content="{{ yandex }}" />
+    <script src="https://www.google-analytics.com/analytics.js" async></script>
   </head>
   <body>
     <div class="ui sidebar very wide vertical accordion menu"></div>
     <div class="ui main menu fixed" hidden>
       <a class="launch icon item"><i class="content icon"></i></a>
-      <div class="header item">#title#</div>
+      <div class="header item">{{ title }}</div>
     </div>
-    <div class="pusher">#pusher#</div>
-    <script>
+    <div class="pusher">{{ pusher }}</div>
+    <script id="yandex">
       (function (m, e, t, r, i, k, a) {
         m[i] =
           m[i] ||
@@ -45,25 +46,24 @@
         "https://mc.yandex.ru/metrika/tag.js",
         "ym"
       );
-      ym("#metrika#", "init", {
-        id: "#metrika#",
+      ym("{{ metrika }}", "init", {
+        id: "{{ metrika }}",
         clickmap: true,
         trackLinks: true,
         accurateTrackBounce: true,
         ut: "noindex",
       });
     </script>
-    <script>
+    <script id="google">
       window.ga = function () {
         ga.q.push(arguments);
       };
       ga.q = [];
       ga.l = +new Date();
-      ga("create", "#analytics#", "auto");
+      ga("create", "{{ analytics }}", "auto");
       ga("set", "anonymizeIp", true);
       ga("set", "transport", "beacon");
       ga("send", "pageview");
     </script>
-    <script src="https://www.google-analytics.com/analytics.js" async></script>
   </body>
 </html>
