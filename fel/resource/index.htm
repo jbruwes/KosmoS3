@@ -17,15 +17,6 @@
     <meta name="theme-color" content="#fafafa" />
     <meta name="google-site-verification" content="{{ google }}" />
     <meta name="yandex-verification" content="{{ yandex }}" />
-    <script src="https://www.google-analytics.com/analytics.js" async></script>
-  </head>
-  <body>
-    <div class="ui sidebar very wide vertical accordion menu"></div>
-    <div class="ui main menu fixed" hidden>
-      <a class="launch icon item"><i class="content icon"></i></a>
-      <div class="header item">{{ title }}</div>
-    </div>
-    <div class="pusher">{{ pusher }}</div>
     <script id="yandex">
       (function (m, e, t, r, i, k, a) {
         m[i] =
@@ -65,5 +56,14 @@
       ga("set", "transport", "beacon");
       ga("send", "pageview");
     </script>
+    <script src="https://www.google-analytics.com/analytics.js" async></script>
+  </head>
+  <body>
+    <div class="ui sidebar very wide vertical accordion menu"></div>
+    <div class="ui main menu fixed" hidden>
+      <a class="launch icon item"><i class="content icon"></i></a>
+      <div class="header item">{{ title }}</div>
+    </div>
+    <div class="pusher">{{ pusher }}</div>
   </body>
 </html>
