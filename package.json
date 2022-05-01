@@ -41,9 +41,9 @@
   "author": "Jerry Bruwes",
   "license": "GNU AGPL",
   "devDependencies": {
-    "@babel/core": "^7.17.9",
+    "@babel/core": "^7.17.10",
     "@babel/eslint-parser": "^7.17.0",
-    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-env": "^7.17.10",
     "acorn": "^8.7.1",
     "babel-loader": "^8.2.5",
     "copy-webpack-plugin": "^10.2.4",
@@ -74,7 +74,7 @@
     "webpack-dev-server": "^4.8.1"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.80.0",
+    "@aws-sdk/client-s3": "^3.81.0",
     "@fontsource/arsenal": "^4.5.7",
     "@fontsource/bad-script": "^4.5.7",
     "@fontsource/caveat": "^4.5.7",
@@ -84,7 +84,7 @@
     "@fontsource/cormorant-infant": "^4.5.8",
     "@fontsource/cormorant-sc": "^4.5.8",
     "@fontsource/cormorant-unicase": "^4.5.8",
-    "@fontsource/jura": "^4.5.6",
+    "@fontsource/jura": "^4.5.8",
     "@fontsource/marck-script": "^4.5.5",
     "@fontsource/montserrat": "^4.5.7",
     "@fontsource/montserrat-alternates": "^4.5.5",
@@ -128,7 +128,7 @@
   },
   "optionalDependencies": {
     "electron-installer-debian": "^3.1.0",
-    "electron-installer-dmg": "^3.0.0",
+    "electron-installer-dmg": "^4.0.0",
     "electron-installer-windows": "^3.0.0"
   }
 }
