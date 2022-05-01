@@ -4,23 +4,8 @@
  * @param {object} index Структура сайта
  */
 export default function sidebar(index) {
-  /**
-   * Айди таймера
-   *
-   * @type {number}
-   */
   const timerId = null;
-  /**
-   * Корневой элемент меню
-   *
-   * @type {object}
-   */
   let first;
-  /**
-   * Флаг включения турбоменю на сайте
-   *
-   * @type {boolean}
-   */
   const flSidebar = $("#content").data("turbomenu");
   /**
    * Инициализация динамического меню
@@ -30,65 +15,15 @@ export default function sidebar(index) {
    * @param {string} pid Айдишник
    */
   function ddInit(idx, phref, pid) {
-    /**
-     * Рассчетный флаг дочерних элементов с учетом видимости
-     *
-     * @type {boolean}
-     */
     let empty = true;
-    /**
-     * Заготовка для пункта меню
-     *
-     * @type {object}
-     */
     let item = null;
-    /**
-     * Заготовка для заголовка
-     *
-     * @type {object}
-     */
     let title = null;
-    /**
-     * Заготовка для содержимого
-     *
-     * @type {object}
-     */
     let content = null;
-    /**
-     * Заготовка для группы полей
-     *
-     * @type {object}
-     */
     let fields = null;
-    /**
-     * Заготовка для формы
-     *
-     * @type {object}
-     */
     let form = null;
-    /**
-     * Заготовка для поля
-     *
-     * @type {object}
-     */
     let field = null;
-    /**
-     * Заготовка для чекбокса
-     *
-     * @type {object}
-     */
     let checkbox = null;
-    /**
-     * Текущий урл для элемента меню
-     *
-     * @type {string}
-     */
     let href = null;
-    /**
-     * Текущий айди
-     *
-     * @type {string}
-     */
     let id = null;
     /**
      * Поиск хотя бы одного видимого дочернего элемента
@@ -193,11 +128,6 @@ export default function sidebar(index) {
    * @returns {boolean} Прерывание дальнейшей обработки клика
    */
   function click(e) {
-    /**
-     * Урл для перехода
-     *
-     * @type {string}
-     */
     let href = "";
     if (e) {
       if (!$(e.target).hasClass("item") && !$(e.target).hasClass("home")) {
@@ -250,7 +180,6 @@ export default function sidebar(index) {
   /**
    * Включение нужных чекбоксов и скрытие при необходимости
    *
-   * @param {number} idx Индекс
    * @param {string} value Текущее айди
    */
   function sidebarCheck(value) {
@@ -265,17 +194,7 @@ export default function sidebar(index) {
    * @this HTMLElement
    */
   function updateSidebar() {
-    /**
-     * Массив сохраненных в элементе айдишников в виде пути
-     *
-     * @type {Array[]}
-     */
     let id = null;
-    /**
-     * Текущий элемент меню
-     *
-     * @type {object}
-     */
     let sel = null;
     $("body>.ui.main.menu>.header.item").html($(this).text());
     id = $(this).data("id").toString().split(" ");
