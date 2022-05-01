@@ -49,9 +49,13 @@ import glightbox from "./modules/glightbox";
 import cont from "./modules/cont";
 import sidebar from "./modules/sidebar";
 
+import { createApp } from "vue/dist/vue.esm-bundler";
+
 window.$ = $;
 window.jQuery = jQuery;
 (async () => {
+  const kosmos3 = createApp({});
+
   /**
    * Объект с промисами подгружаемых скриптов
    *
@@ -90,6 +94,7 @@ window.jQuery = jQuery;
       }
       onhashchange(usrScripts, scripts, index, "body>.pusher");
     });
+    kosmos3.mount("body");
   }
   // jarallaxVideo();
   if (!window.location.origin) {
