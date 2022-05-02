@@ -20,13 +20,12 @@ jarallaxVideo();
 /**
  * Функция вызываемая по событию изменения урла
  *
- * @param {*[]} usrScripts Массив промисов пользовательских подгружаемых
+ * @param {*[]} scripts Массив промисов пользовательских подгружаемых
  *  скриптов
- * @param {Object<*>} scripts Объект с промисами подгружаемых скриптов
  * @param {object} index Структура сайта
  * @param {string} sel Dom путь
  */
-export default function onhashchange(usrScripts, scripts, index, sel) {
+export default function onhashchange(scripts, index, sel) {
   const pSel = sel || "#content";
   carousel(index, pSel);
   deck(index, pSel);
@@ -50,12 +49,7 @@ export default function onhashchange(usrScripts, scripts, index, sel) {
   $("img").on("load", AOS.refresh);
   AOS.refresh();
   jarallax(document.querySelectorAll(".jarallax"));
-  $.when(
-    ...$.merge(
-      $.map(scripts, (value) => value),
-      usrScripts
-    )
-  ).done(() => {
+  $.when(scripts).done(() => {
     if (typeof init === "function") init.call(index);
   });
 }
