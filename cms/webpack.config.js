@@ -139,11 +139,12 @@ module.exports = function exports(env) {
       },
       compress: true,
       server: "http",
+      historyApiFallback: true,
     },
     performance: { hints: false },
   };
   if (!production) {
-    config.devtool = "inline-source-map";
+    config.devtool = "eval-source-map";
   }
 
   return config;
