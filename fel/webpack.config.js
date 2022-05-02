@@ -6,6 +6,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
+const { VueLoaderPlugin } = require("vue-loader");
 
 const babelSettings = {
   extends: path.join(__dirname, "../.babelrc.json"),
@@ -69,6 +70,12 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        use: {
+          loader: "vue-loader",
+        },
+      },
+      {
         test: /\.js$/i,
         use: `babel-loader?${JSON.stringify(babelSettings)}`,
       },
@@ -86,8 +93,12 @@ module.exports = {
   resolve: {
     extensions: [".js"],
     modules: ["./sources", "node_modules"],
+    alias: {
+      vue$: "vue/dist/vue.esm-bundler.js",
+    },
   },
   plugins: [
+    new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       filename: "index.htm",
       template: "./resource/index.htm",
