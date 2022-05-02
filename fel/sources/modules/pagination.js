@@ -1,4 +1,5 @@
 import getChildren from "./children";
+
 /**
  * Список - вертикальный список заголовков с картинками и анимациями
  *
@@ -12,11 +13,6 @@ export default function pagination(index, sel) {
    * @this HTMLElement
    */
   function eachPagination() {
-    /**
-     * Массив дочерних объектов
-     *
-     * @type {object[]}
-     */
     let dataChildren = getChildren(
       index,
       $(this).data("deep"),
@@ -47,11 +43,6 @@ export default function pagination(index, sel) {
       .replace(/%2F/g, "/")
       .replace(/\/+/g, "/")
       .replace(/^\/+|\/+$/g, "");
-    /**
-     * Индекс текущей страницы
-     *
-     * @constant {number}
-     */
     const curIndex = dataChildren.findIndex(
       (element) =>
         element.$href.replace(/^\/|\/$/g, "").replace(/_/g, " ") === hash
@@ -84,35 +75,15 @@ export default function pagination(index, sel) {
       return curIndex !== a.pos ? "" : " active";
     }
     if (dataChildren.length) {
-      /**
-       * Двойной левый шеврон
-       *
-       * @type {object}
-       */
       const doubleLeft = $(
         '<a class="item"><i class="angle double left icon"><!-- --></i></a>'
       );
-      /**
-       * Двойной правый шеврон
-       *
-       * @type {object}
-       */
       const doubleRight = $(
         '<a class="item"><i class="angle double right icon"><!-- --></i></a>'
       );
-      /**
-       * Левый шеврон
-       *
-       * @type {object}
-       */
       const left = $(
         '<a class="item"><i class="angle left icon"><!-- --></i></a>'
       );
-      /**
-       * Правый шеврон
-       *
-       * @type {object}
-       */
       const right = $(
         '<a class="item"><i class="angle right icon"><!-- --></i></a>'
       );
@@ -156,20 +127,13 @@ export default function pagination(index, sel) {
                 ".@class+": visible,
               },
               /**
-               * @param a
+               * Фильтр отображения
+               *
+               * @param {object} a Объект для проверки
+               * @returns {boolean} Результат проверки отображения
                */
               filter(a) {
-                /**
-                 * Проверочный сдвиг слева
-                 *
-                 * @type {number}
-                 */
                 const rightShift = 3 + (curIndex < 3 ? 2 - curIndex : 0);
-                /**
-                 * Проверочный сдвиг справа
-                 *
-                 * @type {number}
-                 */
                 const leftShift =
                   3 -
                   (curIndex > dataChildren.length - 3
