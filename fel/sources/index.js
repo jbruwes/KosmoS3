@@ -44,89 +44,50 @@ import "kendo-ui-core/js/kendo.menu";
 import "lightslider";
 import "pure";
 import "onpushstate";
+import { createApp } from "vue";
+import page from "page";
 import onhashchange from "./modules/onhashchange";
 import glightbox from "./modules/glightbox";
 import cont from "./modules/cont";
 import sidebar from "./modules/sidebar";
 
-import { createApp } from "vue/dist/vue.esm-bundler";
-
 window.$ = $;
 window.jQuery = jQuery;
-(async () => {
-  const kosmos3 = createApp({});
+if (!window.location.origin)
+  window.location.origin = `${window.location.protocol}//${
+    window.location.hostname
+  }${window.location.port ? `:${window.location.port}` : ""}`;
+$.ajaxSetup({ cache: false });
 
+createApp({
   /**
-   * Объект с промисами подгружаемых скриптов
+   * @returns {object} Объект data
+   */
+  data: () => ({
+    index: null,
+    scripts: null,
+  }),
+  /**
    *
-   * @constant {Object<*>}
    */
-  const scripts = {
-    indexJs: $.Deferred(),
-    indexJson: $.Deferred(),
-    indexCdnJson: $.Deferred(),
-  };
-  /**
-   * Структура вебсайта
-   *
-   * @type {object}
-   */
-  let index = {};
-  /**
-   * Массив промисов пользовательских подгружаемых скриптов
-   *
-   * @type {*[]}
-   */
-  let usrScripts = [];
-  /**
-   * Обработчик, запускаемый после загрузки документа
-   */
-  function readyFn() {
+  async created() {
+    // jarallaxVideo();
     glightbox("body");
     AOS.init();
-    $.when(scripts.indexJson, scripts.indexCdnJson).done(() => {
-      sidebar(index);
-      $(window).on("popstate pushstate", () => {
-        cont(usrScripts, scripts, index);
-      });
-      if (window.location !== window.parent.location) {
-        $(window).trigger("popstate");
-      }
-      onhashchange(usrScripts, scripts, index, "body>.pusher");
-    });
-    kosmos3.mount("body");
-  }
-  // jarallaxVideo();
-  if (!window.location.origin) {
-    window.location.origin = `${window.location.protocol}//${
-      window.location.hostname
-    }${window.location.port ? `:${window.location.port}` : ""}`;
-  }
-  $("<link>")
-    .appendTo("head")
-    .attr({ type: "text/css", rel: "stylesheet" })
-    .attr("href", "index.cdn.css");
-  $("<link>")
-    .appendTo("head")
-    .attr({ type: "text/css", rel: "stylesheet" })
-    .attr("href", "index.css");
-  $.ajaxSetup({ cache: false });
-  $.getScript("index.js").done(scripts.indexJs.resolve);
-  $.getJSON("index.json").done((data) => {
-    index = data;
-    scripts.indexJson.resolve();
-  });
-  $.getJSON("index.cdn.json").done((data) => {
-    usrScripts = data.map((val) =>
+    [this.index, this.scripts] = await Promise.all([
+      (await fetch("index.json", { cache: "no-store" })).json(),
+      (await fetch("index.cdn.json", { cache: "no-store" })).json(),
+    ]);
+    this.scripts = this.scripts.map((val) =>
       Object.prototype.hasOwnProperty.call(val, "url") && val.url
         ? $.getScript(val.url)
         : false
     );
-    scripts.indexCdnJson.resolve();
-  });
-  if (document.readyState !== "loading") {
-    readyFn();
-  } else {
-    document.addEventListener("DOMContentLoaded", readyFn);
-  }
-})();
+    this.scripts.push($.getScript("index.js"));
+    sidebar(this.index);
+    $(window).on("popstate pushstate", () => cont(this.scripts, this.index));
+    if (window.location !== window.parent.location)
+      $(window).trigger("popstate");
+    onhashchange(this.scripts, this.index, "body>.pusher");
+  },
+}).mount("body");
