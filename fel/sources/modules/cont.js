@@ -3,12 +3,11 @@ import glightbox from "./glightbox";
 /**
  * Загрузка нужного контента в зависимости от урл
  *
- * @param {*[]} usrScripts Массив промисов пользовательских подгружаемых
+ * @param {*[]} scripts Массив промисов пользовательских подгружаемых
  *  скриптов
- * @param {Object<*>} scripts Объект с промисами подгружаемых скриптов
  * @param {object} index Структура сайта
  */
-export default async function cont(usrScripts, scripts, index) {
+export default async function cont(scripts, index) {
   /**
    * Строка пути относительно корня сайта
    *
@@ -80,7 +79,7 @@ export default async function cont(usrScripts, scripts, index) {
     $("#content>main").html(html);
     document.title = value;
     glightbox("#content>main");
-    onhashchange(usrScripts, scripts, index);
+    onhashchange(scripts, index);
     if (!window.location.hash) window.scrollTo(0, 0);
   }
 }
