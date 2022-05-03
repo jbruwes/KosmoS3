@@ -1,3 +1,5 @@
+import page from "page";
+
 /**
  * Сайдбар - супер турбо меню
  *
@@ -138,20 +140,7 @@ export default function sidebar(index) {
       }
       $("body>.ui.sidebar").sidebar("hide");
     } else href = $(this).parent().data("href");
-    const evt = new CustomEvent("pushstate");
-    evt.state = window.location.href;
-    setTimeout(function onTimeout() {
-      dispatchEvent(evt);
-      if (window.onpushstate) window.onpushstate(evt);
-    });
-    window.history.pushState(
-      evt.state,
-      document.title,
-      `${window.location.origin}/${href.replace(/^\/$/, "")}`.replace(
-        /\s/g,
-        "_"
-      ) + window.location.search
-    );
+    page(`/${href.trim().replace(/\s/g, "_")}`);
     return false;
   }
   /**
