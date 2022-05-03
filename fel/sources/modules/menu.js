@@ -1,3 +1,5 @@
+import page from "page";
+
 /**
  * Меню классическое
  *
@@ -106,19 +108,7 @@ export default function menu(index, sel) {
    * @param {object} e Событие
    */
   function select(e) {
-    const evt = new CustomEvent("pushstate");
-    evt.state = window.location.href;
-    setTimeout(function onTimeout() {
-      dispatchEvent(evt);
-      if (window.onpushstate) window.onpushstate(evt);
-    });
-    window.history.pushState(
-      evt.state,
-      document.title,
-      `${window.location.origin}/${$(e.item)
-        .data("path")
-        .replace(/^\/$/, "")}`.replace(/\s/g, "_") + window.location.search
-    );
+    page(`/${$(e.item).data("path").replace(/\s/g, "_")}`);
   }
   /**
    * Функция простановки класса выделения
