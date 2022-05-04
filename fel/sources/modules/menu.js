@@ -15,9 +15,6 @@ export default function menu(index, sel) {
    * @returns {object} Измененный объект
    */
   function rmenujson(e, a) {
-    /**
-     * Возвращаемый объект
-     */
     const t = {};
     if (a && typeof a === "object" && !Array.isArray(a)) {
       Object.keys(a).forEach((n) => {
@@ -51,29 +48,9 @@ export default function menu(index, sel) {
    * @param {string} pId id
    */
   function hideVisible(pIndex, pPath, pId) {
-    /**
-     * Счетчик
-     *
-     * @type {number}
-     */
     let i = null;
-    /**
-     * Текущий id
-     *
-     * @type {string}
-     */
     let id = null;
-    /**
-     * Текущий путь
-     *
-     * @type {string}
-     */
     let path = null;
-    /**
-     * Текущий экземпляр структуры меню
-     *
-     * @type {object}
-     */
     const lIndex = pIndex;
     if (lIndex) {
       i = lIndex.length - 1;
@@ -113,7 +90,6 @@ export default function menu(index, sel) {
   /**
    * Функция простановки класса выделения
    *
-   * @param {number} pIndex Индекс
    * @param {string} value Значение
    */
   function eachId(value) {
@@ -133,21 +109,9 @@ export default function menu(index, sel) {
    * @this HTMLElement
    */
   function eachMenu() {
-    /**
-     * @type {object} Источник данных для меню
-     */
     let i = null;
-    /**
-     * @type {object} Объект меню
-     */
     let a = null;
-    /**
-     * @type {object} Копия объекта структуры сайта
-     */
     const lIndex = JSON.parse(JSON.stringify(index));
-    /**
-     * @type {string} Тип коллизий
-     */
     let popupCollision = $(this).data("popup-collision");
     if (typeof popupCollision === "undefined") popupCollision = "horizontal";
     if (popupCollision === true) popupCollision = "";
