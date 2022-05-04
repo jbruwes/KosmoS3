@@ -33,29 +33,9 @@ export default function getChildren(
     .replace(/%2F/g, "/")
     .replace(/\/+/g, "/")
     .replace(/^\/+|\/+$/g, "");
-  /**
-   * Выбирать папки или файлы?
-   *
-   * @type {string}
-   */
   let lChildren = null;
-  /**
-   * Локальная копия атрибутов
-   *
-   * @type {string}
-   */
   let lAttr = attr;
-  /**
-   * Пути через запятую, по которым ищутся дочерние элементы
-   *
-   * @type {(string|string[])}
-   */
   let dataHashes = $.trim(path);
-  /**
-   * Массив дочерних объектов
-   *
-   * @type {object[]}
-   */
   let dataChildren = [];
   /**
    * Тримминг и убирание кодов из путей, по которым ищутся дочерние элементы
@@ -76,17 +56,7 @@ export default function getChildren(
    * @returns {string} Путь до дочернего объекта
    */
   function calchash(pValue) {
-    /**
-     * Текущий объект
-     *
-     * @type {object}
-     */
     let lValue = pValue;
-    /**
-     * Путь до дочернего объекта
-     *
-     * @type {(string[]|string)}
-     */
     let localHash = [];
     while (lValue.$level > 2) {
       lValue = jsel(index[0]).select(`//*[@id="${lValue.$parent}"]`);
@@ -98,7 +68,6 @@ export default function getChildren(
   /**
    * Нахождение дочерних объектов по каждому пути
    *
-   * @param {number} key Ключ пути
    * @param {string} dataHash Значение пути по которому ищутся дочерние объекты
    */
   function eachDataHash(dataHash) {
@@ -109,17 +78,7 @@ export default function getChildren(
      * @returns {object} Обработанный дочерний объект
      */
     function mapDataChildren(pValue) {
-      /**
-       * Текущий объект
-       *
-       * @type {object}
-       */
       const lValue = pValue;
-      /**
-       * Путь до дочернего объекта
-       *
-       * @type {string}
-       */
       let localHash = null;
       if (deep || axe) localHash = calchash(lValue);
       else localHash = dataHash ? `${dataHash.replace(/\s/g, "_")}/` : "";
