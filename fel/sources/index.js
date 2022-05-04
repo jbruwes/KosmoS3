@@ -65,14 +65,12 @@ import parentbutton from "./modules/parentbutton";
 
 window.$ = $;
 window.jQuery = jQuery;
-if (!window.location.origin)
-  window.location.origin = `${window.location.protocol}//${
-    window.location.hostname
-  }${window.location.port ? `:${window.location.port}` : ""}`;
 $.ajaxSetup({ cache: false });
 
 createApp({
   /**
+   * Инициализация данных приложения
+   *
    * @returns {object} Объект data
    */
   data: () => ({
@@ -81,20 +79,20 @@ createApp({
     scripts: null,
   }),
   /**
-   *
+   * Обработчик создания приложения
    */
   async created() {
     [this.index, this.scripts] = await Promise.all([
       (await fetch("index.json", { cache: "no-store" })).json(),
       (await fetch("index.cdn.json", { cache: "no-store" })).json(),
     ]);
-    this.plainIndex = jsel(this.index).selectAll("//*[@id]");
+    this.setPlainIndex();
     this.getScripts();
     this.setRouter();
-    this.onhashchange("body>.pusher");
+    this.onhashchange(".pusher");
   },
   /**
-   *
+   * Обработчик монтирования приложения
    */
   mounted() {
     jarallaxVideo();
@@ -103,7 +101,7 @@ createApp({
   },
   methods: {
     /**
-     *
+     * Заполнение массива загрузки пользовательских скриптов
      */
     getScripts() {
       this.scripts.push({ url: "index.js" });
@@ -112,9 +110,10 @@ createApp({
         .map((script) => $.getScript(script.url));
     },
     /**
-     *
+     * Заполнение плоского индекса
      */
-    setRouter() {
+    setPlainIndex() {
+      this.plainIndex = jsel(this.index).selectAll("//*[@id]");
       this.plainIndex.forEach((node) => {
         const lNode = node;
         lNode.path = jsel(this.index).selectAll(
@@ -123,22 +122,25 @@ createApp({
         lNode.path = lNode.path.map((e) => e.value.trim().replace(/\s/g, "_"));
         lNode.path.shift();
         lNode.path = `/${lNode.path.join("/")}`;
-        if (lNode.path !== "/") {
-          page(lNode.path, this.route);
-          page(`${lNode.path}/`, this.route);
-          page(encodeURI(lNode.path), this.route);
-          page(`${encodeURI(lNode.path)}/`, this.route);
-        }
+      });
+    },
+    /**
+     * Инициализация роутера
+     */
+    setRouter() {
+      this.plainIndex.forEach((node) => {
+        if (node.path !== "/") page(node.path, this.route);
       });
       page();
       page("/", this.route);
     },
     /**
+     * Обработка роутинга
      *
-     * @param ctx
+     * @param {object} ctx Объект роутинга
      */
     async route(ctx) {
-      let node = this.plainIndex.find(
+      const node = this.plainIndex.find(
         (element) => element.path === ctx.routePath
       );
       if (node) {
@@ -149,6 +151,25 @@ createApp({
           });
           html = html.status === 200 ? await html.text() : "";
         } finally {
+          document.title = node.title ? node.title.replace(/"/g, "&quot;") : "";
+          [
+            ['meta[name="description"]', node.description],
+            ['meta[name="keywords"]', node.keywords],
+            ['meta[property="og:title"]', node.title],
+            ['meta[property="og:description"]', node.description],
+            [
+              'meta[property="og:url"]',
+              `${window.location.origin}${encodeURI(ctx.routePath)}`,
+            ],
+            [
+              'meta[property="og:image"]',
+              node.image ? `${window.location.origin}/${node.image}` : "",
+            ],
+          ].forEach((e) => {
+            document.head.querySelector(e[0]).content = e[1]
+              ? e[1].replace(/"/g, "&quot;")
+              : "";
+          });
           $("#content>main").html(html);
           glightbox("#content>main");
           this.onhashchange();
@@ -157,8 +178,9 @@ createApp({
       }
     },
     /**
+     * Обработчик загруженного контента
      *
-     * @param sel
+     * @param {string} sel Селектор
      */
     async onhashchange(sel) {
       const pSel = sel || "#content";
@@ -176,7 +198,6 @@ createApp({
       parentbutton(this.index, pSel);
       sidebar(this.index);
       menu(this.index, pSel);
-      // corrector(pSel);
       $(`${pSel} .ui.accordion`).accordion();
       $(`${pSel} .ui.embed:not([contenteditable])`)
         .attr("contenteditable", "false")
