@@ -792,7 +792,7 @@ export default class TinymceView extends JetView {
         tinymce.execCommand(
           "mceInsertContent",
           !1,
-          `<a href="${that.path}/${that.text.replace(/ /g, "_")}/">${
+          `<a href="${that.path}/${that.text.replace(/ /g, "_")}">${
             that.text
           }</a>`
         );
@@ -800,7 +800,7 @@ export default class TinymceView extends JetView {
         tinymce.execCommand(
           "mceInsertLink",
           !1,
-          `${that.path}/${that.text.replace(/ /g, "_")}/`
+          `${that.path}/${that.text.replace(/ /g, "_")}`
         );
     }
 
