@@ -17,6 +17,10 @@ export default async function html(pPath, pHtml, pIo, pNode) {
     pNode.description ? pNode.description.replace(/"/g, "&quot;") : ""
   );
   lHtml = lHtml.replace(
+    /{{ keywords }}/g,
+    pNode.keywords ? pNode.keywords.replace(/"/g, "&quot;") : ""
+  );
+  lHtml = lHtml.replace(
     /{{ yandex }}/g,
     pNode.yandex ? pNode.yandex.replace(/"/g, "&quot;") : ""
   );
@@ -48,13 +52,11 @@ export default async function html(pPath, pHtml, pIo, pNode) {
   } finally {
     lHtml = lHtml.replace(/<main><\/main>/g, `<main>${lHtm}</main>`);
     if (pNode.url) {
-      let lUrl = decodeURI(pNode.url.trim().replace(/^\/+|\/+$/g, "")).replace(
-        / /g,
-        "_"
-      );
-      lUrl = lUrl ? `${lUrl}/` : "";
+      const lUrl = decodeURI(
+        pNode.url.trim().replace(/^\/+|\/+$/g, "")
+      ).replace(/ /g, "_");
       await pIo.putObject(
-        `${lUrl}index.html`,
+        `${lUrl ? `${lUrl}/` : ""}index.html`,
         "text/html",
         lHtml.replace(
           /{{ url }}/g,
@@ -62,13 +64,12 @@ export default async function html(pPath, pHtml, pIo, pNode) {
         )
       );
     }
-    const lPath = pPath ? `${pPath}/` : "";
     await pIo.putObject(
-      `${lPath}index.html`,
+      `${pPath ? `${pPath}/` : ""}index.html`,
       "text/html",
       lHtml.replace(
         /{{ url }}/g,
-        `https://${pIo.getBucket()}/${encodeURI(lPath)}`
+        `https://${pIo.getBucket()}/${encodeURI(pPath)}`
       )
     );
   }
