@@ -122,6 +122,7 @@ createApp({
         lNode.path = lNode.path.map((e) => e.value.trim().replace(/\s/g, "_"));
         lNode.path.shift();
         lNode.path = `/${lNode.path.join("/")}`;
+        lNode.url = lNode.url ? `/${lNode.url.trim().replace(/^\/+|\/+$/g, "")}` : "";
       });
     },
     /**
@@ -129,6 +130,7 @@ createApp({
      */
     setRouter() {
       this.plainIndex.forEach((node) => {
+        if (node.url) page(node.url, this.route);
         if (node.path !== "/") page(node.path, this.route);
       });
       page();
@@ -141,7 +143,7 @@ createApp({
      */
     async route(ctx) {
       const node = this.plainIndex.find(
-        (element) => element.path === ctx.routePath
+        (e) => e.path === ctx.routePath || e.url === ctx.routePath
       );
       if (node) {
         let html = "";
@@ -159,7 +161,7 @@ createApp({
             ['meta[property="og:description"]', node.description],
             [
               'meta[property="og:url"]',
-              `${window.location.origin}${encodeURI(ctx.routePath)}`,
+              `${window.location.origin}${encodeURI(ctx.routePath)}/`,
             ],
             [
               'meta[property="og:image"]',
