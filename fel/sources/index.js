@@ -155,11 +155,14 @@ createApp({
           });
           html = html.status === 200 ? await html.text() : "";
         } finally {
-          document.title = node.title ? node.title.replace(/"/g, "&quot;") : "";
+          document.title = (node.title ? node.title : node.value).replace(
+            /"/g,
+            "&quot;"
+          );
           [
             ['meta[name="description"]', node.description],
             ['meta[name="keywords"]', node.keywords],
-            ['meta[property="og:title"]', node.title],
+            ['meta[property="og:title"]', document.title],
             ['meta[property="og:description"]', node.description],
             [
               'meta[property="og:url"]',
