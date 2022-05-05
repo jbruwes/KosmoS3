@@ -52,9 +52,10 @@ export default async function html(pPath, pHtml, pIo, pNode) {
   } finally {
     lHtml = lHtml.replace(/<main><\/main>/g, `<main>${lHtm}</main>`);
     if (pNode.url) {
-      const lUrl = decodeURI(
-        pNode.url.trim().replace(/^\/+|\/+$/g, "")
-      ).replace(/ /g, "_");
+      let lUrl = decodeURI(pNode.url.trim().replace(/^\/+|\/+$/g, "")).replace(
+        / /g,
+        "_"
+      );
       lUrl = lUrl ? `${lUrl}/` : "";
       await pIo.putObject(
         `${lUrl}index.html`,
