@@ -60,14 +60,20 @@ export default async function html(pPath, pHtml, pIo, pNode) {
       await pIo.putObject(
         `${lUrl}index.html`,
         "text/html",
-        lHtml.replace(/#url#/g, `https://${pIo.getBucket()}/${encodeURI(lUrl)}`)
+        lHtml.replace(
+          /{{ url }}/g,
+          `https://${pIo.getBucket()}/${encodeURI(lUrl)}`
+        )
       );
     }
     const lPath = pPath ? `${pPath}/` : "";
     await pIo.putObject(
       `${lPath}index.html`,
       "text/html",
-      lHtml.replace(/#url#/g, `https://${pIo.getBucket()}/${encodeURI(lPath)}`)
+      lHtml.replace(
+        /{{ url }}/g,
+        `https://${pIo.getBucket()}/${encodeURI(lPath)}`
+      )
     );
   }
 }
