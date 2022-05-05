@@ -132,7 +132,7 @@ export default class TinymceView extends JetView {
   config = () => ({
     id: "tinymce",
     view: "tinymce5-editor",
-    //apiKey: "r2lw5k8fd0gyrwrhztc4ie6zdmanh9ovn6c38xwh8ujjimpw",
+    // apiKey: "r2lw5k8fd0gyrwrhztc4ie6zdmanh9ovn6c38xwh8ujjimpw",
     config: {
       plugins:
         "preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount charmap quickbars emoticons",
@@ -159,30 +159,30 @@ export default class TinymceView extends JetView {
       document_base_url: `${this.app.io.getWendpoint()}/${this.app.io.getBucket()}/`,
       statusbar: false,
       resize: false,
-      //mobile: {
+      // mobile: {
       //  theme: "silver",
       //  menubar: false,
-      //},
-      //visualblocks_default_state: true,
-      //allow_conditional_comments: true,
-      //allow_html_in_named_anchor: true,
-      //element_format: "html",
-      //quickbars_insert_toolbar: false,
-      //quickbars_selection_toolbar:
+      // },
+      // visualblocks_default_state: true,
+      // allow_conditional_comments: true,
+      // allow_html_in_named_anchor: true,
+      // element_format: "html",
+      // quickbars_insert_toolbar: false,
+      // quickbars_selection_toolbar:
       //  "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
-      //contextmenu: "link image table",
-      //extended_valid_elements: "script[*],i[*],span[*],img[*]",
-      //valid_children:
+      // contextmenu: "link image table",
+      // extended_valid_elements: "script[*],i[*],span[*],img[*]",
+      // valid_children:
       //  "+body[style],+body[link],+h1[div],+h2[div],+h3[div],+h4[div],+h5[div],+h6[div]",
-      //noneditable_class: "mceNonEditable",
-      //allow_script_urls: true,
-      //paste_data_images: true,
-      //toolbar_sticky: true,
-      //autosave_ask_before_unload: true,
-      //autosave_interval: "30s",
-      //autosave_prefix: "{path}{query}-{id}-",
-      //autosave_restore_when_empty: false,
-      //autosave_retention: "2m",
+      // noneditable_class: "mceNonEditable",
+      // allow_script_urls: true,
+      // paste_data_images: true,
+      // toolbar_sticky: true,
+      // autosave_ask_before_unload: true,
+      // autosave_interval: "30s",
+      // autosave_prefix: "{path}{query}-{id}-",
+      // autosave_restore_when_empty: false,
+      // autosave_retention: "2m",
       templates: [
         {
           title: "menu",
