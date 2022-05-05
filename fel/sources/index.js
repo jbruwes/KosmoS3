@@ -122,7 +122,9 @@ createApp({
         lNode.path = lNode.path.map((e) => e.value.trim().replace(/\s/g, "_"));
         lNode.path.shift();
         lNode.path = `/${lNode.path.join("/")}`;
-        lNode.url = lNode.url ? `/${lNode.url.trim().replace(/^\/+|\/+$/g, "")}` : "";
+        lNode.url = lNode.url
+          ? `/${lNode.url.trim().replace(/^\/+|\/+$/g, "")}`
+          : "";
       });
     },
     /**
