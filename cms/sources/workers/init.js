@@ -3,13 +3,15 @@ import "regenerator-runtime/runtime";
 import S3 from "../s3";
 
 /**
- * @param root0
- * @param root0.data
- * @param root0.data.pAccessKeyId
- * @param root0.data.pSecretAccessKey
- * @param root0.data.pBucketName
- * @param root0.data.pRegion
- * @param root0.data.pEndpoint
+ * Создание обязательных файлов
+ *
+ * @param {object} root0 Сообщение
+ * @param {object} root0.data Данные сообщения
+ * @param {string} root0.data.pAccessKeyId Идентификатор
+ * @param {string} root0.data.pSecretAccessKey Ключ доступа
+ * @param {string} root0.data.pBucketName Название корзины
+ * @param {string} root0.data.pRegion Регион
+ * @param {string} root0.data.pEndpoint Точка входа
  */
 onmessage = async ({
   data: { pAccessKeyId, pSecretAccessKey, pBucketName, pRegion, pEndpoint },
