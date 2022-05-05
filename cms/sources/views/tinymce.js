@@ -132,27 +132,57 @@ export default class TinymceView extends JetView {
   config = () => ({
     id: "tinymce",
     view: "tinymce5-editor",
-    apiKey: "r2lw5k8fd0gyrwrhztc4ie6zdmanh9ovn6c38xwh8ujjimpw",
+    //apiKey: "r2lw5k8fd0gyrwrhztc4ie6zdmanh9ovn6c38xwh8ujjimpw",
     config: {
-      mobile: {
-        theme: "silver",
-        menubar: false,
-      },
       plugins:
         "preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount charmap quickbars emoticons",
       menubar: "file edit view insert format tools table",
       toolbar:
         "undo redo | rlink | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview print | insertfile image media template link anchor codesample | ltr rtl",
-      toolbar_sticky: true,
       content_css_cors: true,
       content_css: "index.cdn.css,index.css",
       skin: false,
       content_style: `${contentUiCss.toString()}\n${contentCss.toString()}\n.mce-content-body{margin:0;padding:8px;}`,
-      autosave_ask_before_unload: true,
-      autosave_interval: "30s",
-      autosave_prefix: "{path}{query}-{id}-",
-      autosave_restore_when_empty: false,
-      autosave_retention: "2m",
+      file_picker_types: "image media file",
+      quickbars_insert_toolbar: "quickimage quicktable template",
+      toolbar_mode: "sliding",
+      extended_valid_elements: "i[class]",
+      branding: false,
+      browser_spellcheck: true,
+      convert_urls: false,
+      image_advtab: true,
+      image_caption: true,
+      image_title: true,
+      images_reuse_filename: true,
+      relative_urls: false,
+      remove_script_host: false,
+      document_base_url: `${this.app.io.getWendpoint()}/${this.app.io.getBucket()}/`,
+      statusbar: false,
+      resize: false,
+      //mobile: {
+      //  theme: "silver",
+      //  menubar: false,
+      //},
+      //visualblocks_default_state: true,
+      //allow_conditional_comments: true,
+      //allow_html_in_named_anchor: true,
+      //element_format: "html",
+      //quickbars_insert_toolbar: false,
+      //quickbars_selection_toolbar:
+      //  "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
+      //contextmenu: "link image table",
+      //extended_valid_elements: "script[*],i[*],span[*],img[*]",
+      //valid_children:
+      //  "+body[style],+body[link],+h1[div],+h2[div],+h3[div],+h4[div],+h5[div],+h6[div]",
+      //noneditable_class: "mceNonEditable",
+      //allow_script_urls: true,
+      //paste_data_images: true,
+      //toolbar_sticky: true,
+      //autosave_ask_before_unload: true,
+      //autosave_interval: "30s",
+      //autosave_prefix: "{path}{query}-{id}-",
+      //autosave_restore_when_empty: false,
+      //autosave_retention: "2m",
       templates: [
         {
           title: "menu",
@@ -479,7 +509,6 @@ export default class TinymceView extends JetView {
           });
         }
       },
-      file_picker_types: "image media file",
       /**
        * @param cb
        */
@@ -520,35 +549,6 @@ export default class TinymceView extends JetView {
         };
         input.click();
       },
-      visualblocks_default_state: true,
-      allow_conditional_comments: true,
-      allow_html_in_named_anchor: true,
-      element_format: "html",
-      quickbars_insert_toolbar: false,
-      quickbars_selection_toolbar:
-        "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
-      toolbar_mode: "sliding",
-      contextmenu: "link image table",
-      extended_valid_elements: "script[*],i[*],span[*],img[*]",
-      valid_children:
-        "+body[style]," +
-        "+body[link]," +
-        "+h1[div]," +
-        "+h2[div]," +
-        "+h3[div]," +
-        "+h4[div]," +
-        "+h5[div]," +
-        "+h6[div]",
-      branding: false,
-      noneditable_class: "mceNonEditable",
-      browser_spellcheck: true,
-      convert_urls: false,
-      image_advtab: true,
-      image_caption: true,
-      image_title: true,
-      allow_script_urls: true,
-      paste_data_images: true,
-      images_reuse_filename: true,
       /**
        * @param blobInfo
        * @param success
@@ -569,11 +569,6 @@ export default class TinymceView extends JetView {
           if (this.app) failure(err.message);
         }
       },
-      relative_urls: false,
-      remove_script_host: false,
-      document_base_url: `${this.app.io.getWendpoint()}/${this.app.io.getBucket()}/`,
-      statusbar: false,
-      resize: false,
       link_class_list: [
         {
           title: "None",
@@ -792,7 +787,7 @@ export default class TinymceView extends JetView {
         tinymce.execCommand(
           "mceInsertContent",
           !1,
-          `<a href="${that.path}/${that.text.replace(/ /g, "_")}">${
+          `<a href="${that.path}/${that.text.replace(/ /g, "_")}/">${
             that.text
           }</a>`
         );
@@ -800,7 +795,7 @@ export default class TinymceView extends JetView {
         tinymce.execCommand(
           "mceInsertLink",
           !1,
-          `${that.path}/${that.text.replace(/ /g, "_")}`
+          `${that.path}/${that.text.replace(/ /g, "_")}/`
         );
     }
 
