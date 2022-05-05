@@ -9,15 +9,13 @@
     "webix": true,
     "$$": true,
     "tinymce": true,
-    "scheduler": true,
     "fabric": true,
     "init": true,
     "AOS": true,
     "jsel": true,
     "APPNAME": true,
     "VERSION": true,
-    "PRODUCTION": true,
-    "BUILD_AS_MODULE": true
+    "PRODUCTION": true
   },
   "rules": {
     "jsdoc/require-jsdoc": [
