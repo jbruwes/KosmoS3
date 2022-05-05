@@ -55,22 +55,18 @@ export default async function html(pPath, pHtml, pIo, pNode) {
       const lUrl = decodeURI(
         pNode.url.trim().replace(/^\/+|\/+$/g, "")
       ).replace(/ /g, "_");
+      lUrl = lUrl ? `${lUrl}/` : "";
       await pIo.putObject(
-        `${lUrl ? `${lUrl}/` : ""}index.html`,
+        `${lUrl}index.html`,
         "text/html",
-        lHtml.replace(
-          /{{ url }}/g,
-          `https://${pIo.getBucket()}/${encodeURI(lUrl)}`
-        )
+        lHtml.replace(/#url#/g, `https://${pIo.getBucket()}/${encodeURI(lUrl)}`)
       );
     }
+    const lPath = pPath ? `${pPath}/` : "";
     await pIo.putObject(
-      `${pPath ? `${pPath}/` : ""}index.html`,
+      `${lPath}index.html`,
       "text/html",
-      lHtml.replace(
-        /{{ url }}/g,
-        `https://${pIo.getBucket()}/${encodeURI(pPath)}`
-      )
+      lHtml.replace(/#url#/g, `https://${pIo.getBucket()}/${encodeURI(lPath)}`)
     );
   }
 }
