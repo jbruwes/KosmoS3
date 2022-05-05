@@ -14,6 +14,7 @@ export default class TopView extends JetView {
         view: "toolbar",
         height: 56,
         // css: "webix_dark",
+        paddingX: 10,
         cols: [
           {
             view: "icon",
@@ -27,6 +28,7 @@ export default class TopView extends JetView {
             view: "label",
             label: '<i class="rocket icon"></i> KosmoS3 CMS',
           },
+          { view: "label", label: `v. ${VERSION}`, align: "right" },
         ],
       },
       {
