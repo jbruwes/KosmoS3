@@ -88,7 +88,7 @@ createApp({
     ]);
     this.setPlainIndex();
     this.getScripts();
-    this.setRouter();
+    if(!window.frameElement)this.setRouter();
     this.onhashchange(".pusher");
   },
   /**
