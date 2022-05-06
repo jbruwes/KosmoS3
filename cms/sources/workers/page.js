@@ -36,14 +36,18 @@ onmessage = async ({
   const [lJson] = JSON.parse(await io.getObject("index.json"));
   const lNode = jsel(lJson).select(`//*[@id="${pId}"]`);
   if (lNode) {
-    const lPath = jsel(lJson)
+    lNode.path = jsel(lJson)
       .selectAll(`//*[@id="${pId}"]/ancestor-or-self::*[@id]`)
       .map((e) =>
         decodeURI(e.value.trim().replace(/^\//, "")).replace(/ /g, "_")
       );
-    lPath.shift();
+    lNode.path.shift();
+    lNode.path = lPath.join("/");
+    lNode.yandex = lJson.yandex;
+    lNode.google = lJson.google;
+    lNode.metrika = lJson.metrika;
+    lNode.analytics = lJson.analytics;
     await html(
-      lPath.join("/"),
       (
         await (await fetch("index.htm")).text()
       ).replace(/{{ pusher }}/g, await io.getObject("index.htm")),
