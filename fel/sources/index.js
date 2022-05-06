@@ -159,6 +159,7 @@ createApp({
             /"/g,
             "&quot;"
           );
+          const lUrl = node.url || ctx.routePath;
           [
             ['meta[name="description"]', node.description],
             ['meta[name="keywords"]', node.keywords],
@@ -166,7 +167,9 @@ createApp({
             ['meta[property="og:description"]', node.description],
             [
               'meta[property="og:url"]',
-              `${window.location.origin}${encodeURI(ctx.routePath)}/`,
+              `${window.location.origin}${
+                lUrl === "/" ? "" : `${encodeURI(lUrl)}/`
+              }`,
             ],
             [
               'meta[property="og:image"]',
