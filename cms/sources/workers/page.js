@@ -42,7 +42,7 @@ onmessage = async ({
         decodeURI(e.value.trim().replace(/^\//, "")).replace(/ /g, "_")
       );
     lNode.path.shift();
-    lNode.path = lPath.join("/");
+    lNode.path = lNode.path.join("/");
     lNode.yandex = lJson.yandex;
     lNode.google = lJson.google;
     lNode.metrika = lJson.metrika;
