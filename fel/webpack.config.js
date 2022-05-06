@@ -100,6 +100,7 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
+      inject: false,
       filename: "index.htm",
       template: "./resource/index.htm",
     }),
