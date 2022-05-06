@@ -1,11 +1,10 @@
 /**
- * @param {string} pPath Путь
- * @param {string} pHtml Объект для чтения шаблона сайта
+ * @param {string} pHtml Шаблон сайта
  * @param {object} pIo Клиент S3
  * @param {object} pNode Текущий узел
  * @see https://github.com/joshbuchea/HEAD
  */
-export default async function html(pPath, pHtml, pIo, pNode) {
+export default async function html(pHtml, pIo, pNode) {
   let lHtml = pHtml;
   lHtml = lHtml.replace(/{{ base }}/g, "/");
   lHtml = lHtml.replace(
@@ -51,28 +50,32 @@ export default async function html(pPath, pHtml, pIo, pNode) {
     lHtm = await pIo.getObject(`${pNode.id}.htm`);
   } finally {
     lHtml = lHtml.replace(/<main><\/main>/g, `<main>${lHtm}</main>`);
+    let lUrl = "";
     if (pNode.url) {
-      let lUrl = decodeURI(pNode.url.trim().replace(/^\/+|\/+$/g, "")).replace(
+      lUrl = decodeURI(pNode.url.trim().replace(/^\/+|\/+$/g, "")).replace(
         / /g,
         "_"
       );
-      lUrl = lUrl ? `${lUrl}/` : "";
-      await pIo.putObject(
-        `${lUrl}index.html`,
-        "text/html",
-        lHtml.replace(
-          /{{ url }}/g,
-          `https://${pIo.getBucket()}/${encodeURI(lUrl)}`
-        )
-      );
+      if (lUrl) {
+        lUrl = `${lUrl}/`;
+        await pIo.putObject(
+          `${lUrl}index.html`,
+          "text/html",
+          lHtml.replace(
+            /{{ url }}/g,
+            `https://${pIo.getBucket()}/${encodeURI(lUrl)}`
+          )
+        );
+      }
     }
-    const lPath = pPath ? `${pPath}/` : "";
+    const lPath = pNode.path ? `${pNode.path}/` : "";
+    lUrl = lUrl || lPath;
     await pIo.putObject(
       `${lPath}index.html`,
       "text/html",
       lHtml.replace(
         /{{ url }}/g,
-        `https://${pIo.getBucket()}/${encodeURI(lPath)}`
+        `https://${pIo.getBucket()}${lUrl ? `/${encodeURI(lUrl)}` : ""}`
       )
     );
   }
