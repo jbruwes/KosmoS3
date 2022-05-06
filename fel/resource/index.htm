@@ -15,12 +15,13 @@
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="icon.png" />
-    <link rel="stylesheet" href="index.cdn.css" />
-    <link rel="stylesheet" href="index.css" />
     <meta name="theme-color" content="#fafafa" />
     <meta name="google-site-verification" content="{{ google }}" />
     <meta name="yandex-verification" content="{{ yandex }}" />
     <meta name="keywords" content="{{ keywords }}" />
+    <%= htmlWebpackPlugin.tags.headTags %>
+    <link href="index.cdn.css" rel="stylesheet" />
+    <link href="index.css" rel="stylesheet" />
     <script id="yandex">
       (function (m, e, t, r, i, k, a) {
         m[i] =
@@ -60,7 +61,10 @@
       ga("set", "transport", "beacon");
       ga("send", "pageview");
     </script>
-    <script src="https://www.google-analytics.com/analytics.js" async></script>
+    <script
+      async="async"
+      src="https://www.google-analytics.com/analytics.js"
+    ></script>
   </head>
   <body>
     <div class="ui sidebar very wide vertical accordion menu"></div>
