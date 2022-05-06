@@ -5,7 +5,9 @@ import { JetView } from "webix-jet";
  */
 export default class TopView extends JetView {
   /**
+   * Инициализация кофигурация класса
    *
+   * @returns {object} Конфигурация
    */
   config = () => ({
     rows: [
@@ -13,14 +15,13 @@ export default class TopView extends JetView {
         id: "toolbar",
         view: "toolbar",
         height: 56,
-        // css: "webix_dark",
         paddingX: 10,
         cols: [
           {
             view: "icon",
             icon: "mdi mdi-menu",
             /**
-             *
+             * Обработчик нажатия на кнопку сендвич
              */
             click: () => $$("sidebar").toggle(),
           },
@@ -37,10 +38,11 @@ export default class TopView extends JetView {
             view: "sidebar",
             collapsed: true,
             id: "sidebar",
-            // css: "webix_dark",
             data: [],
             /**
-             * @param id
+             * Обработчик переходов по меню
+             *
+             * @param {string} id Идентификатор кнопки
              */
             click: async (id) => {
               if (id === "signout") {
@@ -66,7 +68,7 @@ export default class TopView extends JetView {
   });
 
   /**
-   * The method is called once when a view is rendered
+   * Обработчик готовности класса
    */
   ready() {
     this.$$("sidebar")
