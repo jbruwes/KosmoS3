@@ -23,7 +23,9 @@ export default class TopView extends JetView {
             /**
              * Обработчик нажатия на кнопку сендвич
              */
-            click: () => $$("sidebar").toggle(),
+            click: () => {
+              $$("sidebar").toggle();
+            },
           },
           {
             view: "label",
