@@ -582,7 +582,7 @@ export default class TemplateView extends JetView {
             /{{ base }}/g,
             `${this.app.io.getWendpoint()}/${this.app.io.getBucket()}/`
           )
-          .replace("#pusher#", this.genHtml())
+          .replace("{{ pusher }}", this.genHtml())
           .replace(/<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi, "")
           .replace(/<script id="google"[^>]*>([\s\S]*?)<\/script>/gi, "")
       );
