@@ -49,7 +49,10 @@ export default async function html(pHtml, pIo, pNode) {
   try {
     lHtm = await pIo.getObject(`${pNode.id}.htm`);
   } finally {
-    lHtml = lHtml.replace(/<main><\/main>/g, `<main>${lHtm}</main>`);
+    lHtml = lHtml.replace(
+      /<main><\/main>/g,
+      `<main v-if="!content">${lHtm}</main><main v-else v-html="content"></main>`
+    ); // `<main v-html="content">${lHtm}</main>`);
     let lUrl = "";
     if (pNode.url) {
       lUrl = decodeURI(pNode.url.trim().replace(/^\/+|\/+$/g, "")).replace(
