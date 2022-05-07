@@ -52,7 +52,7 @@ export default async function html(pHtml, pIo, pNode) {
     lHtml = lHtml.replace(
       /<main><\/main>/g,
       `<main v-if="!content">${lHtm}</main><main v-else v-html="content"></main>`
-    ); // `<main v-html="content">${lHtm}</main>`);
+    );
     let lUrl = "";
     if (pNode.url) {
       lUrl = decodeURI(pNode.url.trim().replace(/^\/+|\/+$/g, "")).replace(
