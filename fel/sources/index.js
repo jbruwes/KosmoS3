@@ -44,9 +44,10 @@ import "kendo-ui-core/js/kendo.menu";
 import "lightslider";
 import "pure";
 import { jarallax, jarallaxVideo } from "jarallax";
-import { createApp } from "vue";
+import { createApp, nextTick } from "vue";
 import page from "page";
 import jsel from "jsel";
+import LoadScript from "vue-plugin-load-script";
 import glightbox from "./modules/glightbox";
 import deck from "./modules/deck";
 import carousel from "./modules/carousel";
@@ -75,46 +76,40 @@ createApp({
    */
   data: () => ({
     index: null,
-    plainIndex: null,
-    scripts: null,
+    urls: null,
+    content: null,
+    context: { routePath: null },
   }),
-  /**
-   * Обработчик создания приложения
-   */
-  async created() {
-    [this.index, this.scripts] = await Promise.all([
-      (await fetch("index.json", { cache: "no-store" })).json(),
-      (await fetch("index.cdn.json", { cache: "no-store" })).json(),
-    ]);
-    this.setPlainIndex();
-    this.getScripts();
-    if(!window.frameElement)this.setRouter();
-    this.onhashchange(".pusher");
-  },
-  /**
-   * Обработчик монтирования приложения
-   */
-  mounted() {
-    jarallaxVideo();
-    glightbox("body");
-    AOS.init();
-  },
-  methods: {
+  computed: {
     /**
-     * Заполнение массива загрузки пользовательских скриптов
+     * Пользовательские скрипты
+     *
+     * @returns {Array} Массив обещаний по зпгрузке пользовательских скриптов
      */
-    getScripts() {
-      this.scripts.push({ url: "index.js" });
-      this.scripts = this.scripts
+    scripts() {
+      return [...this.urls, { url: "index.js" }]
         .filter((script) => script.url)
-        .map((script) => $.getScript(script.url));
+        .map((script) => this.$loadScript(script.url));
     },
     /**
-     * Заполнение плоского индекса
+     * Текущий объект
+     *
+     * @returns {object} Текущий объект для загрузки
      */
-    setPlainIndex() {
-      this.plainIndex = jsel(this.index).selectAll("//*[@id]");
-      this.plainIndex.forEach((node) => {
+    node() {
+      return this.plainIndex.find(
+        (e) =>
+          e.path === this.context.routePath || e.url === this.context.routePath
+      );
+    },
+    /**
+     * Плоский индекс
+     *
+     * @returns {object} Плоский индекс для поиска
+     */
+    plainIndex() {
+      const plainIndex = jsel(this.index).selectAll("//*[@id]");
+      plainIndex.forEach((node) => {
         const lNode = node;
         lNode.path = jsel(this.index).selectAll(
           `//*[@id="${lNode.id}"]/ancestor-or-self::*[@id]`
@@ -126,66 +121,93 @@ createApp({
           ? `/${lNode.url.trim().replace(/^\/+|\/+$/g, "")}`
           : "";
       });
+      return plainIndex;
+    },
+  },
+  watch: {
+    /**
+     * При изменении текущего объекта загружаем страницу
+     */
+    async node() {
+      let html = "";
+      try {
+        html = await fetch(`${encodeURIComponent(this.node.id)}.htm`, {
+          cache: "no-store",
+        });
+        html = html.status === 200 ? await html.text() : "";
+      } finally {
+        document.title = (
+          this.node.title ? this.node.title : this.node.value
+        ).replace(/"/g, "&quot;");
+        const lUrl = this.node.url || this.context.routePath;
+        [
+          ['meta[name="description"]', this.node.description],
+          ['meta[name="keywords"]', this.node.keywords],
+          ['meta[property="og:title"]', document.title],
+          ['meta[property="og:description"]', this.node.description],
+          [
+            'meta[property="og:url"]',
+            `${window.location.origin}${
+              lUrl === "/" ? "" : `${encodeURI(lUrl)}/`
+            }`,
+          ],
+          [
+            'meta[property="og:image"]',
+            this.node.image
+              ? `${window.location.origin}/${this.node.image}`
+              : "",
+          ],
+        ].forEach((e) => {
+          document.head.querySelector(e[0]).content = e[1]
+            ? e[1].replace(/"/g, "&quot;")
+            : "";
+        });
+        this.content = html;
+      }
     },
     /**
-     * Инициализация роутера
+     * При изменении контента на странице обновляем компоненты
      */
-    setRouter() {
-      this.plainIndex.forEach((node) => {
-        if (node.url) page(node.url, this.route);
-        if (node.path !== "/") page(node.path, this.route);
-      });
-      page();
-      page("/", this.route);
+    async content() {
+      await nextTick();
+      glightbox("#content>main");
+      this.onhashchange();
+      if (!window.location.hash) window.scrollTo(0, 0);
     },
+    /**
+     * При изменении индекса создаем роутер
+     */
+    index() {
+      if (!window.frameElement) {
+        page();
+        this.plainIndex.forEach((node) => {
+          if (node.url) page(node.url, this.route);
+          page(node.path, this.route);
+        });
+      }
+    },
+  },
+  /**
+   * Обработчик монтирования приложения
+   */
+  async created() {
+    jarallaxVideo();
+    glightbox("body");
+    AOS.init();
+    [this.index, this.urls] = await Promise.all([
+      (await fetch("index.json", { cache: "no-store" })).json(),
+      (await fetch("index.cdn.json", { cache: "no-store" })).json(),
+    ]);
+    this.onhashchange(".pusher");
+  },
+  methods: {
     /**
      * Обработка роутинга
      *
-     * @param {object} ctx Объект роутинга
+     * @param {object} context Объект роутинга
      */
-    async route(ctx) {
-      const node = this.plainIndex.find(
-        (e) => e.path === ctx.routePath || e.url === ctx.routePath
-      );
-      if (node) {
-        let html = "";
-        try {
-          html = await fetch(`${encodeURIComponent(node.id)}.htm`, {
-            cache: "no-store",
-          });
-          html = html.status === 200 ? await html.text() : "";
-        } finally {
-          document.title = (node.title ? node.title : node.value).replace(
-            /"/g,
-            "&quot;"
-          );
-          const lUrl = node.url || ctx.routePath;
-          [
-            ['meta[name="description"]', node.description],
-            ['meta[name="keywords"]', node.keywords],
-            ['meta[property="og:title"]', document.title],
-            ['meta[property="og:description"]', node.description],
-            [
-              'meta[property="og:url"]',
-              `${window.location.origin}${
-                lUrl === "/" ? "" : `${encodeURI(lUrl)}/`
-              }`,
-            ],
-            [
-              'meta[property="og:image"]',
-              node.image ? `${window.location.origin}/${node.image}` : "",
-            ],
-          ].forEach((e) => {
-            document.head.querySelector(e[0]).content = e[1]
-              ? e[1].replace(/"/g, "&quot;")
-              : "";
-          });
-          $("#content>main").html(html);
-          glightbox("#content>main");
-          this.onhashchange();
-          if (!window.location.hash) window.scrollTo(0, 0);
-        }
-      }
+    route(context) {
+      this.context = context;
     },
     /**
      * Обработчик загруженного контента
@@ -212,11 +234,16 @@ createApp({
       $(`${pSel} .ui.embed:not([contenteditable])`)
         .attr("contenteditable", "false")
         .embed();
-      $("img").on("load", AOS.refresh);
-      AOS.refresh();
+      const img = document.querySelector("img");
+      if (img) {
+        if (img.complete) AOS.refresh();
+        else img.addEventListener("load", AOS.refresh);
+      } else AOS.refresh();
       jarallax(document.querySelectorAll(".jarallax"));
       await Promise.allSettled(this.scripts);
       if (typeof init === "function") init.call(this.index);
     },
   },
-}).mount("body");
+})
+  .use(LoadScript)
+  .mount("body");
