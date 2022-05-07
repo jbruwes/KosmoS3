@@ -36,7 +36,8 @@
   "extends": [
     "airbnb-base",
     "plugin:prettier/recommended",
-    "plugin:jsdoc/recommended"
+    "plugin:jsdoc/recommended",
+    "plugin:vue/vue3-recommended"
   ],
   "parserOptions": {
     "sourceType": "module",
