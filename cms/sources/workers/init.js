@@ -62,7 +62,7 @@ onmessage = async ({
       io.putObject(
         "index.htm",
         "text/html",
-        '<div data-static="" class="ui container" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><main></main></div></div>'
+        '<div data-static="" class="ui container" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><main v-if="!content"></main><main v-else v-html="content"></main></div></div>'
       )
     );
   if (put.length)
