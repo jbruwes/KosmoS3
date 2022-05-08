@@ -82,9 +82,9 @@ module.exports = {
         use: ["css-loader"],
       },
       {
-        test: /\.(less|css)$/i,
+        test: /\.css$/i,
         exclude: /content\.css$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "less-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
