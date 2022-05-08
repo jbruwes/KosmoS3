@@ -1,5 +1,5 @@
 {
-  "plugins": [],
+  "plugins": ["node_modules/jsdoc-vuejs"],
   "recurseDepth": 10,
   "opts": {
     "recurse": true,
@@ -7,8 +7,7 @@
   },
   "source": {
     "include": ["fel"],
-    "includePattern": ".+\\.js(doc|x)?$",
-    "excludePattern": "(^|\\/|\\\\)_"
+    "includePattern": "\\.(vue|js)$"
   },
   "sourceType": "module",
   "tags": {
