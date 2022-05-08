@@ -144,7 +144,7 @@ export default class TinymceView extends JetView {
       skin: false,
       content_style: `${contentUiCss.toString()}\n${contentCss.toString()}\n.mce-content-body{margin:0;padding:8px;}`,
       file_picker_types: "image media file",
-      quickbars_insert_toolbar: "quickimage quicktable template",
+      quickbars_insert_toolbar: "template",
       toolbar_mode: "sliding",
       extended_valid_elements: "i[class]",
       branding: false,
@@ -554,7 +554,7 @@ export default class TinymceView extends JetView {
        * @param success
        * @param failure
        */
-      images_upload_handler: async (blobInfo, success, failure) => {
+      images_upload_handler: async (blobInfo) => {
         const filePath = `${webix.uid()}.${decodeURI(blobInfo.filename())
           .split(".")
           .pop()}`;
@@ -564,10 +564,10 @@ export default class TinymceView extends JetView {
             blobInfo.blob().type,
             blobInfo.blob()
           );
-          if (this.app) success(filePath);
         } catch (err) {
-          if (this.app) failure(err.message);
+          if (this.app) throw err;
         }
+        return filePath;
       },
       link_class_list: [
         {
