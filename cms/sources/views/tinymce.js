@@ -3,11 +3,9 @@ import * as webix from "webix/webix.min";
 import "../tinymce5";
 import tinymce from "tinymce";
 
-/* Import content css */
 import contentUiCss from "tinymce/skins/ui/oxide/content.css";
 import contentCss from "tinymce/skins/content/default/content.css";
 
-/* Import fonts */
 import "@fontsource/arsenal";
 import "@fontsource/bad-script";
 import "@fontsource/caveat";
@@ -36,7 +34,7 @@ import "@fontsource/tenor-sans";
 import "@fontsource/neucha";
 
 /**
- *
+ * TinyMCE
  */
 export default class TinymceView extends JetView {
   #tinymce;
@@ -60,7 +58,7 @@ export default class TinymceView extends JetView {
   #sliderData;
 
   /**
-   *
+   * Деструктор
    */
   destroy() {
     if (this.#tinymce) {
@@ -80,7 +78,9 @@ export default class TinymceView extends JetView {
   }
 
   /**
-   * @param app
+   * Коструктор
+   *
+   * @param {object} app Приложение
    */
   constructor(app) {
     super(app);
@@ -127,12 +127,13 @@ export default class TinymceView extends JetView {
   }
 
   /**
+   * Конфигурация представления
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => ({
     id: "tinymce",
     view: "tinymce5-editor",
-    // apiKey: "r2lw5k8fd0gyrwrhztc4ie6zdmanh9ovn6c38xwh8ujjimpw",
     config: {
       plugins:
         "preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount charmap quickbars emoticons",
@@ -159,30 +160,6 @@ export default class TinymceView extends JetView {
       document_base_url: `${this.app.io.getWendpoint()}/${this.app.io.getBucket()}/`,
       statusbar: false,
       resize: false,
-      // mobile: {
-      //  theme: "silver",
-      //  menubar: false,
-      // },
-      // visualblocks_default_state: true,
-      // allow_conditional_comments: true,
-      // allow_html_in_named_anchor: true,
-      // element_format: "html",
-      // quickbars_insert_toolbar: false,
-      // quickbars_selection_toolbar:
-      //  "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
-      // contextmenu: "link image table",
-      // extended_valid_elements: "script[*],i[*],span[*],img[*]",
-      // valid_children:
-      //  "+body[style],+body[link],+h1[div],+h2[div],+h3[div],+h4[div],+h5[div],+h6[div]",
-      // noneditable_class: "mceNonEditable",
-      // allow_script_urls: true,
-      // paste_data_images: true,
-      // toolbar_sticky: true,
-      // autosave_ask_before_unload: true,
-      // autosave_interval: "30s",
-      // autosave_prefix: "{path}{query}-{id}-",
-      // autosave_restore_when_empty: false,
-      // autosave_retention: "2m",
       templates: [
         {
           title: "menu",
@@ -489,7 +466,9 @@ export default class TinymceView extends JetView {
         'Rubik="Rubik";' +
         'Tenor Sans="Tenor Sans";',
       /**
-       * @param editor
+       * Начальная установка TinyMCE
+       *
+       * @param {object} editor Текущий инстанс
        */
       setup: (editor) => {
         if (
@@ -500,7 +479,9 @@ export default class TinymceView extends JetView {
             icon: "link",
             tooltip: "Insert/edit link",
             /**
-             * @param callback
+             * Дерево ссылок
+             *
+             * @param {Function} callback Колбек функция
              */
             fetch: (callback) => {
               const item = $$("tree").getFirstId();
@@ -510,20 +491,22 @@ export default class TinymceView extends JetView {
         }
       },
       /**
-       * @param cb
+       * Обработчик по нажатию кнопки выбора файла
+       *
+       * @param {Function} cb Колбек функция
        */
       file_picker_callback: (cb) => {
         const input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("accept", "image/*,video/*");
         /**
-         *
+         * Обработчик по загрузке файла
          */
         input.onchange = () => {
           const file = input.files[0];
           const reader = new FileReader();
           /**
-           *
+           * Запись на S3
            */
           reader.onload = async () => {
             const id = `blobid${webix.uid()}`;
@@ -550,9 +533,9 @@ export default class TinymceView extends JetView {
         input.click();
       },
       /**
-       * @param blobInfo
-       * @param success
-       * @param failure
+       * Обработчик на форму загрузки файла
+       *
+       * @param {object} blobInfo Мета объект загруженного файла
        */
       images_upload_handler: async (blobInfo) => {
         const filePath = `${webix.uid()}.${decodeURI(blobInfo.filename())
@@ -755,7 +738,7 @@ export default class TinymceView extends JetView {
   });
 
   /**
-   *
+   * По готовности представления
    */
   async ready() {
     this.#tinymce = await $$("tinymce").getEditor(true);
@@ -775,12 +758,17 @@ export default class TinymceView extends JetView {
   }
 
   /**
-   * @param pId
-   * @param pPath
+   * Формирование дерева ссылок
+   *
+   * @param {string} pId Идентификатоп
+   * @param {string} pPath Путь
+   * @returns {object} Дерево ссылок
    */
   getSubmenuItems(pId, pPath) {
     /**
-     * @param {object} that указатель на объект
+     * Вставка ссылки
+     *
+     * @param {object} that Объект текущей ссылки
      */
     function onAction(that) {
       if (tinymce.activeEditor.selection.getContent() === "")
@@ -808,14 +796,18 @@ export default class TinymceView extends JetView {
         text: item.value.replace(/[""]/g, '\\"'),
         path: pPath,
         /**
-         *
+         * Функия вызова обработчика вставки ссылки
          */
-        onAction: () => onAction(lItem),
+        onAction: () => {
+          onAction(lItem);
+        },
       };
       if ($$("tree").getFirstChildId(lId)) {
         lItem.icon = "chevron-right";
         /**
+         * Вызов формирования подуровня ссылок
          *
+         * @returns {object} Подуровень ссылок
          */
         lItem.getSubmenuItems = () =>
           this.getSubmenuItems(
@@ -830,7 +822,7 @@ export default class TinymceView extends JetView {
   }
 
   /**
-   * Инициализация tinyMCE
+   * Загрузка контента в TinyMCE
    *
    * @param {string} val Контент
    */
@@ -846,7 +838,9 @@ export default class TinymceView extends JetView {
   }
 
   /**
-   *
+   * Запись контента на S3
    */
-  save = () => this.getParentView().save.call(this.getParentView());
+  save = () => {
+    this.getParentView().save.call(this.getParentView());
+  };
 }
