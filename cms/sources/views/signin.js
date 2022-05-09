@@ -268,7 +268,7 @@ export default class SignInView extends JetView {
                   css: "webix_transparent",
                   type: "icon",
                   width: 268,
-                  label: "KosmoS3 CMS",
+                  label: "KosmoS3",
                   icon: "mdi mdi-cursor-default-click-outline",
                   /**
                    *
@@ -286,7 +286,7 @@ export default class SignInView extends JetView {
     if (this.app.config.size === "wide") {
       this.#config.cols[1].rows.unshift({
         view: "template",
-        template: "<h1 class='mainHeader'>KosmoS3 CMS</h1>",
+        template: "<h1 class='mainHeader'>KosmoS3</h1>",
         minHeight: 90,
         type: "clean",
       });
