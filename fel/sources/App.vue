@@ -181,10 +181,6 @@ export default {
       parentbutton(this.index, pSel);
       sidebar(this.index);
       menu(this.index, pSel);
-      $(`${pSel} .ui.accordion`).accordion();
-      $(`${pSel} .ui.embed:not([contenteditable])`)
-        .attr("contenteditable", "false")
-        .embed();
       this.AOS();
       jarallax(document.querySelectorAll(".jarallax"));
       await Promise.allSettled(this.scripts);
