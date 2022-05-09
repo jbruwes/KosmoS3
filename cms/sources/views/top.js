@@ -29,7 +29,7 @@ export default class TopView extends JetView {
           },
           {
             view: "label",
-            label: '<i class="rocket icon"></i> KosmoS3 CMS',
+            label: '<i class="rocket icon"></i> KosmoS3',
           },
           { view: "label", label: `v. ${VERSION}`, align: "right" },
         ],
