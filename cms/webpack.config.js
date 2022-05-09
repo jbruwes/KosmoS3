@@ -103,7 +103,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "KosmoS3 CMS",
+      title: "KosmoS3",
     }),
     new FaviconsWebpackPlugin({
       logo: "./resource/rocket.svg",
