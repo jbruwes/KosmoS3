@@ -127,6 +127,8 @@ module.exports = {
       patterns: [
         { from: "./resource/error.html" },
         { from: "./resource/robots.txt" },
+        { from: "./resource/site.webmanifest" },
+        { from: "./resource/browserconfig.xml" },
       ],
     }),
     new webpack.ProvidePlugin({
