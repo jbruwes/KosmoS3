@@ -23,14 +23,44 @@ onmessage = async ({
     pRegion,
     pEndpoint
   );
-  const lObjects = Object.values(
-    await (await fetch("assets-manifest.json", { cache: "no-store" })).json()
-  );
+  let lJson;
+  let lObjects;
+  [lJson, lObjects] = await Promise.all([
+    io.getObject("index.json"),
+    (await fetch("assets-manifest.json", { cache: "no-store" })).json(),
+  ]);
+  [lJson] = JSON.parse(lJson);
+  lObjects = Object.values(lObjects);
   const lOobjectsLength = lObjects.length;
   let i = 0;
   setTimeout(async function run() {
     try {
-      await io.headObject(`${lObjects[i]}`);
+      const lHead = await io.headObject(`${lObjects[i]}`);
+      if (lObjects[i] === "robots.txt" || lObjects[i] === "site.webmanifest") {
+        const body = (
+          await (await fetch(`${lObjects[i]}`, { cache: "no-store" })).text()
+        )
+          .replace(
+            /{{ name }}/g,
+            (lJson.title ? lJson.title : lJson.value).replace(/"/g, "&quot;")
+          )
+          .replace(/{{ short_name }}/g, lJson.value.replace(/"/g, "&quot;"))
+          .replace(/{{ domain }}/g, pBucketName);
+        let type;
+        switch (lObjects[i]) {
+          case "robots.txt":
+            type = "text/plain";
+            break;
+          case "site.webmanifest":
+            type = "application/manifest+json";
+            break;
+          default:
+        }
+        if (lHead.ContentLength === new TextEncoder().encode(body).length) {
+          if (body !== (await io.getObject(`${lObjects[i]}`)))
+            await io.putObject(`${lObjects[i]}`, type, body);
+        } else await io.putObject(`${lObjects[i]}`, type, body);
+      }
     } catch (err) {
       const body = await (await fetch(`${lObjects[i]}`)).blob();
       await io.putObject(`${lObjects[i]}`, body.type, body);
