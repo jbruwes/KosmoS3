@@ -69,7 +69,7 @@ export default class SettingsView extends JetView {
             {
               view: "uploader",
               id: "uploader",
-              value: "Upload ico",
+              value: "favicon.ico (32x32)",
               multiple: false,
               autosend: false,
               name: "files",
@@ -78,7 +78,7 @@ export default class SettingsView extends JetView {
             {
               view: "uploader",
               id: "svgUploader",
-              value: "Upload svg",
+              value: "icon.svg",
               multiple: false,
               autosend: false,
               name: "files",
@@ -87,7 +87,25 @@ export default class SettingsView extends JetView {
             {
               view: "uploader",
               id: "pngUploader",
-              value: "Upload png",
+              value: "icon.png (192x192)",
+              multiple: false,
+              autosend: false,
+              name: "files",
+              accept: "image/png",
+            },
+            {
+              view: "uploader",
+              id: "tileUploader",
+              value: "tile.png (558x558)",
+              multiple: false,
+              autosend: false,
+              name: "files",
+              accept: "image/png",
+            },
+            {
+              view: "uploader",
+              id: "tileWideUploader",
+              value: "tile-wide.png (558x270)",
               multiple: false,
               autosend: false,
               name: "files",
@@ -147,6 +165,8 @@ export default class SettingsView extends JetView {
     this.doIcon($$("uploader"), "favicon.ico");
     this.doIcon($$("pngUploader"), "icon.png");
     this.doIcon($$("svgUploader"), "icon.svg");
+    this.doIcon($$("tileUploader"), "tile.png");
+    this.doIcon($$("tileWideUploader"), "tile-wide.png");
     try {
       this.prop = JSON.parse(await this.app.io.getObject("index.json"));
       if (this.app) {
