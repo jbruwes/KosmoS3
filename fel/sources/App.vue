@@ -1,5 +1,5 @@
 <script>
-import { nextTick } from "vue";
+import { defineComponent, nextTick } from "vue";
 import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
 import jsel from "jsel";
@@ -19,7 +19,7 @@ import sidebar from "./modules/sidebar";
 import pagination from "./modules/pagination";
 import parentbutton from "./modules/parentbutton";
 
-export default {
+export default defineComponent({
   /**
    * Инициализация данных приложения
    *
@@ -82,10 +82,13 @@ export default {
     async node() {
       let html = "";
       try {
-        html = await fetch(`${encodeURIComponent(this.node.id)}.htm`, {
-          cache: "no-store",
-        });
-        html = html.status === 200 ? await html.text() : "";
+        const response = await fetch(
+          `${encodeURIComponent(this.node.id)}.htm`,
+          {
+            cache: "no-store",
+          }
+        );
+        html = response.status === 200 ? await response.text() : "";
       } finally {
         document.title = (
           this.node.title ? this.node.title : this.node.value
@@ -242,5 +245,5 @@ export default {
       });
     },
   },
-};
+});
 </script>
