@@ -127,12 +127,13 @@ export default class S3 {
    * @param key
    */
   async headObject(key) {
-    await this.#s3Client.send(
+    const body = await this.#s3Client.send(
       new HeadObjectCommand({
         Bucket: this.#bucket,
         Key: key,
       })
     );
+    return body;
   }
 
   /**
