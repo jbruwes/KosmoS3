@@ -25,7 +25,12 @@ onmessage = async ({
     pRegion,
     pEndpoint
   );
-  const [lJson] = JSON.parse(await io.getObject("index.json"));
+  const [[lJson], lHtml] = await Promise.all([
+    JSON.parse(await io.getObject("index.json")),
+    (
+      await (await fetch("index.htm")).text()
+    ).replace(/{{ pusher }}/g, await io.getObject("index.htm")),
+  ]);
   const lMap = jsel(lJson).selectAll("//*[@id]");
   const lMapLength = lMap.length;
   let i = 0;
@@ -42,13 +47,7 @@ onmessage = async ({
     lNode.google = lJson.google;
     lNode.metrika = lJson.metrika;
     lNode.analytics = lJson.analytics;
-    await html(
-      (
-        await (await fetch("index.htm")).text()
-      ).replace(/{{ pusher }}/g, await io.getObject("index.htm")),
-      io,
-      lNode
-    );
+    await html(lHtml, io, lNode);
     i += 1;
     if (i < lMapLength) setTimeout(run);
     else
