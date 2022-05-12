@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+
+    "noImplicitAny": true,
+    "allowJs": true,
+
+    "types": [
+      "webpack-env",
+      "jarallax",
+      "node"
+    ],
+    "paths": {
+      "@/*": [
+        "fel/sources/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  },
+  "include": [
+    "fel/sources/**/*.ts",
+    "fel/sources/**/*.tsx",
+    "fel/sources/**/*.vue"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
