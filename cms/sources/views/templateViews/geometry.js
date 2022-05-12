@@ -1,11 +1,13 @@
 import { JetView } from "webix-jet";
 
 /**
- *
+ * Класс ввода геометрических параметров
  */
 export default class GeometryView extends JetView {
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => ({
     view: "form",
@@ -41,7 +43,9 @@ export default class GeometryView extends JetView {
             ],
             on: {
               /**
-               * @param id
+               * Обработчик смены режима
+               *
+               * @param {string} id Идентификатор режима
                */
               onChange: (id) => {
                 const item = $$("layers").getSelectedItem();
@@ -67,10 +71,11 @@ export default class GeometryView extends JetView {
             ],
             on: {
               /**
-               *
+               * Обработчик смены типа адаптивности
                */
-              onChange: () =>
-                this.getParentView().redraw.call(this.getParentView()),
+              onChange: () => {
+                this.getParentView().redraw.call(this.getParentView());
+              },
             },
           },
         ],
@@ -92,10 +97,11 @@ export default class GeometryView extends JetView {
                 labelWidth: 33,
                 on: {
                   /**
-                   *
+                   * Обработчик изменения верхнего отступа
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
               {
@@ -115,10 +121,11 @@ export default class GeometryView extends JetView {
                 ],
                 on: {
                   /**
-                   *
+                   * Обработчик изменения размерности верхнего отступа
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
             ],
@@ -134,10 +141,11 @@ export default class GeometryView extends JetView {
                 labelWidth: 33,
                 on: {
                   /**
-                   *
+                   * Обработчик изменения высоты
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
               {
@@ -157,10 +165,11 @@ export default class GeometryView extends JetView {
                 ],
                 on: {
                   /**
-                   *
+                   * Обработчик изменения размерности высоты
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
             ],
@@ -176,10 +185,11 @@ export default class GeometryView extends JetView {
                 labelWidth: 33,
                 on: {
                   /**
-                   *
+                   * Обработчик изменения нижнего отступа
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
               {
@@ -199,10 +209,11 @@ export default class GeometryView extends JetView {
                 ],
                 on: {
                   /**
-                   *
+                   * Обработчик изменения размерности нижнего отступа
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
             ],
@@ -227,10 +238,11 @@ export default class GeometryView extends JetView {
                 labelWidth: 33,
                 on: {
                   /**
-                   *
+                   * Обработчик изменения левого отступа
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
               {
@@ -250,10 +262,11 @@ export default class GeometryView extends JetView {
                 ],
                 on: {
                   /**
-                   *
+                   * Обработчик изменения размерности левого отступа
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
             ],
@@ -269,10 +282,11 @@ export default class GeometryView extends JetView {
                 labelWidth: 33,
                 on: {
                   /**
-                   *
+                   * Обработчик изменения ширины
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
               {
@@ -292,10 +306,11 @@ export default class GeometryView extends JetView {
                 ],
                 on: {
                   /**
-                   *
+                   * Обработчик изменения размерности ширины
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
             ],
@@ -311,10 +326,11 @@ export default class GeometryView extends JetView {
                 labelWidth: 33,
                 on: {
                   /**
-                   *
+                   * Обработчик изменения правого отступа
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
               {
@@ -334,10 +350,11 @@ export default class GeometryView extends JetView {
                 ],
                 on: {
                   /**
-                   *
+                   * Обработчик изменения размерности правого отступа
                    */
-                  onChange: () =>
-                    this.getParentView().redraw.call(this.getParentView()),
+                  onChange: () => {
+                    this.getParentView().redraw.call(this.getParentView());
+                  },
                 },
               },
             ],
@@ -360,10 +377,11 @@ export default class GeometryView extends JetView {
             labelWidth: 33,
             on: {
               /**
-               *
+               * Обработчик вращения
                */
-              onChange: () =>
-                this.getParentView().redraw.call(this.getParentView()),
+              onChange: () => {
+                this.getParentView().redraw.call(this.getParentView());
+              },
             },
           },
         ],
