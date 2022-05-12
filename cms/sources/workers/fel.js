@@ -33,17 +33,8 @@ onmessage = async ({
   let i = 0;
   setTimeout(async function run() {
     try {
-      const lHead = await io.headObject(`${lObjects[i]}`);
-      if (lObjects[i] === "robots.txt" || lObjects[i] === "site.webmanifest") {
-        const body = (
-          await (await fetch(`${lObjects[i]}`, { cache: "no-store" })).text()
-        )
-          .replace(
-            /{{ name }}/g,
-            (lJson.title ? lJson.title : lJson.value).replace(/"/g, "&quot;")
-          )
-          .replace(/{{ short_name }}/g, lJson.value.replace(/"/g, "&quot;"))
-          .replace(/{{ domain }}/g, pBucketName);
+      if (lObjects[i] !== "index.htm") {
+        const lHead = await io.headObject(`${lObjects[i]}`);
         let type;
         switch (lObjects[i]) {
           case "robots.txt":
@@ -52,12 +43,30 @@ onmessage = async ({
           case "site.webmanifest":
             type = "application/manifest+json";
             break;
+          case "error.html":
+            type = "text/html";
+            break;
+          case "browserconfig.xml":
+            type = "application/xml";
+            break;
           default:
+            type = null;
         }
-        if (lHead.ContentLength === new TextEncoder().encode(body).length) {
-          if (body !== (await io.getObject(`${lObjects[i]}`)))
+        if (type) {
+          const body = (
+            await (await fetch(`${lObjects[i]}`, { cache: "no-store" })).text()
+          )
+            .replace(
+              /{{ name }}/g,
+              (lJson.title ? lJson.title : lJson.value).replace(/"/g, "&quot;")
+            )
+            .replace(/{{ short_name }}/g, lJson.value.replace(/"/g, "&quot;"))
+            .replace(/{{ domain }}/g, pBucketName);
+          if (lHead.ContentLength !== new TextEncoder().encode(body).length)
             await io.putObject(`${lObjects[i]}`, type, body);
-        } else await io.putObject(`${lObjects[i]}`, type, body);
+          else if (body !== (await io.getObject(`${lObjects[i]}`)))
+            await io.putObject(`${lObjects[i]}`, type, body);
+        }
       }
     } catch (err) {
       const body = await (await fetch(`${lObjects[i]}`)).blob();
