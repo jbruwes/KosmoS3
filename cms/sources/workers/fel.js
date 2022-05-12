@@ -23,14 +23,12 @@ onmessage = async ({
     pRegion,
     pEndpoint
   );
-  let lJson;
-  let lObjects;
-  [lJson, lObjects] = await Promise.all([
-    io.getObject("index.json"),
-    (await fetch("assets-manifest.json", { cache: "no-store" })).json(),
+  const [[lJson], lObjects] = await Promise.all([
+    JSON.parse(await io.getObject("index.json")),
+    Object.values(
+      await (await fetch("assets-manifest.json", { cache: "no-store" })).json()
+    ),
   ]);
-  [lJson] = JSON.parse(lJson);
-  lObjects = Object.values(lObjects);
   const lOobjectsLength = lObjects.length;
   let i = 0;
   setTimeout(async function run() {
