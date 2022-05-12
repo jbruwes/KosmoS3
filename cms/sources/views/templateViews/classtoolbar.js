@@ -1,20 +1,22 @@
 import { JetView } from "webix-jet";
 
 /**
- *
+ * Класс тулбара для классов
  */
 export default class ClassToolbarView extends JetView {
   #config;
 
   /**
-   * It destroys the config object.
+   * Деструктор
    */
   destroy() {
     this.#config = null;
   }
 
   /**
-   * @param app
+   * Конструктор
+   *
+   * @param {object} app Объект приложения
    */
   constructor(app) {
     super(app);
@@ -25,7 +27,7 @@ export default class ClassToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-file-document-outline",
           /**
-           *
+           * Новый класс
            */
           click: () => {
             $$("class").select(
@@ -39,7 +41,7 @@ export default class ClassToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-delete-outline",
           /**
-           *
+           * Удаление класса
            */
           click: () => {
             const id = $$("class").getSelectedId();
@@ -58,7 +60,9 @@ export default class ClassToolbarView extends JetView {
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => this.#config;
 }
