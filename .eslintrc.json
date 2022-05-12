@@ -36,26 +36,18 @@
     "vue/no-deprecated-slot-attribute": "off",
     "@typescript-eslint/no-explicit-any": "off"
   },
-  "plugins": ["jsdoc"],
+  "plugins": ["jsdoc", "vue"],
   "extends": [
     "airbnb-base",
-    "plugin:prettier/recommended",
     "plugin:jsdoc/recommended",
     "plugin:vue/vue3-recommended",
     "eslint:recommended",
-    "@vue/typescript/recommended"
+    "@vue/typescript/recommended",
+    "plugin:prettier/recommended"
   ],
   "parserOptions": {
     "parser": "@typescript-eslint/parser",
     "sourceType": "module"
   },
-  "parser": "vue-eslint-parser",
-  "overrides": [
-    {
-      "files": ["*.vue"],
-      "rules": {
-        // Add ESLint rules for .vue files here, including eslint-plugin-jsdoc ones
-      }
-    }
-  ]
+  "parser": "vue-eslint-parser"
 }
