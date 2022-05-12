@@ -20,6 +20,7 @@ import pagination from "./modules/pagination";
 import parentbutton from "./modules/parentbutton";
 
 export default defineComponent({
+  name: "App",
   /**
    * Инициализация данных приложения
    *
