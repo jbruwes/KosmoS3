@@ -2,11 +2,13 @@ import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
 
 /**
- * The AppearanceView class
+ * Класс параметров представления
  */
 export default class AppearanceView extends JetView {
   /**
-   * @returns {object} The form description
+   * Конфигурация
+   *
+   * @returns {object} Объект конфигурации
    */
   config = () => ({
     view: "form",
@@ -675,17 +677,17 @@ export default class AppearanceView extends JetView {
   });
 
   /**
-   * When the user changes the value of the input field, the parent view is redrawn
+   * Перерисовка на изменение полей
    */
   onChange = () => {
     const parentView = this.getParentView();
     parentView.redraw.call(parentView);
-  };
+  }
 
   /**
-   * It adds a file to the s3
+   * Загрузка картинки
    *
-   * @param {object} pFile - The file object that was added.
+   * @param {object} pFile Объект загружаемой картинки
    */
   onBeforeFileAdd = async (pFile) => {
     const file = pFile;
@@ -702,5 +704,5 @@ export default class AppearanceView extends JetView {
           });
       }
     }
-  };
+  }
 }
