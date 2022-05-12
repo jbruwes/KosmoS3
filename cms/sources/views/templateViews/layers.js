@@ -5,11 +5,13 @@ import "../../editlist";
 import "../../fabricjs";
 
 /**
- *
+ * Класс слоёв
  */
 export default class LayersView extends JetView {
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => ({
     view: "editlist",
@@ -21,18 +23,22 @@ export default class LayersView extends JetView {
     editValue: "value",
     type: {
       /**
-       * @param obj
+       * Маркировка элемента списка
+       *
+       * @param {object} obj Объект элемента списка
+       * @returns {string} Сформатированный html для вывода чекбокса
        */
-      markCheckbox(obj) {
-        return `<span class='check mdi mdi-18px mdi-checkbox-${
+      markCheckbox: (obj) =>
+        `<span class='check mdi mdi-18px mdi-checkbox-${
           obj.markCheckbox ? "marked-" : "blank-"
-        }outline'></span>`;
-      },
+        }outline'></span>`,
     },
     onClick: {
       /**
-       * @param e
-       * @param id
+       * Обработка клика на элемент списка
+       *
+       * @param {object} e Событие
+       * @param {string} id Идентификатор
        */
       check: (e, id) => {
         const item = $$("layers").getItem(id);
@@ -47,8 +53,6 @@ export default class LayersView extends JetView {
           item1.parent().removeAttr("hidden");
           item2.parent().removeAttr("hidden");
         } else {
-          // item1.attr("hidden", "");
-          // item2.attr("hidden", "");
           item1.parent().attr("hidden", "");
           item2.parent().attr("hidden", "");
         }
@@ -59,7 +63,7 @@ export default class LayersView extends JetView {
       "<span class='mdi mdi-dark mdi-inactive mdi-18px mdi-#icon#'></span> {common.markCheckbox()} #value#",
     on: {
       /**
-       *
+       * Обработка смены текужего элемента списка
        */
       onSelectChange: () => {
         const that = this.getParentView();
@@ -67,14 +71,18 @@ export default class LayersView extends JetView {
         if (selectedItem) that.setParams.call(that, selectedItem);
       },
       /**
-       *
+       * Перерисовка на изменение данных
        */
-      "data->onStoreUpdated": () =>
-        this.getParentView().redraw.call(this.getParentView(), true),
+      "data->onStoreUpdated": () => {
+        this.getParentView().redraw.call(this.getParentView(), true);
+      },
       /**
-       * @param state
-       * @param editor
-       * @param ignore
+       * Обработчик введенных значений
+       *
+       * @param {object} state Объект с состояниями
+       * @param {object} editor Объект редактора
+       * @param {boolean} ignore Флаг изменения после редактирования
+       * @returns {boolean} Флаг разрешения окончания редактирования
        */
       onBeforeEditStop: (state, editor, ignore) => {
         const that = this.getParentView();
@@ -108,7 +116,10 @@ export default class LayersView extends JetView {
         return true;
       },
       /**
-       * @param id
+       * Не даем переименовать слой контента
+       *
+       * @param {string} id Идентификатор слоя
+       * @returns {boolean} Флаг разрешения окончания редактирования
        */
       onBeforeEditStart: (id) => {
         if ($$("layers").getItem(id).value === "content") {
