@@ -2,35 +2,40 @@ import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
 
 /**
- *
+ * Класс теней
  */
 export default class ShadowView extends JetView {
   /**
-   * @param app
+   * Конструктор
+   *
+   * @param {object} app Объект приложения
    */
   constructor(app) {
     super(app);
     webix.editors.number = webix.extend(
       {
         /**
+         * Отрисовщик поля типа number
          *
+         * @returns {object} Объект поля типа number
          */
-        render() {
-          return webix.html.create(
+        render: () =>
+          webix.html.create(
             "div",
             {
               class: "webix_dt_editor",
             },
             "<input type='number'>"
-          );
-        },
+          ),
       },
       webix.editors.text
     );
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => ({
     id: "shadows",
@@ -80,10 +85,11 @@ export default class ShadowView extends JetView {
     editable: true,
     on: {
       /**
-       *
+       * Обработчик перерисовки на обновление
        */
-      "data->onStoreUpdated": () =>
-        this.getParentView().redraw.call(this.getParentView()),
+      "data->onStoreUpdated": () => {
+        this.getParentView().redraw.call(this.getParentView());
+      },
     },
   });
 }
