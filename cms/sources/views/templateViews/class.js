@@ -1,11 +1,13 @@
 import { JetView } from "webix-jet";
 
 /**
- *
+ * Класс для классов
  */
 export default class ClassView extends JetView {
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => ({
     id: "class",
@@ -17,10 +19,11 @@ export default class ClassView extends JetView {
     editable: true,
     on: {
       /**
-       *
+       * Отрисовка на обновление
        */
-      "data->onStoreUpdated": () =>
-        this.getParentView().redraw.call(this.getParentView()),
+      "data->onStoreUpdated": () => {
+        this.getParentView().redraw.call(this.getParentView());
+      },
     },
   });
 }
