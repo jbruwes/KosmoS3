@@ -5,11 +5,13 @@ import { fabric } from "fabric";
 import "../../fabricjs";
 
 /**
- *
+ * Класс тулбара для слоёв
  */
 export default class LayersToolbarView extends JetView {
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => ({
     view: "toolbar",
@@ -18,7 +20,7 @@ export default class LayersToolbarView extends JetView {
         view: "icon",
         icon: "mdi mdi-file-document-outline",
         /**
-         *
+         * Добавить слой
          */
         click: () => {
           const id = webix.uid().toString();
@@ -75,7 +77,7 @@ export default class LayersToolbarView extends JetView {
         view: "icon",
         icon: "mdi mdi-pencil",
         /**
-         *
+         * Переименовать слой
          */
         click: () => {
           const id = $$("layers").getSelectedId();
@@ -89,7 +91,7 @@ export default class LayersToolbarView extends JetView {
         view: "icon",
         icon: "mdi mdi-delete-outline",
         /**
-         *
+         * Удалить слой
          */
         click: () => {
           const item = $$("layers").getSelectedItem();
@@ -128,7 +130,7 @@ export default class LayersToolbarView extends JetView {
         view: "icon",
         icon: "mdi mdi-arrow-up-bold-box-outline",
         /**
-         *
+         * Слой вверх
          */
         click: () => {
           const id = $$("layers").getSelectedId();
@@ -142,7 +144,7 @@ export default class LayersToolbarView extends JetView {
         view: "icon",
         icon: "mdi mdi-arrow-down-bold-box-outline",
         /**
-         *
+         * Слой вниз
          */
         click: () => {
           const id = $$("layers").getSelectedId();
@@ -157,7 +159,7 @@ export default class LayersToolbarView extends JetView {
   });
 
   /**
-   *
+   * Отмена последнего действия
    */
   undo() {
     const that = this.getParentView();
