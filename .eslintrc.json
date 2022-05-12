@@ -41,7 +41,6 @@
     "airbnb-base",
     "plugin:jsdoc/recommended",
     "plugin:vue/vue3-recommended",
-    "eslint:recommended",
     "@vue/typescript/recommended",
     "plugin:prettier/recommended"
   ],
