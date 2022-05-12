@@ -14,7 +14,7 @@ const babelSettings = {
 module.exports = {
   mode: "production",
   context: path.resolve(__dirname),
-  entry: { fel: "./sources/index.js" },
+  entry: { fel: "./sources/index.ts" },
   output: {
     path: path.join(__dirname, "../dist"),
     filename: "[contenthash].js",
@@ -70,6 +70,11 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+      {
         test: /\.vue$/i,
         use: {
           loader: "vue-loader",
@@ -91,7 +96,7 @@ module.exports = {
   },
   stats: "minimal",
   resolve: {
-    extensions: [".js"],
+    extensions: [".tsx", ".ts", ".js"],
     modules: ["./sources", "node_modules"],
     alias: {
       vue$: "vue/dist/vue.esm-bundler.js",
