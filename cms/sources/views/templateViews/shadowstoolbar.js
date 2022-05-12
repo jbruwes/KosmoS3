@@ -1,20 +1,22 @@
 import { JetView } from "webix-jet";
 
 /**
- *
+ * Класс тулбара для теней
  */
 export default class ShadowToolbarView extends JetView {
   #config;
 
   /**
-   * It destroys the config object.
+   * Деструктор
    */
   destroy() {
     this.#config = null;
   }
 
   /**
-   * @param app
+   * Конструктор
+   *
+   * @param {object} app Объект приложения
    */
   constructor(app) {
     super(app);
@@ -25,7 +27,7 @@ export default class ShadowToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-file-document-outline",
           /**
-           *
+           * Добавление тени
            */
           click: () => {
             $$("shadows").select(
@@ -44,7 +46,7 @@ export default class ShadowToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-delete-outline",
           /**
-           *
+           * Удаление тени
            */
           click: () => {
             const id = $$("shadows").getSelectedId();
@@ -61,7 +63,7 @@ export default class ShadowToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-arrow-up-bold-box-outline",
           /**
-           *
+           * Тень вверх
            */
           click: () => {
             const id = $$("shadows").getSelectedId();
@@ -72,7 +74,7 @@ export default class ShadowToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-arrow-down-bold-box-outline",
           /**
-           *
+           * Тень вниз
            */
           click: () => {
             const id = $$("shadows").getSelectedId();
@@ -85,7 +87,9 @@ export default class ShadowToolbarView extends JetView {
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => this.#config;
 }
