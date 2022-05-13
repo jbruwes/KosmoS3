@@ -682,7 +682,7 @@ export default class AppearanceView extends JetView {
   onChange = () => {
     const parentView = this.getParentView();
     parentView.redraw.call(parentView);
-  }
+  };
 
   /**
    * Загрузка картинки
@@ -704,5 +704,5 @@ export default class AppearanceView extends JetView {
           });
       }
     }
-  }
+  };
 }
