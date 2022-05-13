@@ -71,13 +71,17 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        loader: "ts-loader",
+        options: {
+          appendTsSuffixTo: [/\.vue$/],
+        },
         exclude: /node_modules/,
       },
       {
         test: /\.vue$/i,
-        use: {
-          loader: "vue-loader",
+        loader: "vue-loader",
+        options: {
+          esModule: true,
         },
       },
       {
