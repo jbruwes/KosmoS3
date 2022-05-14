@@ -652,7 +652,7 @@ export default class TemplateView extends JetView {
    * 
    * @param {boolean} layers
    */
-  async redraw(layers) {
+  redraw(layers) {
     /**
      * @param {object} item current object
      * @param {string} body body selector
@@ -1205,7 +1205,7 @@ export default class TemplateView extends JetView {
   /**
    * @param selectedItem
    */
-  async setParams(selectedItem) {
+  setParams(selectedItem) {
     /**
      * Given an item, return the mode of the item
      *
@@ -1223,7 +1223,6 @@ export default class TemplateView extends JetView {
     const item = this.body.find(`#${selectedItem.value}`);
     if (item.length) {
       this.lockRedraw = true;
-      await $$("tinymce").getEditor(true);
       if (selectedItem.value === "content") {
         $$("tinymce").disable();
         $$("tinymce").$scope.setValue("");
