@@ -649,8 +649,8 @@ export default class TemplateView extends JetView {
 
   /**
    * Отрисовка
-   * 
-   * @param {boolean} layers
+   *
+   * @param {boolean} layers Перерисовка слоёв
    */
   redraw(layers) {
     /**
@@ -699,9 +699,6 @@ export default class TemplateView extends JetView {
       const pmarginLeft = $$("pmarginLeft").getValue();
       const pmarginRight = $$("pmarginRight").getValue();
       const pwidth = $$("pwidth").getValue();
-      // pmarginRight = pmarginRight === '%' ? 'vw' : pmarginRight;
-      // pmarginLeft = pmarginLeft === '%' ? 'vw' : pmarginLeft;
-      // pwidth = pwidth === '%' ? 'vw' : pwidth;
       if (marginLeft !== "") item.css("margin-left", marginLeft + pmarginLeft);
       if (marginRight !== "")
         item.css("margin-right", marginRight + pmarginRight);
@@ -909,29 +906,26 @@ export default class TemplateView extends JetView {
           fabricDocument
         );
         this.zIndex(fabricDocument, "");
-        // this.genHtml();
         this.save2();
       }
     }
   }
 
   /**
-   *
+   * Подготовка записи шаблона
    */
-  async save() {
+  save() {
     const fabricDocument = $($$("fabric").getIframe()).contents();
     const item = $$("layers").getSelectedItem();
     if (item) {
-      await $$("tinymce").getEditor(true);
       this.body.find(`#${item.value}`).html($$("tinymce").getValue());
       fabricDocument.find(`#${item.value}`).html($$("tinymce").getValue());
-      // this.genHtml();
       this.save2();
     }
   }
 
   /**
-   *
+   * Запись шаблона
    */
   async save2() {
     try {
@@ -957,8 +951,10 @@ export default class TemplateView extends JetView {
   }
 
   /**
-   * @param oldRect
-   * @param newRect
+   * Обновление данных из fabric при переключении выделенного объекта
+   *
+   * @param {object} oldRect Старый объект
+   * @param {object} newRect Новый объект
    */
   updateDND(oldRect, newRect) {
     this.lockRedraw = true;
@@ -1074,17 +1070,21 @@ export default class TemplateView extends JetView {
   }
 
   /**
+   * Обработчик выбора слоя
    *
+   * @returns {object} Выбраный слой
    */
   makeSelection = () => {
     let selectedItem = null;
 
     /**
-     * @param {*} pElem Элемент
-     * @param {*} options Свойства
-     * @param {*} callback Коллбэк
-     * @param {*} args Аргументы
-     * @returns {*} Возврат свапа
+     * Изменение порядка слоев
+     *
+     * @param {object} pElem Элемент
+     * @param {object} options Свойства
+     * @param {Function} callback Коллбэк
+     * @param {object} args Аргументы
+     * @returns {object} Возврат свапа
      */
     function swap(pElem, options, callback, args) {
       const elem = pElem;
@@ -1101,9 +1101,9 @@ export default class TemplateView extends JetView {
     }
 
     /**
-     * @param {*} pThose Те объекты
-     * @param that
-     * @param pThat
+     * Пересчет слоёв в fabric
+     *
+     * @param {object} pThat Требуемый контекст
      */
     function doLayers(pThat) {
       const that = pThat;
@@ -1203,14 +1203,16 @@ export default class TemplateView extends JetView {
   };
 
   /**
-   * @param selectedItem
+   * Выставка параметров
+   *
+   * @param {object} selectedItem Выбранный слой
    */
   setParams(selectedItem) {
     /**
-     * Given an item, return the mode of the item
+     * Вычисление режима объекта
      *
-     * @param item - The element that is being scrolled.
-     * @returns The mode of the item.
+     * @param {object} item Объект для расчета
+     * @returns {number} Режим объекта
      */
     function getMode(item) {
       if (item.parent("div[data-absolute]:not([id])").parent(".pusher").length)
