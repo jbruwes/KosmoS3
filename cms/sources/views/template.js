@@ -5,27 +5,31 @@ import { fabric } from "fabric";
 import "../fabricjs";
 
 /**
- *
+ * Класс редактора шаблона
  */
 export default class TemplateView extends JetView {
   lockRedraw = false;
 
   /**
-   * It removes the event listener for the mouse wheel.
+   * Деструктор
    */
   destroy() {
     fabric.util.removeListener(document.body, "wheel", this.wheelEvent);
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => ({
     id: "templateAccordion",
     view: "accordion",
     on: {
       /**
-       * @param id
+       * Обработчик скрытия табов
+       *
+       * @param {string} id Идентификатор таба
        */
       onAfterCollapse: (id) => {
         if (id === "tools") {
@@ -66,7 +70,7 @@ export default class TemplateView extends JetView {
                           view: "icon",
                           icon: "mdi mdi-undo",
                           /**
-                           *
+                           * Обработчик отмены последнего действия
                            */
                           click: () => {
                             const pop = this.undo.pop();
@@ -124,7 +128,7 @@ export default class TemplateView extends JetView {
                           view: "icon",
                           icon: "mdi mdi-redo",
                           /**
-                           *
+                           * Обработчик возврата отмененного действия
                            */
                           click: () => {
                             const pop = this.redo.pop();
@@ -222,7 +226,7 @@ export default class TemplateView extends JetView {
               type: "bottom",
               on: {
                 /**
-                 *
+                 * Обработчик переключения режимов редактора шаблонов
                  */
                 onChange: () => {
                   switch ($$("tabbar").getValue()) {
@@ -335,11 +339,14 @@ export default class TemplateView extends JetView {
   });
 
   /**
-   *
+   * Обработчик по готовности представления редактора шаблонов
    */
   async ready() {
     /**
-     * @param item
+     * Вычисление режима объекта
+     *
+     * @param {object} item Объект для расчета
+     * @returns {number} Режим объекта
      */
     function getMode(item) {
       if (item.parent("div[data-absolute]:not([id])").parent(".pusher").length)
@@ -540,13 +547,14 @@ export default class TemplateView extends JetView {
       });
       // stackoverflow.com/questions/41592349/allow-pointer-click-events-to-pass-through-element-whilst-maintaining-scroll-f
       fabric.util.addListener(document.body, "wheel", this.wheelEvent);
-      // this.genHtml();
       this.loadSite();
     }
   }
 
   /**
-   * @param event
+   * Обработчик прокрутки колеса мыши
+   *
+   * @param {object} event Событие прокрутки колеса мышки
    */
   wheelEvent = (event) => {
     const scrollable =
@@ -569,8 +577,7 @@ export default class TemplateView extends JetView {
   };
 
   /**
-   * It loads the index.htm file from the S3 bucket, replaces the base URL with the correct one, and
-   * replaces the Pusher and Google Analytics scripts with the correct ones
+   * Загрузчик шаблона сайта в iframe
    */
   async loadSite() {
     if (this.app && this.app.io) {
@@ -591,7 +598,9 @@ export default class TemplateView extends JetView {
   }
 
   /**
+   * Генератор html
    *
+   * @returns {string} HTML
    */
   genHtml() {
     return this.body
@@ -612,8 +621,10 @@ export default class TemplateView extends JetView {
   }
 
   /**
-   * @param body
-   * @param prefix
+   * Сортировка слоев по оси z
+   *
+   * @param {object} body Объект DOM
+   * @param {string} prefix Селектор
    */
   zIndex = (body, prefix) => {
     const that = this.getSubView("templateViewsLayers");
@@ -634,11 +645,12 @@ export default class TemplateView extends JetView {
           return Math.abs($(b).css("z-index")) - Math.abs($(a).css("z-index"));
         })
     );
-    // body.find(prefix + 'body:first>.pusher>div[data-static]:not([id])').each((index, element) => $(element).css('z-index', -$(element).css('z-index')));
   };
 
   /**
-   * @param layers
+   * Отрисовка
+   * 
+   * @param {boolean} layers
    */
   async redraw(layers) {
     /**
