@@ -3,6 +3,7 @@ import { defineComponent, nextTick } from "vue";
 import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
 import jsel from "jsel";
+import AOS from "aos";
 import GLightbox from "glightbox";
 import deck from "./modules/deck";
 import carousel from "./modules/carousel";
@@ -27,9 +28,9 @@ export default defineComponent({
    * @returns {object} Объект data
    */
   data: () => ({
-    index: null,
-    urls: null,
-    content: null,
+    index: {},
+    urls: [],
+    content: "",
     context: { routePath: null },
   }),
   computed: {
@@ -167,10 +168,9 @@ export default defineComponent({
     /**
      * Обработчик загруженного контента
      *
-     * @param {string} sel Селектор
+     * @param {string} pSel Селектор
      */
-    async onhashchange(sel) {
-      const pSel = sel || "#content";
+    async onhashchange(pSel = "#content") {
       carousel(this.index, pSel);
       deck(this.index, pSel);
       cardgrid(this.index, pSel);
@@ -188,7 +188,8 @@ export default defineComponent({
       this.AOS();
       jarallax(document.querySelectorAll(".jarallax"));
       await Promise.allSettled(this.scripts);
-      if (typeof init === "function") init.call(this.index);
+      if (typeof init !== "undefined" && typeof init === "function")
+        init.call(this.index); // Yужна ли первая проверка в typescript?
     },
     /**
      * Обновление AOS после загрузки всех картинок на странице
