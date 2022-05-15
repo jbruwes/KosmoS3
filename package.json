@@ -1,6 +1,6 @@
 {
   "name": "kosmos3",
-  "version": "3.3.14",
+  "version": "3.3.13",
   "description": "KosmoS3",
   "main": "main.js",
   "scripts": {
@@ -65,11 +65,11 @@
     "eslint-plugin-vue": "^8.7.1",
     "favicons-webpack-plugin": "^5.0.2",
     "file-loader": "^6.2.0",
+    "glob": "^8.0.3",
     "html-webpack-plugin": "^5.5.0",
     "jsdoc": "^3.6.10",
     "jsdoc-vuejs": "^4.0.0",
     "mini-css-extract-plugin": "^2.6.0",
-    "minimatch": "3.0.4",
     "prettier": "^2.6.2",
     "svg2png": "^4.1.1",
     "terser-webpack-plugin": "^5.3.1",
