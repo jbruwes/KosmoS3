@@ -3,7 +3,7 @@ import * as webix from "webix/webix.min";
 import S3 from "../s3";
 
 /**
- *
+ * Класс пердставления логина
  */
 export default class SignInView extends JetView {
   #config;
@@ -11,7 +11,7 @@ export default class SignInView extends JetView {
   #event = [];
 
   /**
-   *
+   * Деструктор
    */
   destroy() {
     if (this.#event)
@@ -22,12 +22,14 @@ export default class SignInView extends JetView {
   }
 
   /**
-   * @param app
+   * Конструктор
+   *
+   * @param {object} app Объект приложения
    */
   constructor(app) {
     super(app);
     /**
-     *
+     * Вычисление ссылки облачного сервиса
      */
     function wendbpoint() {
       switch ($$("cloud").getValue()) {
@@ -128,7 +130,9 @@ export default class SignInView extends JetView {
                               ],
                               on: {
                                 /**
-                                 * @param {*} pValue
+                                 * Вычисление списка регионов
+                                 *
+                                 * @param {number} pValue Облачный провайдер
                                  */
                                 onChange: (pValue) => {
                                   switch (pValue) {
@@ -271,7 +275,7 @@ export default class SignInView extends JetView {
                   label: "KosmoS3",
                   icon: "mdi mdi-cursor-default-click-outline",
                   /**
-                   *
+                   * Открытие ссылки сайта космос 3
                    */
                   click: () => {
                     window.open("https://kosmos3.com", "_blank");
@@ -297,12 +301,14 @@ export default class SignInView extends JetView {
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Файл конфигурации
    */
   config = () => this.#config;
 
   /**
-   *
+   * Логин
    */
   clickLogin = async () => {
     if (
@@ -350,7 +356,7 @@ export default class SignInView extends JetView {
           if (this.app) {
             // webix.UIManager.removeHotKey("enter", this.clickLogin);
             /**
-             *
+             * Ждем, когда отработает воркер инициализации
              */
             initWorker.onmessage = () => {
               $$("sidebar").clearAll();
@@ -359,10 +365,11 @@ export default class SignInView extends JetView {
                 view: "icon",
                 icon: "mdi mdi-play-circle",
                 /**
-                 *
+                 * Открытие сайта в отдельном окне
                  */
-                click: () =>
-                  window.open(`https://${message.pBucketName}`, "_tab"),
+                click: () => {
+                  window.open(`https://${message.pBucketName}`, "_tab");
+                },
               });
               $$("sidebar").add(
                 {
@@ -452,15 +459,16 @@ export default class SignInView extends JetView {
   };
 
   /**
+   * Обработчик готовности представления класса логина
    *
-   * @param view
+   * @param {object} view Текущее представление
    */
   ready(view) {
     this.form = view;
     /**
      * Обработчик выбора сохраненных кредов
      *
-     * @param {number} value id в списке
+     * @param {string} value Идентификатор в списке
      */
     function onChangeStored(value) {
       if (value) {
