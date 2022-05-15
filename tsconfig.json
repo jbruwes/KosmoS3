@@ -37,7 +37,7 @@
     // See <https://github.com/vuejs/vue-cli/pull/5688>
     "skipLibCheck": true,
 
-    "types": ["webpack-env", "jarallax", "node"],
+    "types": ["webpack-env", "jarallax", "node", "aos"],
     "allowJs": true,
     "baseUrl": ".",
 
