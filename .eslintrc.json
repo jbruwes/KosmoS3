@@ -13,8 +13,6 @@
     "tinymce": true,
     "fabric": true,
     "init": true,
-    "AOS": true,
-    "jsel": true,
     "APPNAME": true,
     "VERSION": true,
     "PRODUCTION": true
