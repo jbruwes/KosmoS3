@@ -143,8 +143,6 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery",
-      jsel: "jsel",
-      AOS: "aos",
     }),
   ],
   performance: { hints: false },
