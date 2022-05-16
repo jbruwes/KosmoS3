@@ -1,6 +1,5 @@
 import {
   S3Client,
-  DeleteObjectCommand,
   HeadObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
@@ -8,7 +7,7 @@ import {
 } from "@aws-sdk/client-s3";
 
 /**
- *
+ * Сервисный класс для S3
  */
 export default class S3 {
   #s3Client;
@@ -26,12 +25,14 @@ export default class S3 {
   #secretAccessKey;
 
   /**
-   * @param accessKeyId
-   * @param secretAccessKey
-   * @param bucket
-   * @param region
-   * @param endpoint
-   * @param wendpoint
+   * Конструктор
+   *
+   * @param {string} accessKeyId Идентификатор доступа
+   * @param {string} secretAccessKey Ключ доступа
+   * @param {string} bucket Корзина
+   * @param {string} region Регион
+   * @param {string} endpoint Урл для api
+   * @param {string} wendpoint Урл для доступа к сайту
    */
   constructor(
     accessKeyId,
@@ -59,72 +60,66 @@ export default class S3 {
   }
 
   /**
+   * Геттер для идентификатора доступа
    *
+   * @returns {string} Идентификатор доступа
    */
-  getAccessKeyId() {
-    return this.#accessKeyId;
-  }
+  getAccessKeyId = () => this.#accessKeyId;
 
   /**
+   * Геттер для ключа доступа
    *
+   * @returns {string} Ключ доступа
    */
-  getSecretAccessKey() {
-    return this.#secretAccessKey;
-  }
+  getSecretAccessKey = () => this.#secretAccessKey;
 
   /**
+   * Геттер для корзины
    *
+   * @returns {string} Корзина
    */
-  getBucket() {
-    return this.#bucket;
-  }
+  getBucket = () => this.#bucket;
 
   /**
+   * Геттер для региона
    *
+   * @returns {string} Регион
    */
-  getRegion() {
-    return this.#region;
-  }
+  getRegion = () => this.#region;
 
   /**
+   * Геттер урла для api
    *
+   * @returns {string} Урл для api
    */
-  getEndpoint() {
-    return this.#endpoint;
-  }
+  getEndpoint = () => this.#endpoint;
 
   /**
+   * Геттер урла для сайта
    *
+   * @returns {string} Урл для сайта
    */
-  getWendpoint() {
-    return this.#wendpoint;
-  }
+  getWendpoint = () => this.#wendpoint;
 
   /**
+   * Считываение заголовка корзины
    *
+   * @returns {object} Заголовок корзины
    */
   async headBucket() {
-    await this.#s3Client.send(
+    const body = await this.#s3Client.send(
       new HeadBucketCommand({
         Bucket: this.#bucket,
       })
     );
+    return body;
   }
 
   /**
-   * @param key
-   */
-  async deleteObject(key) {
-    await this.#s3Client.send(
-      new DeleteObjectCommand({
-        Bucket: this.#bucket,
-        Key: key,
-      })
-    );
-  }
-
-  /**
-   * @param key
+   * Считывание заголовка объекта
+   *
+   * @param {string} key Имя файла
+   * @returns {object} Заголовок файла
    */
   async headObject(key) {
     const body = await this.#s3Client.send(
@@ -137,9 +132,11 @@ export default class S3 {
   }
 
   /**
-   * @param key
-   * @param contentType
-   * @param body
+   * Запись объекта
+   *
+   * @param {string} key Имя файла
+   * @param {string} contentType Тип mime
+   * @param {string | Uint8Array | Buffer} body Тело файла
    */
   async putObject(key, contentType, body) {
     await this.#s3Client.send(
@@ -153,11 +150,17 @@ export default class S3 {
   }
 
   /**
-   * @param key
+   * Считывание объекта
+   *
+   * @param {string} key Имя файла
+   * @returns {string} Тело файла
    */
   async getObject(key) {
     /**
-     * @param stream
+     * Импорт строки из потока
+     *
+     * @param {object} stream Поток
+     * @returns {string} Строка из потока
      */
     const streamToString = (stream) =>
       new Promise((resolve) => {
@@ -165,9 +168,11 @@ export default class S3 {
         const reader = stream.getReader();
         const decoder = new TextDecoder();
         /**
-         * @param root0
-         * @param root0.done
-         * @param root0.value
+         * Обработчик по готовности считывания из потока
+         *
+         * @param {object} root0 Объект параметров функции
+         * @param {boolean} root0.done Флаг окончания считывания из потока
+         * @param {string} root0.value Считанное значение
          */
         const processRead = ({ done, value }) => {
           if (done) resolve(chunks.join(""));
