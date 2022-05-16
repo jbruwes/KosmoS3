@@ -2,11 +2,13 @@ import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
 
 /**
- *
+ * Класс представления свойств страницы контента
  */
 export default class PropertiesView extends JetView {
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => ({
     view: "form",
@@ -28,7 +30,9 @@ export default class PropertiesView extends JetView {
             labelWidth: 33,
             on: {
               /**
-               * @param value
+               * Обработчик смены заголовка
+               *
+               * @param {string} value Новый заголовок
                */
               onChange: (value) => {
                 let id;
@@ -56,7 +60,9 @@ export default class PropertiesView extends JetView {
             height: 100,
             on: {
               /**
-               * @param value
+               * Обработчик смены описания
+               *
+               * @param {string} value Новое описание
                */
               onChange: (value) => {
                 let id;
@@ -83,7 +89,9 @@ export default class PropertiesView extends JetView {
             height: 100,
             on: {
               /**
-               * @param value
+               * Обработчик смены ключевых слов
+               *
+               * @param {string} value Ключевые слова
                */
               onChange: (value) => {
                 let id;
@@ -112,7 +120,9 @@ export default class PropertiesView extends JetView {
             labelWidth: 33,
             on: {
               /**
-               * @param value
+               * Обработчик смены постоянной ссылки
+               *
+               * @param {string} value Постоянная ссылка
                */
               onChange: (value) => {
                 let id;
@@ -141,7 +151,9 @@ export default class PropertiesView extends JetView {
             labelWidth: 33,
             on: {
               /**
-               * @param value
+               * Обработчик смены даты
+               *
+               * @param {Date} value Дата
                */
               onChange: (value) => {
                 let id;
@@ -178,7 +190,9 @@ export default class PropertiesView extends JetView {
             ],
             on: {
               /**
-               * @param value
+               * Обработчик смены частоты обновления
+               *
+               * @param {number} value Частота обновления
                */
               onChange: (value) => {
                 let id;
@@ -210,7 +224,9 @@ export default class PropertiesView extends JetView {
             type: "alt",
             on: {
               /**
-               * @param value
+               * Обработчик смены приоритета
+               *
+               * @param {number} value Приоритет
                */
               onChange: (value) => {
                 let id;
@@ -224,7 +240,6 @@ export default class PropertiesView extends JetView {
               },
             },
           },
-
           {
             template: "Icon",
             type: "section",
@@ -238,7 +253,9 @@ export default class PropertiesView extends JetView {
             labelWidth: 33,
             on: {
               /**
-               * @param value
+               * Обработчик смены иконки
+               *
+               * @param {string} value Иконка
                */
               onChange: (value) => {
                 let id;
@@ -3463,7 +3480,9 @@ export default class PropertiesView extends JetView {
             accept: "image/png, image/gif, image/jpeg",
             on: {
               /**
-               * @param pFile
+               * Загрузчик картинки
+               *
+               * @param {object} pFile Объект загрузчика картинки
                */
               onBeforeFileAdd: async (pFile) => {
                 const file = pFile;
@@ -3488,9 +3507,11 @@ export default class PropertiesView extends JetView {
                 }
               },
               /**
-               *
+               * Обработчик удаления картинки
                */
-              "files->onAfterDelete": () => this.image(),
+              "files->onAfterDelete": () => {
+                this.image();
+              },
             },
           },
           {
@@ -3507,16 +3528,17 @@ export default class PropertiesView extends JetView {
     ],
     rules: {
       /**
-       * @param value
+       * Проверка ссылки
+       *
+       * @param {string} value Ссылка
+       * @returns {boolean} Флаг корректности ссылки
        */
-      url: (value) => {
-        return !value || !/[\s;,?:@&=+$]/.test(value);
-      },
+      url: (value) => !value || !/[\s;,?:@&=+$]/.test(value),
     },
   });
 
   /**
-   *
+   * Запись имени картинки
    */
   image() {
     const id = $$("tree").getSelectedId();
