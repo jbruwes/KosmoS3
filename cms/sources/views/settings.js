@@ -2,7 +2,7 @@ import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
 
 /**
- *
+ * Класс представления настроек
  */
 export default class SettingsView extends JetView {
   #config;
@@ -12,7 +12,7 @@ export default class SettingsView extends JetView {
   #event = [];
 
   /**
-   *
+   * Деструктор
    */
   destroy() {
     if (this.#event)
@@ -22,7 +22,9 @@ export default class SettingsView extends JetView {
   }
 
   /**
-   * @param app
+   * Конструктор
+   *
+   * @param {object} app Объект приложения
    */
   constructor(app) {
     super(app);
@@ -123,13 +125,17 @@ export default class SettingsView extends JetView {
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => this.#config;
 
   /**
-   * @param uploader
-   * @param filename
+   * Загрузка иконки
+   *
+   * @param {object} uploader Объект загрузчика файла
+   * @param {string} filename Название файла
    */
   doIcon(uploader, filename) {
     uploader.files.data.clearAll();
@@ -159,7 +165,7 @@ export default class SettingsView extends JetView {
   }
 
   /**
-   *
+   * Обработчик готовности представления класса настроек
    */
   async ready() {
     this.doIcon($$("uploader"), "favicon.ico");
@@ -190,7 +196,7 @@ export default class SettingsView extends JetView {
   }
 
   /**
-   *
+   * Обработчик изменения данных на форме
    */
   onChange() {
     this.#event.push({
@@ -224,7 +230,7 @@ export default class SettingsView extends JetView {
   }
 
   /**
-   *
+   * Сохранение настроек
    */
   async save() {
     try {
