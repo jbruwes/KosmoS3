@@ -2,20 +2,22 @@ import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
 
 /**
- *
+ * Класс представления контента
  */
 export default class ContentView extends JetView {
   #config;
 
   /**
-   *
+   * Деструктор
    */
   destroy() {
     this.#config = null;
   }
 
   /**
-   * @param app
+   * Конструктор
+   *
+   * @param {object} app Объект приложения
    */
   constructor(app) {
     super(app);
@@ -24,7 +26,9 @@ export default class ContentView extends JetView {
       view: "accordion",
       on: {
         /**
-         * @param id
+         * Обработчик закрытия таба
+         *
+         * @param {string} id Идентификатор
          */
         onAfterCollapse: (id) => {
           if (id === "tools") {
@@ -77,7 +81,7 @@ export default class ContentView extends JetView {
                 type: "bottom",
                 on: {
                   /**
-                   *
+                   * Обработчик переключения табов
                    */
                   onChange: () => {
                     if ($$("tabbar").getValue() === "ace-content")
@@ -131,12 +135,14 @@ export default class ContentView extends JetView {
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => this.#config;
 
   /**
-   *
+   * Запись контента
    */
   async save() {
     try {
