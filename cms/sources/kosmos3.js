@@ -9,11 +9,13 @@ import { JetApp, EmptyRouter } from "webix-jet";
 import * as webix from "webix/webix.min";
 
 /**
- *
+ * Основной класс приложения
  */
 export default class KosmoS3 extends JetApp {
   /**
-   * @param config
+   * Конструктор
+   *
+   * @param {object} config Объект конфигурации
    */
   constructor(config) {
     const defaults = {
@@ -35,7 +37,9 @@ webix.ready(() => {
   webix.ui.fullScreen();
   const app = new KosmoS3();
   /**
+   * Расчет адаптивной ширины
    *
+   * @returns {string} Ширина
    */
   app.config.size = () => (document.body.offsetWidth > 964 ? "wide" : "small");
   app.render();
