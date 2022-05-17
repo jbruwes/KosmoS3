@@ -5,7 +5,7 @@ webix.protoUI(
   {
     name: "fabric",
     /**
-     *
+     * Инициализация
      */
     $init() {
       this.getIframe().style.position = "absolute";
@@ -13,7 +13,7 @@ webix.protoUI(
       this.$ready.push(this.render);
     },
     /**
-     *
+     * Отрисовка
      */
     render() {
       const elm = document.createElement("canvas");
@@ -28,8 +28,10 @@ webix.protoUI(
       if (this.config.ready) this.config.ready.call(this, this.canvas);
     },
     /**
-     * @param x
-     * @param y
+     * Установка размера
+     *
+     * @param {number} x Ширина
+     * @param {number} y Высота
      */
     $setSize(x, y) {
       webix.ui.view.prototype.$setSize.call(this, x, y);
@@ -40,7 +42,10 @@ webix.protoUI(
       });
     },
     /**
-     * @param waitCanvas
+     * Получение канвы
+     *
+     * @param {boolean} waitCanvas Флаг ожидания
+     * @returns {object} Канва
      */
     getCanvas(waitCanvas) {
       return waitCanvas ? this.waitCanvas : this.canvas;
