@@ -3,7 +3,7 @@ import * as webix from "webix/webix.min";
 import "../../edittree";
 
 /**
- *
+ * Класс представления дерева
  */
 export default class TreeView extends JetView {
   #siteWorker;
@@ -15,7 +15,7 @@ export default class TreeView extends JetView {
   #event = [];
 
   /**
-   *
+   * Деструктор
    */
   destroy() {
     if (this.#event)
@@ -26,7 +26,9 @@ export default class TreeView extends JetView {
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => ({
     view: "edittree",
@@ -35,18 +37,22 @@ export default class TreeView extends JetView {
     activeTitle: true,
     type: {
       /**
-       * @param obj
+       * Рендер чекбокса
+       *
+       * @param {object} obj Элемент дерева
+       * @returns {string} Html чекбокса
        */
-      visible(obj) {
-        return `<span class='check mdi mdi-18px mdi-checkbox-${
+      visible: (obj) =>
+        `<span class='check mdi mdi-18px mdi-checkbox-${
           obj.visible ? "marked-" : "blank-"
-        }outline'></span>`;
-      },
+        }outline'></span>`,
     },
     onClick: {
       /**
-       * @param e
-       * @param id
+       * Клик по элементу дерева
+       *
+       * @param {object} e Событие
+       * @param {string} id Идентификатор
        */
       check(e, id) {
         const item = this.getItem(id);
@@ -63,7 +69,7 @@ export default class TreeView extends JetView {
     editaction: "dblclick",
     on: {
       /**
-       *
+       * Обработчик после загрузки дерева
        */
       onAfterLoad: async () => {
         this.#event.push({
@@ -84,7 +90,9 @@ export default class TreeView extends JetView {
       },
       onItemCheck: this.onChangeFnc,
       /**
-       * @param id
+       * Обработчик выделения элемента дерева
+       *
+       * @param {string} id Идентификатор
        */
       onAfterSelect: async (id) => {
         const item = $$("tree").getItem(id);
@@ -129,9 +137,12 @@ export default class TreeView extends JetView {
         }
       },
       /**
-       * @param state
-       * @param editor
-       * @param ignore
+       * Проверка правильности ввода названия элемента дерева
+       *
+       * @param {object} state Объект со старым и новым название
+       * @param {object} editor Объект редактора
+       * @param {boolean} ignore Флаг признака изменения названия
+       * @returns {boolean} Флаг проверки
        */
       onBeforeEditStop: (state, editor, ignore) => {
         if (!(ignore && state.old)) {
@@ -155,7 +166,7 @@ export default class TreeView extends JetView {
   });
 
   /**
-   *
+   * Обработчик готовности представления класса
    */
   async ready() {
     try {
@@ -172,7 +183,7 @@ export default class TreeView extends JetView {
   }
 
   /**
-   *
+   * Обработчик изменения элементов дерева
    */
   onChangeFnc = async () => {
     const tree = $$("tree").data.serialize();
