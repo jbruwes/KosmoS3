@@ -13,7 +13,7 @@ webix.protoUI(
       theme: "monokai",
     },
     /**
-     *
+     * Инициализация
      */
     $init() {
       this.$view.innerHTML = "<div style='width:100%;height:100%'></div>";
@@ -21,8 +21,10 @@ webix.protoUI(
       this.$ready.push(this.render_cm_editor);
     },
     /**
-     * @param w
-     * @param h
+     * Установка размера
+     *
+     * @param {number} w Ширина
+     * @param {number} h Высота
      */
     $setSize(w, h) {
       if (webix.ui.view.prototype.$setSize.call(this, w, h)) {
@@ -32,7 +34,7 @@ webix.protoUI(
       }
     },
     /**
-     *
+     * Отрисовка
      */
     render_cm_editor() {
       this.editor = ace.edit(this.$view.firstChild);
@@ -60,7 +62,9 @@ webix.protoUI(
       this.waitEditor.resolve(this.editor);
     },
     /**
-     * @param pValue
+     * Установка содержимого
+     *
+     * @param {string} pValue Содержимое
      */
     setValue(pValue) {
       let value = pValue;
@@ -74,13 +78,15 @@ webix.protoUI(
       }
     },
     /**
+     * Получение содержимого
      *
+     * @returns {string} Содержимое
      */
     getValue() {
       return this.editor ? this.editor.getValue() : this.config.value;
     },
     /**
-     *
+     * Установка фокуса
      */
     focus() {
       this.focus_await = true;
@@ -89,7 +95,10 @@ webix.protoUI(
       }
     },
     /**
-     * @param waitEditor
+     * Получение редактора
+     *
+     * @param {boolean} waitEditor Флаг ожидания
+     * @returns {object} Редактор
      */
     getEditor(waitEditor) {
       return waitEditor ? this.waitEditor : this.editor;
