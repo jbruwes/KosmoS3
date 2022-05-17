@@ -2,20 +2,22 @@ import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
 
 /**
- *
+ * Класс представления тулбара для дерева
  */
 export default class ToolbarView extends JetView {
   #config;
 
   /**
-   *
+   * Деструктор
    */
   destroy() {
     this.#config = null;
   }
 
   /**
-   * @param app
+   * Конструктор
+   *
+   * @param {object} app Объект приложения
    */
   constructor(app) {
     super(app);
@@ -26,7 +28,7 @@ export default class ToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-file-document-outline",
           /**
-           *
+           * Новый элемент дерева
            */
           click: () => {
             const sel = $$("tree").getSelectedId();
@@ -77,15 +79,17 @@ export default class ToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-pencil",
           /**
-           *
+           * Редактирование название элемента дерева
            */
-          click: () => $$("tree").edit($$("tree").getSelectedId()),
+          click: () => {
+            $$("tree").edit($$("tree").getSelectedId());
+          },
         },
         {
           view: "icon",
           icon: "mdi mdi-delete-outline",
           /**
-           *
+           * Удаление элемента дерева
            */
           click: () => {
             const sel = $$("tree").getSelectedId();
@@ -112,7 +116,7 @@ export default class ToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-arrow-up-bold-box-outline",
           /**
-           *
+           * Элемент вверх
            */
           click: () => {
             const sel = $$("tree").getSelectedId();
@@ -127,7 +131,7 @@ export default class ToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-arrow-down-bold-box-outline",
           /**
-           *
+           * Элемент вниз
            */
           click: () => {
             const sel = $$("tree").getSelectedId();
@@ -142,7 +146,7 @@ export default class ToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-arrow-left-bold-box-outline",
           /**
-           *
+           * Элемент налево
            */
           click: () => {
             const sel = $$("tree").getSelectedId();
@@ -161,7 +165,7 @@ export default class ToolbarView extends JetView {
           view: "icon",
           icon: "mdi mdi-arrow-right-bold-box-outline",
           /**
-           *
+           * Элемент направо
            */
           click: () => {
             const sel = $$("tree").getSelectedId();
@@ -180,7 +184,9 @@ export default class ToolbarView extends JetView {
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => this.#config;
 }
