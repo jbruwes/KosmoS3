@@ -1,20 +1,22 @@
 import { JetView } from "webix-jet";
 
 /**
- *
+ * Класс представления информации
  */
 export default class JsView extends JetView {
   #config;
 
   /**
-   * It destroys the config object.
+   * Деструктор
    */
   destroy() {
     this.#config = null;
   }
 
   /**
-   * @param app
+   * Конструктор
+   *
+   * @param {object} app Объект приложения
    */
   constructor(app) {
     super(app);
@@ -731,7 +733,9 @@ export default class JsView extends JetView {
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => this.#config;
 }
