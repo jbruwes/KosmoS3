@@ -2,7 +2,7 @@ import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
 
 /**
- *
+ * Класс представления списка стилей для загрузки
  */
 export default class CdnView extends JetView {
   #config;
@@ -10,7 +10,7 @@ export default class CdnView extends JetView {
   #event = [];
 
   /**
-   *
+   * Деструктор
    */
   destroy() {
     if (this.#event)
@@ -20,7 +20,9 @@ export default class CdnView extends JetView {
   }
 
   /**
-   * @param app
+   * Коструктор
+   *
+   * @param {object} app Объект приложения
    */
   constructor(app) {
     super(app);
@@ -41,12 +43,14 @@ export default class CdnView extends JetView {
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => this.#config;
 
   /**
-   *
+   * Обработчик готовности представления класса
    */
   async ready() {
     try {
