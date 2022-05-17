@@ -52,7 +52,7 @@ webix.protoUI(
       value: "",
     },
     /**
-     *
+     * Инициализация
      */
     $init() {
       webix.html.addStyle(".tox-tinymce{ border:0px !important}");
@@ -65,13 +65,13 @@ webix.protoUI(
       this.$ready.push(this.require_tinymce_once);
     },
     /**
-     *
+     * Отрисовка
      */
     render() {
       this.set_inner_size();
     },
     /**
-     *
+     * По инициализации
      */
     require_tinymce_once() {
       if (!tinymce.dom.Event.domLoaded) {
@@ -102,7 +102,9 @@ webix.protoUI(
       }, this);
     },
     /**
-     * @param event
+     * По готовности
+     *
+     * @param {object} event Событие
      */
     mce_editor_ready(event) {
       this.editor = event.target;
@@ -112,7 +114,7 @@ webix.protoUI(
       this.waitEditor.resolve(this.editor);
     },
     /**
-     *
+     * Установка внутреннего размера
      */
     set_inner_size() {
       if (this.editor) {
@@ -122,8 +124,10 @@ webix.protoUI(
       }
     },
     /**
-     * @param x
-     * @param y
+     * Установка размера
+     *
+     * @param {number} x Ширина
+     * @param {number} y Высота
      */
     $setSize(x, y) {
       if (webix.ui.view.prototype.$setSize.call(this, x, y)) {
@@ -131,7 +135,9 @@ webix.protoUI(
       }
     },
     /**
-     * @param value
+     * Установка содержимого
+     *
+     * @param {string} value Содержимое
      */
     setValue(value) {
       this.config.value = value;
@@ -140,13 +146,15 @@ webix.protoUI(
       });
     },
     /**
+     * Получение содержимого
      *
+     * @returns {string} Содержимое
      */
     getValue() {
       return this.editor ? this.editor.getContent() : this.config.value;
     },
     /**
-     *
+     * Установка фокуса
      */
     focus() {
       this.waitEditor.then(function onWaitEditor(editor) {
@@ -154,7 +162,10 @@ webix.protoUI(
       });
     },
     /**
-     * @param wait
+     * Получение редактора
+     *
+     * @param {boolean} wait Флаг ожидания
+     * @returns {object} Редактор
      */
     getEditor(wait) {
       return wait ? this.waitEditor : this.editor;
