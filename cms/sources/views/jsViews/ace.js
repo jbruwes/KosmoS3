@@ -3,7 +3,7 @@ import * as webix from "webix/webix.min";
 import "../../ace";
 
 /**
- * Класс представления редактьора исходного кода для js
+ * Класс представления редактора исходного кода для js
  */
 export default class AceView extends JetView {
   #config;
