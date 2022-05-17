@@ -3,7 +3,7 @@ import * as webix from "webix/webix.min";
 import "../../ace";
 
 /**
- *
+ * Класс представления редактора исходного кода для css
  */
 export default class AceView extends JetView {
   #config;
@@ -13,7 +13,7 @@ export default class AceView extends JetView {
   #session;
 
   /**
-   *
+   * Деструктор
    */
   destroy() {
     if (this.#session) this.#session.removeAllListeners("change");
@@ -23,7 +23,9 @@ export default class AceView extends JetView {
   }
 
   /**
-   * @param app
+   * Конструктор
+   *
+   * @param {object} app Объект приложения
    */
   constructor(app) {
     super(app);
@@ -36,12 +38,16 @@ export default class AceView extends JetView {
   }
 
   /**
+   * Конфигурация
    *
+   * @returns {object} Объект конфигурации
    */
   config = () => this.#config;
 
   /**
-   * @param text
+   * Загрузка кода в редактор и инициализация
+   *
+   * @param {string} text Код
    */
   async cb(text) {
     const timeoutId = [];
@@ -83,7 +89,7 @@ export default class AceView extends JetView {
   }
 
   /**
-   *
+   * Обработчик готовности представления класса
    */
   async ready() {
     try {
