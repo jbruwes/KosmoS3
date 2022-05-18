@@ -68,9 +68,7 @@ export default defineComponent({
         let path = jsel(this.index).selectAll(
           `//*[@id="${lNode.id}"]/ancestor-or-self::*[@id]`
         );
-        path = path.map((e: Branch) =>
-          e.value.trim().replace(/\s/g, "_")
-        );
+        path = path.map((e: Branch) => e.value.trim().replace(/\s/g, "_"));
         path.shift();
         lNode.path = `/${path.join("/")}`;
         lNode.url = lNode.url
@@ -193,8 +191,7 @@ export default defineComponent({
       this.AOS();
       jarallax(document.querySelectorAll(".jarallax"));
       await Promise.allSettled(this.scripts);
-      if (typeof init !== "undefined" && typeof init === "function")
-        init.call(this.index); // Yужна ли первая проверка в typescript?
+      if (typeof init === "function") init.call(this.index);
     },
     /**
      * Обновление AOS после загрузки всех картинок на странице
