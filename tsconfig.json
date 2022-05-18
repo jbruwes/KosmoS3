@@ -48,7 +48,7 @@
       "@/*": ["fel/sources/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
-    "typeRoots": ["fel/typings", "node_modules/@types/"]
+    "typeRoots": ["fel/sources/typings", "node_modules/@types/"]
   },
   "include": [
     "fel/sources/**/*.ts",
