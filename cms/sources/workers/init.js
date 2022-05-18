@@ -38,7 +38,7 @@ onmessage = async ({
       io.putObject(
         "index.json",
         "application/json",
-        `{"link":"","text":"","date":"","image":"","visible":true,"value":"${pBucketName}","id":${id}}`
+        `{"visible":true,"value":"${pBucketName}","id":${id}}`
       )
     );
     put.push(io.putObject(`${id}.htm`, "text/html", ""));
