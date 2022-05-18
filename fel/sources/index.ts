@@ -55,6 +55,16 @@ import App from "./App.vue";
 (window as any).jQuery = jQuery;
 $.ajaxSetup({ cache: false });
 
+document.addEventListener("click", (event) => {
+  const element = event.target as HTMLAnchorElement;
+  if (
+    element.tagName.toLowerCase() === "a" &&
+    element.getAttribute("href")!.indexOf("#") === 0
+  )
+    element.href =
+      window.location.href.split("#")[0] + element.getAttribute("href");
+});
+
 const app = createApp(App);
 const vuetify = createVuetify({
   // components,
