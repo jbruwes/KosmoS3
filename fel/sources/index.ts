@@ -51,18 +51,15 @@ import { createVuetify } from "vuetify";
 import LoadScript from "vue-plugin-load-script";
 import App from "./App.vue";
 
-(window as any).$ = $;
-(window as any).jQuery = jQuery;
+(<any>window).$ = $;
+(<any>window).jQuery = jQuery;
 $.ajaxSetup({ cache: false });
 
 document.addEventListener("click", (event) => {
   const element = event.target as HTMLAnchorElement;
-  if (
-    element.tagName.toLowerCase() === "a" &&
-    element.getAttribute("href")!.indexOf("#") === 0
-  )
-    element.href =
-      window.location.href.split("#")[0] + element.getAttribute("href");
+  const href = element.getAttribute("href");
+  if (element.tagName.toLowerCase() === "a" && href && href.indexOf("#") === 0)
+    element.href = window.location.href.split("#")[0] + href;
 });
 
 const app = createApp(App);
