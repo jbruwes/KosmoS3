@@ -147,7 +147,28 @@ export default class TinymceView extends JetView {
       file_picker_types: "image media file",
       quickbars_insert_toolbar: "template",
       toolbar_mode: "sliding",
-      extended_valid_elements: "i[class]",
+      /**
+       * Чтобы не сжирались пустые элементы
+       *
+       *  @see https://www.tiny.cloud/docs-3x/reference/Configuration3x/Configuration3x@valid_elements/#fullxhtmlruleset
+       */
+      extended_valid_elements:
+        "a[accesskey|charset|class|coords|dir<ltr?rtl|href|hreflang|id|lang|name" +
+        "|onblur|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup" +
+        "|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|rel|rev" +
+        "|shape<circle?default?poly?rect|style|tabindex|title|target|type]," +
+        "div[align<center?justify?left?right|class|dir<ltr?rtl|id|lang|onclick" +
+        "|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove" +
+        "|onmouseout|onmouseover|onmouseup|style|title]," +
+        "em[class|dir<ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress" +
+        "|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style" +
+        "|title]," +
+        "i[class|dir<ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress" +
+        "|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style" +
+        "|title]," +
+        "span[align<center?justify?left?right|class|dir<ltr?rtl|id|lang|onclick|ondblclick|onkeydown" +
+        "|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover" +
+        "|onmouseup|style|title]",
       branding: false,
       browser_spellcheck: true,
       convert_urls: false,
