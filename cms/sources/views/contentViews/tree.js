@@ -133,7 +133,7 @@ export default class TreeView extends JetView {
         } finally {
           if (this.app) {
             $$("tinymce").$scope.setValue(result);
-            $$("ace-content").$scope.setValue(result);
+            $$("ace-content").$scope.setValue($$("tinymce").getValue());
           }
         }
       },
