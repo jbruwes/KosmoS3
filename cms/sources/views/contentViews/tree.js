@@ -1,5 +1,6 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
+import DOMPurify from "dompurify";
 import "../../edittree";
 
 /**
@@ -128,7 +129,7 @@ export default class TreeView extends JetView {
         }
         this.getParentView().lockProperties = false;
         try {
-          result = await this.app.io.getObject(`${id}.htm`);
+          result = DOMPurify.sanitize(await this.app.io.getObject(`${id}.htm`));
         } finally {
           if (this.app) {
             $$("tinymce").$scope.setValue(result);
