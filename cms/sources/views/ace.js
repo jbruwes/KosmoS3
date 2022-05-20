@@ -1,5 +1,6 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
+import DOMPurify from "dompurify";
 import "../ace";
 
 /**
@@ -58,7 +59,7 @@ export default class AceView extends JetView {
         () => {
           this.#timeoutId.pop();
           if (!this.#timeoutId.length)
-            $$("tinymce").setValue(this.#editor.getValue());
+            $$("tinymce").setValue(DOMPurify.sanitize(this.#editor.getValue()));
         },
         this,
         [],
