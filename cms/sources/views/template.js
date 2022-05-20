@@ -2,6 +2,7 @@ import $ from "jquery/dist/jquery.slim";
 import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
 import { fabric } from "fabric";
+import DOMPurify from "dompurify";
 import "../fabricjs";
 
 /**
@@ -385,7 +386,7 @@ export default class TemplateView extends JetView {
       this.body = $("<div/>").append(
         $("<div/>")
           .attr("id", "body")
-          .html(await this.app.io.getObject("index.htm"))
+          .html(DOMPurify.sanitize(await this.app.io.getObject("index.htm")))
       );
       let pusher = this.body.find("#body:first>.pusher");
       if (!pusher.length)
@@ -929,7 +930,11 @@ export default class TemplateView extends JetView {
    */
   async save2() {
     try {
-      await this.app.io.putObject("index.htm", "text/html", this.genHtml());
+      await this.app.io.putObject(
+        "index.htm",
+        "text/html",
+        DOMPurify.sanitize(this.genHtml())
+      );
       webix.message("Template save complete");
       if (this.siteWorker) this.siteWorker.terminate();
       this.siteWorker = new Worker(
