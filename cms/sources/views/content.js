@@ -1,6 +1,6 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
-
+import DOMPurify from "dompurify";
 /**
  * Класс представления контента
  */
@@ -157,7 +157,7 @@ export default class ContentView extends JetView {
       await this.app.io.putObject(
         `${$$("tree").getSelectedId()}.htm`,
         "text/html",
-        $$("tinymce").getValue()
+        DOMPurify.sanitize($$("tinymce").getValue())
       );
       if (this.app) webix.message("Content save complete");
       const pageWorker = new Worker(
