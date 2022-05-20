@@ -86,7 +86,7 @@ export default class ContentView extends JetView {
                   onChange: () => {
                     if ($$("tabbar").getValue() === "ace-content")
                       $$("ace-content").$scope.setValue(
-                        $$("tinymce").getValue()
+                        DOMPurify.sanitize($$("tinymce").getValue())
                       );
                   },
                 },
