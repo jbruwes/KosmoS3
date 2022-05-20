@@ -6,6 +6,7 @@ import type { Context } from "page";
 import jsel from "jsel";
 import AOS from "aos";
 import GLightbox from "glightbox";
+import DOMPurify from "dompurify";
 import deck from "./modules/deck";
 import carousel from "./modules/carousel";
 import cardgrid from "./modules/cardgrid";
@@ -92,7 +93,10 @@ export default defineComponent({
               cache: "no-store",
             }
           );
-          html = response.status === 200 ? await response.text() : "";
+          html =
+            response.status === 200
+              ? DOMPurify.sanitize(await response.text())
+              : "";
         } finally {
           document.title = (
             this.node.title ? this.node.title : this.node.value
