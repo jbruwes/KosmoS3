@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, nextTick } from "vue";
+import VRuntimeTemplate from "vue3-runtime-template";
 import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
 import type { Context } from "page";
@@ -252,6 +253,9 @@ export default defineComponent({
         zoomable: false,
       });
     },
+  },
+  components: {
+    VRuntimeTemplate,
   },
 });
 </script>
