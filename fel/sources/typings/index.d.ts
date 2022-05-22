@@ -36,8 +36,8 @@ declare interface Url {
 }
 
 declare interface Data {
-  index: Branch;
-  urls: Url[];
-  content: string;
-  context: import("page").Context;
+  index: Branch | undefined;
+  urls: Url[] | undefined;
+  content: string | undefined;
+  context: import("page").Context | undefined;
 }
