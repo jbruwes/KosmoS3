@@ -117,8 +117,8 @@ export default function pagination(index, sel) {
       $(this).append(doubleRight);
       try {
         $(this)
-          .removeData("auto")
-          .removeAttr("data-auto")
+          // .removeData("auto")
+          // .removeAttr("data-auto")
           .render(dataChildren, {
             "a.item:empty": {
               "i<-": {
