@@ -100,29 +100,32 @@ export default class LayersToolbarView extends JetView {
           if (item) {
             if (item.value === "content")
               webix.message("Delete is prohibited", "debug");
-            else {
-              this.undo();
-              let newId = $$("layers").getPrevId(item.id);
-              if (!newId) newId = $$("layers").getNextId(item.id);
-              that.body.find(`#${item.value}`).remove();
-              that.body
-                .find("#body:first>.pusher>div:not([id]):empty")
-                .remove();
-              that.zIndex.call(that, that.body, "#");
-              fabricDocument.find(`#${item.value}`).remove();
-              fabricDocument
-                .find("body:first>.pusher>div:not([id]):empty")
-                .remove();
-              that.zIndex.call(that, fabricDocument, "");
-              if (newId) $$("layers").select(newId);
-              $$("fabric")
-                .getCanvas()
-                .forEachObject((obj) => {
-                  if (obj.id && obj.id === item.id)
-                    $$("fabric").getCanvas().remove(obj);
-                });
-              $$("layers").remove(item.id);
-            }
+            else
+              webix.confirm("Are you sure?", (result) => {
+                if (result) {
+                  this.undo();
+                  let newId = $$("layers").getPrevId(item.id);
+                  if (!newId) newId = $$("layers").getNextId(item.id);
+                  that.body.find(`#${item.value}`).remove();
+                  that.body
+                    .find("#body:first>.pusher>div:not([id]):empty")
+                    .remove();
+                  that.zIndex.call(that, that.body, "#");
+                  fabricDocument.find(`#${item.value}`).remove();
+                  fabricDocument
+                    .find("body:first>.pusher>div:not([id]):empty")
+                    .remove();
+                  that.zIndex.call(that, fabricDocument, "");
+                  if (newId) $$("layers").select(newId);
+                  $$("fabric")
+                    .getCanvas()
+                    .forEachObject((obj) => {
+                      if (obj.id && obj.id === item.id)
+                        $$("fabric").getCanvas().remove(obj);
+                    });
+                  $$("layers").remove(item.id);
+                }
+              });
           }
         },
       },
