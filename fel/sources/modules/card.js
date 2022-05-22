@@ -86,8 +86,8 @@ export default function card(index, sel) {
     if (dataChildren.length) {
       try {
         $(this)
-          .removeData("auto")
-          .removeAttr("data-auto")
+          // .removeData("auto")
+          // .removeAttr("data-auto")
           .render(dataChildren[0], {
             "a.ui.button@href": aUiButton,
             "img.ui.image@src": "image",
