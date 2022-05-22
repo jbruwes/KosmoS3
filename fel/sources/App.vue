@@ -31,10 +31,10 @@ export default defineComponent({
    * @returns {Data} Объект data
    */
   data: (): Data => ({
-    index: <Branch>{},
-    urls: [],
-    content: "",
-    context: <Context>{},
+    index: undefined,
+    urls: undefined,
+    content: undefined,
+    context: undefined,
   }),
   computed: {
     /**
@@ -42,10 +42,12 @@ export default defineComponent({
      *
      * @returns {Promise<HTMLScriptElement>[]} Массив обещаний по зпгрузке пользовательских скриптов
      */
-    scripts(): Promise<HTMLScriptElement>[] {
-      return [...this.urls, { url: "index.js" }]
-        .filter((script) => script.url)
-        .map((script) => this.$loadScript(script.url));
+    scripts(): Promise<HTMLScriptElement>[] | undefined {
+      return this.urls
+        ? [...this.urls, { url: "index.js" }]
+            .filter((script) => script.url)
+            .map((script) => this.$loadScript(script.url))
+        : undefined;
     },
     /**
      * Текущий объект
@@ -53,9 +55,11 @@ export default defineComponent({
      * @returns {Branch} Текущий объект для загрузки
      */
     node(): Branch | undefined {
-      return this.plainIndex.find(
-        (e: Branch) =>
-          e.path === this.context.routePath || e.url === this.context.routePath
+      return this.plainIndex.find((e: Branch) =>
+        this.context
+          ? e.path === this.context.routePath ||
+            e.url === this.context.routePath
+          : undefined
       );
     },
     /**
@@ -102,7 +106,7 @@ export default defineComponent({
           document.title = (
             this.node.title ? this.node.title : this.node.value
           ).replace(/"/g, "&quot;");
-          const lUrl = this.node.url || this.context.routePath;
+          const lUrl = this.node.url || this.node.path;
           [
             ['meta[name="description"]', this.node.description],
             ['meta[name="keywords"]', this.node.keywords],
@@ -127,16 +131,11 @@ export default defineComponent({
             element.content = e[1] ? e[1].replace(/"/g, "&quot;") : "";
           });
           this.content = html;
+          await nextTick();
+          this.GLightbox();
+          this.onhashchange();
+          window.scrollTo(0, 0);
         }
-    },
-    /**
-     * При изменении контента на странице обновляем компоненты
-     */
-    async content() {
-      await nextTick();
-      this.GLightbox();
-      this.onhashchange();
-      if (!window.location.hash) window.scrollTo(0, 0);
     },
     /**
      * При изменении индекса создаем роутер
@@ -179,23 +178,25 @@ export default defineComponent({
      * @param {string} pSel Селектор
      */
     async onhashchange(pSel: string = "#content") {
-      carousel(this.index, pSel);
-      deck(this.index, pSel);
-      cardgrid(this.index, pSel);
-      card(this.index, pSel);
-      list(this.index, pSel);
-      header(this.index, pSel);
-      pageheader(this.index, pSel);
-      doubleheader(this.index, pSel);
-      icongrid(this.index, pSel);
-      breadcrumbs(this.index, pSel);
-      pagination(this.index, pSel);
-      parentbutton(this.index, pSel);
-      sidebar(this.index);
-      menu(this.index, pSel);
+      if (this.index) {
+        carousel(this.index, pSel);
+        deck(this.index, pSel);
+        cardgrid(this.index, pSel);
+        card(this.index, pSel);
+        list(this.index, pSel);
+        header(this.index, pSel);
+        pageheader(this.index, pSel);
+        doubleheader(this.index, pSel);
+        icongrid(this.index, pSel);
+        breadcrumbs(this.index, pSel);
+        pagination(this.index, pSel);
+        parentbutton(this.index, pSel);
+        sidebar(this.index);
+        menu(this.index, pSel);
+      }
       this.AOS();
       jarallax(document.querySelectorAll(".jarallax"));
-      await Promise.allSettled(this.scripts);
+      if (this.scripts) await Promise.allSettled(this.scripts);
       if (typeof init === "function") init.call(this.index);
     },
     /**
