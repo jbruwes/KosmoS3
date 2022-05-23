@@ -61,6 +61,7 @@ export default function carousel(index, sel) {
       try {
         $(this)
           .removeData("auto")
+          .removeAttr("data-auto")
           .render(dataChildren, {
             "div.segment": {
               "i<-": {
