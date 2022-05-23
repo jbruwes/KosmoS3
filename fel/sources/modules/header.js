@@ -74,22 +74,19 @@ export default function header(index, sel) {
     };
     if (dataChildren.length) {
       try {
-        $(this)
-          // .removeData("auto")
-          // .removeAttr("data-auto")
-          .render(dataChildren[0], {
-            // Заголовок минимум
-            "+span.ui": "$header",
-            "a.ui.header@href": aUiHeader,
-            "span.sub.header": spanSubHeader,
-            // Заголовок костыли
-            "div.content+": spanUi,
-            "i.hvr-icon@style": "vertical-align:top;padding-top:0.3em;",
-            "span.ui@class+": " content",
-            "a.ui.header@class+": " massive dividing fluid container",
-            // Иконки
-            "i.icon:not(.calendar)@class+": " #{$icon}",
-          });
+        $(this).removeData("auto").render(dataChildren[0], {
+          // Заголовок минимум
+          "+span.ui": "$header",
+          "a.ui.header@href": aUiHeader,
+          "span.sub.header": spanSubHeader,
+          // Заголовок костыли
+          "div.content+": spanUi,
+          "i.hvr-icon@style": "vertical-align:top;padding-top:0.3em;",
+          "span.ui@class+": " content",
+          "a.ui.header@class+": " massive dividing fluid container",
+          // Иконки
+          "i.icon:not(.calendar)@class+": " #{$icon}",
+        });
       } catch (e) {
         // console.log(e.message);
       }
