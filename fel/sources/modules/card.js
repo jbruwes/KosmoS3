@@ -85,23 +85,20 @@ export default function card(index, sel) {
     };
     if (dataChildren.length) {
       try {
-        $(this)
-          // .removeData("auto")
-          // .removeAttr("data-auto")
-          .render(dataChildren[0], {
-            "a.ui.button@href": aUiButton,
-            "img.ui.image@src": "image",
-            // Заголовок минимум
-            "+span.ui": "$header",
-            "a.ui.header@href": aUiHeader,
-            "span.sub.header": spanSubHeader,
-            // Заголовок костыли
-            "span.ui+": spanUi,
-            "i.hvr-icon@style": "vertical-align:top;padding-top:0.3em;",
-            "span.ui@class+": " content",
-            // Иконки
-            "i.icon:not(.calendar)@class+": " #{$icon}",
-          });
+        $(this).removeData("auto").render(dataChildren[0], {
+          "a.ui.button@href": aUiButton,
+          "img.ui.image@src": "image",
+          // Заголовок минимум
+          "+span.ui": "$header",
+          "a.ui.header@href": aUiHeader,
+          "span.sub.header": spanSubHeader,
+          // Заголовок костыли
+          "span.ui+": spanUi,
+          "i.hvr-icon@style": "vertical-align:top;padding-top:0.3em;",
+          "span.ui@class+": " content",
+          // Иконки
+          "i.icon:not(.calendar)@class+": " #{$icon}",
+        });
       } catch (e) {
         // console.log(e.message);
       }
