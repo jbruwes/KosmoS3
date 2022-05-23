@@ -130,11 +130,8 @@ export default defineComponent({
             ) as HTMLMetaElement;
             element.content = e[1] ? e[1].replace(/"/g, "&quot;") : "";
           });
+          if (this.content === html) this.content = undefined;
           this.content = html;
-          await nextTick();
-          this.GLightbox();
-          this.onhashchange();
-          window.scrollTo(0, 0);
         }
     },
     /**
@@ -162,6 +159,14 @@ export default defineComponent({
       (await fetch("index.cdn.json", { cache: "no-store" })).json(),
     ]);
     this.onhashchange(".pusher");
+  },
+  /**
+   * Обработчик по обновлению контента
+   */
+  updated() {
+    this.GLightbox();
+    this.onhashchange();
+    window.scrollTo(0, 0);
   },
   methods: {
     /**
