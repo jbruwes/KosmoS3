@@ -74,21 +74,18 @@ export default function pageheader(index, sel) {
     };
     if (dataChildren.length) {
       try {
-        $(this)
-          // .removeData("auto")
-          // .removeAttr("data-auto")
-          .render(dataChildren[0], {
-            "@style+": "$backgroundImage",
-            // Заголовок минимум
-            "+span.ui": "$header",
-            "a.ui.header@href": aUiHeader,
-            "span.sub.header": spanSubHeader,
-            // Заголовок костыли
-            "span.ui+": spanUi,
-            "a.ui.header@class+": " massive inverted icon",
-            // Иконки
-            "i.icon:not(.calendar)@class+": " #{icon}",
-          });
+        $(this).removeData("auto").render(dataChildren[0], {
+          "@style+": "$backgroundImage",
+          // Заголовок минимум
+          "+span.ui": "$header",
+          "a.ui.header@href": aUiHeader,
+          "span.sub.header": spanSubHeader,
+          // Заголовок костыли
+          "span.ui+": spanUi,
+          "a.ui.header@class+": " massive inverted icon",
+          // Иконки
+          "i.icon:not(.calendar)@class+": " #{icon}",
+        });
       } catch (e) {
         //
       }
