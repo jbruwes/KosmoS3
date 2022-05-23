@@ -60,8 +60,7 @@ export default function doubleheader(index, sel) {
     if (dataChildren.length) {
       try {
         $(this)
-          // .removeData("auto")
-          // .removeAttr("data-auto")
+          .removeData("auto")
           .render(dataChildren, {
             "div.column": {
               "i<-": {
