@@ -43,12 +43,9 @@ export default function parentbutton(index, sel) {
     }
     if (dataChildren.length) {
       try {
-        $(this)
-          // .removeData("auto")
-          // .removeAttr("data-auto")
-          .render(dataChildren[0], {
-            ".@href": "$href",
-          });
+        $(this).removeData("auto").render(dataChildren[0], {
+          ".@href": "$href",
+        });
       } catch (e) {
         //
       }
