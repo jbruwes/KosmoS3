@@ -69,6 +69,7 @@ export default function list(index, sel) {
       try {
         $(this)
           .removeData("auto")
+          .removeAttr("data-auto")
           .render(dataChildren, {
             "div.item": {
               "i<-": {
