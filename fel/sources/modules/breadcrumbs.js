@@ -92,6 +92,7 @@ export default function breadcrumbs(index, sel) {
       try {
         $(this)
           .removeData("auto")
+          .removeAttr("data-auto")
           .render(dataChildren, {
             "a.step": {
               "i<-": {
