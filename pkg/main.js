@@ -1,8 +1,8 @@
 import { app, BrowserWindow } from "electron";
-import { check } from "electron-squirrel-startup";
+import check from "electron-squirrel-startup";
 import serve from "electron-serve";
 
-if (check()) app.quit();
+if (check) app.quit();
 
 const loadURL = serve({ directory: "." });
 (async () => {
