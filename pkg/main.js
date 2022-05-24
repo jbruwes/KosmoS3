@@ -3,7 +3,6 @@ import check from "electron-squirrel-startup";
 import serve from "electron-serve";
 
 if (check) app.quit();
-
 const loadURL = serve({ directory: "." });
 (async () => {
   await app.whenReady();
