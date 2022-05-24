@@ -130,6 +130,9 @@ export default class TreeView extends JetView {
         this.getParentView().lockProperties = false;
         try {
           result = DOMPurify.sanitize(await this.app.io.getObject(`${id}.htm`));
+        } catch (err) {
+          result =
+            '<div class="ui fluid placeholder"><div class="image header"><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div></div>';
         } finally {
           if (this.app) {
             $$("tinymce").$scope.setValue(result);
