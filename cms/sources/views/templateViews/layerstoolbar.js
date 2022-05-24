@@ -26,22 +26,11 @@ export default class LayersToolbarView extends JetView {
           const id = webix.uid().toString();
           const that = this.getParentView();
           const fabricDocument = $($$("fabric").getIframe()).contents();
+          const layer = `<div class="ui container" data-static><div id="layer-${id}" class="ui raised segment" style="margin:10px 0;"><div class="ui fluid placeholder"><div class="image header"><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div></div></div></div>`;
           this.undo();
-          that.body
-            .find("#body:first>.pusher")
-            .append(
-              $(
-                `${'<div data-fixed><div id="layer-'}${id}" style=margin-left:0;margin-right:0;margin-top:0;height:100px;"></div></div>`
-              )
-            );
+          that.body.find("#body:first>.pusher").append($(layer));
           that.zIndex.call(that, that.body, "#");
-          fabricDocument
-            .find("body:first>.pusher")
-            .append(
-              $(
-                `${'<div data-fixed><div id="layer-'}${id}" style="margin-left:0;margin-right:0;margin-top:0;height:100px;"></div></div>`
-              )
-            );
+          fabricDocument.find("body:first>.pusher").append($(layer));
           that.zIndex.call(that, fabricDocument, "");
           $$("layers").add({
             id,
