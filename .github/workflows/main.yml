@@ -55,8 +55,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ./out/KosmoS3.dmg
-          asset_name: KosmoS3.dmg
+          asset_path: ./out/kosmos3.dmg
+          asset_name: kosmos3.dmg
           asset_content_type: application/x-apple-diskimage
       - name: KosmoS3-amd64.deb
         if: matrix.os == 'ubuntu-latest'
