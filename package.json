@@ -20,7 +20,7 @@
     "darwin": "npx electron-packager dist KosmoS3 --platform=darwin --arch=universal --overwrite --prune=true --asar --out=out --icon=./icons/icon",
     "win32": "npx electron-packager dist KosmoS3 --platform=win32 --arch=x64 --overwrite --prune=true --asar --out=out --icon=./icons/icon",
     "linux": "npx electron-packager dist --platform=linux --arch=x64 --overwrite --prune=true --asar --out=out --icon=./icons/icon",
-    "dmg": "./node_modules/.bin/electron-installer-dmg --overwrite --title=KosmoS3 --icon=./icons/icon.icns ./out/kosmos3-darwin-universal/KosmoS3.app ./out/KosmoS3",
+    "dmg": "./node_modules/.bin/electron-installer-dmg --overwrite --title=KosmoS3 --icon=./icons/icon.icns ./out/kosmos3-darwin-universal/KosmoS3.app ./out/kosmos3",
     "deb": "./node_modules/.bin/electron-installer-debian --src out/kosmos3-linux-x64 --dest out --arch amd64",
     "msi": ".\"/node_modules/.bin/electron-installer-windows\" --src \"./out/KosmoS3-win32-x64\" --dest out",
     "mac": "npm run darwin && npm run dmg",
