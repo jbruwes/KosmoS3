@@ -43,30 +43,20 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "17"
+          node-version: "18"
       - name: Install NPM packages
         run: npm ci
       - name: Build project
         run: npm run ${{ matrix.os }}
-      - name: KosmoS3-arm64.dmg
+      - name: KosmoS3.dmg
         if: matrix.os == 'macos-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ./out/KosmoS3-arm64.dmg
-          asset_name: KosmoS3-arm64.dmg
-          asset_content_type: application/x-apple-diskimage
-      - name: KosmoS3-x64.dmg
-        if: matrix.os == 'macos-latest'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ./out/KosmoS3-x64.dmg
-          asset_name: KosmoS3-x64.dmg
+          asset_path: ./out/KosmoS3.dmg
+          asset_name: KosmoS3.dmg
           asset_content_type: application/x-apple-diskimage
       - name: KosmoS3-amd64.deb
         if: matrix.os == 'ubuntu-latest'
