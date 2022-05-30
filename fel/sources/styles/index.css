@@ -1,5 +1,6 @@
-[hidden] {
-  display: none !important;
+html,
+body {
+  height: auto;
 }
 
 p:empty:before {
@@ -23,7 +24,11 @@ p:empty:before {
   margin-right: -50vw !important;
 }
 
-body > .pusher {
+main.v-main > div.v-main__wrap > div.v-container {
+  padding: 0;
+}
+
+.pusher {
   position: relative;
   height: auto;
 }
@@ -44,7 +49,7 @@ div[data-fixed]:not([id]) {
   position: fixed;
 }
 
-body > .pusher,
+.pusher,
 div[data-relative]:not([id]),
 div[data-static]:not([id]),
 div[data-absolute]:not([id]),
