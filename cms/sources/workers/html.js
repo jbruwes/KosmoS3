@@ -50,9 +50,9 @@ export default async function html(pHtml, pIo, pNode) {
     lHtm = await pIo.getObject(`${pNode.id}.htm`);
   } finally {
     lHtml = lHtml.replace(
-      /<main><\/main>/g,
-      `<main v-if="!content">${lHtm}</main><main v-else v-html="content"></main>`
-      // `<main v-if="!content">${lHtm}</main><main v-else><v-runtime-template :template="content"></v-runtime-template></main>`
+      /<article><\/article>/g,
+      `<article v-if="!content">${lHtm}</article><article v-else v-html="content"></article>`
+      // `<article v-if="!content">${lHtm}</article><article v-else><v-runtime-template :template="content"></v-runtime-template></article>`
     );
     let lUrl = "";
     if (pNode.url) {
