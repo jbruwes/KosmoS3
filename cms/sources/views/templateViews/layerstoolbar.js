@@ -28,10 +28,10 @@ export default class LayersToolbarView extends JetView {
           const fabricDocument = $($$("fabric").getIframe()).contents();
           const layer = `<div class="ui container" data-static><div id="layer-${id}" class="ui raised segment" style="margin:10px 0;"><div class="ui fluid placeholder"><div class="image header"><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div></div></div></div>`;
           this.undo();
-          that.body.find("#body:first>.pusher").append($(layer));
-          that.zIndex.call(that, that.body, "#");
-          fabricDocument.find("body:first>.pusher").append($(layer));
-          that.zIndex.call(that, fabricDocument, "");
+          that.body.find(".pusher:first").append($(layer));
+          that.zIndex.call(that, that.body);
+          fabricDocument.find(".pusher:first").append($(layer));
+          that.zIndex.call(that, fabricDocument);
           $$("layers").add({
             id,
             value: `layer-${id}`,
@@ -96,15 +96,13 @@ export default class LayersToolbarView extends JetView {
                   let newId = $$("layers").getPrevId(item.id);
                   if (!newId) newId = $$("layers").getNextId(item.id);
                   that.body.find(`#${item.value}`).remove();
-                  that.body
-                    .find("#body:first>.pusher>div:not([id]):empty")
-                    .remove();
-                  that.zIndex.call(that, that.body, "#");
+                  that.body.find(".pusher:first>div:not([id]):empty").remove();
+                  that.zIndex.call(that, that.body);
                   fabricDocument.find(`#${item.value}`).remove();
                   fabricDocument
-                    .find("body:first>.pusher>div:not([id]):empty")
+                    .find(".pusher:first>div:not([id]):empty")
                     .remove();
-                  that.zIndex.call(that, fabricDocument, "");
+                  that.zIndex.call(that, fabricDocument);
                   if (newId) $$("layers").select(newId);
                   $$("fabric")
                     .getCanvas()
@@ -158,8 +156,8 @@ export default class LayersToolbarView extends JetView {
     const fabricDocument = $($$("fabric").getIframe()).contents();
     that.redo = [];
     that.undo.push([
-      that.body.find("#body:first>.pusher").html(),
-      fabricDocument.find("body:first>.pusher").html(),
+      that.body.find(".pusher:first").html(),
+      fabricDocument.find(".pusher:first").html(),
       webix.ajax().stringify($$("fabric").getCanvas()),
       $$("layers").serialize(),
       $$("layers").getSelectedId(),
