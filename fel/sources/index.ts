@@ -1,14 +1,6 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
-import "kendo-ui-core/css/web/kendo.common.css";
-import "kendo-ui-core/css/web/kendo.default.css";
-import "glightbox/dist/css/glightbox.css";
-import "fomantic-ui-css/semantic.css";
-import "aos/dist/aos.css";
-import "lightslider/dist/css/lightslider.css";
-import "jarallax/dist/jarallax.css";
-
 import "@fontsource/arsenal";
 import "@fontsource/bad-script";
 import "@fontsource/caveat";
@@ -35,8 +27,16 @@ import "@fontsource/rubik-mono-one";
 import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 
-// import "vuetify/dist/vuetify.min.css";
-
+import "kendo-ui-core/css/web/kendo.common.css";
+import "kendo-ui-core/css/web/kendo.default.css";
+import "glightbox/dist/css/glightbox.css";
+import "aos/dist/aos.css";
+import "lightslider/dist/css/lightslider.css";
+import "jarallax/dist/jarallax.css";
+import "fomantic-ui-css/semantic.css";
+import "tailwindcss/dist/tailwind.css";
+import "@mdi/font/css/materialdesignicons.css";
+import "vuetify/styles";
 import "./styles/index.css";
 
 import "fomantic-ui-css/semantic";
@@ -46,8 +46,10 @@ import "pure";
 
 import { createApp } from "vue";
 import { createVuetify } from "vuetify";
-// import * as components from "vuetify/lib/components";
-// import * as directives from "vuetify/lib/directives";
+
+import * as components from "vuetify/components";
+import * as directives from "vuetify/directives";
+
 import LoadScript from "vue-plugin-load-script";
 import App from "./App.vue";
 
@@ -64,8 +66,8 @@ document.addEventListener("click", (event) => {
 
 const app = createApp(App);
 const vuetify = createVuetify({
-  // components,
-  // directives,
+  components,
+  directives,
 });
 app.use(vuetify);
 app.use(LoadScript);
