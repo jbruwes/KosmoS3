@@ -80,22 +80,16 @@ export default class TemplateView extends JetView {
                                 $$("fabric").getIframe()
                               ).contents();
                               this.redo.push([
-                                this.body.find("#body:first>.pusher").html(),
-                                fabricDocument
-                                  .find("body:first>.pusher")
-                                  .html(),
+                                this.body.find(".pusher:first").html(),
+                                fabricDocument.find(".pusher:first").html(),
                                 webix
                                   .ajax()
                                   .stringify($$("fabric").getCanvas()),
                                 $$("layers").serialize(),
                                 $$("layers").getSelectedId(),
                               ]);
-                              this.body
-                                .find("#body:first>.pusher")
-                                .html(pop[0]);
-                              fabricDocument
-                                .find("body:first>.pusher")
-                                .html(pop[1]);
+                              this.body.find(".pusher:first").html(pop[0]);
+                              fabricDocument.find(".pusher:first").html(pop[1]);
                               $$("fabric")
                                 .getCanvas()
                                 .loadFromJSON(
@@ -138,22 +132,16 @@ export default class TemplateView extends JetView {
                                 $$("fabric").getIframe()
                               ).contents();
                               this.undo.push([
-                                this.body.find("#body:first>.pusher").html(),
-                                fabricDocument
-                                  .find("body:first>.pusher")
-                                  .html(),
+                                this.body.find(".pusher:first").html(),
+                                fabricDocument.find(".pusher:first").html(),
                                 webix
                                   .ajax()
                                   .stringify($$("fabric").getCanvas()),
                                 $$("layers").serialize(),
                                 $$("layers").getSelectedId(),
                               ]);
-                              this.body
-                                .find("#body:first>.pusher")
-                                .html(pop[0]);
-                              fabricDocument
-                                .find("body:first>.pusher")
-                                .html(pop[1]);
+                              this.body.find(".pusher:first").html(pop[0]);
+                              fabricDocument.find(".pusher:first").html(pop[1]);
                               $$("fabric")
                                 .getCanvas()
                                 .loadFromJSON(
@@ -388,7 +376,7 @@ export default class TemplateView extends JetView {
           .attr("id", "body")
           .html(await this.app.io.getObject("index.htm"))
       );
-      let pusher = this.body.find("#body:first>.pusher");
+      let pusher = this.body.find(".pusher:first");
       if (!pusher.length)
         pusher = $("<div/>")
           .addClass("pusher")
@@ -397,7 +385,7 @@ export default class TemplateView extends JetView {
       this.body.find("#body:first").empty().append(pusher);
       const list = this.body
         .find(
-          "#body:first>.pusher>div[data-fixed]:not([id])>div[id],#body:first>.pusher>div[data-absolute]:not([id])>div[id],#body:first>.pusher>div[data-static]:not([id])>div[id]"
+          ".pusher:first>div[data-fixed]:not([id])>div[id],.pusher:first>div[data-absolute]:not([id])>div[id],.pusher:first>div[data-static]:not([id])>div[id]"
         )
         .not('div[id=""]');
       pusher = $("<div/>").addClass("pusher");
@@ -406,11 +394,11 @@ export default class TemplateView extends JetView {
       );
       let o = pusher.find("#content");
       if (!o.length) {
-        o = $('<div id="content"><main></main></div>');
+        o = $('<div id="content"><article></article></div>');
         list.push(o[0]);
         pusher.append(o);
         o.wrap("<div data-static></div>");
-      } else o.empty().append("<main></main>");
+      } else o.empty().append("<article></article>");
       this.body.find("#body:first").empty().append(pusher);
       list.sort((val1, val2) => {
         return (
@@ -605,7 +593,7 @@ export default class TemplateView extends JetView {
    */
   genHtml() {
     return this.body
-      .find("#body:first>.pusher")
+      .find(".pusher:first")
       .html()
       .replace(
         new RegExp(
@@ -625,9 +613,8 @@ export default class TemplateView extends JetView {
    * Сортировка слоев по оси z
    *
    * @param {object} body Объект DOM
-   * @param {string} prefix Селектор
    */
-  zIndex = (body, prefix) => {
+  zIndex = (body) => {
     const that = this.getSubView("templateViewsLayers");
     let i = that.$$("layers").count();
     that
@@ -637,10 +624,10 @@ export default class TemplateView extends JetView {
         body.find(`#${value.value}`).parent().css("z-index", i);
         i -= 1;
       });
-    body.find(`${prefix}body:first>.pusher`).append(
+    body.find(".pusher:first").append(
       body
         .find(
-          `${prefix}body:first>.pusher>div[data-fixed]:not([id]),${prefix}body:first>.pusher>div[data-absolute]:not([id]),${prefix}body:first>.pusher>div[data-static]:not([id])`
+          ".pusher:first>div[data-fixed]:not([id]),.pusher:first>div[data-absolute]:not([id]),.pusher:first>div[data-static]:not([id])"
         )
         .sort((a, b) => {
           return Math.abs($(b).css("z-index")) - Math.abs($(a).css("z-index"));
@@ -888,25 +875,21 @@ export default class TemplateView extends JetView {
         if (!layers) {
           this.redo = [];
           this.undo.push([
-            this.body.find("#body:first>.pusher").html(),
-            fabricDocument.find("body:first>.pusher").html(),
+            this.body.find(".pusher:first").html(),
+            fabricDocument.find(".pusher:first").html(),
             webix.ajax().stringify($$("fabric").getCanvas()),
             $$("layers").serialize(),
             $$("layers").getSelectedId(),
           ]);
         }
-        saveStage(
-          this.body.find(`#${item.value}`),
-          "#body:first>.pusher",
-          this.body
-        );
-        this.zIndex(this.body, "#");
+        saveStage(this.body.find(`#${item.value}`), ".pusher:first", this.body);
+        this.zIndex(this.body);
         saveStage(
           fabricDocument.find(`#${item.value}`),
-          "body:first>.pusher",
+          ".pusher:first",
           fabricDocument
         );
-        this.zIndex(fabricDocument, "");
+        this.zIndex(fabricDocument);
         this.save2();
       }
     }
