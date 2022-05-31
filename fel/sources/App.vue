@@ -31,6 +31,7 @@ export default defineComponent({
    * @returns {Data} Объект data
    */
   data: (): Data => ({
+    drawer: false,
     index: undefined,
     urls: undefined,
     content: undefined,
@@ -158,7 +159,7 @@ export default defineComponent({
       (await fetch("index.json", { cache: "no-store" })).json(),
       (await fetch("index.cdn.json", { cache: "no-store" })).json(),
     ]);
-    this.onhashchange(".pusher");
+    this.onhashchange("#kosmos3");
   },
   /**
    * Обработчик по обновлению контента
