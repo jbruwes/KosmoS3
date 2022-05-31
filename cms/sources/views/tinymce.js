@@ -143,10 +143,11 @@ export default class TinymceView extends JetView {
       content_css_cors: true,
       content_css: "index.cdn.css,index.css",
       skin: false,
-      content_style: `${contentUiCss.toString()}\n${contentCss.toString()}\n.mce-content-body{margin:0;padding:8px;}`,
+      content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
       file_picker_types: "image media file",
       quickbars_insert_toolbar: "template",
       toolbar_mode: "sliding",
+      body_class: "p-2",
       /**
        * Чтобы не сжирались пустые элементы
        *
