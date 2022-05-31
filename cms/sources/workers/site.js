@@ -29,7 +29,7 @@ onmessage = async ({
     JSON.parse(await io.getObject("index.json")),
     (
       await (await fetch("index.htm")).text()
-    ).replace(/{{ pusher }}/g, await io.getObject("index.htm")),
+    ).replace(/{{ kosmos3 }}/g, await io.getObject("index.htm")),
   ]);
   const lMap = jsel(lJson).selectAll("//*[@id]");
   const lMapLength = lMap.length;
