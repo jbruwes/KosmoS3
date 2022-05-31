@@ -71,4 +71,4 @@ const vuetify = createVuetify({
 });
 app.use(vuetify);
 app.use(LoadScript);
-app.mount("body");
+app.mount("#app");
