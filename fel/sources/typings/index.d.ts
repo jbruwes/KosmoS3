@@ -36,6 +36,7 @@ declare interface Url {
 }
 
 declare interface Data {
+  drawer: boolean,
   index: Branch | undefined;
   urls: Url[] | undefined;
   content: string | undefined;
