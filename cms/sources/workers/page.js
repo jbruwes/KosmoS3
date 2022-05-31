@@ -50,7 +50,7 @@ onmessage = async ({
     await html(
       (
         await (await fetch("index.htm")).text()
-      ).replace(/{{ pusher }}/g, await io.getObject("index.htm")),
+      ).replace(/{{ kosmos3 }}/g, await io.getObject("index.htm")),
       io,
       lNode
     );
