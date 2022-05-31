@@ -80,16 +80,18 @@ export default class TemplateView extends JetView {
                                 $$("fabric").getIframe()
                               ).contents();
                               this.redo.push([
-                                this.body.find(".pusher:first").html(),
-                                fabricDocument.find(".pusher:first").html(),
+                                this.body.find("#kosmos3:first").html(),
+                                fabricDocument.find("#kosmos3:first").html(),
                                 webix
                                   .ajax()
                                   .stringify($$("fabric").getCanvas()),
                                 $$("layers").serialize(),
                                 $$("layers").getSelectedId(),
                               ]);
-                              this.body.find(".pusher:first").html(pop[0]);
-                              fabricDocument.find(".pusher:first").html(pop[1]);
+                              this.body.find("#kosmos3:first").html(pop[0]);
+                              fabricDocument
+                                .find("#kosmos3:first")
+                                .html(pop[1]);
                               $$("fabric")
                                 .getCanvas()
                                 .loadFromJSON(
@@ -132,16 +134,18 @@ export default class TemplateView extends JetView {
                                 $$("fabric").getIframe()
                               ).contents();
                               this.undo.push([
-                                this.body.find(".pusher:first").html(),
-                                fabricDocument.find(".pusher:first").html(),
+                                this.body.find("#kosmos3:first").html(),
+                                fabricDocument.find("#kosmos3:first").html(),
                                 webix
                                   .ajax()
                                   .stringify($$("fabric").getCanvas()),
                                 $$("layers").serialize(),
                                 $$("layers").getSelectedId(),
                               ]);
-                              this.body.find(".pusher:first").html(pop[0]);
-                              fabricDocument.find(".pusher:first").html(pop[1]);
+                              this.body.find("#kosmos3:first").html(pop[0]);
+                              fabricDocument
+                                .find("#kosmos3:first")
+                                .html(pop[1]);
                               $$("fabric")
                                 .getCanvas()
                                 .loadFromJSON(
@@ -338,9 +342,9 @@ export default class TemplateView extends JetView {
      * @returns {number} Режим объекта
      */
     function getMode(item) {
-      if (item.parent("div[data-absolute]:not([id])").parent(".pusher").length)
+      if (item.parent("div[data-absolute]:not([id])").parent("#kosmos3").length)
         return 1;
-      if (item.parent("div[data-fixed]:not([id])").parent(".pusher").length)
+      if (item.parent("div[data-fixed]:not([id])").parent("#kosmos3").length)
         return 2;
       return 3;
     }
@@ -371,62 +375,56 @@ export default class TemplateView extends JetView {
         });
     });
     if ($$("sidebar").getSelectedId() === "template") {
-      this.body = $("<div/>").append(
-        $("<div/>")
-          .attr("id", "body")
-          .html(await this.app.io.getObject("index.htm"))
-      );
-      let pusher = this.body.find(".pusher:first");
-      if (!pusher.length)
-        pusher = $("<div/>")
-          .addClass("pusher")
-          .append(this.body.find("#body:first").html());
-
-      this.body.find("#body:first").empty().append(pusher);
-      const list = this.body
-        .find(
-          ".pusher:first>div[data-fixed]:not([id])>div[id],.pusher:first>div[data-absolute]:not([id])>div[id],.pusher:first>div[data-static]:not([id])>div[id]"
-        )
-        .not('div[id=""]');
-      pusher = $("<div/>").addClass("pusher");
-      list.each((index, element) =>
-        pusher.append($(element).parentsUntil(".pusher").clone())
-      );
-      let o = pusher.find("#content");
-      if (!o.length) {
-        o = $('<div id="content"><article></article></div>');
-        list.push(o[0]);
-        pusher.append(o);
-        o.wrap("<div data-static></div>");
-      } else o.empty().append("<article></article>");
-      this.body.find("#body:first").empty().append(pusher);
-      list.sort((val1, val2) => {
-        return (
-          Math.abs($(val2).parent().css("z-index")) -
-          Math.abs($(val1).parent().css("z-index"))
+      let kosmos3 = $("<div/>")
+        .attr("id", "kosmos3")
+        .html(await this.app.io.getObject("index.htm"));
+      let o = kosmos3.find("#content");
+      if (o.length) o.empty().append("<article></article>");
+      else
+      kosmos3.append(
+          '<div data-static><div id="content"><article></article></div></div>'
         );
-      });
-      list.each((i, e) => {
-        let icon = "mdi mdi-monitor-off";
-        switch (getMode($(e))) {
-          case 1:
-            icon = "mdi mdi-monitor-dashboard";
-            break;
-          case 2:
-            icon = "mdi mdi-monitor-lock";
-            break;
-          case 3:
-            icon = "mdi mdi-monitor-star";
-            break;
-          default:
-        }
-        $$("layers").add({
-          id: webix.uid().toString(),
-          value: $(e).attr("id"),
-          markCheckbox: !$(e).parent().attr("hidden"),
-          icon,
+      this.body = $("<div/>").append(kosmos3);
+      kosmos3 = $("<div/>")
+      .attr("id", "kosmos3")
+      .append(
+          this.body
+            .find(
+              "#kosmos3:first>div[data-fixed]:not([id]),#kosmos3:first>div[data-absolute]:not([id]),#kosmos3:first>div[data-static]:not([id])"
+            )
+            .sort((a, b) => {
+              return (
+                Math.abs($(b).css("z-index")) - Math.abs($(a).css("z-index"))
+              );
+            })
+        );
+      this.body = $("<div/>").append(kosmos3);
+      this.body
+        .find(
+          "#kosmos3:first>div[data-fixed]:not([id])>div[id],#kosmos3:first>div[data-absolute]:not([id])>div[id],#kosmos3:first>div[data-static]:not([id])>div[id]"
+        )
+        .not('div[id=""]')
+        .each((i, e) => {
+          let icon = "mdi mdi-monitor-off";
+          switch (getMode($(e))) {
+            case 1:
+              icon = "mdi mdi-monitor-dashboard";
+              break;
+            case 2:
+              icon = "mdi mdi-monitor-lock";
+              break;
+            case 3:
+              icon = "mdi mdi-monitor-star";
+              break;
+            default:
+          }
+          $$("layers").add({
+            id: webix.uid().toString(),
+            value: $(e).attr("id"),
+            markCheckbox: !$(e).parent().attr("hidden"),
+            icon,
+          });
         });
-      });
       const canvas = await $$("fabric").getCanvas(true);
       $$("layers")
         .serialize()
@@ -578,7 +576,7 @@ export default class TemplateView extends JetView {
             /{{ base }}/g,
             `${this.app.io.getWendpoint()}/${this.app.io.getBucket()}/`
           )
-          .replace("{{ pusher }}", this.genHtml())
+          .replace("{{ kosmos3 }}", this.genHtml())
           .replace(/<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi, "")
           .replace(/<script id="google"[^>]*>([\s\S]*?)<\/script>/gi, "")
       );
@@ -593,7 +591,7 @@ export default class TemplateView extends JetView {
    */
   genHtml() {
     return this.body
-      .find(".pusher:first")
+      .find("#kosmos3:first")
       .html()
       .replace(
         new RegExp(
@@ -624,10 +622,10 @@ export default class TemplateView extends JetView {
         body.find(`#${value.value}`).parent().css("z-index", i);
         i -= 1;
       });
-    body.find(".pusher:first").append(
+    body.find("#kosmos3:first").append(
       body
         .find(
-          ".pusher:first>div[data-fixed]:not([id]),.pusher:first>div[data-absolute]:not([id]),.pusher:first>div[data-static]:not([id])"
+          "#kosmos3:first>div[data-fixed]:not([id]),#kosmos3:first>div[data-absolute]:not([id]),#kosmos3:first>div[data-static]:not([id])"
         )
         .sort((a, b) => {
           return Math.abs($(b).css("z-index")) - Math.abs($(a).css("z-index"));
@@ -875,18 +873,22 @@ export default class TemplateView extends JetView {
         if (!layers) {
           this.redo = [];
           this.undo.push([
-            this.body.find(".pusher:first").html(),
-            fabricDocument.find(".pusher:first").html(),
+            this.body.find("#kosmos3:first").html(),
+            fabricDocument.find("#kosmos3:first").html(),
             webix.ajax().stringify($$("fabric").getCanvas()),
             $$("layers").serialize(),
             $$("layers").getSelectedId(),
           ]);
         }
-        saveStage(this.body.find(`#${item.value}`), ".pusher:first", this.body);
+        saveStage(
+          this.body.find(`#${item.value}`),
+          "#kosmos3:first",
+          this.body
+        );
         this.zIndex(this.body);
         saveStage(
           fabricDocument.find(`#${item.value}`),
-          ".pusher:first",
+          "#kosmos3:first",
           fabricDocument
         );
         this.zIndex(fabricDocument);
@@ -1200,9 +1202,9 @@ export default class TemplateView extends JetView {
      * @returns {number} Режим объекта
      */
     function getMode(item) {
-      if (item.parent("div[data-absolute]:not([id])").parent(".pusher").length)
+      if (item.parent("div[data-absolute]:not([id])").parent("#kosmos3").length)
         return 1;
-      if (item.parent("div[data-fixed]:not([id])").parent(".pusher").length)
+      if (item.parent("div[data-fixed]:not([id])").parent("#kosmos3").length)
         return 2;
       return 3;
     }
