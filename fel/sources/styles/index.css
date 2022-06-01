@@ -1,3 +1,7 @@
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   height: auto !important;
@@ -14,7 +18,7 @@ p:empty:before {
   }
 }
 
-.ui.free.container {
+.free.container {
   width: 100vw !important;
   max-width: none;
   position: relative;
@@ -24,26 +28,26 @@ p:empty:before {
   margin-right: -50vw !important;
 }
 
-div[data-relative]:not([id]) {
+[data-relative] {
   position: relative;
 }
 
-div[data-static]:not([id]) {
+[data-static] {
   position: static;
 }
 
-div[data-absolute]:not([id]) {
+[data-absolute] {
   position: absolute;
 }
 
-div[data-fixed]:not([id]) {
+[data-fixed] {
   position: fixed;
 }
 
-div[data-relative]:not([id]),
-div[data-static]:not([id]),
-div[data-absolute]:not([id]),
-div[data-fixed]:not([id]) {
+#kosmos3 > [data-relative],
+#kosmos3 > [data-static],
+#kosmos3 > [data-absolute],
+#kosmos3 > [data-fixed] {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -54,17 +58,23 @@ div[data-fixed]:not([id]) {
   pointer-events: none;
 }
 
-div[data-relative]:not([id]) > div[id],
-div[data-static]:not([id]) > div[id],
-div[data-absolute]:not([id]) > div[id],
-div[data-fixed]:not([id]) > div[id] {
+#kosmos3 > .relative > [id],
+#kosmos3 > .static > [id],
+#kosmos3 > .absolute > [id],
+#kosmos3 > .fixed > [id],
+#kosmos3 > [data-relative] > [id],
+#kosmos3 > [data-static] > [id],
+#kosmos3 > [data-absolute] > [id],
+#kosmos3 > [data-fixed] > [id] {
   position: relative;
   pointer-events: auto;
   margin: auto;
 }
 
-div[data-absolute]:not([id]) > #content,
-div[data-fixed]:not([id]) > #content {
+#kosmos3 > .absolute > #content,
+#kosmos3 > .fixed > #content,
+#kosmos3 > [data-absolute] > #content,
+#kosmos3 > [data-fixed] > #content {
   overflow-y: auto;
 }
 
