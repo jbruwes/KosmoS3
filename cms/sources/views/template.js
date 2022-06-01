@@ -5,6 +5,11 @@ import { fabric } from "fabric";
 import DOMPurify from "dompurify";
 import "../fabricjs";
 
+const containers =
+  "#kosmos3:first>.fixed,#kosmos3:first>.absolute,#kosmos3:first>.static, #kosmos3:first>div[data-fixed],#kosmos3:first>div[data-absolute],#kosmos3:first>div[data-static]";
+const layers =
+  "#kosmos3:first>.fixed>div[id],#kosmos3:first>.absolute>div[id],#kosmos3:first>.static>div[id] ,#kosmos3:first>div[data-fixed]>div[id],#kosmos3:first>div[data-absolute]>div[id],#kosmos3:first>div[data-static]>div[id]";
+
 /**
  * Класс редактора шаблона
  */
@@ -342,9 +347,9 @@ export default class TemplateView extends JetView {
      * @returns {number} Режим объекта
      */
     function getMode(item) {
-      if (item.parent("div[data-absolute]:not([id])").parent("#kosmos3").length)
+      if (item.parent(".absolute, [data-absolute]").parent("#kosmos3").length)
         return 1;
-      if (item.parent("div[data-fixed]:not([id])").parent("#kosmos3").length)
+      if (item.parent(".fixed, [data-fixed]").parent("#kosmos3").length)
         return 2;
       return 3;
     }
@@ -378,53 +383,45 @@ export default class TemplateView extends JetView {
       let kosmos3 = $("<div/>")
         .attr("id", "kosmos3")
         .html(await this.app.io.getObject("index.htm"));
-      let o = kosmos3.find("#content");
+      const o = kosmos3.find("#content");
       if (o.length) o.empty().append("<article></article>");
       else
-      kosmos3.append(
-          '<div data-static><div id="content"><article></article></div></div>'
+        kosmos3.append(
+          '<div class="container mx-auto static flex flex-auto flex-col inset-0 pointer-events-none"><div id="content"><article></article></div></div>'
         );
       this.body = $("<div/>").append(kosmos3);
       kosmos3 = $("<div/>")
-      .attr("id", "kosmos3")
-      .append(
+        .attr("id", "kosmos3")
+        .append(
           this.body
-            .find(
-              "#kosmos3:first>div[data-fixed]:not([id]),#kosmos3:first>div[data-absolute]:not([id]),#kosmos3:first>div[data-static]:not([id])"
-            )
-            .sort((a, b) => {
-              return (
+            .find(containers)
+            .sort(
+              (a, b) =>
                 Math.abs($(b).css("z-index")) - Math.abs($(a).css("z-index"))
-              );
-            })
+            )
         );
       this.body = $("<div/>").append(kosmos3);
-      this.body
-        .find(
-          "#kosmos3:first>div[data-fixed]:not([id])>div[id],#kosmos3:first>div[data-absolute]:not([id])>div[id],#kosmos3:first>div[data-static]:not([id])>div[id]"
-        )
-        .not('div[id=""]')
-        .each((i, e) => {
-          let icon = "mdi mdi-monitor-off";
-          switch (getMode($(e))) {
-            case 1:
-              icon = "mdi mdi-monitor-dashboard";
-              break;
-            case 2:
-              icon = "mdi mdi-monitor-lock";
-              break;
-            case 3:
-              icon = "mdi mdi-monitor-star";
-              break;
-            default:
-          }
-          $$("layers").add({
-            id: webix.uid().toString(),
-            value: $(e).attr("id"),
-            markCheckbox: !$(e).parent().attr("hidden"),
-            icon,
-          });
+      this.body.find(layers).each((i, e) => {
+        let icon = "mdi mdi-monitor-off";
+        switch (getMode($(e))) {
+          case 1:
+            icon = "mdi mdi-monitor-dashboard";
+            break;
+          case 2:
+            icon = "mdi mdi-monitor-lock";
+            break;
+          case 3:
+            icon = "mdi mdi-monitor-star";
+            break;
+          default:
+        }
+        $$("layers").add({
+          id: webix.uid().toString(),
+          value: $(e).attr("id"),
+          markCheckbox: !$(e).parent().attr("hidden"),
+          icon,
         });
+      });
       const canvas = await $$("fabric").getCanvas(true);
       $$("layers")
         .serialize()
@@ -622,23 +619,24 @@ export default class TemplateView extends JetView {
         body.find(`#${value.value}`).parent().css("z-index", i);
         i -= 1;
       });
-    body.find("#kosmos3:first").append(
-      body
-        .find(
-          "#kosmos3:first>div[data-fixed]:not([id]),#kosmos3:first>div[data-absolute]:not([id]),#kosmos3:first>div[data-static]:not([id])"
-        )
-        .sort((a, b) => {
-          return Math.abs($(b).css("z-index")) - Math.abs($(a).css("z-index"));
-        })
-    );
+    body
+      .find("#kosmos3:first")
+      .append(
+        body
+          .find(containers)
+          .sort(
+            (a, b) =>
+              Math.abs($(b).css("z-index")) - Math.abs($(a).css("z-index"))
+          )
+      );
   };
 
   /**
    * Отрисовка
    *
-   * @param {boolean} layers Перерисовка слоёв
+   * @param {boolean} pLayers Перерисовка слоёв
    */
-  redraw(layers) {
+  redraw(pLayers) {
     /**
      * @param {object} item current object
      * @param {string} body body selector
@@ -650,33 +648,23 @@ export default class TemplateView extends JetView {
       const dock = $$("dock").getValue() - 1;
       const hidden = item.parent().attr("hidden");
       object.find(body).append(item);
-      if (dock) {
-        switch (fixed) {
-          case 1:
-            item.wrap('<div data-absolute class="ui fluid container">');
-            break;
-          case 2:
-            item.wrap('<div data-fixed class="ui fluid container">');
-            break;
-          case 3:
-            item.wrap('<div data-static class="ui fluid container">');
-            break;
-          default:
-        }
-      } else {
-        switch (fixed) {
-          case 1:
-            item.wrap('<div data-absolute class="ui container">');
-            break;
-          case 2:
-            item.wrap('<div data-fixed class="ui container">');
-            break;
-          case 3:
-            item.wrap('<div data-static class="ui container">');
-            break;
-          default:
-        }
+      const wrapper = $("<div/>").addClass(
+        "flex flex-auto flex-col inset-0 pointer-events-none"
+      );
+      if (!dock) wrapper.addClass("container mx-auto");
+      switch (fixed) {
+        case 1:
+          wrapper.addClass("absolute");
+          break;
+        case 2:
+          wrapper.addClass("fixed");
+          break;
+        case 3:
+          wrapper.addClass("static");
+          break;
+        default:
       }
+      item.wrap(wrapper);
       item.parent().attr("hidden", hidden);
       object.find(`${body}>div:not([id]):empty`).remove();
       const marginLeft = $$("marginLeft").getValue();
@@ -852,9 +840,7 @@ export default class TemplateView extends JetView {
               .data(
                 value.data
                   .toLowerCase()
-                  .replace(/-([a-z])/g, function valueDataToUpperCase(g) {
-                    return g[1].toUpperCase();
-                  }),
+                  .replace(/-([a-z])/g, (g) => g[1].toUpperCase()),
                 value.value
               )
               .attr(`data-${value.data.toLowerCase()}`, value.value);
@@ -870,7 +856,7 @@ export default class TemplateView extends JetView {
       const fabricDocument = $($$("fabric").getIframe()).contents();
       const item = $$("layers").getSelectedItem();
       if (item) {
-        if (!layers) {
+        if (!pLayers) {
           this.redo = [];
           this.undo.push([
             this.body.find("#kosmos3:first").html(),
@@ -1202,9 +1188,9 @@ export default class TemplateView extends JetView {
      * @returns {number} Режим объекта
      */
     function getMode(item) {
-      if (item.parent("div[data-absolute]:not([id])").parent("#kosmos3").length)
+      if (item.parent(".absolute, [data-absolute]").parent("#kosmos3").length)
         return 1;
-      if (item.parent("div[data-fixed]:not([id])").parent("#kosmos3").length)
+      if (item.parent(".fixed, [data-fixed]").parent("#kosmos3").length)
         return 2;
       return 3;
     }
@@ -1224,9 +1210,7 @@ export default class TemplateView extends JetView {
         $$("ace-template").$scope.setValue(item.html());
       }
       $$("mode").setValue(getMode(item));
-      $$("dock").setValue(
-        !item.parent("div.container:not(.fluid):not([id])").length + 1
-      );
+      $$("dock").setValue(!item.parent(".container:not(.fluid)").length + 1);
       $$("angle").setValue(
         ((item.attr("style") || "").match(/rotate\(-?\d+deg\)/g) || [""])[0]
           .replace("rotate(", "")
@@ -1438,12 +1422,8 @@ export default class TemplateView extends JetView {
         boxShadow = boxShadow.split(/,(?![^(]*\))/);
         boxShadow.forEach((element) => {
           const cur = element.trim().split(/ (?![^(]*\))/g);
-          const boxShadowGeom = cur.filter((val) => {
-            return val.match(/^-?\d+/);
-          });
-          const boxShadowParams = cur.filter((val) => {
-            return !val.match(/^-?\d+/);
-          });
+          const boxShadowGeom = cur.filter((val) => val.match(/^-?\d+/));
+          const boxShadowParams = cur.filter((val) => !val.match(/^-?\d+/));
           let inset = null;
           let color = null;
           const [boxShadowParams0, boxShadowParams1] = boxShadowParams;
