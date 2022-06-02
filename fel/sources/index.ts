@@ -34,7 +34,6 @@ import "aos/dist/aos.css";
 import "lightslider/dist/css/lightslider.css";
 import "jarallax/dist/jarallax.css";
 import "fomantic-ui-css/semantic.css";
-import "tailwindcss/dist/tailwind.css";
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 import "./styles/index.css";
