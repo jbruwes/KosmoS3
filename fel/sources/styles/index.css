@@ -18,7 +18,8 @@ p:empty:before {
   }
 }
 
-.free.container {
+.free.container,
+.v-container--free {
   width: 100vw !important;
   max-width: none;
   position: relative;
@@ -44,10 +45,8 @@ p:empty:before {
   position: fixed;
 }
 
-#kosmos3 > [data-relative],
-#kosmos3 > [data-static],
-#kosmos3 > [data-absolute],
-#kosmos3 > [data-fixed] {
+#kosmos3,
+#kosmos3 > div {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -58,21 +57,14 @@ p:empty:before {
   pointer-events: none;
 }
 
-#kosmos3 > .relative > [id],
-#kosmos3 > .static > [id],
-#kosmos3 > .absolute > [id],
-#kosmos3 > .fixed > [id],
-#kosmos3 > [data-relative] > [id],
-#kosmos3 > [data-static] > [id],
-#kosmos3 > [data-absolute] > [id],
-#kosmos3 > [data-fixed] > [id] {
+#kosmos3 > div > div {
   position: relative;
   pointer-events: auto;
   margin: auto;
 }
 
-#kosmos3 > .absolute > #content,
-#kosmos3 > .fixed > #content,
+#kosmos3 > .position-absolute > #content,
+#kosmos3 > .position-fixed > #content,
 #kosmos3 > [data-absolute] > #content,
 #kosmos3 > [data-fixed] > #content {
   overflow-y: auto;
