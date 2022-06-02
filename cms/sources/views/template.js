@@ -6,9 +6,9 @@ import DOMPurify from "dompurify";
 import "../fabricjs";
 
 const containers =
-  "#kosmos3:first>.fixed,#kosmos3:first>.absolute,#kosmos3:first>.static, #kosmos3:first>div[data-fixed],#kosmos3:first>div[data-absolute],#kosmos3:first>div[data-static]";
+  "#kosmos3:first>.position-fixed,#kosmos3:first>.position-absolute,#kosmos3:first>.position-static, #kosmos3:first>div[data-fixed],#kosmos3:first>div[data-absolute],#kosmos3:first>div[data-static]";
 const layers =
-  "#kosmos3:first>.fixed>div[id],#kosmos3:first>.absolute>div[id],#kosmos3:first>.static>div[id] ,#kosmos3:first>div[data-fixed]>div[id],#kosmos3:first>div[data-absolute]>div[id],#kosmos3:first>div[data-static]>div[id]";
+  "#kosmos3:first>.position-fixed>div[id],#kosmos3:first>.position-absolute>div[id],#kosmos3:first>.position-static>div[id] ,#kosmos3:first>div[data-fixed]>div[id],#kosmos3:first>div[data-absolute]>div[id],#kosmos3:first>div[data-static]>div[id]";
 
 /**
  * Класс редактора шаблона
@@ -347,9 +347,9 @@ export default class TemplateView extends JetView {
      * @returns {number} Режим объекта
      */
     function getMode(item) {
-      if (item.parent(".absolute, [data-absolute]").parent("#kosmos3").length)
+      if (item.parent(".position-absolute, [data-absolute]").parent("#kosmos3").length)
         return 1;
-      if (item.parent(".fixed, [data-fixed]").parent("#kosmos3").length)
+      if (item.parent(".position-fixed, [data-fixed]").parent("#kosmos3").length)
         return 2;
       return 3;
     }
@@ -387,7 +387,7 @@ export default class TemplateView extends JetView {
       if (o.length) o.empty().append("<article></article>");
       else
         kosmos3.append(
-          '<div class="container mx-auto static flex flex-auto flex-col inset-0 pointer-events-none"><div id="content"><article></article></div></div>'
+          '<div class="v-container py-0 position-static"><div id="content"><article></article></div></div>'
         );
       this.body = $("<div/>").append(kosmos3);
       kosmos3 = $("<div/>")
@@ -648,19 +648,18 @@ export default class TemplateView extends JetView {
       const dock = $$("dock").getValue() - 1;
       const hidden = item.parent().attr("hidden");
       object.find(body).append(item);
-      const wrapper = $("<div/>").addClass(
-        "flex flex-auto flex-col inset-0 pointer-events-none"
-      );
-      if (!dock) wrapper.addClass("container mx-auto");
+      const wrapper = $("<div/>").addClass("v-container");
+      if (dock) wrapper.addClass("v-container--fluid pa-0");
+      else wrapper.addClass("py-0");
       switch (fixed) {
         case 1:
-          wrapper.addClass("absolute");
+          wrapper.addClass("position-absolute");
           break;
         case 2:
-          wrapper.addClass("fixed");
+          wrapper.addClass("position-fixed");
           break;
         case 3:
-          wrapper.addClass("static");
+          wrapper.addClass("position-static");
           break;
         default:
       }
@@ -1188,9 +1187,9 @@ export default class TemplateView extends JetView {
      * @returns {number} Режим объекта
      */
     function getMode(item) {
-      if (item.parent(".absolute, [data-absolute]").parent("#kosmos3").length)
+      if (item.parent(".position-absolute, [data-absolute]").parent("#kosmos3").length)
         return 1;
-      if (item.parent(".fixed, [data-fixed]").parent("#kosmos3").length)
+      if (item.parent(".position-fixed, [data-fixed]").parent("#kosmos3").length)
         return 2;
       return 3;
     }
@@ -1210,7 +1209,7 @@ export default class TemplateView extends JetView {
         $$("ace-template").$scope.setValue(item.html());
       }
       $$("mode").setValue(getMode(item));
-      $$("dock").setValue(!item.parent(".container:not(.fluid)").length + 1);
+      $$("dock").setValue(item.parent(".fluid,.v-container--fluid").length + 1);
       $$("angle").setValue(
         ((item.attr("style") || "").match(/rotate\(-?\d+deg\)/g) || [""])[0]
           .replace("rotate(", "")
