@@ -165,9 +165,12 @@ export default defineComponent({
    * Обработчик по обновлению контента
    */
   updated() {
-    this.GLightbox();
-    this.onhashchange();
-    window.scrollTo(0, 0);
+    this.$nextTick(function () {
+      console.log("updated");
+      this.GLightbox();
+      this.onhashchange();
+      window.scrollTo(0, 0);
+    });
   },
   methods: {
     /**
