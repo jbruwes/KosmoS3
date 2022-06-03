@@ -1,13 +1,11 @@
 {
-  "plugins": ["@babel/plugin-transform-typescript"],
   "presets": [
     [
       "@babel/env",
       {
         "targets": "> 1%, last 2 versions, not dead, not ie 11"
       }
-    ],
-    "@babel/preset-typescript"
+    ]
   ],
   "comments": false,
   "env": {
