@@ -30,20 +30,17 @@
           "FunctionExpression": true
         }
       }
-    ],
-    "vue/no-deprecated-slot-attribute": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    ]
   },
   "plugins": ["jsdoc", "vue"],
   "extends": [
     "airbnb-base",
     "plugin:jsdoc/recommended",
     "plugin:vue/vue3-recommended",
-    "@vue/typescript/recommended",
     "plugin:prettier/recommended"
   ],
   "parserOptions": {
-    "parser": "@typescript-eslint/parser",
+    "parser": "@babel/eslint-parser",
     "sourceType": "module"
   },
   "parser": "vue-eslint-parser"
