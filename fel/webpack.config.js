@@ -14,7 +14,7 @@ const babelSettings = {
 module.exports = {
   mode: "production",
   context: path.resolve(__dirname),
-  entry: { fel: "./sources/index.ts" },
+  entry: { fel: "./sources/index.js" },
   output: {
     path: path.join(__dirname, "../dist"),
     filename: "[contenthash].js",
