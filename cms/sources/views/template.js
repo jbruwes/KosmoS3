@@ -347,9 +347,14 @@ export default class TemplateView extends JetView {
      * @returns {number} Режим объекта
      */
     function getMode(item) {
-      if (item.parent(".position-absolute, [data-absolute]").parent("#kosmos3").length)
+      if (
+        item.parent(".position-absolute, [data-absolute]").parent("#kosmos3")
+          .length
+      )
         return 1;
-      if (item.parent(".position-fixed, [data-fixed]").parent("#kosmos3").length)
+      if (
+        item.parent(".position-fixed, [data-fixed]").parent("#kosmos3").length
+      )
         return 2;
       return 3;
     }
@@ -1187,9 +1192,14 @@ export default class TemplateView extends JetView {
      * @returns {number} Режим объекта
      */
     function getMode(item) {
-      if (item.parent(".position-absolute, [data-absolute]").parent("#kosmos3").length)
+      if (
+        item.parent(".position-absolute, [data-absolute]").parent("#kosmos3")
+          .length
+      )
         return 1;
-      if (item.parent(".position-fixed, [data-fixed]").parent("#kosmos3").length)
+      if (
+        item.parent(".position-fixed, [data-fixed]").parent("#kosmos3").length
+      )
         return 2;
       return 3;
     }
