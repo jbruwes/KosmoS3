@@ -1,9 +1,8 @@
-<script lang="ts">
-import { defineComponent, nextTick } from "vue";
+<script>
+import { nextTick } from "vue";
 import VRuntimeTemplate from "vue3-runtime-template";
 import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
-import type { Context } from "page";
 import jsel from "jsel";
 import AOS from "aos";
 import GLightbox from "glightbox";
@@ -23,19 +22,26 @@ import sidebar from "./modules/sidebar";
 import pagination from "./modules/pagination";
 import parentbutton from "./modules/parentbutton";
 
-export default defineComponent({
+import * as store from "./stores/store.js";
+import * as index2 from "./stores/index.js";
+
+import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
+
+export default {
   name: "App",
   /**
    * Инициализация данных приложения
    *
    * @returns {Data} Объект data
    */
-  data: (): Data => ({
+  data: () => ({
     drawer: false,
     index: undefined,
     urls: undefined,
     content: undefined,
     context: undefined,
+    store,
+    index2,
   }),
   computed: {
     /**
@@ -43,7 +49,7 @@ export default defineComponent({
      *
      * @returns {Promise<HTMLScriptElement>[]} Массив обещаний по зпгрузке пользовательских скриптов
      */
-    scripts(): Promise<HTMLScriptElement>[] | undefined {
+    scripts() {
       return this.urls
         ? [...this.urls, { url: "index.js" }]
             .filter((script) => script.url)
@@ -55,8 +61,8 @@ export default defineComponent({
      *
      * @returns {Branch} Текущий объект для загрузки
      */
-    node(): Branch | undefined {
-      return this.plainIndex.find((e: Branch) =>
+    node() {
+      return this.plainIndex.find((e) =>
         this.context
           ? e.path === this.context.routePath ||
             e.url === this.context.routePath
@@ -68,14 +74,14 @@ export default defineComponent({
      *
      * @returns {Branch[]} Плоский индекс для поиска
      */
-    plainIndex(): Branch[] {
+    plainIndex() {
       const plainIndex = jsel(this.index).selectAll("//*[@id]");
-      plainIndex.forEach((node: Branch) => {
+      plainIndex.forEach((node) => {
         const lNode = node;
         let path = jsel(this.index).selectAll(
           `//*[@id="${lNode.id}"]/ancestor-or-self::*[@id]`
         );
-        path = path.map((e: Branch) => e.value.trim().replace(/\s/g, "_"));
+        path = path.map((e) => e.value.trim().replace(/\s/g, "_"));
         path.shift();
         lNode.path = `/${path.join("/")}`;
         lNode.url = lNode.url
@@ -126,9 +132,7 @@ export default defineComponent({
                 : "",
             ],
           ].forEach((e) => {
-            const element = document.head.querySelector(
-              e[0]
-            ) as HTMLMetaElement;
+            const element = document.head.querySelector(e[0]);
             element.content = e[1] ? e[1].replace(/"/g, "&quot;") : "";
           });
           if (this.content === html) this.content = undefined;
@@ -141,7 +145,7 @@ export default defineComponent({
     index() {
       if (!window.frameElement) {
         page();
-        this.plainIndex.forEach((node: Branch) => {
+        this.plainIndex.forEach((node) => {
           if (node.url) page(node.url, this.route);
           page(node.path, this.route);
         });
@@ -155,17 +159,19 @@ export default defineComponent({
     jarallaxVideo();
     this.GLightbox();
     AOS.init();
-    [this.index, this.urls] = await Promise.all([
+    [[this.index], this.urls] = await Promise.all([
       (await fetch("index.json", { cache: "no-store" })).json(),
       (await fetch("index.cdn.json", { cache: "no-store" })).json(),
     ]);
+    this.store.index = this.index;
+    this.index2 = this.index;
     this.onhashchange("#kosmos3");
   },
   /**
    * Обработчик по обновлению контента
    */
   updated() {
-    this.$nextTick(function () {
+    nextTick(() => {
       console.log("updated");
       this.GLightbox();
       this.onhashchange();
@@ -178,7 +184,7 @@ export default defineComponent({
      *
      * @param {Context} context Объект роутинга
      */
-    route(context: Context) {
+    route(context) {
       this.context = context;
     },
     /**
@@ -186,7 +192,7 @@ export default defineComponent({
      *
      * @param {string} pSel Селектор
      */
-    async onhashchange(pSel: string = "#content") {
+    async onhashchange(pSel = "#content") {
       if (this.index) {
         carousel(this.index, pSel);
         deck(this.index, pSel);
@@ -266,6 +272,7 @@ export default defineComponent({
   },
   components: {
     VRuntimeTemplate,
+    VNavigationDrawerK3,
   },
-});
+};
 </script>
