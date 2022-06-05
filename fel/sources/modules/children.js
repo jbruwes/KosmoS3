@@ -61,7 +61,7 @@ export default function getChildren(
     let lValue = pValue;
     let localHash = [];
     while (lValue.$level > 2) {
-      lValue = jsel(index[0]).select(`//*[@id="${lValue.$parent}"]`);
+      lValue = jsel(index).select(`//*[@id="${lValue.$parent}"]`);
       localHash.unshift(lValue.value.replace(/\s/g, "_"));
     }
     localHash = localHash.join("/");
@@ -119,7 +119,7 @@ export default function getChildren(
       $.merge(
         dataChildren,
         $.map(
-          jsel(index[0]).selectAll(
+          jsel(index).selectAll(
             `/*${
               dataHash
                 ? `/data/*[@value="${dataHash
