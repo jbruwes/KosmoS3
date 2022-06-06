@@ -1,9 +1,9 @@
 <script>
 import { nextTick } from "vue";
+import { storeToRefs } from "pinia";
 import VRuntimeTemplate from "vue3-runtime-template";
 import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
-import jsel from "jsel";
 import AOS from "aos";
 import GLightbox from "glightbox";
 import DOMPurify from "dompurify";
@@ -22,13 +22,18 @@ import sidebar from "./modules/sidebar";
 import pagination from "./modules/pagination";
 import parentbutton from "./modules/parentbutton";
 
-import * as store from "./stores/store.js";
-import * as index2 from "./stores/index.js";
+import defineStore from "./stores/core.js";
 
 import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
 
 export default {
   name: "App",
+  setup() {
+    const core = defineStore();
+    const { index, plainIndex, context, node } = storeToRefs(core);
+    const { initIndex } = core;
+    return { index, plainIndex, context, node, initIndex };
+  },
   /**
    * Инициализация данных приложения
    *
@@ -36,12 +41,8 @@ export default {
    */
   data: () => ({
     drawer: false,
-    index: undefined,
     urls: undefined,
     content: undefined,
-    context: undefined,
-    store,
-    index2,
   }),
   computed: {
     /**
@@ -55,40 +56,6 @@ export default {
             .filter((script) => script.url)
             .map((script) => this.$loadScript(script.url))
         : undefined;
-    },
-    /**
-     * Текущий объект
-     *
-     * @returns {Branch} Текущий объект для загрузки
-     */
-    node() {
-      return this.plainIndex.find((e) =>
-        this.context
-          ? e.path === this.context.routePath ||
-            e.url === this.context.routePath
-          : undefined
-      );
-    },
-    /**
-     * Плоский индекс
-     *
-     * @returns {Branch[]} Плоский индекс для поиска
-     */
-    plainIndex() {
-      const plainIndex = jsel(this.index).selectAll("//*[@id]");
-      plainIndex.forEach((node) => {
-        const lNode = node;
-        let path = jsel(this.index).selectAll(
-          `//*[@id="${lNode.id}"]/ancestor-or-self::*[@id]`
-        );
-        path = path.map((e) => e.value.trim().replace(/\s/g, "_"));
-        path.shift();
-        lNode.path = `/${path.join("/")}`;
-        lNode.url = lNode.url
-          ? `/${lNode.url.trim().replace(/^\/+|\/+$/g, "")}`
-          : "";
-      });
-      return plainIndex;
     },
   },
   watch: {
@@ -144,7 +111,8 @@ export default {
      */
     index() {
       if (!window.frameElement) {
-        page();
+        page.stop();
+        page.start();
         this.plainIndex.forEach((node) => {
           if (node.url) page(node.url, this.route);
           page(node.path, this.route);
@@ -159,12 +127,10 @@ export default {
     jarallaxVideo();
     this.GLightbox();
     AOS.init();
-    [[this.index], this.urls] = await Promise.all([
-      (await fetch("index.json", { cache: "no-store" })).json(),
+    [this.urls] = await Promise.all([
       (await fetch("index.cdn.json", { cache: "no-store" })).json(),
+      await this.initIndex(),
     ]);
-    this.store.index = this.index;
-    this.index2 = this.index;
     this.onhashchange("#kosmos3");
   },
   /**
