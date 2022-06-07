@@ -43,5 +43,14 @@
     "parser": "@babel/eslint-parser",
     "sourceType": "module"
   },
-  "parser": "vue-eslint-parser"
+  "parser": "vue-eslint-parser",
+  "settings": {
+    "import/core-modules": [
+      "vuetify/styles",
+      "vuetify/iconsets/fa",
+      "vuetify/iconsets/mdi",
+      "vuetify/components",
+      "vuetify/directives"
+    ]
+  }
 }
