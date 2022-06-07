@@ -147,7 +147,7 @@ export default class TinymceView extends JetView {
       file_picker_types: "image media file",
       quickbars_insert_toolbar: "template",
       toolbar_mode: "sliding",
-      body_class: "p-2",
+      body_class: "pa-2 ma-0",
       /**
        * Чтобы не сжирались пустые элементы
        *
