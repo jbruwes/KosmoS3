@@ -3,21 +3,27 @@ import jsel from "jsel";
 
 export default defineStore("core", {
   /**
-   * @returns {Object} Переменные состояния
+   * @returns {object} Переменные состояния
    */
   state: () => ({
     index: undefined,
     context: undefined,
   }),
   getters: {
+    /**
+     * @returns {string} Основной заголовок
+     */
     mainTitle() {
       if (this.index)
         return this.index.title ? this.index.title : this.index.value;
-      else return "";
+      return "";
     },
+    /**
+     * @returns {string} Основное описание
+     */
     mainDescription() {
       if (this.index) return this.index.description;
-      else return "";
+      return "";
     },
     /**
      * Плоский индекс
