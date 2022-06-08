@@ -6,25 +6,33 @@ export default defineStore("core", {
    * @returns {object} Переменные состояния
    */
   state: () => ({
-    index: undefined,
+    index: {
+      yandex: "",
+      google: "",
+      metrika: "",
+      analytics: "",
+      value: "",
+      id: "",
+      visible: true,
+      date: "",
+      image: "",
+      $count: 0,
+      $parent: 0,
+      $level: 1,
+      open: true,
+      lastmod: "",
+      changefreq: "",
+      priority: "",
+      description: "",
+      keywords: "",
+      url: "",
+      title: "",
+      icon: "",
+      data: [],
+    },
     context: undefined,
   }),
   getters: {
-    /**
-     * @returns {string} Основной заголовок
-     */
-    mainTitle() {
-      if (this.index)
-        return this.index.title ? this.index.title : this.index.value;
-      return "";
-    },
-    /**
-     * @returns {string} Основное описание
-     */
-    mainDescription() {
-      if (this.index) return this.index.description;
-      return "";
-    },
     /**
      * Плоский индекс
      *
