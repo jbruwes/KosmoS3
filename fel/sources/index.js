@@ -85,7 +85,6 @@ import "fomantic-ui-css/components/toast.css";
 import "fomantic-ui-css/components/transition.css";
 
 import "@mdi/font/css/materialdesignicons.css";
-import '@fortawesome/fontawesome-free/css/all.css'
 import "vuetify/styles";
 import "./styles/index.css";
 
@@ -95,8 +94,6 @@ import "lightslider";
 import "pure";
 
 import { createApp } from "vue";
-import { fa } from "vuetify/iconsets/fa";
-import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { createVuetify } from "vuetify";
 import { createPinia } from "pinia";
 
@@ -121,14 +118,6 @@ const app = createApp(App);
 const vuetify = createVuetify({
   components,
   directives,
-  icons: {
-    defaultSet: "mdi",
-    aliases,
-    sets: {
-      fa,
-      mdi,
-    },
-  },
 });
 app.use(vuetify);
 app.use(LoadScript);
