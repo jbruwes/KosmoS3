@@ -73,7 +73,7 @@
     "webpack-dev-server": "^4.9.2"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.105.0",
+    "@aws-sdk/client-s3": "^3.107.0",
     "@fontsource/arsenal": "^4.5.7",
     "@fontsource/bad-script": "^4.5.7",
     "@fontsource/caveat": "^4.5.7",
@@ -106,7 +106,7 @@
     "aos": "^2.3.4",
     "core-js": "^3.22.8",
     "dompurify": "^2.3.8",
-    "electron": "^18.3.2",
+    "electron": "^18.3.3",
     "electron-serve": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "fabric": "^5.2.1",
