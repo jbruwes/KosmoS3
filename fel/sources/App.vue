@@ -41,6 +41,7 @@ export default {
    */
   data: () => ({
     drawer: false,
+    subdrawer: false,
     urls: undefined,
     content: undefined,
   }),
@@ -80,7 +81,7 @@ export default {
           document.title = (
             this.node.title ? this.node.title : this.node.value
           ).replace(/"/g, "&quot;");
-          const lUrl = this.node.url || this.node.path;
+          const lUrl = this.node.href || this.node.path;
           [
             ['meta[name="description"]', this.node.description],
             ['meta[name="keywords"]', this.node.keywords],
@@ -89,7 +90,7 @@ export default {
             [
               'meta[property="og:url"]',
               `${window.location.origin}${
-                lUrl === "/" ? "" : `${encodeURI(lUrl)}/`
+                lUrl === "/" ? "" : `${encodeURI(lUrl)}`
               }`,
             ],
             [
@@ -104,6 +105,11 @@ export default {
           });
           if (this.content === html) this.content = undefined;
           this.content = html;
+          nextTick(() => {
+            this.GLightbox();
+            this.onhashchange();
+            window.scrollTo(0, 0);
+          });
         }
     },
     /**
@@ -114,7 +120,7 @@ export default {
         page.stop();
         page.start();
         this.plainIndex.forEach((node) => {
-          if (node.url) page(node.url, this.route);
+          if (node.href) page(node.href, this.route);
           page(node.path, this.route);
         });
       }
@@ -132,17 +138,6 @@ export default {
       await this.initIndex(),
     ]);
     this.onhashchange("#kosmos3");
-  },
-  /**
-   * Обработчик по обновлению контента
-   */
-  updated() {
-    nextTick(() => {
-      console.log("updated");
-      this.GLightbox();
-      this.onhashchange();
-      window.scrollTo(0, 0);
-    });
   },
   methods: {
     /**
