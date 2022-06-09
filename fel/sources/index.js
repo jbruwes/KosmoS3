@@ -115,6 +115,7 @@ document.addEventListener("click", (event) => {
 });
 
 const app = createApp(App);
+app.config.globalProperties.window = window;
 const vuetify = createVuetify({
   components,
   directives,
