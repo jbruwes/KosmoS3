@@ -28,20 +28,30 @@
   <body>
     <div id="app">
       <v-app>
-        <v-navigation-drawer-k3 v-model="drawer"> </v-navigation-drawer-k3>
+        <v-navigation-drawer-k3 v-model="drawer"> </v-navigation-drawer-k3
+        ><v-navigation-drawer-k3 v-model="subdrawer" location="right">
+        </v-navigation-drawer-k3>
         <v-app-bar app hide-on-scroll>
           <v-app-bar-nav-icon
             @click.stop="drawer = !drawer"
           ></v-app-bar-nav-icon>
           <v-toolbar-title>{{ title }}</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn variant="text" icon="mdi-dots-vertical"></v-btn>
+          <v-btn
+            icon="mdi-dots-vertical"
+            @click.stop="subdrawer = !subdrawer"
+          ></v-btn>
         </v-app-bar>
         <v-main>
           <v-container fluid class="pa-0"
             ><div id="kosmos3">{{ kosmos3 }}</div></v-container
-          >
-        </v-main>
+          > </v-main
+        ><v-bottom-navigation
+          app
+          hide-on-scroll
+          density="compact"
+        ></v-bottom-navigation
+        >>
       </v-app>
     </div>
     <script id="yandex">
