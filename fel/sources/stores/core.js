@@ -42,15 +42,22 @@ export default defineStore("core", {
       const plainIndex = jsel(this.index).selectAll("//*[@id]");
       plainIndex.forEach((node) => {
         const lNode = node;
-        let path = jsel(this.index).selectAll(
+        lNode.path = jsel(this.index).selectAll(
           `//*[@id="${lNode.id}"]/ancestor-or-self::*[@id]`
         );
-        path = path.map((e) => e.value.trim().replace(/\s/g, "_"));
-        path.shift();
-        lNode.path = `/${path.join("/")}`;
-        lNode.url = lNode.url
-          ? `/${lNode.url.trim().replace(/^\/+|\/+$/g, "")}`
+        lNode.path = lNode.path.map((e) =>
+          e.value.trim().replace(/\s/g, "_").replace(/\//g, "")
+        );
+        lNode.path.shift();
+        lNode.path = lNode.path.join("/");
+        lNode.path = lNode.path ? `/${lNode.path}/` : "/";
+        lNode.href = lNode.url
+          ? lNode.url
+              .trim()
+              .replace(/\s/g, "_")
+              .replace(/^\/+|\/+$/g, "")
           : "";
+        lNode.href = lNode.href ? `/${lNode.href}/` : "";
       });
       return plainIndex;
     },
@@ -63,7 +70,7 @@ export default defineStore("core", {
       return this.plainIndex.find((e) =>
         this.context
           ? e.path === this.context.routePath ||
-            e.url === this.context.routePath
+            e.href === this.context.routePath
           : undefined
       );
     },
