@@ -20,14 +20,14 @@ import defineStore from "../stores/core.js";
 export default {
   setup() {
     const core = defineStore();
-    const { index, siblings, routePath } = storeToRefs(core);
+    const { data, siblings, routePath } = storeToRefs(core);
     const { href, title } = core;
-    return { index, siblings, routePath, href, title };
+    return { data, siblings, routePath, href, title };
   },
   computed: {
     items() {
       return !this.routePath || this.routePath === "/"
-        ? this.index.data
+        ? this.data
         : this.siblings;
     },
   },
