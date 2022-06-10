@@ -74,6 +74,24 @@ export default defineStore("core", {
           : undefined
       );
     },
+    /**
+     * Объекты одного уровня с текущим
+     *
+     * @returns {object[]} Массив объектов
+     */
+    siblings() {
+      return jsel(this.index).selectAll(
+        `//*[@id="${this.node.id}"]/preceding-sibling::*[@id]|//*[@id="${this.node.id}"]|//*[@id="${this.node.id}"]/following-sibling::*[@id]`
+      );
+    },
+    /**
+     * Вычисление текущего пути
+     *
+     * @returns {string} Путь
+     */
+    routePath() {
+      return this.context ? this.context.routePath : "";
+    },
   },
   actions: {
     /**
@@ -84,5 +102,19 @@ export default defineStore("core", {
         await fetch("index.json", { cache: "no-store" })
       ).json();
     },
+    /**
+     * Вычисленние пути
+     *
+     * @param {object} item Объект вычисления
+     * @returns {string} Путь
+     */
+    href: (item) => (item.href ? item.href : item.path),
+    /**
+     * Вычисление заголовка
+     *
+     * @param {object} item Объект вычисления
+     * @returns {string} Заголовок
+     */
+    title: (item) => (item.title ? item.title : item.value),
   },
 });
