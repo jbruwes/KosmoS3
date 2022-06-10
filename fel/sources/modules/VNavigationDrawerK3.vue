@@ -2,16 +2,16 @@
   <v-navigation-drawer app temporary>
     <v-list>
       <v-list-item
-        :prepend-icon="`mdi-${index.icon}`"
-        :title="title(index)"
-        :subtitle="index.description"
+        :prepend-icon="`mdi-${icon}`"
+        :title="index ? title(index) : ''"
+        :subtitle="description"
         href="/"
       >
       </v-list-item
     ></v-list>
     <v-divider></v-divider>
     <v-list nav>
-      <template v-for="(item, i) in index.data" :key="i" :value="item">
+      <template v-for="(item, i) in data" :key="i" :value="item">
         <v-list-item
           v-if="item.visible"
           :prepend-icon="`mdi-${item.icon}`"
@@ -32,9 +32,9 @@ import defineStore from "../stores/core.js";
 export default {
   setup() {
     const core = defineStore();
-    const { index, routePath } = storeToRefs(core);
+    const { index, data, icon, description, routePath } = storeToRefs(core);
     const { href, title } = core;
-    return { index, routePath, href, title };
+    return { index, data, icon, description, routePath, href, title };
   },
 };
 </script>
