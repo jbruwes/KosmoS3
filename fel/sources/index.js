@@ -34,6 +34,9 @@ import "aos/dist/aos.css";
 import "lightslider/dist/css/lightslider.css";
 import "jarallax/dist/jarallax.css";
 
+import "fomantic-ui-css/semantic.css";
+
+/*
 import "fomantic-ui-css/components/accordion.css";
 import "fomantic-ui-css/components/ad.css";
 import "fomantic-ui-css/components/breadcrumb.css";
@@ -83,6 +86,7 @@ import "fomantic-ui-css/components/table.css";
 import "fomantic-ui-css/components/text.css";
 import "fomantic-ui-css/components/toast.css";
 import "fomantic-ui-css/components/transition.css";
+*/
 
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
@@ -115,7 +119,6 @@ document.addEventListener("click", (event) => {
 });
 
 const app = createApp(App);
-app.config.globalProperties.window = window;
 const vuetify = createVuetify({
   components,
   directives,
