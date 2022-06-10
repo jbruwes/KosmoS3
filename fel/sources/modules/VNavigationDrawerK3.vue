@@ -18,7 +18,7 @@
           :title="title(item)"
           :subtitle="item.description"
           :href="href(item)"
-          :active="href(item) === decodeURI(window.location.pathname)"
+          :active="href(item) === routePath"
           active-color="primary"
         >
         </v-list-item
@@ -32,15 +32,9 @@ import defineStore from "../stores/core.js";
 export default {
   setup() {
     const core = defineStore();
-    const { index } = storeToRefs(core);
-    return { index };
-  },
-  data: () => ({
-    selectedItem: 0,
-  }),
-  methods: {
-    href: (item) => (item.href ? item.href : item.path),
-    title: (item) => (item.title ? item.title : item.value),
+    const { index, routePath } = storeToRefs(core);
+    const { href, title } = core;
+    return { index, routePath, href, title };
   },
 };
 </script>
