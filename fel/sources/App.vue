@@ -24,6 +24,7 @@ import parentbutton from "./modules/parentbutton";
 
 import defineStore from "./stores/core.js";
 
+import VMenuK3 from "./modules/VMenuK3.vue";
 import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
 
 export default {
@@ -32,7 +33,13 @@ export default {
     const core = defineStore();
     const { index, plainIndex, context, node } = storeToRefs(core);
     const { initIndex } = core;
-    return { index, plainIndex, context, node, initIndex };
+    return {
+      index,
+      plainIndex,
+      context,
+      node,
+      initIndex,
+    };
   },
   /**
    * Инициализация данных приложения
@@ -41,7 +48,6 @@ export default {
    */
   data: () => ({
     drawer: false,
-    subdrawer: false,
     urls: undefined,
     content: undefined,
   }),
@@ -233,6 +239,7 @@ export default {
   },
   components: {
     VRuntimeTemplate,
+    VMenuK3,
     VNavigationDrawerK3,
   },
 };
