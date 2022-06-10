@@ -6,30 +6,7 @@ export default defineStore("core", {
    * @returns {object} Переменные состояния
    */
   state: () => ({
-    index: {
-      yandex: "",
-      google: "",
-      metrika: "",
-      analytics: "",
-      value: "",
-      id: "",
-      visible: true,
-      date: "",
-      image: "",
-      $count: 0,
-      $parent: 0,
-      $level: 1,
-      open: true,
-      lastmod: "",
-      changefreq: "",
-      priority: "",
-      description: "",
-      keywords: "",
-      url: "",
-      title: "",
-      icon: "",
-      data: [],
-    },
+    index: undefined,
     context: undefined,
   }),
   getters: {
@@ -91,6 +68,30 @@ export default defineStore("core", {
      */
     routePath() {
       return this.context ? this.context.routePath : "";
+    },
+    /**
+     * Вычисление массива первого уровня
+     *
+     * @returns {object[]} Массив объектов первого уровня
+     */
+    data() {
+      return this.index ? this.index.data : [];
+    },
+    /**
+     * Вычисление основной иконки
+     *
+     * @returns {string} Иконка
+     */
+    icon() {
+      return this.index ? this.index.icon : "";
+    },
+    /**
+     * Вычисление основного описания
+     *
+     * @returns {string} Описание
+     */
+    description() {
+      return this.index ? this.index.description : "";
     },
   },
   actions: {
