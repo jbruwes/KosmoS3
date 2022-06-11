@@ -134,6 +134,7 @@ export default class TreeView extends JetView {
             {
               ADD_TAGS: ["iframe"],
               ADD_ATTR: [
+                "target",
                 "allow",
                 "allowfullscreen",
                 "frameborder",
