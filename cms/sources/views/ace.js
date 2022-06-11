@@ -59,7 +59,7 @@ export default class AceView extends JetView {
         () => {
           this.#timeoutId.pop();
           if (!this.#timeoutId.length)
-            $$("tinymce").setValue(DOMPurify.sanitize(this.#editor.getValue()));
+            $$("tinymce").setValue(this.#editor.getValue());
         },
         this,
         [],
