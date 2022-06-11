@@ -101,7 +101,6 @@ export default defineComponent({
           html =
             response.status === 200
               ? DOMPurify.sanitize(await response.text(), {
-                  SAFE_FOR_TEMPLATES: true,
                   ADD_TAGS: ["iframe"],
                   ADD_ATTR: [
                     "allow",
