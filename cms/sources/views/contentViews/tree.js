@@ -129,7 +129,19 @@ export default class TreeView extends JetView {
         }
         this.getParentView().lockProperties = false;
         try {
-          result = DOMPurify.sanitize(await this.app.io.getObject(`${id}.htm`));
+          result = DOMPurify.sanitize(
+            await this.app.io.getObject(`${id}.htm`),
+            {
+              SAFE_FOR_TEMPLATES: true,
+              ADD_TAGS: ["iframe"],
+              ADD_ATTR: [
+                "allow",
+                "allowfullscreen",
+                "frameborder",
+                "scrolling",
+              ],
+            }
+          );
         } catch (err) {
           result =
             '<div class="ui fluid placeholder"><div class="image header"><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div><div class="paragraph"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div></div>';
