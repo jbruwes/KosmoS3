@@ -233,7 +233,7 @@ export default class TemplateView extends JetView {
                   switch ($$("tabbar").getValue()) {
                     case "ace-template":
                       $$("ace-template").$scope.setValue(
-                        DOMPurify.sanitize($$("tinymce").getValue())
+                        $$("tinymce").getValue()
                       );
                       break;
                     case "fabricCnt":
@@ -386,7 +386,18 @@ export default class TemplateView extends JetView {
       this.body = $("<div/>").append(
         $("<div/>")
           .attr("id", "body")
-          .html(await this.app.io.getObject("index.htm"))
+          .html(
+            DOMPurify.sanitize(await this.app.io.getObject("index.htm"), {
+              SAFE_FOR_TEMPLATES: true,
+              ADD_TAGS: ["iframe"],
+              ADD_ATTR: [
+                "allow",
+                "allowfullscreen",
+                "frameborder",
+                "scrolling",
+              ],
+            })
+          )
       );
       let pusher = this.body.find("#body:first>.pusher");
       if (!pusher.length)
@@ -919,7 +930,7 @@ export default class TemplateView extends JetView {
     const fabricDocument = $($$("fabric").getIframe()).contents();
     const item = $$("layers").getSelectedItem();
     if (item) {
-      const html = DOMPurify.sanitize($$("tinymce").getValue());
+      const html = $$("tinymce").getValue();
       this.body.find(`#${item.value}`).html(html);
       fabricDocument.find(`#${item.value}`).html(html);
       this.save2();
@@ -931,7 +942,15 @@ export default class TemplateView extends JetView {
    */
   async save2() {
     try {
-      await this.app.io.putObject("index.htm", "text/html", this.genHtml());
+      await this.app.io.putObject(
+        "index.htm",
+        "text/html",
+        DOMPurify.sanitize(this.genHtml(), {
+          SAFE_FOR_TEMPLATES: true,
+          ADD_TAGS: ["iframe"],
+          ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
+        })
+      );
       webix.message("Template save complete");
       if (this.siteWorker) this.siteWorker.terminate();
       this.siteWorker = new Worker(
@@ -1234,7 +1253,7 @@ export default class TemplateView extends JetView {
         $$("ace-template").$scope.setValue("");
       } else {
         $$("tinymce").enable();
-        $$("tinymce").$scope.setValue(DOMPurify.sanitize(item.html()));
+        $$("tinymce").$scope.setValue(item.html());
         $$("ace-template").enable();
         $$("ace-template").$scope.setValue(item.html());
       }
