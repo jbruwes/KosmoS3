@@ -390,7 +390,13 @@ export default class TemplateView extends JetView {
         .html(
           DOMPurify.sanitize(await this.app.io.getObject("index.htm"), {
             ADD_TAGS: ["iframe"],
-            ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
+            ADD_ATTR: [
+              "target",
+              "allow",
+              "allowfullscreen",
+              "frameborder",
+              "scrolling",
+            ],
           })
         );
       const o = kosmos3.find("#content");
@@ -916,7 +922,13 @@ export default class TemplateView extends JetView {
         "text/html",
         DOMPurify.sanitize(this.genHtml(), {
           ADD_TAGS: ["iframe"],
-          ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
+          ADD_ATTR: [
+            "target",
+            "allow",
+            "allowfullscreen",
+            "frameborder",
+            "scrolling",
+          ],
         })
       );
       webix.message("Template save complete");
