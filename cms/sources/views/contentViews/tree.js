@@ -132,7 +132,6 @@ export default class TreeView extends JetView {
           result = DOMPurify.sanitize(
             await this.app.io.getObject(`${id}.htm`),
             {
-              SAFE_FOR_TEMPLATES: true,
               ADD_TAGS: ["iframe"],
               ADD_ATTR: [
                 "allow",
