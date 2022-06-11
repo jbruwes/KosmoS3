@@ -86,7 +86,7 @@ export default class ContentView extends JetView {
                   onChange: () => {
                     if ($$("tabbar").getValue() === "ace-content")
                       $$("ace-content").$scope.setValue(
-                        DOMPurify.sanitize($$("tinymce").getValue())
+                        $$("tinymce").getValue()
                       );
                   },
                 },
@@ -157,7 +157,11 @@ export default class ContentView extends JetView {
       await this.app.io.putObject(
         `${$$("tree").getSelectedId()}.htm`,
         "text/html",
-        DOMPurify.sanitize($$("tinymce").getValue())
+        DOMPurify.sanitize($$("tinymce").getValue(), {
+          SAFE_FOR_TEMPLATES: true,
+          ADD_TAGS: ["iframe"],
+          ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
+        })
       );
       if (this.app) webix.message("Content save complete");
       const pageWorker = new Worker(
