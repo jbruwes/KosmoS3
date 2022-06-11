@@ -1,6 +1,5 @@
 import { JetView } from "webix-jet";
 import * as webix from "webix/webix.min";
-import DOMPurify from "dompurify";
 import "../ace";
 
 /**
