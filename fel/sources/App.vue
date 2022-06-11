@@ -84,6 +84,7 @@ export default {
               ? DOMPurify.sanitize(await response.text(), {
                   ADD_TAGS: ["iframe"],
                   ADD_ATTR: [
+                    "target",
                     "allow",
                     "allowfullscreen",
                     "frameborder",
