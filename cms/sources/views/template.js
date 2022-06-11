@@ -386,18 +386,7 @@ export default class TemplateView extends JetView {
       this.body = $("<div/>").append(
         $("<div/>")
           .attr("id", "body")
-          .html(
-            DOMPurify.sanitize(await this.app.io.getObject("index.htm"), {
-              SAFE_FOR_TEMPLATES: true,
-              ADD_TAGS: ["iframe"],
-              ADD_ATTR: [
-                "allow",
-                "allowfullscreen",
-                "frameborder",
-                "scrolling",
-              ],
-            })
-          )
+          .html(await this.app.io.getObject("index.htm"))
       );
       let pusher = this.body.find("#body:first>.pusher");
       if (!pusher.length)
@@ -942,15 +931,7 @@ export default class TemplateView extends JetView {
    */
   async save2() {
     try {
-      await this.app.io.putObject(
-        "index.htm",
-        "text/html",
-        DOMPurify.sanitize(this.genHtml(), {
-          SAFE_FOR_TEMPLATES: true,
-          ADD_TAGS: ["iframe"],
-          ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
-        })
-      );
+      await this.app.io.putObject("index.htm", "text/html", this.genHtml());
       webix.message("Template save complete");
       if (this.siteWorker) this.siteWorker.terminate();
       this.siteWorker = new Worker(
