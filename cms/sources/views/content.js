@@ -159,7 +159,13 @@ export default class ContentView extends JetView {
         "text/html",
         DOMPurify.sanitize($$("tinymce").getValue(), {
           ADD_TAGS: ["iframe"],
-          ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
+          ADD_ATTR: [
+            "target",
+            "allow",
+            "allowfullscreen",
+            "frameborder",
+            "scrolling",
+          ],
         })
       );
       if (this.app) webix.message("Content save complete");
