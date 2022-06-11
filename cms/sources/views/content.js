@@ -158,7 +158,6 @@ export default class ContentView extends JetView {
         `${$$("tree").getSelectedId()}.htm`,
         "text/html",
         DOMPurify.sanitize($$("tinymce").getValue(), {
-          SAFE_FOR_TEMPLATES: true,
           ADD_TAGS: ["iframe"],
           ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
         })
