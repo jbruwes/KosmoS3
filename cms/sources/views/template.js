@@ -389,7 +389,6 @@ export default class TemplateView extends JetView {
         .attr("id", "kosmos3")
         .html(
           DOMPurify.sanitize(await this.app.io.getObject("index.htm"), {
-            SAFE_FOR_TEMPLATES: true,
             ADD_TAGS: ["iframe"],
             ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
           })
@@ -916,7 +915,6 @@ export default class TemplateView extends JetView {
         "index.htm",
         "text/html",
         DOMPurify.sanitize(this.genHtml(), {
-          SAFE_FOR_TEMPLATES: true,
           ADD_TAGS: ["iframe"],
           ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
         })
