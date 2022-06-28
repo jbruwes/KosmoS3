@@ -3,7 +3,7 @@
     <v-list>
       <v-list-item
         :prepend-icon="`mdi-${icon}`"
-        :title="index ? title(index) : ''"
+        :title="tree ? title(tree) : ''"
         :subtitle="description"
         href="/"
       >
@@ -32,9 +32,9 @@ import defineStore from "../stores/core.js";
 export default {
   setup() {
     const core = defineStore();
-    const { index, data, icon, description, routePath } = storeToRefs(core);
+    const { tree, data, icon, description, routePath } = storeToRefs(core);
     const { href, title } = core;
-    return { index, data, icon, description, routePath, href, title };
+    return { tree, data, icon, description, routePath, href, title };
   },
 };
 </script>
