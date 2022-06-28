@@ -140,6 +140,11 @@ export default class TreeView extends JetView {
                 "frameborder",
                 "scrolling",
               ],
+              CUSTOM_ELEMENT_HANDLING: {
+                tagNameCheck: /^v-/,
+                attributeNameCheck: null,
+                allowCustomizedBuiltInElements: true,
+              },
             }
           );
         } catch (err) {
