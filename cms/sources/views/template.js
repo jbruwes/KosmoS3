@@ -397,6 +397,11 @@ export default class TemplateView extends JetView {
               "frameborder",
               "scrolling",
             ],
+            CUSTOM_ELEMENT_HANDLING: {
+              tagNameCheck: /^v-/,
+              attributeNameCheck: null,
+              allowCustomizedBuiltInElements: true,
+            },
           })
         );
       const o = kosmos3.find("#content");
@@ -929,6 +934,11 @@ export default class TemplateView extends JetView {
             "frameborder",
             "scrolling",
           ],
+          CUSTOM_ELEMENT_HANDLING: {
+            tagNameCheck: /^v-/,
+            attributeNameCheck: null,
+            allowCustomizedBuiltInElements: true,
+          },
         })
       );
       webix.message("Template save complete");
