@@ -166,6 +166,11 @@ export default class ContentView extends JetView {
             "frameborder",
             "scrolling",
           ],
+          CUSTOM_ELEMENT_HANDLING: {
+            tagNameCheck: /^v-/,
+            attributeNameCheck: null,
+            allowCustomizedBuiltInElements: true,
+          },
         })
       );
       if (this.app) webix.message("Content save complete");
