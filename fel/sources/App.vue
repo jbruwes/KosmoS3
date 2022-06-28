@@ -24,6 +24,7 @@ import parentbutton from "./modules/parentbutton";
 
 import defineStore from "./stores/core.js";
 
+import VCardK3 from "./modules/VCardK3.vue";
 import VMenuK3 from "./modules/VMenuK3.vue";
 import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
 
@@ -31,10 +32,10 @@ export default {
   name: "App",
   setup() {
     const core = defineStore();
-    const { index, plainIndex, context, node } = storeToRefs(core);
+    const { tree, plainIndex, context, node } = storeToRefs(core);
     const { initIndex } = core;
     return {
-      index,
+      tree,
       plainIndex,
       context,
       node,
@@ -55,7 +56,7 @@ export default {
     /**
      * Пользовательские скрипты
      *
-     * @returns {Promise<HTMLScriptElement>[]} Массив обещаний по зпгрузке пользовательских скриптов
+     * @returns {Promise<HTMLScriptElement>[]} Массив обещаний по загрузке пользовательских скриптов
      */
     scripts() {
       return this.urls
@@ -90,6 +91,11 @@ export default {
                     "frameborder",
                     "scrolling",
                   ],
+                  CUSTOM_ELEMENT_HANDLING: {
+                    tagNameCheck: /^v-/,
+                    attributeNameCheck: null,
+                    allowCustomizedBuiltInElements: true,
+                  },
                 })
               : "";
         } finally {
@@ -130,7 +136,7 @@ export default {
     /**
      * При изменении индекса создаем роутер
      */
-    index() {
+    tree() {
       if (!window.frameElement) {
         page.stop();
         page.start();
@@ -169,26 +175,26 @@ export default {
      * @param {string} pSel Селектор
      */
     async onhashchange(pSel = "#content") {
-      if (this.index) {
-        carousel(this.index, pSel);
-        deck(this.index, pSel);
-        cardgrid(this.index, pSel);
-        card(this.index, pSel);
-        list(this.index, pSel);
-        header(this.index, pSel);
-        pageheader(this.index, pSel);
-        doubleheader(this.index, pSel);
-        icongrid(this.index, pSel);
-        breadcrumbs(this.index, pSel);
-        pagination(this.index, pSel);
-        parentbutton(this.index, pSel);
-        sidebar(this.index);
-        menu(this.index, pSel);
+      if (this.tree) {
+        carousel(this.tree, pSel);
+        deck(this.tree, pSel);
+        cardgrid(this.tree, pSel);
+        card(this.tree, pSel);
+        list(this.tree, pSel);
+        header(this.tree, pSel);
+        pageheader(this.tree, pSel);
+        doubleheader(this.tree, pSel);
+        icongrid(this.tree, pSel);
+        breadcrumbs(this.tree, pSel);
+        pagination(this.tree, pSel);
+        parentbutton(this.tree, pSel);
+        sidebar(this.tree);
+        menu(this.tree, pSel);
       }
       this.AOS();
       jarallax(document.querySelectorAll(".jarallax"));
       if (this.scripts) await Promise.allSettled(this.scripts);
-      if (typeof init === "function") init.call(this.index);
+      if (typeof init === "function") init.call(this.tree);
     },
     /**
      * Обновление AOS после загрузки всех картинок на странице
@@ -247,9 +253,10 @@ export default {
     },
   },
   components: {
-    VRuntimeTemplate,
+    VCardK3,
     VMenuK3,
     VNavigationDrawerK3,
+    VRuntimeTemplate,
   },
 };
 </script>
