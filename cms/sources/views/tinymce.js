@@ -148,12 +148,14 @@ export default class TinymceView extends JetView {
       quickbars_insert_toolbar: "template",
       toolbar_mode: "sliding",
       body_class: "pa-2 ma-0",
+      custom_elements: "v-card-k3,template",
       /**
        * Чтобы не сжирались пустые элементы
        *
        *  @see https://www.tiny.cloud/docs-3x/reference/Configuration3x/Configuration3x@valid_elements/#fullxhtmlruleset
        */
       extended_valid_elements:
+        "v-*[*],template[*]" +
         "a[accesskey|charset|class|coords|dir<ltr?rtl|href|hreflang|id|lang|name" +
         "|onblur|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup" +
         "|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|rel|rev" +
