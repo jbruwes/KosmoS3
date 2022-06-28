@@ -51,8 +51,8 @@ export default async function html(pHtml, pIo, pNode) {
   } finally {
     lHtml = lHtml.replace(
       /<article><\/article>/g,
-      `<article v-if="!content">${lHtm}</article><article v-else v-html="content"></article>`
-      // `<article v-if="!content">${lHtm}</article><article v-else><v-runtime-template :template="content"></v-runtime-template></article>`
+      // `<article v-if="!content">${lHtm}</article><article v-else v-html="content"></article>`
+      `<article v-if="!content">${lHtm}</article><article v-else><v-runtime-template :template="content"></v-runtime-template></article>`
     );
     let lUrl = "";
     if (pNode.url) {
