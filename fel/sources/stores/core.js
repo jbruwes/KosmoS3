@@ -6,7 +6,7 @@ export default defineStore("core", {
    * @returns {object} Переменные состояния
    */
   state: () => ({
-    index: undefined,
+    tree: undefined,
     context: undefined,
   }),
   getters: {
@@ -16,10 +16,10 @@ export default defineStore("core", {
      * @returns {object[]} Плоский индекс для поиска
      */
     plainIndex() {
-      const plainIndex = jsel(this.index).selectAll("//*[@id]");
+      const plainIndex = jsel(this.tree).selectAll("//*[@id]");
       plainIndex.forEach((node) => {
         const lNode = node;
-        lNode.path = jsel(this.index).selectAll(
+        lNode.path = jsel(this.tree).selectAll(
           `//*[@id="${lNode.id}"]/ancestor-or-self::*[@id]`
         );
         lNode.path = lNode.path.map((e) =>
@@ -57,7 +57,7 @@ export default defineStore("core", {
      * @returns {object[]} Массив объектов
      */
     siblings() {
-      return jsel(this.index).selectAll(
+      return jsel(this.tree).selectAll(
         `//*[@id="${this.node.id}"]/preceding-sibling::*[@id]|//*[@id="${this.node.id}"]|//*[@id="${this.node.id}"]/following-sibling::*[@id]`
       );
     },
@@ -75,7 +75,7 @@ export default defineStore("core", {
      * @returns {object[]} Массив объектов первого уровня
      */
     data() {
-      return this.index ? this.index.data : [];
+      return this.tree ? this.tree.data : [];
     },
     /**
      * Вычисление основной иконки
@@ -83,7 +83,7 @@ export default defineStore("core", {
      * @returns {string} Иконка
      */
     icon() {
-      return this.index ? this.index.icon : "";
+      return this.tree ? this.tree.icon : "";
     },
     /**
      * Вычисление основного описания
@@ -91,15 +91,15 @@ export default defineStore("core", {
      * @returns {string} Описание
      */
     description() {
-      return this.index ? this.index.description : "";
+      return this.tree ? this.tree.description : "";
     },
   },
   actions: {
     /**
-     * Загрузка данных в index
+     * Загрузка данных в tree
      */
     async initIndex() {
-      [this.index] = await (
+      [this.tree] = await (
         await fetch("index.json", { cache: "no-store" })
       ).json();
     },
