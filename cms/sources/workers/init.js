@@ -63,7 +63,7 @@ onmessage = async ({
         "index.htm",
         "text/html",
         // '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!content"></article><article v-else v-html="content"></article></div></div>'
-        '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!content"></article><article v-else><v-runtime-template :template="content"></v-runtime-template></article></div></div>'
+        '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!content"></article><article v-else><v-runtime-template :parent="this" :template="content"></v-runtime-template></article></div></div>'
       )
     );
   if (put.length)
