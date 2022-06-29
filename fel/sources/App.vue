@@ -32,13 +32,13 @@ export default {
   name: "App",
   setup() {
     const core = defineStore();
-    const { tree, plainIndex, context, node } = storeToRefs(core);
+    const { tree, list, context, item } = storeToRefs(core);
     const { initIndex } = core;
     return {
       tree,
-      plainIndex,
+      list,
       context,
-      node,
+      item,
       initIndex,
     };
   },
@@ -70,12 +70,12 @@ export default {
     /**
      * При изменении текущего объекта загружаем страницу
      */
-    async node() {
+    async item() {
       let html = "";
-      if (this.node)
+      if (this.item)
         try {
           const response = await fetch(
-            `${encodeURIComponent(this.node.id)}.htm`,
+            `${encodeURIComponent(this.item.id)}.htm`,
             {
               cache: "no-store",
             }
@@ -100,14 +100,14 @@ export default {
               : "";
         } finally {
           document.title = (
-            this.node.title ? this.node.title : this.node.value
+            this.item.title ? this.item.title : this.item.value
           ).replace(/"/g, "&quot;");
-          const lUrl = this.node.href || this.node.path;
+          const lUrl = this.item.href || this.item.path;
           [
-            ['meta[name="description"]', this.node.description],
-            ['meta[name="keywords"]', this.node.keywords],
+            ['meta[name="description"]', this.item.description],
+            ['meta[name="keywords"]', this.item.keywords],
             ['meta[property="og:title"]', document.title],
-            ['meta[property="og:description"]', this.node.description],
+            ['meta[property="og:description"]', this.item.description],
             [
               'meta[property="og:url"]',
               `${window.location.origin}${
@@ -116,8 +116,8 @@ export default {
             ],
             [
               'meta[property="og:image"]',
-              this.node.image
-                ? `${window.location.origin}/${this.node.image}`
+              this.item.image
+                ? `${window.location.origin}/${this.item.image}`
                 : "",
             ],
           ].forEach((e) => {
@@ -140,7 +140,7 @@ export default {
       if (!window.frameElement) {
         page.stop();
         page.start();
-        this.plainIndex.forEach((node) => {
+        this.list.forEach((node) => {
           if (node.href) page(node.href, this.route);
           page(node.path, this.route);
         });
