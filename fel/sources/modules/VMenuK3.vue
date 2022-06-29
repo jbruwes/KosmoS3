@@ -8,7 +8,7 @@
         <v-list-subheader
           v-if="item.visible"
           :prepend-icon="`mdi-${item.icon}`"
-          :title="title(item)"
+          :title="getTitle(item)"
         >
         </v-list-subheader></template
     ></v-list>
@@ -20,14 +20,14 @@ import defineStore from "../stores/core.js";
 export default {
   setup() {
     const core = defineStore();
-    const { data, siblings, routePath } = storeToRefs(core);
-    const { href, title } = core;
-    return { data, siblings, routePath, href, title };
+    const { treeChildren, siblings, routePath } = storeToRefs(core);
+    const { getHref, getTitle } = core;
+    return { treeChildren, siblings, routePath, getHref, getTitle };
   },
   computed: {
     items() {
       return !this.routePath || this.routePath === "/"
-        ? this.data
+        ? this.treeChildren
         : this.siblings;
     },
   },
