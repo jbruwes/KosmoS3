@@ -168,7 +168,7 @@ export default class ContentView extends JetView {
           ],
           CUSTOM_ELEMENT_HANDLING: {
             tagNameCheck: /^v-/,
-            attributeNameCheck: null,
+            attributeNameCheck: /\w+/,
             allowCustomizedBuiltInElements: true,
           },
         })
