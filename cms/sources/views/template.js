@@ -399,7 +399,7 @@ export default class TemplateView extends JetView {
             ],
             CUSTOM_ELEMENT_HANDLING: {
               tagNameCheck: /^v-/,
-              attributeNameCheck: null,
+              attributeNameCheck: /\w+/,
               allowCustomizedBuiltInElements: true,
             },
           })
@@ -936,7 +936,7 @@ export default class TemplateView extends JetView {
           ],
           CUSTOM_ELEMENT_HANDLING: {
             tagNameCheck: /^v-/,
-            attributeNameCheck: null,
+            attributeNameCheck: /\w+/,
             allowCustomizedBuiltInElements: true,
           },
         })
