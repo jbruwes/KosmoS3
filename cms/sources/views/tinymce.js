@@ -155,7 +155,7 @@ export default class TinymceView extends JetView {
        *  @see https://www.tiny.cloud/docs-3x/reference/Configuration3x/Configuration3x@valid_elements/#fullxhtmlruleset
        */
       extended_valid_elements:
-        "v-*[*],template[*]" +
+        "v-*[*],template[*]," +
         "a[accesskey|charset|class|coords|dir<ltr?rtl|href|hreflang|id|lang|name" +
         "|onblur|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup" +
         "|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|rel|rev" +
