@@ -21,8 +21,8 @@ export default {
   setup() {
     const core = defineStore();
     const { treeChildren, siblings, routePath } = storeToRefs(core);
-    const { getHref, getTitle } = core;
-    return { treeChildren, siblings, routePath, getHref, getTitle };
+    const { getPath, getTitle } = core;
+    return { treeChildren, siblings, routePath, getPath, getTitle };
   },
   computed: {
     items() {
