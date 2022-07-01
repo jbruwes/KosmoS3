@@ -148,7 +148,6 @@ export default class TinymceView extends JetView {
       quickbars_insert_toolbar: "template",
       toolbar_mode: "sliding",
       body_class: "pa-2 ma-0",
-      custom_elements: "v-card-k3,template",
       /**
        * Чтобы не сжирались пустые элементы
        *
