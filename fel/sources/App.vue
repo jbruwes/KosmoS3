@@ -25,6 +25,7 @@ import parentbutton from "./modules/parentbutton";
 import defineStore from "./stores/core.js";
 
 import VCardK3 from "./modules/VCardK3.vue";
+import VCardSingleK3 from "./modules/VCardSingleK3.vue";
 import VMenuK3 from "./modules/VMenuK3.vue";
 import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
 
@@ -32,14 +33,69 @@ export default {
   name: "App",
   setup() {
     const core = defineStore();
-    const { tree, list, context, item } = storeToRefs(core);
-    const { initIndex } = core;
+    const {
+      tree,
+      context,
+      list,
+      siblings,
+      children,
+      treeChildren,
+      parentChildren,
+      vector,
+      parent,
+      item,
+      title,
+      treeTitle,
+      parentTitle,
+      description,
+      treeDescription,
+      parentDescription,
+      icon,
+      treeIcon,
+      parentIcon,
+      path,
+      treePath,
+      parentPath,
+      image,
+      treeImage,
+      parentImage,
+      routePath,
+    } = storeToRefs(core);
+    const { initIndex, getPath, getTitle, getVector, getParent, getSiblings } =
+      core;
     return {
       tree,
-      list,
       context,
+      list,
+      siblings,
+      children,
+      treeChildren,
+      parentChildren,
+      vector,
+      parent,
       item,
+      title,
+      treeTitle,
+      parentTitle,
+      description,
+      treeDescription,
+      parentDescription,
+      icon,
+      treeIcon,
+      parentIcon,
+      path,
+      treePath,
+      parentPath,
+      image,
+      treeImage,
+      parentImage,
+      routePath,
       initIndex,
+      getPath,
+      getTitle,
+      getVector,
+      getParent,
+      getSiblings,
     };
   },
   /**
@@ -254,6 +310,7 @@ export default {
   },
   components: {
     VCardK3,
+    VCardSingleK3,
     VMenuK3,
     VNavigationDrawerK3,
     VRuntimeTemplate,
