@@ -16,27 +16,27 @@ export default defineStore("core", {
      * @returns {object[]} Плоский индекс для поиска
      */
     list() {
-      let list;
-      if (this.tree) {
-        list = jsel(this.tree).selectAll("//*[@id]");
-        list.forEach((node) => {
-          const lNode = node;
-          lNode.path = this.getVector(lNode).map((e) =>
-            e.value.trim().replace(/\s/g, "_").replace(/\//g, "")
-          );
-          lNode.path.shift();
-          lNode.path = lNode.path.join("/");
-          lNode.path = lNode.path ? `/${lNode.path}/` : "/";
-          lNode.href = lNode.url
-            ? lNode.url
-                .trim()
-                .replace(/\s/g, "_")
-                .replace(/^\/+|\/+$/g, "")
-            : "";
-          lNode.href = lNode.href ? `/${lNode.href}/` : "";
-        });
-      }
-      return list;
+      return this.tree
+        ? jsel(this.tree)
+            .selectAll("//*[@id]")
+            .map((node) => {
+              const lNode = node;
+              lNode.path = this.getVector(lNode).map((e) =>
+                e.value.trim().replace(/\s/g, "_").replace(/\//g, "")
+              );
+              lNode.path.shift();
+              lNode.path = lNode.path.join("/");
+              lNode.path = lNode.path ? `/${lNode.path}/` : "/";
+              lNode.href = lNode.url
+                ? lNode.url
+                    .trim()
+                    .replace(/\s/g, "_")
+                    .replace(/^\/+|\/+$/g, "")
+                : "";
+              lNode.href = lNode.href ? `/${lNode.href}/` : "";
+              return lNode;
+            })
+        : undefined;
     },
     /**
      * Объекты одного уровня с текущим
@@ -179,7 +179,7 @@ export default defineStore("core", {
      * @returns {string} Путь
      */
     path() {
-      return this.item ? this.getHref(this.item) : "";
+      return this.item ? this.getPath(this.item) : "";
     },
     /**
      * Путь дерева
@@ -187,7 +187,7 @@ export default defineStore("core", {
      * @returns {string} Путь
      */
     treePath() {
-      return this.tree ? this.getHref(this.tree) : "";
+      return this.tree ? this.getPath(this.tree) : "";
     },
     /**
      * Путь родительского объекта
@@ -195,7 +195,7 @@ export default defineStore("core", {
      * @returns {string} Путь
      */
     parentPath() {
-      return this.parent ? this.getHref(this.parent) : "";
+      return this.parent ? this.getPath(this.parent) : "";
     },
 
     /**
@@ -246,7 +246,7 @@ export default defineStore("core", {
      * @param {object} item Объект вычисления
      * @returns {string} Путь
      */
-    getHref: (item) => (item.href ? item.href : item.path),
+    getPath: (item) => (item.href ? item.href : item.path),
     /**
      * Вычисление заголовка
      *
@@ -284,6 +284,94 @@ export default defineStore("core", {
       return jsel(this.tree).selectAll(
         `//*[@id="${item.id}"]/preceding-sibling::*[@id]|//*[@id="${item.id}"]|//*[@id="${item.id}"]/following-sibling::*[@id]`
       );
+    },
+    /**
+     * Получение массива дочерних объектов
+     *
+     * @param {(number | boolean)} deep Флаг использования рекурсии
+     *  по дочерним объектам
+     * @param {number} length Количество дочерних объектов для изъятия
+     * @param {(number | boolean)} reveal Флаг указывающий показывать ли
+     *  скрытые объекты
+     * @param {string} sort Флаг указывающий на необходимость
+     *  отсортировать результат
+     * @param {string} path CSV путей до дочерних объектов
+     * @param {(number | boolean)} children Выбирать папки или файлы?
+     * Если путое значение то всё
+     * @param {string} [attr=""] Путь xpath
+     * @param {string} axe Заведует включением параметра xpath axe
+     * @returns {object[]} Массив дочерних объектов
+     */
+    getItems(deep, length, reveal, sort, path, children, attr, axe) {
+      console.log(path);
+      const hash = this.routePath.replace(/^\/+|\/+$/g, "");
+      let lChildren = null;
+      let lAttr = attr ? attr : "";
+      let dataHashes = path ? path.trim() : "";
+      let dataChildren = [];
+      if (!dataHashes) dataHashes = hash;
+      dataHashes = dataHashes.split(",").map((value) =>
+        decodeURIComponent(value.trim())
+          .replace(/_/g, " ")
+          .replace(/\/+/g, "/")
+          .replace(/^\/+|\/+$/g, "")
+      );
+      dataHashes.forEach((dataHash) => {
+        try {
+          if (
+            typeof children === "undefined" ||
+            children === null ||
+            children === ""
+          )
+            lChildren = "";
+          else lChildren = children ? "[*]" : "[not(*)]";
+          $.merge(
+            dataChildren,
+            jsel(this.tree).selectAll(
+              `/*${
+                dataHash
+                  ? `/data/*[@value="${dataHash
+                      .split("/")
+                      .join('"]/data/*[@value="')}"]`
+                  : ""
+              }${lAttr && !axe ? "/data" : ""}${
+                deep && lAttr && !axe ? "/" : ""
+              }${lAttr ? "/" : ""}${axe ? `${axe}::` : ""}${lAttr}${
+                lAttr && !axe && !reveal ? "[@visible=1]" : ""
+              }${lChildren}`
+            )
+          );
+        } catch (e) {
+          // console.log(e.message);
+        }
+      });
+      if (lAttr && !axe) {
+        dataChildren = dataChildren.filter(
+          (element) => element.$href.replace(/^\/+|\/+$/g, "") !== hash
+        );
+      }
+      if (
+        length &&
+        !Number.isNaN(Number(length)) &&
+        length > 0 &&
+        length < dataChildren.length
+      ) {
+        dataChildren = dataChildren.slice(0, length);
+      }
+      switch (sort) {
+        case "random":
+          dataChildren.sort(() => 0.5 - Math.random());
+          break;
+        case "date":
+          dataChildren.sort((a, b) => {
+            if (a.date > b.date) return -1;
+            if (a.date < b.date) return 1;
+            return 0;
+          });
+          break;
+        default:
+      }
+      return dataChildren;
     },
   },
 });
