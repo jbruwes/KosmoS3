@@ -15,6 +15,7 @@
           size="x-large"
           color="white"
           :icon="icon"
+          :href="href"
         ></v-btn>
       </v-overlay>
     </v-card>
@@ -28,6 +29,7 @@ export default {
     text: String,
     icon: String,
     img: String,
+    href: String,
   },
 };
 </script>
