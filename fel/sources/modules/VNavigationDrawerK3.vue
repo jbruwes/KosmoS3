@@ -17,8 +17,8 @@
           :prepend-icon="`mdi-${item.icon}`"
           :title="getTitle(item)"
           :subtitle="item.description"
-          :href="getHref(item)"
-          :active="getHref(item) === routePath"
+          :href="getPath(item)"
+          :active="getPath(item) === routePath"
           active-color="primary"
         >
         </v-list-item
@@ -34,14 +34,14 @@ export default {
     const core = defineStore();
     const { tree, treeChildren, treeIcon, treeDescription, routePath } =
       storeToRefs(core);
-    const { getHref, getTitle } = core;
+    const { getPath, getTitle } = core;
     return {
       tree,
       treeChildren,
       treeIcon,
       treeDescription,
       routePath,
-      getHref,
+      getPath,
       getTitle,
     };
   },
