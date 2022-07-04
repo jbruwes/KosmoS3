@@ -27,23 +27,20 @@
   </v-navigation-drawer>
 </template>
 <script>
-import { storeToRefs } from "pinia";
-import defineStore from "../stores/core.js";
+import { mapState, mapActions } from "pinia";
+import core from "../stores/core.js";
 export default {
-  setup() {
-    const core = defineStore();
-    const { tree, treeChildren, treeIcon, treeDescription, routePath } =
-      storeToRefs(core);
-    const { getPath, getTitle } = core;
-    return {
-      tree,
-      treeChildren,
-      treeIcon,
-      treeDescription,
-      routePath,
-      getPath,
-      getTitle,
-    };
+  computed: {
+    ...mapState(core, [
+      "tree",
+      "treeChildren",
+      "treeIcon",
+      "treeDescription",
+      "routePath",
+    ]),
+  },
+  methods: {
+    ...mapActions(core, ["getPath", "getTitle"]),
   },
 };
 </script>
