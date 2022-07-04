@@ -15,21 +15,19 @@
   </v-menu>
 </template>
 <script>
-import { storeToRefs } from "pinia";
-import defineStore from "../stores/core.js";
+import { mapState, mapActions } from "pinia";
+import core from "../stores/core.js";
 export default {
-  setup() {
-    const core = defineStore();
-    const { treeChildren, siblings, routePath } = storeToRefs(core);
-    const { getPath, getTitle } = core;
-    return { treeChildren, siblings, routePath, getPath, getTitle };
-  },
   computed: {
     items() {
       return !this.routePath || this.routePath === "/"
         ? this.treeChildren
         : this.siblings;
     },
+    ...mapState(core, ["treeChildren", "siblings", "routePath"]),
+  },
+  methods: {
+    ...mapActions(core, ["getPath", "getTitle"]),
   },
 };
 </script>
