@@ -1,6 +1,6 @@
 <script>
 import { nextTick } from "vue";
-import { storeToRefs } from "pinia";
+import { mapState, mapActions, mapWritableState } from "pinia";
 import VRuntimeTemplate from "vue3-runtime-template";
 import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
@@ -22,82 +22,16 @@ import sidebar from "./modules/sidebar";
 import pagination from "./modules/pagination";
 import parentbutton from "./modules/parentbutton";
 
-import defineStore from "./stores/core.js";
+import core from "./stores/core.js";
 
 import VCardK3 from "./modules/VCardK3.vue";
+import VCardItemK3 from "./modules/VCardItemK3.vue";
 import VCardSingleK3 from "./modules/VCardSingleK3.vue";
 import VMenuK3 from "./modules/VMenuK3.vue";
 import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
 
 export default {
   name: "App",
-  setup() {
-    const core = defineStore();
-    const {
-      tree,
-      context,
-      list,
-      siblings,
-      children,
-      treeChildren,
-      parentChildren,
-      vector,
-      parent,
-      item,
-      title,
-      treeTitle,
-      parentTitle,
-      description,
-      treeDescription,
-      parentDescription,
-      icon,
-      treeIcon,
-      parentIcon,
-      path,
-      treePath,
-      parentPath,
-      image,
-      treeImage,
-      parentImage,
-      routePath,
-    } = storeToRefs(core);
-    const { initIndex, getPath, getTitle, getVector, getParent, getSiblings } =
-      core;
-    return {
-      tree,
-      context,
-      list,
-      siblings,
-      children,
-      treeChildren,
-      parentChildren,
-      vector,
-      parent,
-      item,
-      title,
-      treeTitle,
-      parentTitle,
-      description,
-      treeDescription,
-      parentDescription,
-      icon,
-      treeIcon,
-      parentIcon,
-      path,
-      treePath,
-      parentPath,
-      image,
-      treeImage,
-      parentImage,
-      routePath,
-      initIndex,
-      getPath,
-      getTitle,
-      getVector,
-      getParent,
-      getSiblings,
-    };
-  },
   /**
    * Инициализация данных приложения
    *
@@ -109,6 +43,35 @@ export default {
     content: undefined,
   }),
   computed: {
+    ...mapWritableState(core, ["context"]),
+    ...mapState(core, [
+      "tree",
+      "list",
+      "siblings",
+      "children",
+      "treeChildren",
+      "parentChildren",
+      "vector",
+      "parent",
+      "item",
+      "title",
+      "treeTitle",
+      "parentTitle",
+      "description",
+      "treeDescription",
+      "parentDescription",
+      "icon",
+      "treeIcon",
+      "parentIcon",
+      "path",
+      "treePath",
+      "parentPath",
+      "image",
+      "treeImage",
+      "parentImage",
+      "routePath",
+    ]),
+
     /**
      * Пользовательские скрипты
      *
@@ -128,7 +91,7 @@ export default {
      */
     async item() {
       let html = "";
-      if (this.item)
+      if (this.item && this.context && this.context.page.len)
         try {
           const response = await fetch(
             `${encodeURIComponent(this.item.id)}.htm`,
@@ -195,11 +158,11 @@ export default {
     tree() {
       if (!window.frameElement) {
         page.stop();
-        page.start();
         this.list.forEach((node) => {
           if (node.href) page(node.href, this.route);
           page(node.path, this.route);
         });
+        page.start();
       }
     },
   },
@@ -217,6 +180,14 @@ export default {
     this.onhashchange("#kosmos3");
   },
   methods: {
+    ...mapActions(core, [
+      "initIndex",
+      "getPath",
+      "getTitle",
+      "getVector",
+      "getParent",
+      "getSiblings",
+    ]),
     /**
      * Обработка роутинга
      *
@@ -310,6 +281,7 @@ export default {
   },
   components: {
     VCardK3,
+    VCardItemK3,
     VCardSingleK3,
     VMenuK3,
     VNavigationDrawerK3,
