@@ -9,22 +9,23 @@
     :text="item ? item.description : ''"
     :icon="item ? `mdi-${item.icon}` : ''"
     :img="item ? item.image : ''"
-    :href="item ? getPath(item) : ''"
+    :href="href"
   ></v-card-k3>
 </template>
 <script>
-import { mapActions } from "pinia";
+import { mapState, mapActions } from "pinia";
 import core from "../stores/core.js";
 import VCardK3 from "./VCardK3.vue";
 export default {
-  props: {
-    item: Object,
+  props: { item: Object },
+  components: { VCardK3 },
+  computed: {
+    ...mapState(core, ["routePath"]),
+    href() {
+      let href = this.item ? this.getPath(this.item) : "";
+      return href === this.routePath ? "" : href;
+    },
   },
-  components: {
-    VCardK3,
-  },
-  methods: {
-    ...mapActions(core, ["getTitle", "getPath"]),
-  },
+  methods: { ...mapActions(core, ["getTitle", "getPath"]) },
 };
 </script>
