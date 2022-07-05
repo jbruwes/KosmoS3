@@ -39,8 +39,6 @@ export default {
       "routePath",
     ]),
   },
-  methods: {
-    ...mapActions(core, ["getPath", "getTitle"]),
-  },
+  methods: { ...mapActions(core, ["getPath", "getTitle"]) },
 };
 </script>
