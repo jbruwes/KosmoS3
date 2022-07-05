@@ -27,16 +27,12 @@ import "@fontsource/rubik-mono-one";
 import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 
-import "kendo-ui-core/css/web/kendo.common.css";
-import "kendo-ui-core/css/web/kendo.default.css";
 import "glightbox/dist/css/glightbox.css";
 import "aos/dist/aos.css";
 import "lightslider/dist/css/lightslider.css";
 import "jarallax/dist/jarallax.css";
 
-import "fomantic-ui-css/semantic.css";
-
-/*
+// import "fomantic-ui-css/semantic.css";
 import "fomantic-ui-css/components/accordion.css";
 import "fomantic-ui-css/components/ad.css";
 import "fomantic-ui-css/components/breadcrumb.css";
@@ -72,11 +68,13 @@ import "fomantic-ui-css/components/popup.css";
 import "fomantic-ui-css/components/progress.css";
 import "fomantic-ui-css/components/rail.css";
 import "fomantic-ui-css/components/rating.css";
+// import "fomantic-ui-css/components/reset.css";
 import "fomantic-ui-css/components/reveal.css";
 import "fomantic-ui-css/components/search.css";
 import "fomantic-ui-css/components/segment.css";
 import "fomantic-ui-css/components/shape.css";
 import "fomantic-ui-css/components/sidebar.css";
+// import "fomantic-ui-css/components/site.css";
 import "fomantic-ui-css/components/slider.css";
 import "fomantic-ui-css/components/statistic.css";
 import "fomantic-ui-css/components/step.css";
@@ -86,14 +84,12 @@ import "fomantic-ui-css/components/table.css";
 import "fomantic-ui-css/components/text.css";
 import "fomantic-ui-css/components/toast.css";
 import "fomantic-ui-css/components/transition.css";
-*/
 
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 import "./styles/index.css";
 
 import "fomantic-ui-css/semantic";
-import "kendo-ui-core/js/kendo.menu";
 import "lightslider";
 import "pure";
 
