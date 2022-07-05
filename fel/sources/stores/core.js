@@ -303,18 +303,16 @@ export default defineStore("core", {
      * @returns {object[]} Массив дочерних объектов
      */
     getItems(deep, length, reveal, sort, path, children, attr, axe) {
-      console.log(path);
       const hash = this.routePath.replace(/^\/+|\/+$/g, "");
       let lChildren = null;
-      let lAttr = attr ? attr : "";
-      let dataHashes = path ? path.trim() : "";
+      const lAttr = attr || "";
       let dataChildren = [];
-      if (!dataHashes) dataHashes = hash;
-      dataHashes = dataHashes.split(",").map((value) =>
-        decodeURIComponent(value.trim())
-          .replace(/_/g, " ")
-          .replace(/\/+/g, "/")
-          .replace(/^\/+|\/+$/g, "")
+      const dataHashes = (Array.isArray(path) ? path : [path || hash]).map(
+        (value) =>
+          decodeURIComponent(value.trim())
+            .replace(/_/g, " ")
+            .replace(/\/+/g, "/")
+            .replace(/^\/+|\/+$/g, "")
       );
       dataHashes.forEach((dataHash) => {
         try {
