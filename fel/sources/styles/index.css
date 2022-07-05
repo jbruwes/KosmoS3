@@ -2,20 +2,19 @@
   display: none !important;
 }
 
-html,
-body {
-  height: auto !important;
-}
-
-p:empty:before {
-  content: "\A";
-  white-space: pre;
-}
-
 @media only screen and (max-width: 991.98px) {
   .stackable.grid .ui.vertical.divider {
     display: none !important;
   }
+}
+
+a.ui {
+  color: #4183C4;
+  text-decoration: none;
+}
+a.ui:hover {
+  color: #1e70bf;
+  text-decoration: none;
 }
 
 .free.container,
