@@ -148,13 +148,13 @@ export default class TinymceView extends JetView {
       quickbars_insert_toolbar: "template",
       toolbar_mode: "sliding",
       body_class: "pa-2 ma-0",
+      //custom_elements: "v-card-single-k3",
       /**
        * Чтобы не сжирались пустые элементы
        *
        *  @see https://www.tiny.cloud/docs-3x/reference/Configuration3x/Configuration3x@valid_elements/#fullxhtmlruleset
        */
       extended_valid_elements:
-        "v-*[*],template[*]," +
         "a[accesskey|charset|class|coords|dir<ltr?rtl|href|hreflang|id|lang|name" +
         "|onblur|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup" +
         "|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|rel|rev" +
@@ -171,6 +171,7 @@ export default class TinymceView extends JetView {
         "span[align<center?justify?left?right|class|dir<ltr?rtl|id|lang|onclick|ondblclick|onkeydown" +
         "|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover" +
         "|onmouseup|style|title]",
+      protect: [/<v-.+[\^>]*>/g],
       branding: false,
       browser_spellcheck: true,
       convert_urls: false,
@@ -323,15 +324,9 @@ export default class TinymceView extends JetView {
           ].join(" ")}>${this.#header}</div>`,
         },
         {
-          title: "card",
-          description: "одиночная карточка",
-          content: `<div class="ui raised link card mceNonEditable" ${[
-            'data-id="card"',
-            this.#commonData,
-            this.#singleData,
-          ].join(" ")}>${this.#dimmedImage
-            .replace("#{loading}", "eager")
-            .replace("#{size}", "")}${this.#header}</div>`,
+          title: "Single Card",
+          description: "v-card-single-k3",
+          content: '<v-card-single-k3 path=""></v-card-single-k3>',
         },
         {
           title: "doubleheader",
