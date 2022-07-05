@@ -24,8 +24,6 @@ export default {
       return items.length ? items[0] : undefined;
     },
   },
-  methods: {
-    ...mapActions(core, ["getItems"]),
-  },
+  methods: { ...mapActions(core, ["getItems"]) },
 };
 </script>
