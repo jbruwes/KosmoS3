@@ -26,8 +26,6 @@ export default {
     },
     ...mapState(core, ["treeChildren", "siblings", "routePath"]),
   },
-  methods: {
-    ...mapActions(core, ["getPath", "getTitle"]),
-  },
+  methods: { ...mapActions(core, ["getPath", "getTitle"]) },
 };
 </script>
