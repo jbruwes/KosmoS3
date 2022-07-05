@@ -10,15 +10,12 @@ import DOMPurify from "dompurify";
 import deck from "./modules/deck";
 import carousel from "./modules/carousel";
 import cardgrid from "./modules/cardgrid";
-import card from "./modules/card";
 import list from "./modules/list";
 import breadcrumbs from "./modules/breadcrumbs";
 import icongrid from "./modules/icongrid";
 import header from "./modules/header";
 import pageheader from "./modules/pageheader";
 import doubleheader from "./modules/doubleheader";
-import menu from "./modules/menu";
-import sidebar from "./modules/sidebar";
 import pagination from "./modules/pagination";
 import parentbutton from "./modules/parentbutton";
 
@@ -206,7 +203,6 @@ export default {
         carousel(this.tree, pSel);
         deck(this.tree, pSel);
         cardgrid(this.tree, pSel);
-        card(this.tree, pSel);
         list(this.tree, pSel);
         header(this.tree, pSel);
         pageheader(this.tree, pSel);
@@ -215,8 +211,6 @@ export default {
         breadcrumbs(this.tree, pSel);
         pagination(this.tree, pSel);
         parentbutton(this.tree, pSel);
-        sidebar(this.tree);
-        menu(this.tree, pSel);
       }
       this.AOS();
       jarallax(document.querySelectorAll(".jarallax"));
