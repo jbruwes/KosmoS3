@@ -1,7 +1,7 @@
 <template>
   <v-hover v-slot="{ isHovering, props }">
     <v-card v-bind="props" width="290px">
-      <v-img :src="img"></v-img>
+      <v-img :src="image"></v-img>
       <v-card-title>{{ title }}</v-card-title>
       <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
       <v-card-text>{{ text }}</v-card-text>
@@ -28,7 +28,7 @@ export default {
     subtitle: String,
     text: String,
     icon: String,
-    img: String,
+    image: String,
     href: String,
   },
 };
