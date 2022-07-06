@@ -148,7 +148,7 @@ export default class TinymceView extends JetView {
       quickbars_insert_toolbar: "template",
       toolbar_mode: "sliding",
       body_class: "pa-2 ma-0",
-      //custom_elements: "v-card-single-k3",
+      // custom_elements: "v-card-single-k3",
       /**
        * Чтобы не сжирались пустые элементы
        *
@@ -171,7 +171,7 @@ export default class TinymceView extends JetView {
         "span[align<center?justify?left?right|class|dir<ltr?rtl|id|lang|onclick|ondblclick|onkeydown" +
         "|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover" +
         "|onmouseup|style|title]",
-      protect: [/<v-.+[\^>]*>/g],
+      protect: [/<v-.+(<\/v-.+?>)/g],
       branding: false,
       browser_spellcheck: true,
       convert_urls: false,
@@ -326,7 +326,7 @@ export default class TinymceView extends JetView {
         {
           title: "Single Card",
           description: "v-card-single-k3",
-          content: '<v-card-single-k3 path=""></v-card-single-k3>',
+          content: '<v-card-single-k3 path="" :date-off="true"></v-card-single-k3>',
         },
         {
           title: "doubleheader",
