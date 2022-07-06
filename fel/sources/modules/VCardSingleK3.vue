@@ -1,5 +1,12 @@
 <template>
-  <v-card-item-k3 :item="item"></v-card-item-k3>
+  <v-card-item-k3
+    :item="item"
+    :dateOff="dateOff"
+    :titleOff="titleOff"
+    :imageOff="imageOff"
+    :hrefOff="hrefOff"
+    :descriptionOff="descriptionOff"
+  ></v-card-item-k3>
 </template>
 <script>
 import { mapActions } from "pinia";
@@ -8,10 +15,13 @@ import VCardItemK3 from "./VCardItemK3.vue";
 export default {
   props: {
     path: String,
+    dateOff: Boolean,
+    titleOff: Boolean,
+    imageOff: Boolean,
+    hrefOff: Boolean,
+    descriptionOff: Boolean,
   },
-  components: {
-    VCardItemK3,
-  },
+  components: { VCardItemK3 },
   computed: {
     item() {
       const items = this.getItems(
