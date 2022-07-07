@@ -23,6 +23,7 @@ import core from "./stores/core.js";
 import VCardK3 from "./modules/VCardK3.vue";
 import VCardItemK3 from "./modules/VCardItemK3.vue";
 import VCardSingleK3 from "./modules/VCardSingleK3.vue";
+import VCardSlideK3 from "./modules/VCardSlideK3.vue";
 import VMenuK3 from "./modules/VMenuK3.vue";
 import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
 
@@ -257,6 +258,7 @@ export default {
     VCardK3,
     VCardItemK3,
     VCardSingleK3,
+    VCardSlideK3,
     VMenuK3,
     VNavigationDrawerK3,
     VRuntimeTemplate,
