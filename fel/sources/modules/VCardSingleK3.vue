@@ -1,6 +1,7 @@
 <template>
   <v-card-item-k3
     :item="item"
+    :animate="animate"
     :dateOff="dateOff"
     :titleOff="titleOff"
     :imageOff="imageOff"
@@ -15,6 +16,7 @@ import VCardItemK3 from "./VCardItemK3.vue";
 export default {
   props: {
     path: String,
+    animate: String,
     dateOff: Boolean,
     titleOff: Boolean,
     imageOff: Boolean,
