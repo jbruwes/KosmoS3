@@ -1,5 +1,6 @@
 <template>
   <v-card-k3
+    :animate="animate"
     :title="
       JSON.parse(titleOff) ? undefined : item ? getTitle(item) : undefined
     "
@@ -29,6 +30,7 @@ import VCardK3 from "./VCardK3.vue";
 export default {
   props: {
     item: Object,
+    animate: String,
     dateOff: Boolean,
     titleOff: Boolean,
     imageOff: Boolean,
