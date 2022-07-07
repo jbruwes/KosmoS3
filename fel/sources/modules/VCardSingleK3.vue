@@ -26,13 +26,7 @@ export default {
   components: { VCardItemK3 },
   computed: {
     item() {
-      const items = this.getItems(
-        null,
-        null,
-        null,
-        null,
-        this.path ? [this.path] : undefined
-      );
+      const items = this.getItems(null, null, null, null, this.path);
       return items.length ? items[0] : undefined;
     },
   },
