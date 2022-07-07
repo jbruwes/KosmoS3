@@ -343,11 +343,11 @@ export default defineStore("core", {
           // console.log(e.message);
         }
       });
-      if (lAttr && !axe) {
-        dataChildren = dataChildren.filter(
-          (element) => element.$href.replace(/^\/+|\/+$/g, "") !== hash
-        );
-      }
+      // if (lAttr && !axe) {
+      //  dataChildren = dataChildren.filter(
+      //    (element) => element.$href.replace(/^\/+|\/+$/g, "") !== hash
+      //  );
+      // }
       if (
         length &&
         !Number.isNaN(Number(length)) &&
