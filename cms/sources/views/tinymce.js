@@ -326,7 +326,8 @@ export default class TinymceView extends JetView {
         {
           title: "Single Card",
           description: "v-card-single-k3",
-          content: '<v-card-single-k3 path="" :date-off="true"></v-card-single-k3>',
+          content:
+            '<v-card-single-k3 path="" :date-off="true"></v-card-single-k3>',
         },
         {
           title: "doubleheader",
