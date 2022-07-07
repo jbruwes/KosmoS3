@@ -4,7 +4,6 @@ import { mapState, mapActions, mapWritableState } from "pinia";
 import VRuntimeTemplate from "vue3-runtime-template";
 import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
-import AOS from "aos";
 import GLightbox from "glightbox";
 import DOMPurify from "dompurify";
 import deck from "./modules/deck";
@@ -169,7 +168,6 @@ export default {
   async mounted() {
     jarallaxVideo();
     this.GLightbox();
-    AOS.init();
     [this.urls] = await Promise.all([
       (await fetch("index.cdn.json", { cache: "no-store" })).json(),
       await this.initIndex(),
@@ -212,27 +210,9 @@ export default {
         pagination(this.tree, pSel);
         parentbutton(this.tree, pSel);
       }
-      this.AOS();
       jarallax(document.querySelectorAll(".jarallax"));
       if (this.scripts) await Promise.allSettled(this.scripts);
       if (typeof init === "function") init.call(this.tree);
-    },
-    /**
-     * Обновление AOS после загрузки всех картинок на странице
-     */
-    async AOS() {
-      await Promise.all(
-        Array.from(document.images)
-          .filter((img) => !img.complete)
-          .map(
-            (img) =>
-              new Promise((resolve) => {
-                img.addEventListener("load", () => resolve(true));
-                img.addEventListener("error", () => resolve(false));
-              })
-          )
-      );
-      AOS.refresh();
     },
     /**
      * Натравливаем GLightbox на всё подряд
