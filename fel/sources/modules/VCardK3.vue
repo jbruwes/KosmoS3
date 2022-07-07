@@ -5,7 +5,7 @@
         animate ? animate : 'animate__animated animate__flipInY'
       "
       v-bind="props"
-      width="290px"
+      width="290"
     >
       <v-img :src="image"></v-img>
       <v-card-title>{{ title }}</v-card-title>
