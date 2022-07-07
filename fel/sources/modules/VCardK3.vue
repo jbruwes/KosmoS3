@@ -1,6 +1,12 @@
 <template>
   <v-hover v-slot="{ isHovering, props }">
-    <v-card v-bind="props" width="290px">
+    <v-card
+      v-animate-onscroll.repeat="
+        animate ? animate : 'animate__animated animate__flipInY'
+      "
+      v-bind="props"
+      width="290px"
+    >
       <v-img :src="image"></v-img>
       <v-card-title>{{ title }}</v-card-title>
       <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
@@ -24,6 +30,7 @@
 <script>
 export default {
   props: {
+    animate: String,
     title: String,
     subtitle: String,
     text: String,
