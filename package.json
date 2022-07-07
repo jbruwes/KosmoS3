@@ -105,7 +105,7 @@
     "aos": "^2.3.4",
     "core-js": "^3.23.3",
     "dompurify": "^2.3.8",
-    "electron": "^19.0.7",
+    "electron": "^19.0.8",
     "electron-serve": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "fabric": "^5.2.1",
