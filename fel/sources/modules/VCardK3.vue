@@ -1,11 +1,10 @@
 <template>
   <v-hover v-slot="{ isHovering, props }">
     <v-card
-      v-animate-onscroll.repeat="
-        animate ? animate : 'animate__animated animate__flipInY'
-      "
+      v-animate-onscroll.repeat="animate"
       v-bind="props"
-      width="290"
+      :width="width"
+      :class="class"
     >
       <v-img :src="image"></v-img>
       <v-card-title>{{ title }}</v-card-title>
@@ -20,7 +19,7 @@
           variant="outlined"
           size="x-large"
           color="white"
-          :icon="icon"
+          :icon="icon ? icon : 'mdi-open-in-new'"
           :href="href"
         ></v-btn>
       </v-overlay>
@@ -30,7 +29,9 @@
 <script>
 export default {
   props: {
-    animate: String,
+    animate: { default: "animate__animated animate__flipInY", type: String },
+    class: String,
+    width: { default: 290, type: Number },
     title: String,
     subtitle: String,
     text: String,
