@@ -60,6 +60,7 @@ a.ui:hover {
   position: relative;
   pointer-events: auto;
   margin: auto;
+  max-width: 100%;
 }
 
 #kosmos3 > .position-absolute > #content,
