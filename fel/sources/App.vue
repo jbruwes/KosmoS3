@@ -89,7 +89,6 @@ export default {
     async item() {
       let html = "";
       if (
-        this.item &&
         this.context &&
         this.context.page &&
         this.context.page.len
