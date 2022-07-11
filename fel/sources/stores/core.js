@@ -90,8 +90,10 @@ export default defineStore("core", {
      * @returns {object} Текущий объект для загрузки
      */
     item() {
-      return this.list.find(
-        (e) => e.path === this.routePath || e.href === this.routePath
+      return (
+        this.list.find(
+          (e) => e.path === this.routePath || e.href === this.routePath
+        ) || {}
       );
     },
     /**
