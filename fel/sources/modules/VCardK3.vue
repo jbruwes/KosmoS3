@@ -19,7 +19,7 @@
           variant="outlined"
           size="x-large"
           color="white"
-          :icon="icon ? icon : 'mdi-open-in-new'"
+          :icon="`mdi-${icon}`"
           :href="href"
         ></v-btn>
       </v-overlay>
@@ -35,7 +35,7 @@ export default {
     title: String,
     subtitle: String,
     text: String,
-    icon: String,
+    icon: { default: "open-in-new", type: String },
     image: String,
     href: String,
   },
