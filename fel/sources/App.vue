@@ -88,7 +88,12 @@ export default {
      */
     async item() {
       let html = "";
-      if (this.item && this.context && this.context.page.len)
+      if (
+        this.item &&
+        this.context &&
+        this.context.page &&
+        this.context.page.len
+      )
         try {
           const response = await fetch(
             `${encodeURIComponent(this.item.id)}.htm`,
@@ -212,8 +217,10 @@ export default {
         parentbutton(this.tree, pSel);
       }
       jarallax(document.querySelectorAll(".jarallax"));
-      if (this.scripts) await Promise.allSettled(this.scripts);
-      if (typeof init === "function") init.call(this.tree);
+      if (this.scripts) {
+        await Promise.allSettled(this.scripts);
+        if (typeof init === "function") init.call(this.tree);
+      }
     },
     /**
      * Натравливаем GLightbox на всё подряд
