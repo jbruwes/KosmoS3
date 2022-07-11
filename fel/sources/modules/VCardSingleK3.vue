@@ -6,15 +6,10 @@
     :width="width"
     :icon="icon"
     :date="date"
-    :dateOff="dateOff"
     :title="title"
-    :titleOff="titleOff"
     :image="image"
-    :imageOff="imageOff"
     :href="href"
-    :hrefOff="hrefOff"
     :description="description"
-    :descriptionOff="descriptionOff"
   ></v-card-item-k3>
 </template>
 <script>
@@ -29,15 +24,10 @@ export default {
     width: Number,
     icon: String,
     date: String,
-    dateOff: Boolean,
     title: String,
-    titleOff: Boolean,
     image: String,
-    imageOff: Boolean,
     href: String,
-    hrefOff: Boolean,
     description: String,
-    descriptionOff: Boolean,
   },
   components: { VCardItemK3 },
   computed: {
