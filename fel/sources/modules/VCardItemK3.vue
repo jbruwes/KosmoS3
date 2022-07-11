@@ -4,43 +4,33 @@
     :class="class"
     :width="width"
     :title="
-      title
-        ? title
-        : JSON.parse(titleOff)
-        ? undefined
-        : item
-        ? getTitle(item)
-        : undefined
+      typeof title === 'string' ? title : item ? getTitle(item) : undefined
     "
     :subtitle="
-      date
+      typeof date === 'string'
         ? date
-        : JSON.parse(dateOff)
-        ? undefined
         : item
         ? new Date(item.date ? item.date : item.lastmod).toLocaleDateString()
         : undefined
     "
     :text="
-      description
+      typeof description === 'string'
         ? description
-        : JSON.parse(descriptionOff)
-        ? undefined
         : item
         ? item.description
         : undefined
     "
-    :icon="icon ? icon : item ? `mdi-${item.icon}` : undefined"
-    :image="
-      image
-        ? image
-        : JSON.parse(imageOff)
-        ? undefined
+    :icon="
+      typeof icon === 'string'
+        ? icon
         : item
-        ? item.image
+        ? !!item.icon
+          ? item.icon
+          : undefined
         : undefined
     "
-    :href="href ? href : JSON.parse(hrefOff) ? undefined : url"
+    :image="typeof image === 'string' ? image : item ? item.image : undefined"
+    :href="typeof href === 'string' ? href : url"
   ></v-card-k3>
 </template>
 <script>
@@ -55,15 +45,10 @@ export default {
     width: Number,
     icon: String,
     date: String,
-    dateOff: Boolean,
     title: String,
-    titleOff: Boolean,
     image: String,
-    imageOff: Boolean,
     href: String,
-    hrefOff: Boolean,
     description: String,
-    descriptionOff: Boolean,
   },
   components: { VCardK3 },
   computed: {
