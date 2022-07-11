@@ -103,7 +103,7 @@
     "@mdi/svg": "^6.9.96",
     "ace-builds": "^1.7.1",
     "animate.css": "^4.1.1",
-    "core-js": "^3.23.3",
+    "core-js": "^3.23.4",
     "dompurify": "^2.3.8",
     "electron": "^19.0.8",
     "electron-serve": "^1.1.0",
