@@ -54,7 +54,7 @@ export default {
   computed: {
     ...mapState(core, ["routePath"]),
     url() {
-      let href = this.item ? this.getPath(this.item) : "";
+      const href = this.item ? this.getPath(this.item) : "";
       return href === this.routePath ? "" : href;
     },
   },
