@@ -6,8 +6,8 @@ export default defineStore("core", {
    * @returns {object} Переменные состояния
    */
   state: () => ({
-    tree: undefined,
-    context: undefined,
+    tree: Object,
+    context: Object,
   }),
   getters: {
     /**
@@ -16,27 +16,25 @@ export default defineStore("core", {
      * @returns {object[]} Плоский индекс для поиска
      */
     list() {
-      return this.tree
-        ? jsel(this.tree)
-            .selectAll("//*[@id]")
-            .map((node) => {
-              const lNode = node;
-              lNode.path = this.getVector(lNode).map((e) =>
-                e.value.trim().replace(/\s/g, "_").replace(/\//g, "")
-              );
-              lNode.path.shift();
-              lNode.path = lNode.path.join("/");
-              lNode.path = lNode.path ? `/${lNode.path}/` : "/";
-              lNode.href = lNode.url
-                ? lNode.url
-                    .trim()
-                    .replace(/\s/g, "_")
-                    .replace(/^\/+|\/+$/g, "")
-                : "";
-              lNode.href = lNode.href ? `/${lNode.href}/` : "";
-              return lNode;
-            })
-        : undefined;
+      return jsel(this.tree)
+        .selectAll("//*[@id]")
+        .map((node) => {
+          const lNode = node;
+          lNode.path = this.getVector(lNode).map((e) =>
+            e.value.trim().replace(/\s/g, "_").replace(/\//g, "")
+          );
+          lNode.path.shift();
+          lNode.path = lNode.path.join("/");
+          lNode.path = lNode.path ? `/${lNode.path}/` : "/";
+          lNode.href = lNode.url
+            ? lNode.url
+                .trim()
+                .replace(/\s/g, "_")
+                .replace(/^\/+|\/+$/g, "")
+            : "";
+          lNode.href = lNode.href ? `/${lNode.href}/` : "";
+          return lNode;
+        });
     },
     /**
      * Объекты одного уровня с текущим
@@ -44,7 +42,7 @@ export default defineStore("core", {
      * @returns {object[]} Массив объектов
      */
     siblings() {
-      return this.item ? this.getSiblings(this.item) : undefined;
+      return this.getSiblings(this.item);
     },
     /**
      * Вычисление массива первого уровня
@@ -52,7 +50,7 @@ export default defineStore("core", {
      * @returns {object[]} Массив объектов первого уровня
      */
     children() {
-      return this.item ? this.item.data : undefined;
+      return this.item.data;
     },
     /**
      * Вычисление массива первого уровня
@@ -60,7 +58,7 @@ export default defineStore("core", {
      * @returns {object[]} Массив объектов первого уровня
      */
     treeChildren() {
-      return this.tree ? this.tree.data : undefined;
+      return this.tree.data;
     },
     /**
      * Вычисление массива первого уровня
@@ -68,7 +66,7 @@ export default defineStore("core", {
      * @returns {object[]} Массив объектов первого уровня
      */
     parentChildren() {
-      return this.parent ? this.parent.data : undefined;
+      return this.parent.data;
     },
     /**
      * Вектор до текущего объекта
@@ -76,7 +74,7 @@ export default defineStore("core", {
      * @returns {object[]} Вектор
      */
     vector() {
-      return this.item ? this.getVector(this.item) : undefined;
+      return this.getVector(this.item);
     },
     /**
      * Родительский объект
@@ -84,7 +82,7 @@ export default defineStore("core", {
      * @returns {object} Родитель
      */
     parent() {
-      return this.item ? this.getParent(this.item) : undefined;
+      return this.getParent(this.item);
     },
     /**
      * Текущий объект
@@ -92,14 +90,9 @@ export default defineStore("core", {
      * @returns {object} Текущий объект для загрузки
      */
     item() {
-      return this.list
-        ? this.list.find((e) =>
-            this.context
-              ? e.path === this.context.routePath ||
-                e.href === this.context.routePath
-              : undefined
-          )
-        : undefined;
+      return this.list.find(
+        (e) => e.path === this.routePath || e.href === this.routePath
+      );
     },
     /**
      * Заголовок текущего объекта
@@ -107,7 +100,7 @@ export default defineStore("core", {
      * @returns {string} Заголовок
      */
     title() {
-      return this.item ? this.getTitle(this.item) : "";
+      return this.getTitle(this.item);
     },
     /**
      * Заголовок дерева
@@ -115,7 +108,7 @@ export default defineStore("core", {
      * @returns {string} Заголовок
      */
     treeTitle() {
-      return this.tree ? this.getTitle(this.tree) : "";
+      return this.getTitle(this.tree);
     },
     /**
      * Заголовок родительского объекта
@@ -123,7 +116,7 @@ export default defineStore("core", {
      * @returns {string} Заголовок
      */
     parentTitle() {
-      return this.parent ? this.getTitle(this.parent) : "";
+      return this.getTitle(this.parent);
     },
     /**
      * Описание текущего объекта
@@ -131,7 +124,7 @@ export default defineStore("core", {
      * @returns {string} Описание
      */
     description() {
-      return this.item ? this.item.description : "";
+      return this.item.description;
     },
     /**
      * Описание дерева
@@ -139,7 +132,7 @@ export default defineStore("core", {
      * @returns {string} Описание
      */
     treeDescription() {
-      return this.tree ? this.tree.description : "";
+      return this.tree.description;
     },
     /**
      * Описание родительского объекта
@@ -147,7 +140,7 @@ export default defineStore("core", {
      * @returns {string} Описание
      */
     parentDescription() {
-      return this.parent ? this.parent.description : "";
+      return this.parent.description;
     },
     /**
      * Иконка текущего объекта
@@ -155,7 +148,7 @@ export default defineStore("core", {
      * @returns {string} Иконка
      */
     icon() {
-      return this.item ? this.item.icon : "";
+      return this.item.icon;
     },
     /**
      * Иконка дерева
@@ -163,7 +156,7 @@ export default defineStore("core", {
      * @returns {string} Иконка
      */
     treeIcon() {
-      return this.tree ? this.tree.icon : "";
+      return this.tree.icon;
     },
     /**
      * Иконка родительского объекта
@@ -171,7 +164,7 @@ export default defineStore("core", {
      * @returns {string} Иконка
      */
     parentIcon() {
-      return this.parent ? this.parent.icon : "";
+      return this.parent.icon;
     },
     /**
      * Путь текущего объекта
@@ -179,7 +172,7 @@ export default defineStore("core", {
      * @returns {string} Путь
      */
     path() {
-      return this.item ? this.getPath(this.item) : "";
+      return this.getPath(this.item);
     },
     /**
      * Путь дерева
@@ -187,7 +180,7 @@ export default defineStore("core", {
      * @returns {string} Путь
      */
     treePath() {
-      return this.tree ? this.getPath(this.tree) : "";
+      return this.getPath(this.tree);
     },
     /**
      * Путь родительского объекта
@@ -195,7 +188,7 @@ export default defineStore("core", {
      * @returns {string} Путь
      */
     parentPath() {
-      return this.parent ? this.getPath(this.parent) : "";
+      return this.getPath(this.parent);
     },
 
     /**
@@ -204,7 +197,7 @@ export default defineStore("core", {
      * @returns {string} Картинка
      */
     image() {
-      return this.item ? this.item.image : "";
+      return this.item.image;
     },
     /**
      * Картинка дерева
@@ -212,7 +205,7 @@ export default defineStore("core", {
      * @returns {string} Картинка
      */
     treeImage() {
-      return this.tree ? this.item.tree : "";
+      return this.item.tree;
     },
     /**
      * Картинка родительского объекта
@@ -220,7 +213,7 @@ export default defineStore("core", {
      * @returns {string} Картинка
      */
     parentImage() {
-      return this.parent ? this.parent.image : "";
+      return this.parent.image;
     },
     /**
      * Вычисление текущего пути
@@ -228,7 +221,7 @@ export default defineStore("core", {
      * @returns {string} Путь
      */
     routePath() {
-      return this.context ? this.context.routePath : "";
+      return this.context.routePath ? this.context.routePath : "";
     },
   },
   actions: {
