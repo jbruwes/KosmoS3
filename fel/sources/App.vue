@@ -24,6 +24,7 @@ import VCardK3 from "./modules/VCardK3.vue";
 import VCardItemK3 from "./modules/VCardItemK3.vue";
 import VCardSingleK3 from "./modules/VCardSingleK3.vue";
 import VCardSlideK3 from "./modules/VCardSlideK3.vue";
+import VCardGridK3 from "./modules/VCardGridK3.vue";
 import VMenuK3 from "./modules/VMenuK3.vue";
 import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
 
@@ -36,8 +37,7 @@ export default {
    */
   data: () => ({
     drawer: false,
-    urls: undefined,
-    content: undefined,
+    content: "",
   }),
   computed: {
     ...mapWritableState(core, ["context"]),
@@ -68,19 +68,6 @@ export default {
       "parentImage",
       "routePath",
     ]),
-
-    /**
-     * Пользовательские скрипты
-     *
-     * @returns {Promise<HTMLScriptElement>[]} Массив обещаний по загрузке пользовательских скриптов
-     */
-    scripts() {
-      return this.urls
-        ? [...this.urls, { url: "index.js" }]
-            .filter((script) => script.url)
-            .map((script) => this.$loadScript(script.url))
-        : undefined;
-    },
   },
   watch: {
     /**
@@ -88,11 +75,7 @@ export default {
      */
     async item() {
       let html = "";
-      if (
-        this.context &&
-        this.context.page &&
-        this.context.page.len
-      )
+      if (this.context && this.context.page && this.context.page.len)
         try {
           const response = await fetch(
             `${encodeURIComponent(this.item.id)}.htm`,
@@ -144,7 +127,7 @@ export default {
             const element = document.head.querySelector(e[0]);
             element.content = e[1] ? e[1].replace(/"/g, "&quot;") : "";
           });
-          if (this.content === html) this.content = undefined;
+          if (this.content === html) this.content = "";
           this.content = html;
           nextTick(() => {
             this.GLightbox();
@@ -173,10 +156,19 @@ export default {
   async mounted() {
     jarallaxVideo();
     this.GLightbox();
-    [this.urls] = await Promise.all([
-      (await fetch("index.cdn.json", { cache: "no-store" })).json(),
-      await this.initIndex(),
-    ]);
+    await Promise.allSettled(
+      [
+        ...(
+          await Promise.all([
+            (await fetch("index.cdn.json", { cache: "no-store" })).json(),
+            await this.initIndex(),
+          ])
+        )[0],
+        { url: "index.js" },
+      ]
+        .filter((script) => script.url)
+        .map((script) => this.$loadScript(script.url))
+    );
     this.onhashchange("#kosmos3");
   },
   methods: {
@@ -201,7 +193,7 @@ export default {
      *
      * @param {string} pSel Селектор
      */
-    async onhashchange(pSel = "#content") {
+    onhashchange(pSel = "#content") {
       if (this.tree) {
         carousel(this.tree, pSel);
         deck(this.tree, pSel);
@@ -216,10 +208,7 @@ export default {
         parentbutton(this.tree, pSel);
       }
       jarallax(document.querySelectorAll(".jarallax"));
-      if (this.scripts) {
-        await Promise.allSettled(this.scripts);
-        if (typeof init === "function") init.call(this.tree);
-      }
+      if (typeof init === "function") init.call(this.tree);
     },
     /**
      * Натравливаем GLightbox на всё подряд
@@ -265,6 +254,7 @@ export default {
     VCardItemK3,
     VCardSingleK3,
     VCardSlideK3,
+    VCardGridK3,
     VMenuK3,
     VNavigationDrawerK3,
     VRuntimeTemplate,
