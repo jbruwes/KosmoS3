@@ -1,6 +1,6 @@
 <template>
-  <v-slide-group show-arrows class="pa-4" max-width="100%">
-    <v-slide-group-item v-for="item in items" :key="item">
+  <v-slide-group>
+    <v-slide-group-item v-for="item in items">
       <v-card-item-k3
         :item="item"
         :animate="animate"
