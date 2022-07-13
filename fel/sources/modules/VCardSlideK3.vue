@@ -22,7 +22,6 @@ import core from "../stores/core.js";
 import VCardItemK3 from "./VCardItemK3.vue";
 export default {
   props: {
-    path: String,
     animate: String,
     class: { default: "ma-4", type: String },
     width: Number,
@@ -32,11 +31,25 @@ export default {
     image: String,
     href: String,
     description: String,
+    deep: Boolean,
+    length: Number,
+    reveal: Boolean,
+    sort: String,
+    path: String,
+    children: Boolean,
   },
   components: { VCardItemK3 },
   computed: {
     items() {
-      return this.getItems(null, null, null, null, this.path, null, "*");
+      return this.getItems(
+        this.deep,
+        this.length,
+        this.reveal,
+        this.sort,
+        this.path,
+        this.children,
+        "*[@id]"
+      );
     },
   },
   methods: { ...mapActions(core, ["getItems"]) },
