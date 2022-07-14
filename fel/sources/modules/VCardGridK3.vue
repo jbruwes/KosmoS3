@@ -1,20 +1,22 @@
 <template>
-  <v-container class="bg-surface-variant"
+  <v-container
     ><v-row no-gutters v-for="chunk in itemChunks"
-      ><v-col v-for="item in chunk" cols="12" sm="3"
-        ><v-sheet class="ma-2 pa-2"
-          ><v-card-item-k3
-            :item="item"
-            :animate="animate"
-            :class="class"
-            :width="width"
-            :icon="icon"
-            :date="date"
-            :title="title"
-            :image="image"
-            :href="href"
-            :description="description"
-          ></v-card-item-k3></v-sheet></v-col></v-row
+      ><v-spacer v-if="chunk.length < cols"></v-spacer
+      ><v-col v-for="item in chunk" class="d-flex flex-column ma-2"
+        ><v-card-item-k3
+          class="flex-grow-1"
+          :item="item"
+          :animate="animate"
+          :class="class"
+          :width="width"
+          :icon="icon"
+          :date="date"
+          :title="title"
+          :image="image"
+          :href="href"
+          :description="description"
+        ></v-card-item-k3></v-col
+      ><v-spacer v-if="chunk.length < cols"></v-spacer></v-row
   ></v-container>
 </template>
 <script>
