@@ -29,7 +29,7 @@
 <script>
 export default {
   props: {
-    animate: { default: "animate__animated animate__zoomIn", type: String },
+    animate: { default: "animate__animated animate__flipInY", type: String },
     class: String,
     width: { default: 290, type: Number },
     title: String,
