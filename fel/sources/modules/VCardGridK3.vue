@@ -1,10 +1,10 @@
 <template>
   <v-container
-    ><v-row no-gutters v-for="chunk in itemChunks"
+    ><v-row no-gutters v-for="chunk in itemChunks" class="flex-nowrap"
       ><v-spacer v-if="chunk.length < cols"></v-spacer
-      ><v-col v-for="item in chunk" class="d-flex flex-column ma-2"
+      ><v-col v-for="item in chunk" class="ma-2"
         ><v-card-item-k3
-          class="flex-grow-1"
+          class="fill-height"
           :item="item"
           :animate="animate"
           :class="class"
