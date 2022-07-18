@@ -3,6 +3,7 @@
     :animate="animate"
     :class="class"
     :width="width"
+    :height="height"
     :title="
       typeof title === 'string' ? title : item ? getTitle(item) : undefined
     "
@@ -43,6 +44,7 @@ export default {
     animate: String,
     class: String,
     width: Number,
+    height: Number,
     icon: String,
     date: String,
     title: String,
