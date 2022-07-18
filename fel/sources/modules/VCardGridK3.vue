@@ -1,8 +1,33 @@
 <template>
+  <!--v-container>
+    <v-row>
+      <template v-for="(item, n) in items" :key="n">
+        <v-col cols="12" :sm="col">
+          <v-card-item-k3
+            :item="item"
+            :animate="animate"
+            :class="class"
+            :width="width"
+            :height="height"
+            :icon="icon"
+            :date="date"
+            :title="title"
+            :image="image"
+            :href="href"
+            :description="description"
+          ></v-card-item-k3>
+        </v-col>
+        <v-responsive
+          v-if="n === 2"
+          :key="`width-${n}`"
+          width="100%"
+        ></v-responsive>
+      </template>
+    </v-row>
+  </v-container-->
   <v-container
-    ><v-row no-gutters v-for="chunk in itemChunks" class="flex-nowrap"
-      ><v-spacer v-if="chunk.length < cols"></v-spacer
-      ><v-col v-for="item in chunk" class="ma-2"
+    ><v-row v-for="chunk in itemChunks" justify="center"
+      ><v-col v-for="item in chunk" cols="12" sm="6" md="4" lg="3" xl="2"
         ><v-card-item-k3
           class="fill-height"
           :item="item"
@@ -15,8 +40,7 @@
           :image="image"
           :href="href"
           :description="description"
-        ></v-card-item-k3></v-col
-      ><v-spacer v-if="chunk.length < cols"></v-spacer></v-row
+        ></v-card-item-k3></v-col></v-row
   ></v-container>
 </template>
 <script>
@@ -29,6 +53,7 @@ export default {
     animate: String,
     class: String,
     width: { default: "100%", type: Number },
+    height: Number,
     icon: String,
     date: String,
     title: String,
@@ -45,6 +70,12 @@ export default {
   },
   components: { VCardItemK3 },
   computed: {
+    col() {
+      let cols = ~~this.cols;
+      if (this.cols > 4) cols = 4;
+      if (this.cols < 2) cols = 2;
+      return 12 / cols;
+    },
     items() {
       return this.getItems(
         this.deep,
