@@ -436,7 +436,7 @@ export default class SignInView extends JetView {
               const storageItem = storageLocal.findIndex(
                 (item) => item.pBucketName === message.pBucketName
               );
-              if (storageItem === -1) storageLocal.push(message);
+              if (!~storageItem) storageLocal.push(message);
               else storageLocal[storageItem] = message;
             } else {
               storageLocal = storageLocal.filter(
