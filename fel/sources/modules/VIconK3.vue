@@ -1,5 +1,9 @@
 <template>
-  <v-hover v-slot="{ isHovering, props }">
+  <v-btn icon :stacked="true">
+    <v-icon> mdi-tools </v-icon>
+    <span> Tools </span>
+  </v-btn>
+  <!--v-hover v-slot="{ isHovering, props }">
     <v-card
       v-animate-onscroll.repeat="animate"
       v-bind="props"
@@ -24,7 +28,7 @@
         ></v-btn>
       </v-overlay>
     </v-card>
-  </v-hover>
+  </v-hover-->
 </template>
 <script>
 export default {
