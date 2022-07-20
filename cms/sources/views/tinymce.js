@@ -324,9 +324,19 @@ export default class TinymceView extends JetView {
           ].join(" ")}>${this.#header}</div>`,
         },
         {
-          title: "Single Card",
+          title: "Card Single",
           description: "v-card-single-k3",
-          content: '<v-card-single-k3 path="" date=""></v-card-single-k3>',
+          content: '<v-card-single-k3 date=""></v-card-single-k3>',
+        },
+        {
+          title: "Card Slide",
+          description: "v-card-slide-k3",
+          content: '<v-card-slide-k3 date=""></v-card-slide-k3>',
+        },
+        {
+          title: "Card Grid",
+          description: "v-card-grid-k3",
+          content: '<v-card-grid-k3 date=""></v-card-grid-k3>',
         },
         {
           title: "doubleheader",
@@ -371,33 +381,6 @@ export default class TinymceView extends JetView {
               ].join(" ")
             )
             .replace("#{content}", this.#header),
-        },
-        {
-          title: "cardgrid",
-          description: "плитка из карточек",
-          content: this.#grid
-            .replace("#{divider}", "")
-            .replace("#{editable}", "mceNonEditable")
-            .replace("#{centered}", "centered")
-            .replace("#{count}", "three")
-            .replace("#{aos}", "flip-left")
-            .replace("#{align}", "")
-            .replace("#{adaptive}", "stackable doubling")
-            .replace(
-              "#{data}",
-              [
-                'data-id="cardgrid"',
-                this.#commonData,
-                this.#singleData,
-                this.#multiData,
-              ].join(" ")
-            )
-            .replace(
-              "#{content}",
-              `<div class="ui fluid raised link card">${this.#dimmedImage
-                .replace("#{loading}", "eager")
-                .replace("#{size}", "")}${this.#header}</div>`
-            ),
         },
         {
           title: "youtube",
