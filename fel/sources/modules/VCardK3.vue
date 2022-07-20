@@ -6,6 +6,7 @@
       :width="width"
       :height="height"
       :class="class"
+      :href="href"
     >
       <v-img :src="image" :aspect-ratio="16 / 9" cover
         ><v-expand-transition
@@ -21,9 +22,12 @@
               :href="href"
             ></v-btn></div></v-expand-transition
       ></v-img>
-      <v-card-title>{{ title }}</v-card-title>
-      <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
-      <v-card-text>{{ text }}</v-card-text>
+      <v-card-item
+        :title="title"
+        :subtitle="subtitle"
+        :prependIcon="`mdi-${icon}`"
+      ></v-card-item>
+      <v-card-text v-if="text">{{ text }}</v-card-text>
       <!--v-overlay
         :model-value="isHovering"
         contained
