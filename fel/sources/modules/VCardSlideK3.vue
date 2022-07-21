@@ -1,5 +1,5 @@
 <template>
-  <v-slide-group>
+  <v-slide-group show-arrows>
     <v-slide-group-item v-for="item in items">
       <v-card-item-k3
         :item="item"
