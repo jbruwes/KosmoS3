@@ -8,7 +8,7 @@
       :class="class"
       :href="href"
     >
-      <v-img :src="image" :aspect-ratio="16 / 9" cover
+      <v-img v-if="type === 'image'" :src="image" :aspect-ratio="16 / 9" cover
         ><v-expand-transition
           ><div
             v-if="isHovering"
@@ -22,6 +22,13 @@
               :href="href"
             ></v-btn></div></v-expand-transition
       ></v-img>
+
+      <v-row v-if="type === 'icon'">
+        <v-col class="text-center">
+          <v-icon :icon="`mdi-${icon}`" size="x-large"></v-icon>
+        </v-col>
+      </v-row>
+
       <v-card-item
         :title="title"
         :subtitle="subtitle"
@@ -57,6 +64,7 @@ export default {
     icon: { default: "open-in-new", type: String },
     image: String,
     href: String,
+    type: { default: "image", type: String },
   },
 };
 </script>
