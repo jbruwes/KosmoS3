@@ -1,9 +1,5 @@
 <template>
   <v-card-k3
-    :animate="animate"
-    :class="class"
-    :width="width"
-    :height="height"
     :title="
       typeof title === 'string' ? title : item ? getTitle(item) : undefined
     "
@@ -41,10 +37,6 @@ import VCardK3 from "./VCardK3.vue";
 export default {
   props: {
     item: Object,
-    animate: String,
-    class: String,
-    width: Number,
-    height: Number,
     icon: String,
     date: String,
     title: String,
