@@ -7,6 +7,7 @@
       :height="height"
       :class="class"
       :href="href"
+      :variant="variants"
     >
       <v-img v-if="type === 'image'" :src="image" :aspect-ratio="16 / 9" cover
         ><v-expand-transition
@@ -22,17 +23,17 @@
               :href="href"
             ></v-btn></div></v-expand-transition
       ></v-img>
-
-      <v-row v-if="type === 'icon'">
-        <v-col class="text-center">
-          <v-icon :icon="`mdi-${icon}`" size="x-large"></v-icon>
-        </v-col>
-      </v-row>
+      <div v-if="type === 'icon'" class="text-center ma-2">
+        <v-icon
+          :icon="`mdi-${icon}`"
+          style="font-size: calc(var(--v-icon-size-multiplier) * 4em);"
+        ></v-icon>
+      </div>
 
       <v-card-item
         :title="title"
         :subtitle="subtitle"
-        :prependIcon="`mdi-${icon}`"
+        :prependIcon="type === 'icon' ? '' : `mdi-${icon}`"
       ></v-card-item>
       <v-card-text v-if="text">{{ text }}</v-card-text>
       <!--v-overlay
@@ -65,6 +66,21 @@ export default {
     image: String,
     href: String,
     type: { default: "image", type: String },
+  },
+  computed: {
+    variants() {
+      let variant = this.variant;
+      if (!variant)
+        switch (this.type) {
+          case "icon":
+            variant = "plain";
+            break;
+          default:
+            variant = "elevated";
+            break;
+        }
+      return variant;
+    },
   },
 };
 </script>
