@@ -1,7 +1,7 @@
 <template>
   <v-slide-group show-arrows>
     <v-slide-group-item v-for="item in items">
-      <v-card-item-k3
+      <v-item-k3
         :item="item"
         :animate="animate"
         :class="class"
@@ -12,14 +12,14 @@
         :image="image"
         :href="href"
         :description="description"
-      ></v-card-item-k3>
+      ></v-item-k3>
     </v-slide-group-item>
   </v-slide-group>
 </template>
 <script>
 import { mapActions } from "pinia";
 import core from "../stores/core.js";
-import VCardItemK3 from "./VCardItemK3.vue";
+import VItemK3 from "./VItemK3.vue";
 export default {
   props: {
     animate: String,
@@ -38,7 +38,7 @@ export default {
     path: String,
     children: Boolean,
   },
-  components: { VCardItemK3 },
+  components: { VItemK3 },
   computed: {
     items() {
       return this.getItems(
