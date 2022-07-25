@@ -2,7 +2,7 @@
   <v-container>
     <v-row justify="center">
       <v-col v-for="item in items" cols="12" sm="6" md="4" lg="3" xl="2">
-        <v-card-item-k3
+        <v-item-k3
           class="fill-height"
           :item="item"
           :animate="animate"
@@ -15,7 +15,7 @@
           :image="image"
           :href="href"
           :description="description"
-        ></v-card-item-k3>
+        ></v-item-k3>
       </v-col>
     </v-row>
   </v-container>
@@ -23,7 +23,7 @@
 <script>
 import { mapActions } from "pinia";
 import core from "../stores/core.js";
-import VCardItemK3 from "./VCardItemK3.vue";
+import VItemK3 from "./VItemK3.vue";
 export default {
   props: {
     animate: String,
@@ -43,7 +43,7 @@ export default {
     path: String,
     children: Boolean,
   },
-  components: { VCardItemK3 },
+  components: { VItemK3 },
   computed: {
     items() {
       return this.getItems(
