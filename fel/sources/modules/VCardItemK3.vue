@@ -3,14 +3,14 @@
     :title="
       typeof title === 'string' ? title : item ? getTitle(item) : undefined
     "
-    :text="
+    :subtitle="
       typeof date === 'string'
         ? date
         : item
         ? new Date(item.date ? item.date : item.lastmod).toLocaleDateString()
         : undefined
     "
-    :subtitle="
+    :text="
       typeof description === 'string'
         ? description
         : item
