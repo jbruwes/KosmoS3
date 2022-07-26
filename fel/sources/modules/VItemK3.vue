@@ -1,13 +1,19 @@
 <template>
   <v-card-k3
     :title="
-      typeof title === 'string' ? title : theItem ? getTitle(theItem) : undefined
+      typeof title === 'string'
+        ? title
+        : theItem
+        ? getTitle(theItem)
+        : undefined
     "
     :subtitle="
       typeof date === 'string'
         ? date
         : theItem
-        ? new Date(theItem.date ? theItem.date : theItem.lastmod).toLocaleDateString()
+        ? new Date(
+            theItem.date ? theItem.date : theItem.lastmod
+          ).toLocaleDateString()
         : undefined
     "
     :text="
@@ -26,7 +32,9 @@
           : undefined
         : undefined
     "
-    :image="typeof image === 'string' ? image : theItem ? theItem.image : undefined"
+    :image="
+      typeof image === 'string' ? image : theItem ? theItem.image : undefined
+    "
     :href="typeof href === 'string' ? href : url"
   ></v-card-k3>
 </template>
@@ -36,6 +44,7 @@ import core from "../stores/core.js";
 import VCardK3 from "./VCardK3.vue";
 export default {
   props: {
+    path: String,
     item: Object,
     icon: String,
     date: String,
@@ -52,10 +61,11 @@ export default {
       return href === this.routePath ? "" : href;
     },
     theItem() {
-      const items = this.item
-        ? [this.item]
-        : this.getItems(null, null, null, null, this.path);
-      return items.length ? items[0] : undefined;
+      return (
+        this.item
+          ? [this.item]
+          : this.getItems(null, null, null, null, this.path)
+      )[0];
     },
   },
   methods: { ...mapActions(core, ["getTitle", "getPath", "getItems"]) },
