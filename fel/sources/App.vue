@@ -20,12 +20,13 @@ import parentbutton from "./modules/parentbutton";
 
 import core from "./stores/core.js";
 
-import VCardK3 from "./modules/VCardK3.vue";
 import VItemK3 from "./modules/VItemK3.vue";
-import VCardSingleK3 from "./modules/VCardSingleK3.vue";
-import VIconSingleK3 from "./modules/VIconSingleK3.vue";
+import VCardK3 from "./modules/VCardK3.vue";
 import VCardSlideK3 from "./modules/VCardSlideK3.vue";
 import VCardGridK3 from "./modules/VCardGridK3.vue";
+import VIconK3 from "./modules/VIconK3.vue";
+import VIconSlideK3 from "./modules/VIconSlideK3.vue";
+import VIconGridK3 from "./modules/VIconGridK3.vue";
 import VMenuK3 from "./modules/VMenuK3.vue";
 import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
 
@@ -251,12 +252,13 @@ export default {
     },
   },
   components: {
-    VCardK3,
     VItemK3,
-    VCardSingleK3,
-    VIconSingleK3,
+    VCardK3,
     VCardSlideK3,
     VCardGridK3,
+    VIconK3,
+    VIconSlideK3,
+    VIconGridK3,
     VMenuK3,
     VNavigationDrawerK3,
     VRuntimeTemplate,
