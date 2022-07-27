@@ -1,64 +1,100 @@
 <template>
-  <v-card-k3
-    :title="
-      typeof title === 'string'
-        ? title
-        : theItem
-        ? getTitle(theItem)
-        : undefined
-    "
-    :subtitle="
-      typeof date === 'string'
-        ? date
-        : theItem
-        ? new Date(
-            theItem.date ? theItem.date : theItem.lastmod
-          ).toLocaleDateString()
-        : undefined
-    "
-    :text="
-      typeof description === 'string'
-        ? description
-        : theItem
-        ? theItem.description
-        : undefined
-    "
-    :icon="
-      typeof icon === 'string'
-        ? icon
-        : theItem
-        ? !!theItem.icon
-          ? theItem.icon
-          : undefined
-        : undefined
-    "
-    :image="
-      typeof image === 'string' ? image : theItem ? theItem.image : undefined
-    "
-    :href="typeof href === 'string' ? href : url"
-  ></v-card-k3>
+  <v-hover v-slot="{ isHovering, props }">
+    <v-card
+      v-animate-onscroll.repeat="animate"
+      v-bind="props"
+      :width="width"
+      :height="height"
+      :class="class"
+      :href="theHref"
+      :variant="variants"
+    >
+      <v-img
+        v-if="type === 'card'"
+        :src="theImage"
+        :aspect-ratio="16 / 9"
+        cover
+        ><v-expand-transition
+          ><div
+            v-if="isHovering"
+            class="d-flex transition-fast-in-fast-out align-center justify-center v-overlay__scrim v-overlay--absolute fill-height"
+          >
+            <v-btn
+              variant="outlined"
+              size="x-large"
+              color="white"
+              :icon="`mdi-${theIcon}`"
+              :href="theHref"
+            ></v-btn></div></v-expand-transition
+      ></v-img>
+      <div v-if="type === 'icon'" class="text-center ma-2">
+        <v-icon
+          :icon="`mdi-${theIcon}`"
+          style="font-size: calc(var(--v-icon-size-multiplier) * 4em);"
+        ></v-icon>
+      </div>
+
+      <v-card-item
+        :title="theTitle"
+        :subtitle="theSubtitle"
+        :prependIcon="type === 'icon' ? '' : `mdi-${theIcon}`"
+      ></v-card-item>
+      <v-card-text v-if="theText">{{ theText }}</v-card-text>
+      <!--v-overlay
+        :model-value="isHovering"
+        contained
+        class="align-center justify-center"
+      >
+        <v-btn
+          variant="outlined"
+          size="x-large"
+          color="white"
+          :icon="`mdi-${icon}`"
+          :href="href"
+        ></v-btn>
+      </v-overlay-->
+    </v-card>
+  </v-hover>
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
 import core from "../stores/core.js";
-import VCardK3 from "./VCardK3.vue";
 export default {
   props: {
-    path: String,
-    item: Object,
-    icon: String,
-    date: String,
+    animate: { default: "animate__animated animate__flipInY", type: String },
+    class: String,
+    width: { default: 275.99, type: Number },
+    height: Number,
     title: String,
+    subtitle: String,
+    text: String,
+    icon: String,
     image: String,
     href: String,
+    type: { default: "card", type: String },
+    path: String,
+    item: Object,
+    date: String,
     description: String,
   },
-  components: { VCardK3 },
   computed: {
     ...mapState(core, ["routePath"]),
     url() {
       const href = this.getPath(this.theItem);
       return href === this.routePath ? "" : href;
+    },
+    theVariant() {
+      let variant = this.variant;
+      if (!variant)
+        switch (this.type) {
+          case "icon":
+            variant = "plain";
+            break;
+          default:
+            variant = "elevated";
+            break;
+        }
+      return variant;
     },
     theItem() {
       return (
@@ -66,6 +102,48 @@ export default {
           ? [this.item]
           : this.getItems(null, null, null, null, this.path)
       )[0];
+    },
+    theIcon() {
+      return typeof this.icon === "string"
+        ? this.icon
+        : this.theItem
+        ? !!this.theItem.icon
+          ? this.theItem.icon
+          : "open-in-new"
+        : "open-in-new";
+    },
+    theHref() {
+      return typeof this.href === "string" ? this.href : this.url;
+    },
+    theImage() {
+      return typeof this.image === "string"
+        ? this.image
+        : this.theItem
+        ? this.theItem.image
+        : undefined;
+    },
+    theTitle() {
+      return typeof this.title === "string"
+        ? this.title
+        : this.theItem
+        ? this.getTitle(this.theItem)
+        : undefined;
+    },
+    theSubtitle() {
+      return typeof this.date === "string"
+        ? this.date
+        : this.theItem
+        ? new Date(
+            this.theItem.date ? this.theItem.date : this.theItem.lastmod
+          ).toLocaleDateString()
+        : undefined;
+    },
+    theText() {
+      return typeof this.description === "string"
+        ? this.description
+        : this.theItem
+        ? this.theItem.description
+        : undefined;
     },
   },
   methods: { ...mapActions(core, ["getTitle", "getPath", "getItems"]) },
