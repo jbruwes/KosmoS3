@@ -186,69 +186,6 @@ export default class TinymceView extends JetView {
       resize: false,
       templates: [
         {
-          title: "menu",
-          description:
-            "data-scrollable " +
-            "data-animation " +
-            "data-close-on-click " +
-            "data-direction " +
-            "data-hover-delay " +
-            "data-open-on-click " +
-            "data-orientation " +
-            "data-popup-collision",
-          content:
-            "<div" +
-            " " +
-            'class="mceNonEditable"' +
-            " " +
-            'data-id="rmenu"' +
-            " " +
-            'data-scrollable="true"' +
-            " " +
-            'data-animation="true"' +
-            " " +
-            'data-close-on-click="true"' +
-            " " +
-            'data-direction="default"' +
-            " " +
-            'data-hover-delay="100"' +
-            " " +
-            'data-open-on-click="false"' +
-            " " +
-            'data-orientation="horizontal"' +
-            " " +
-            'data-popup-collision="true"' +
-            "></div>",
-        },
-        {
-          title: "deck",
-          description: "колода карточек",
-          content: this.#grid
-            .replace("#{divider}", "")
-            .replace("#{centered}", "centered")
-            .replace("#{editable}", "mceNonEditable")
-            .replace("#{count}", "three")
-            .replace("#{aos}", "flip-left")
-            .replace("#{align}", "")
-            .replace("#{adaptive}", "")
-            .replace(
-              "#{data}",
-              [
-                'data-id="deck"',
-                this.#commonData,
-                this.#singleData,
-                this.#multiData,
-                this.#sliderData,
-              ].join(" ")
-            )
-            .replace(
-              "#{content}",
-              `<div class="ui fluid raised link card">${this.#dimmedImage
-                .replace("#{loading}", "eager")
-                .replace("#{size}", "")}${this.#header}</div>`
-            ),
-        },
-        {
           title: "carousel",
           description: "слайдер",
           content: this.#segments
@@ -325,8 +262,8 @@ export default class TinymceView extends JetView {
         },
         {
           title: "Card Single",
-          description: "v-card-single-k3",
-          content: '<v-card-single-k3 date=""></v-card-single-k3>',
+          description: "v-card-k3",
+          content: '<v-card-k3 date=""></v-card-k3>',
         },
         {
           title: "Card Slide",
@@ -337,6 +274,21 @@ export default class TinymceView extends JetView {
           title: "Card Grid",
           description: "v-card-grid-k3",
           content: '<v-card-grid-k3 date=""></v-card-grid-k3>',
+        },
+        {
+          title: "Icon Single",
+          description: "v-icon-k3",
+          content: '<v-icon-k3 date=""></v-icon-k3>',
+        },
+        {
+          title: "Icon Slide",
+          description: "v-icon-slide-k3",
+          content: '<v-icon-slide-k3 date=""></v-icon-slide-k3>',
+        },
+        {
+          title: "Icon Grid",
+          description: "v-icon-grid-k3",
+          content: '<v-icon-grid-k3 date=""></v-icon-grid-k3>',
         },
         {
           title: "doubleheader",
@@ -359,45 +311,6 @@ export default class TinymceView extends JetView {
               ].join(" ")
             )
             .replace("#{content}", this.#header)}</div>`,
-        },
-        {
-          title: "icongrid",
-          description: "плитка из иконок",
-          content: this.#grid
-            .replace("#{divider}", "")
-            .replace("#{editable}", "mceNonEditable")
-            .replace("#{centered}", "centered")
-            .replace("#{count}", "six")
-            .replace("#{aos}", "fade-up")
-            .replace("#{align}", "center aligned")
-            .replace("#{adaptive}", "stackable doubling")
-            .replace(
-              "#{data}",
-              [
-                'data-id="icongrid"',
-                this.#commonData,
-                this.#singleData,
-                this.#multiData,
-              ].join(" ")
-            )
-            .replace("#{content}", this.#header),
-        },
-        {
-          title: "youtube",
-          description: "вставка youtube ролика",
-          content:
-            "<div" +
-            " " +
-            'class="ui embed mceNonEditable"' +
-            " " +
-            'data-source="youtube"' +
-            " " +
-            'data-id="TaOoK8kd6Zg"' +
-            " " +
-            'data-placeholder="' +
-            "//i.ytimg.com/vi/TaOoK8kd6Zg/maxresdefault.jpg" +
-            '"' +
-            "></div>",
         },
         {
           title: "breadcrumbs",
