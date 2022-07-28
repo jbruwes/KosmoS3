@@ -1,6 +1,7 @@
 <template>
   <v-hover v-slot="{ isHovering, props }">
     <v-card
+      :elevation="isHovering ? 12 : 2"
       v-animate-onscroll.repeat="animate"
       v-bind="props"
       :width="width"
@@ -9,20 +10,17 @@
       :href="theHref"
       :variant="variants"
     >
-      <v-img
-        v-if="type === 'card'"
-        :src="theImage"
-        :aspect-ratio="16 / 9"
-        cover
+      <v-img v-if="type === 'card'" :src="theImage" :aspect-ratio="16 / 9" cover
         ><v-expand-transition
           ><div
             v-if="isHovering"
-            class="d-flex transition-fast-in-fast-out align-center justify-center v-overlay__scrim v-overlay--absolute fill-height"
+            class="d-flex transition-fast-in-slow-out bg-white align-center justify-center position-absolute w-100"
+            style="height:100%;bottom:0;opacity:.9;"
           >
             <v-btn
               variant="outlined"
               size="x-large"
-              color="white"
+              color="grey"
               :icon="`mdi-${theIcon}`"
               :href="theHref"
             ></v-btn></div></v-expand-transition
@@ -34,10 +32,15 @@
         ></v-icon>
       </div>
 
-      <v-card-item
-        :title="theTitle"
-        :subtitle="theSubtitle"
-        :prependIcon="type === 'icon' ? '' : `mdi-${theIcon}`"
+      <v-card-item :title="theTitle"
+        ><v-card-subtitle v-if="theSubtitle"
+          ><v-chip
+            size="x-small"
+            label
+            variant="outlined"
+            prepend-icon="mdi-calendar"
+            :text="theSubtitle"
+          ></v-chip></v-card-subtitle
       ></v-card-item>
       <v-card-text v-if="theText">{{ theText }}</v-card-text>
       <!--v-overlay
