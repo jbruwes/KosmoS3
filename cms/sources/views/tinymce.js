@@ -154,7 +154,7 @@ export default class TinymceView extends JetView {
        *
        *  @see https://www.tiny.cloud/docs-3x/reference/Configuration3x/Configuration3x@valid_elements/#fullxhtmlruleset
        */
-      extended_valid_elements:
+      /* extended_valid_elements:
         "a[accesskey|charset|class|coords|dir<ltr?rtl|href|hreflang|id|lang|name" +
         "|onblur|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup" +
         "|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|rel|rev" +
@@ -170,7 +170,8 @@ export default class TinymceView extends JetView {
         "|title]," +
         "span[align<center?justify?left?right|class|dir<ltr?rtl|id|lang|onclick|ondblclick|onkeydown" +
         "|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover" +
-        "|onmouseup|style|title]",
+        "|onmouseup|style|title]", */
+      valid_elements: "*[*]",
       protect: [/<v-.+(<\/v-.+?>)/g],
       branding: false,
       browser_spellcheck: true,
