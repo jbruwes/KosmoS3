@@ -105,7 +105,7 @@
     "animate.css": "^4.1.1",
     "core-js": "^3.24.0",
     "dompurify": "^2.3.10",
-    "electron": "^19.0.9",
+    "electron": "^19.0.10",
     "electron-serve": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "fabric": "^5.2.1",
