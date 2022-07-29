@@ -6,12 +6,9 @@ import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
 import GLightbox from "glightbox";
 import DOMPurify from "dompurify";
-import deck from "./modules/deck";
 import carousel from "./modules/carousel";
-import cardgrid from "./modules/cardgrid";
 import list from "./modules/list";
 import breadcrumbs from "./modules/breadcrumbs";
-import icongrid from "./modules/icongrid";
 import header from "./modules/header";
 import pageheader from "./modules/pageheader";
 import doubleheader from "./modules/doubleheader";
@@ -198,13 +195,10 @@ export default {
     onhashchange(pSel = "#content") {
       if (this.tree) {
         carousel(this.tree, pSel);
-        deck(this.tree, pSel);
-        cardgrid(this.tree, pSel);
         list(this.tree, pSel);
         header(this.tree, pSel);
         pageheader(this.tree, pSel);
         doubleheader(this.tree, pSel);
-        icongrid(this.tree, pSel);
         breadcrumbs(this.tree, pSel);
         pagination(this.tree, pSel);
         parentbutton(this.tree, pSel);
