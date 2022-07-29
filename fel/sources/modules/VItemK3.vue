@@ -1,14 +1,14 @@
 <template>
   <v-hover v-slot="{ isHovering, props }">
     <v-card
-      :elevation="isHovering ? 12 : 2"
+      :elevation="isHovering && type === 'card' ? 12 : undefined"
       v-animate-onscroll.repeat="animate"
       v-bind="props"
       :width="width"
       :height="height"
       :class="class"
       :href="theHref"
-      :variant="variants"
+      :variant="theVariant"
     >
       <v-img v-if="type === 'card'" :src="theImage" :aspect-ratio="16 / 9" cover
         ><v-expand-transition
@@ -31,7 +31,6 @@
           style="font-size: calc(var(--v-icon-size-multiplier) * 4em);"
         ></v-icon>
       </div>
-
       <v-card-item :title="theTitle"
         ><v-card-subtitle v-if="theSubtitle"
           ><v-chip
@@ -43,19 +42,6 @@
           ></v-chip></v-card-subtitle
       ></v-card-item>
       <v-card-text v-if="theText">{{ theText }}</v-card-text>
-      <!--v-overlay
-        :model-value="isHovering"
-        contained
-        class="align-center justify-center"
-      >
-        <v-btn
-          variant="outlined"
-          size="x-large"
-          color="white"
-          :icon="`mdi-${icon}`"
-          :href="href"
-        ></v-btn>
-      </v-overlay-->
     </v-card>
   </v-hover>
 </template>
@@ -87,66 +73,29 @@ export default {
       return href === this.routePath ? "" : href;
     },
     theVariant() {
-      let variant = this.variant;
-      if (!variant)
-        switch (this.type) {
-          case "icon":
-            variant = "plain";
-            break;
-          default:
-            variant = "elevated";
-            break;
-        }
-      return variant;
+      return this.variant || (this.type === "icon" ? "plain" : "elevated");
     },
     theItem() {
-      return (
-        this.item
-          ? [this.item]
-          : this.getItems(null, null, null, null, this.path)
-      )[0];
+      return this.item || this.getItems(null, null, null, null, this.path)[0];
     },
     theIcon() {
-      return typeof this.icon === "string"
-        ? this.icon
-        : this.theItem
-        ? !!this.theItem.icon
-          ? this.theItem.icon
-          : "open-in-new"
-        : "open-in-new";
+      return this.icon || this.theItem.icon || "open-in-new";
     },
     theHref() {
-      return typeof this.href === "string" ? this.href : this.url;
+      return this.href || this.url;
     },
     theImage() {
-      return typeof this.image === "string"
-        ? this.image
-        : this.theItem
-        ? this.theItem.image
-        : undefined;
+      return this.image || this.theItem.image;
     },
     theTitle() {
-      return typeof this.title === "string"
-        ? this.title
-        : this.theItem
-        ? this.getTitle(this.theItem)
-        : undefined;
+      return this.title || this.getTitle(this.theItem);
     },
     theSubtitle() {
-      return typeof this.date === "string"
-        ? this.date
-        : this.theItem
-        ? new Date(
-            this.theItem.date ? this.theItem.date : this.theItem.lastmod
-          ).toLocaleDateString()
-        : undefined;
+      const date = new Date(this.theItem.date || this.theItem.lastmod);
+      return this.date || (isNaN(date) ? "" : date.toLocaleDateString());
     },
     theText() {
-      return typeof this.description === "string"
-        ? this.description
-        : this.theItem
-        ? this.theItem.description
-        : undefined;
+      return this.description || this.theItem.description;
     },
   },
   methods: { ...mapActions(core, ["getTitle", "getPath", "getItems"]) },
