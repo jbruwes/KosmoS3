@@ -279,17 +279,17 @@ export default class TinymceView extends JetView {
         {
           title: "Icon Single",
           description: "v-icon-k3",
-          content: '<v-icon-k3 date=""></v-icon-k3>',
+          content: '<v-icon-k3 date="" description=""></v-icon-k3>',
         },
         {
           title: "Icon Slide",
           description: "v-icon-slide-k3",
-          content: '<v-icon-slide-k3 date=""></v-icon-slide-k3>',
+          content: '<v-icon-slide-k3 date="" description=""></v-icon-slide-k3>',
         },
         {
           title: "Icon Grid",
           description: "v-icon-grid-k3",
-          content: '<v-icon-grid-k3 date=""></v-icon-grid-k3>',
+          content: '<v-icon-grid-k3 date="" description=""></v-icon-grid-k3>',
         },
         {
           title: "doubleheader",
