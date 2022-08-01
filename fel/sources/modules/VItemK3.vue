@@ -1,10 +1,11 @@
 <template>
   <v-hover v-slot="{ isHovering, props }">
     <v-card
-      :elevation="isHovering && type === 'card' ? 12 : undefined"
+      :elevation="isHovering && type === 'card' ? 6 : undefined"
       v-animate-onscroll.repeat="animate"
       v-bind="props"
-      :width="width"
+      density="compact"
+      :width="theWidth"
       :height="height"
       :class="class"
       :href="theHref"
@@ -25,13 +26,16 @@
               :href="theHref"
             ></v-btn></div></v-expand-transition
       ></v-img>
-      <div v-if="type === 'icon'" class="text-center ma-2">
+      <div v-if="type === 'icon'" class="text-center">
         <v-icon
           :icon="`mdi-${theIcon}`"
           style="font-size: calc(var(--v-icon-size-multiplier) * 4em);"
         ></v-icon>
       </div>
-      <v-card-item :title="theTitle"
+      <v-card-item
+        density="compact"
+        :title="theTitle"
+        :class="type === 'icon' ? 'justify-center text-center' : ''"
         ><v-card-subtitle v-if="theSubtitle"
           ><v-chip
             size="x-small"
@@ -41,7 +45,11 @@
             :text="theSubtitle"
           ></v-chip></v-card-subtitle
       ></v-card-item>
-      <v-card-text v-if="theText">{{ theText }}</v-card-text>
+      <v-card-text
+        v-if="theText"
+        :class="type === 'icon' ? 'text-center' : ''"
+        >{{ theText }}</v-card-text
+      >
     </v-card>
   </v-hover>
 </template>
@@ -52,7 +60,8 @@ export default {
   props: {
     animate: { default: "animate__animated animate__flipInY", type: String },
     class: String,
-    width: { default: 275.99, type: Number },
+    //width: { default: 275.99, type: Number },
+    width: Number,
     height: Number,
     title: String,
     subtitle: String,
@@ -73,29 +82,50 @@ export default {
       return href === this.routePath ? "" : href;
     },
     theVariant() {
-      return this.variant || (this.type === "icon" ? "plain" : "elevated");
+      return typeof this.variant === "string"
+        ? this.variant
+        : this.type === "icon"
+        ? "plain"
+        : "elevated";
     },
     theItem() {
-      return this.item || this.getItems(null, null, null, null, this.path)[0];
+      return typeof this.item === "object"
+        ? this.item
+        : this.getItems(null, null, null, null, this.path)[0];
     },
     theIcon() {
-      return this.icon || this.theItem.icon || "open-in-new";
+      return typeof this.icon === "string"
+        ? this.icon
+        : this.theItem.icon || "open-in-new";
     },
     theHref() {
-      return this.href || this.url;
+      return typeof this.href === "string" ? this.href : this.url;
     },
     theImage() {
-      return this.image || this.theItem.image;
+      return typeof this.image === "string" ? this.image : this.theItem.image;
     },
     theTitle() {
-      return this.title || this.getTitle(this.theItem);
+      return typeof this.title === "string"
+        ? this.title
+        : this.getTitle(this.theItem);
     },
     theSubtitle() {
       const date = new Date(this.theItem.date || this.theItem.lastmod);
-      return this.date || (isNaN(date) ? "" : date.toLocaleDateString());
+      return typeof this.date === "string"
+        ? this.date
+        : isNaN(date)
+        ? undefined
+        : date.toLocaleDateString();
     },
     theText() {
-      return this.description || this.theItem.description;
+      return typeof this.description === "string"
+        ? this.description
+        : this.theItem.description;
+    },
+    theWidth() {
+      return typeof this.width !== "boolean"
+        ? this.width
+        : (this.height * 9) / 16;
     },
   },
   methods: { ...mapActions(core, ["getTitle", "getPath", "getItems"]) },
