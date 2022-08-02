@@ -1,5 +1,6 @@
 <script>
 import { nextTick } from "vue";
+import { useScriptTag } from "@vueuse/core";
 import { mapState, mapActions, mapWritableState } from "pinia";
 import VRuntimeTemplate from "vue3-runtime-template";
 import { jarallax, jarallaxVideo } from "jarallax";
@@ -166,7 +167,9 @@ export default {
         { url: "index.js" },
       ]
         .filter((script) => script.url)
-        .map((script) => this.$loadScript(script.url))
+        .map((script) =>
+          useScriptTag(script.url, undefined, { manual: true }).load()
+        )
     );
     this.onhashchange("#kosmos3");
   },
