@@ -1,12 +1,13 @@
 <template>
   <v-hover v-slot="{ isHovering, props }">
     <v-card
+      ref="el"
+      :width="theWidth"
+      :height="height"
       :elevation="isHovering && type === 'card' ? 6 : undefined"
       v-animate-onscroll.repeat="animate"
       v-bind="props"
       density="compact"
-      :width="theWidth"
-      :height="height"
       :class="class"
       :href="theHref"
       :variant="theVariant"
@@ -54,13 +55,31 @@
   </v-hover>
 </template>
 <script>
+import { ref } from "vue";
+import { useElementSize } from "@vueuse/core";
 import { mapState, mapActions } from "pinia";
 import core from "../stores/core.js";
 export default {
+  setup() {
+    const el = ref(null);
+    const { width, height } = useElementSize(el);
+    const theHeight = height;
+    return { el, theHeight };
+  },
+  data() {
+    return {
+      theWidth: this.width,
+    };
+  },
+  watch: {
+    theHeight(newHeight, oldHeight) {
+      if (typeof this.width === "undefined" && newHeight > oldHeight)
+        this.theWidth = newHeight;
+    },
+  },
   props: {
     animate: { default: "animate__animated animate__flipInY", type: String },
     class: String,
-    //width: { default: 275.99, type: Number },
     width: Number,
     height: Number,
     title: String,
@@ -91,41 +110,52 @@ export default {
     theItem() {
       return typeof this.item === "object"
         ? this.item
-        : this.getItems(null, null, null, null, this.path)[0];
+        : typeof this.item === "undefined" || !!this.item
+        ? this.getItems(null, null, null, null, this.path)[0]
+        : undefined;
     },
     theIcon() {
       return typeof this.icon === "string"
         ? this.icon
-        : this.theItem.icon || "open-in-new";
+        : typeof this.icon === "undefined" || !!this.icon
+        ? this.theItem.icon || "open-in-new"
+        : undefined;
     },
     theHref() {
-      return typeof this.href === "string" ? this.href : this.url;
+      return typeof this.href === "string"
+        ? this.href
+        : typeof this.href === "undefined" || !!this.href
+        ? this.url
+        : undefined;
     },
     theImage() {
-      return typeof this.image === "string" ? this.image : this.theItem.image;
+      return typeof this.image === "string"
+        ? this.image
+        : typeof this.image === "undefined" || !!this.image
+        ? this.theItem.image
+        : undefined;
     },
     theTitle() {
       return typeof this.title === "string"
         ? this.title
-        : this.getTitle(this.theItem);
+        : typeof this.title === "undefined" || !!this.title
+        ? this.getTitle(this.theItem)
+        : undefined;
     },
     theSubtitle() {
       const date = new Date(this.theItem.date || this.theItem.lastmod);
       return typeof this.date === "string"
         ? this.date
-        : isNaN(date)
-        ? undefined
-        : date.toLocaleDateString();
+        : (typeof this.date === "undefined" || !!this.date) && !isNaN(date)
+        ? date.toLocaleDateString()
+        : undefined;
     },
     theText() {
       return typeof this.description === "string"
         ? this.description
-        : this.theItem.description;
-    },
-    theWidth() {
-      return typeof this.width !== "boolean"
-        ? this.width
-        : (this.height * 9) / 16;
+        : typeof this.description === "undefined" || !!this.description
+        ? this.theItem.description
+        : undefined;
     },
   },
   methods: { ...mapActions(core, ["getTitle", "getPath", "getItems"]) },
