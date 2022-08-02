@@ -41,7 +41,7 @@
   "license": "GNU AGPL",
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
-    "@babel/preset-env": "^7.18.9",
+    "@babel/preset-env": "^7.18.10",
     "babel-loader": "^8.2.5",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^5.2.7",
@@ -72,7 +72,7 @@
     "webpack-dev-server": "^4.9.3"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.137.0",
+    "@aws-sdk/client-s3": "^3.141.0",
     "@fontsource/arsenal": "^4.5.7",
     "@fontsource/bad-script": "^4.5.7",
     "@fontsource/caveat": "^4.5.7",
@@ -101,6 +101,7 @@
     "@fontsource/tenor-sans": "^4.5.9",
     "@mdi/font": "^6.9.96",
     "@mdi/svg": "^6.9.96",
+    "@vueuse/core": "^9.0.2",
     "ace-builds": "^1.8.1",
     "animate.css": "^4.1.1",
     "core-js": "^3.24.1",
@@ -115,7 +116,6 @@
     "jquery": "^3.6.0",
     "jsel": "^1.1.6",
     "lightslider": "^1.1.6",
-    "lodash": "^4.17.21",
     "page": "^1.11.6",
     "pinia": "^2.0.17",
     "pure": "^2.85.0",
@@ -125,7 +125,7 @@
     "vue-plugin-load-script": "^2.1.1",
     "vue3-animate-onscroll": "^1.0.6",
     "vue3-runtime-template": "^1.0.2",
-    "vuetify": "^3.0.0-beta.5",
+    "vuetify": "^3.0.0-beta.6",
     "webix": "^9.4.0",
     "webix-jet": "^2.1.3"
   },
