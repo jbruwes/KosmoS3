@@ -100,7 +100,6 @@ import { createPinia } from "pinia";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
-import LoadScript from "vue-plugin-load-script";
 import VueAnimateOnScroll from "vue3-animate-onscroll";
 import App from "./App.vue";
 
@@ -121,7 +120,6 @@ const vuetify = createVuetify({
   directives,
 });
 app.use(vuetify);
-app.use(LoadScript);
 app.use(VueAnimateOnScroll);
 app.use(createPinia());
 app.mount("#app");
