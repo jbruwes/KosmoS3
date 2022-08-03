@@ -28,7 +28,6 @@ import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 
 import "glightbox/dist/css/glightbox.css";
-import "animate.css/animate.css";
 import "lightslider/dist/css/lightslider.css";
 import "jarallax/dist/jarallax.css";
 
@@ -100,7 +99,7 @@ import { createPinia } from "pinia";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
-import VueAnimateOnScroll from "vue3-animate-onscroll";
+import { MotionPlugin } from '@vueuse/motion'
 import App from "./App.vue";
 
 window.$ = $;
@@ -120,6 +119,6 @@ const vuetify = createVuetify({
   directives,
 });
 app.use(vuetify);
-app.use(VueAnimateOnScroll);
+app.use(MotionPlugin);
 app.use(createPinia());
 app.mount("#app");
