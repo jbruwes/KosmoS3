@@ -3,7 +3,6 @@
     <v-slide-group-item v-for="item in items">
       <v-item-k3
         :item="item"
-        :animate="animate"
         :class="class"
         :width="width"
         :height="height"
@@ -24,7 +23,6 @@ import core from "../stores/core.js";
 import VItemK3 from "./VItemK3.vue";
 export default {
   props: {
-    animate: String,
     class: { default: "ma-4", type: String },
     width: Number,
     height: Number,
