@@ -2,10 +2,11 @@
   <v-hover v-slot="{ isHovering, props }">
     <v-card
       ref="el"
+      v-motion-pop-visible
+      style="transform: scale(1) translateZ(0px); opacity: 1;"
       :width="theWidth"
       :height="height"
       :elevation="isHovering && type === 'card' ? 6 : undefined"
-      v-animate-onscroll.repeat="animate"
       v-bind="props"
       density="compact"
       :class="class"
@@ -78,7 +79,6 @@ export default {
     },
   },
   props: {
-    animate: { default: "animate__animated animate__flipInY", type: String },
     class: String,
     width: Number,
     height: Number,
