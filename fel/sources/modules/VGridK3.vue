@@ -5,6 +5,7 @@
         <v-item-k3
           class="fill-height"
           :item="item"
+          :animate="animate"
           :class="class"
           :width="width"
           :height="height"
@@ -26,6 +27,7 @@ import core from "../stores/core.js";
 import VItemK3 from "./VItemK3.vue";
 export default {
   props: {
+    animate: String,
     class: String,
     width: { default: "100%", type: Number },
     height: Number,
