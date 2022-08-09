@@ -97,6 +97,14 @@ export default defineStore("core", {
       );
     },
     /**
+     * Id текущего объекта
+     *
+     * @returns {string} Id
+     */
+    id() {
+      return this.item.id;
+    },
+    /**
      * Заголовок текущего объекта
      *
      * @returns {string} Заголовок
@@ -127,6 +135,12 @@ export default defineStore("core", {
      */
     description() {
       return this.item.description;
+    },
+    /**
+     *
+     */
+    keywords() {
+      return this.item.keywords;
     },
     /**
      * Описание дерева
@@ -223,7 +237,7 @@ export default defineStore("core", {
      * @returns {string} Путь
      */
     routePath() {
-      return this.context.routePath ? this.context.routePath : "";
+      return this.context.routePath;
     },
   },
   actions: {
@@ -298,11 +312,10 @@ export default defineStore("core", {
      * @returns {object[]} Массив дочерних объектов
      */
     getItems(deep, length, reveal, sort, path, children, attr, axe) {
-      const hash = this.routePath.replace(/^\/+|\/+$/g, "");
       let lChildren = null;
       const lAttr = attr || "";
       let dataChildren = [];
-      const dataHashes = (Array.isArray(path) ? path : [path || hash]).map(
+      const dataHashes = (Array.isArray(path) ? path : [path || this.routePath || ""]).map(
         (value) =>
           decodeURIComponent(value.trim())
             .replace(/_/g, " ")
