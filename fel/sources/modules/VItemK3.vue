@@ -1,13 +1,11 @@
 <template>
   <v-hover v-slot="{ isHovering, props }">
     <v-card
-      ref="el"
-      v-motion-pop-visible
-      style="transform: scale(1) translateZ(0px); opacity: 1;"
-      :width="theWidth"
+      v-animate-onscroll.repeat="animate"
+      v-bind="props"
+      class="ma-auto"
       :height="height"
       :elevation="isHovering && type === 'card' ? 6 : undefined"
-      v-bind="props"
       density="compact"
       :class="class"
       :href="theHref"
@@ -57,28 +55,11 @@
 </template>
 <script>
 import { ref } from "vue";
-import { useElementSize } from "@vueuse/core";
 import { mapState, mapActions } from "pinia";
 import core from "../stores/core.js";
 export default {
-  setup() {
-    const el = ref(null);
-    const { width, height } = useElementSize(el);
-    const theHeight = height;
-    return { el, theHeight };
-  },
-  data() {
-    return {
-      theWidth: this.width,
-    };
-  },
-  watch: {
-    theHeight(newHeight, oldHeight) {
-      if (typeof this.width === "undefined" && newHeight > oldHeight)
-        this.theWidth = newHeight;
-    },
-  },
   props: {
+    animate: { default: "animate__animated animate__fadeIn", type: String },
     class: String,
     width: Number,
     height: Number,
