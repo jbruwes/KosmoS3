@@ -1,7 +1,13 @@
 <script>
-import { nextTick } from "vue";
-import { useScriptTag } from "@vueuse/core";
-import { mapState, mapActions, mapWritableState } from "pinia";
+import { nextTick, computed } from "vue";
+import { useScriptTag, useTitle, useFetch, get } from "@vueuse/core";
+import {
+  useStore,
+  storeToRefs,
+  mapState,
+  mapActions,
+  mapWritableState,
+} from "pinia";
 import VRuntimeTemplate from "vue3-runtime-template";
 import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
@@ -35,12 +41,41 @@ export default {
    *
    * @returns {Data} Объект data
    */
-  data: () => ({
-    drawer: false,
-    content: "",
-  }),
+  setup() {
+    const store = core();
+    const { title, id, context } = storeToRefs(store);
+    useTitle(title);
+    const { data } = useFetch(
+      computed(() => `${encodeURIComponent(get(id))}.htm`),
+      {
+        beforeFetch({ cancel }) {
+          if (!(get(context).page && get(context).page.len)) cancel();
+        },
+        afterFetch(ctx) {
+          ctx.data = DOMPurify.sanitize(ctx.data, {
+            ADD_TAGS: ["iframe"],
+            ADD_ATTR: [
+              "target",
+              "allow",
+              "allowfullscreen",
+              "frameborder",
+              "scrolling",
+            ],
+            CUSTOM_ELEMENT_HANDLING: {
+              tagNameCheck: /^v-/,
+              attributeNameCheck: /\w+/,
+              allowCustomizedBuiltInElements: true,
+            },
+          });
+          return ctx;
+        },
+        refetch: true,
+      }
+    );
+    return { title, id, context, data };
+  },
+  data: () => ({ drawer: false }),
   computed: {
-    ...mapWritableState(core, ["context"]),
     ...mapState(core, [
       "tree",
       "list",
@@ -51,10 +86,9 @@ export default {
       "vector",
       "parent",
       "item",
-      "title",
+      "description",
       "treeTitle",
       "parentTitle",
-      "description",
       "treeDescription",
       "parentDescription",
       "icon",
@@ -70,71 +104,38 @@ export default {
     ]),
   },
   watch: {
-    /**
-     * При изменении текущего объекта загружаем страницу
-     */
-    async item() {
-      let html = "";
-      if (this.context && this.context.page && this.context.page.len)
-        try {
-          const response = await fetch(
-            `${encodeURIComponent(this.item.id)}.htm`,
-            {
-              cache: "no-store",
-            }
-          );
-          html =
-            response.status === 200
-              ? DOMPurify.sanitize(await response.text(), {
-                  ADD_TAGS: ["iframe"],
-                  ADD_ATTR: [
-                    "target",
-                    "allow",
-                    "allowfullscreen",
-                    "frameborder",
-                    "scrolling",
-                  ],
-                  CUSTOM_ELEMENT_HANDLING: {
-                    tagNameCheck: /^v-/,
-                    attributeNameCheck: /\w+/,
-                    allowCustomizedBuiltInElements: true,
-                  },
-                })
-              : "";
-        } finally {
-          document.title = (
-            this.item.title ? this.item.title : this.item.value
-          ).replace(/"/g, "&quot;");
-          const lUrl = this.item.href || this.item.path;
-          [
-            ['meta[name="description"]', this.item.description],
-            ['meta[name="keywords"]', this.item.keywords],
-            ['meta[property="og:title"]', document.title],
-            ['meta[property="og:description"]', this.item.description],
-            [
-              'meta[property="og:url"]',
-              `${window.location.origin}${
-                lUrl === "/" ? "" : `${encodeURI(lUrl)}`
-              }`,
-            ],
-            [
-              'meta[property="og:image"]',
-              this.item.image
-                ? `${window.location.origin}/${this.item.image}`
-                : "",
-            ],
-          ].forEach((e) => {
-            const element = document.head.querySelector(e[0]);
-            element.content = e[1] ? e[1].replace(/"/g, "&quot;") : "";
-          });
-          if (this.content === html) this.content = "";
-          this.content = html;
-          nextTick(() => {
-            this.GLightbox();
-            this.onhashchange();
-            window.scrollTo(0, 0);
-          });
-        }
+    data() {
+      nextTick(() => {
+        this.GLightbox();
+        this.onhashchange();
+        window.scrollTo(0, 0);
+      });
+    },
+    title(newTitle) {
+      this.meta(['meta[property="og:title"]', newTitle]);
+    },
+    path(newPath) {
+      this.meta([
+        'meta[property="og:url"]',
+        `${window.location.origin}${
+          newPath === "/" ? "" : `${encodeURI(newPath)}`
+        }`,
+      ]);
+    },
+    description(newDescription) {
+      [
+        ['meta[name="description"]', newDescription],
+        ['meta[property="og:description"]', newDescription],
+      ].forEach(this.meta);
+    },
+    keywords(newKeywords) {
+      this.meta(['meta[name="keywords"]', newKeywords]);
+    },
+    image(newImage) {
+      this.meta([
+        'meta[property="og:image"]',
+        newImage ? `${window.location.origin}/${newImage}` : "",
+      ]);
     },
     /**
      * При изменении индекса создаем роутер
@@ -190,6 +191,10 @@ export default {
     route(context) {
       this.context = context;
     },
+    meta(e) {
+      const element = document.head.querySelector(e[0]);
+      element.content = e[1] ? e[1].replace(/"/g, "&quot;") : "";
+    },
     /**
      * Обработчик загруженного контента
      *
@@ -197,17 +202,18 @@ export default {
      */
     onhashchange(pSel = "#content") {
       if (this.tree) {
-        carousel(this.tree, pSel);
-        list(this.tree, pSel);
-        header(this.tree, pSel);
-        pageheader(this.tree, pSel);
-        doubleheader(this.tree, pSel);
-        breadcrumbs(this.tree, pSel);
-        pagination(this.tree, pSel);
-        parentbutton(this.tree, pSel);
+        const tree = structuredClone(this.tree);
+        carousel(tree, pSel);
+        list(tree, pSel);
+        header(tree, pSel);
+        pageheader(tree, pSel);
+        doubleheader(tree, pSel);
+        breadcrumbs(tree, pSel);
+        pagination(tree, pSel);
+        parentbutton(tree, pSel);
+        if (typeof init === "function") init.call(tree);
       }
       jarallax(document.querySelectorAll(".jarallax"));
-      if (typeof init === "function") init.call(this.tree);
     },
     /**
      * Натравливаем GLightbox на всё подряд
