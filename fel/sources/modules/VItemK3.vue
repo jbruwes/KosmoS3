@@ -91,35 +91,35 @@ export default {
     theItem() {
       return typeof this.item === "object"
         ? this.item
-        : typeof this.item === "undefined" || !!this.item
+        : this.item === undefined || !!this.item
         ? this.getItems(null, null, null, null, this.path)[0]
         : undefined;
     },
     theIcon() {
       return typeof this.icon === "string"
         ? this.icon
-        : typeof this.icon === "undefined" || !!this.icon
+        : this.icon === undefined || !!this.icon
         ? this.theItem.icon || "open-in-new"
         : undefined;
     },
     theHref() {
       return typeof this.href === "string"
         ? this.href
-        : typeof this.href === "undefined" || !!this.href
+        : this.href === undefined || !!this.href
         ? this.url
         : undefined;
     },
     theImage() {
       return typeof this.image === "string"
         ? this.image
-        : typeof this.image === "undefined" || !!this.image
+        : this.image === undefined || !!this.image
         ? this.theItem.image
         : undefined;
     },
     theTitle() {
       return typeof this.title === "string"
         ? this.title
-        : typeof this.title === "undefined" || !!this.title
+        : this.title === undefined || !!this.title
         ? this.getTitle(this.theItem)
         : undefined;
     },
@@ -127,14 +127,14 @@ export default {
       const date = new Date(this.theItem.date || this.theItem.lastmod);
       return typeof this.date === "string"
         ? this.date
-        : (typeof this.date === "undefined" || !!this.date) && !isNaN(date)
+        : (this.date === undefined || !!this.date) && !isNaN(date)
         ? date.toLocaleDateString()
         : undefined;
     },
     theText() {
       return typeof this.description === "string"
         ? this.description
-        : typeof this.description === "undefined" || !!this.description
+        : this.description === undefined || !!this.description
         ? this.theItem.description
         : undefined;
     },
