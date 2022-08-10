@@ -45,7 +45,8 @@ export default {
     const store = core();
     const { title, id, context } = storeToRefs(store);
     useTitle(title);
-    const { data } = useFetch(
+    let status;
+    const { data, statusCode } = useFetch(
       computed(() => `${encodeURIComponent(get(id))}.htm`),
       {
         beforeFetch({ cancel }) {
@@ -72,7 +73,7 @@ export default {
         refetch: true,
       }
     );
-    return { title, id, context, data };
+    return { title, id, context, data, statusCode, status };
   },
   data: () => ({ drawer: false }),
   computed: {
@@ -102,9 +103,15 @@ export default {
       "parentImage",
       "routePath",
     ]),
+    template() {
+      return !this.status || this.status === 200 ? this.data : "<div></div>";
+    },
   },
   watch: {
-    data() {
+    statusCode(newStatusCode) {
+      this.status = newStatusCode;
+    },
+    template() {
       nextTick(() => {
         this.GLightbox();
         this.onhashchange();
