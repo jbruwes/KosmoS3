@@ -137,7 +137,9 @@ export default defineStore("core", {
       return this.item.description;
     },
     /**
-     *
+     * Ключевые слова текущего объекта
+     * 
+     * @returns {string} Ключевые слова
      */
     keywords() {
       return this.item.keywords;
@@ -315,20 +317,17 @@ export default defineStore("core", {
       let lChildren = null;
       const lAttr = attr || "";
       let dataChildren = [];
-      const dataHashes = (Array.isArray(path) ? path : [path || this.routePath || ""]).map(
-        (value) =>
-          decodeURIComponent(value.trim())
-            .replace(/_/g, " ")
-            .replace(/\/+/g, "/")
-            .replace(/^\/+|\/+$/g, "")
+      const dataHashes = (
+        Array.isArray(path) ? path : [path || this.routePath || ""]
+      ).map((value) =>
+        decodeURIComponent(value.trim())
+          .replace(/_/g, " ")
+          .replace(/\/+/g, "/")
+          .replace(/^\/+|\/+$/g, "")
       );
       dataHashes.forEach((dataHash) => {
         try {
-          if (
-            typeof children === "undefined" ||
-            children === null ||
-            children === ""
-          )
+          if (children === undefined || children === null || children === "")
             lChildren = "";
           else lChildren = children ? "[*]" : "[not(*)]";
           $.merge(
