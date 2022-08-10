@@ -62,8 +62,8 @@ onmessage = async ({
       io.putObject(
         "index.htm",
         "text/html",
-        // '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!data"></article><article v-else v-html="data"></article></div></div>'
-        '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!data"></article><article v-else><v-runtime-template :parent="this" :template="data"></v-runtime-template></article></div></div>'
+        // '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else v-html="template"></article></div></div>'
+        '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else><v-runtime-template :parent="this" :template="template"></v-runtime-template></article></div></div>'
       )
     );
   if (put.length)
