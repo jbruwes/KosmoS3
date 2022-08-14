@@ -209,7 +209,8 @@ export default {
      */
     onhashchange(pSel = "#content") {
       if (this.tree) {
-        const tree = structuredClone(this.tree);
+        //const tree = structuredClone(this.tree);
+        const tree = { ...this.tree };
         carousel(tree, pSel);
         list(tree, pSel);
         header(tree, pSel);
