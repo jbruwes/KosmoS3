@@ -138,7 +138,7 @@ export default defineStore("core", {
     },
     /**
      * Ключевые слова текущего объекта
-     * 
+     *
      * @returns {string} Ключевые слова
      */
     keywords() {
