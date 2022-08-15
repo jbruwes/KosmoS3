@@ -24,6 +24,8 @@ import parentbutton from "./modules/parentbutton";
 
 import core from "./stores/core.js";
 
+import VCardTemplateK3 from "./modules/VCardTemplateK3.vue";
+
 import VItemK3 from "./modules/VItemK3.vue";
 import VCardK3 from "./modules/VCardK3.vue";
 import VCardSlideK3 from "./modules/VCardSlideK3.vue";
@@ -263,6 +265,7 @@ export default {
     },
   },
   components: {
+    VCardTemplateK3,
     VItemK3,
     VCardK3,
     VCardSlideK3,
