@@ -11,8 +11,8 @@
       :href="slot.href"
       :path="slot.path"
       :item="slot.item"
-      :date="slot.date"
-      :description="slot.description"
+      :subtitle="slot.subtitle"
+      :text="slot.text"
     ></v-card-template-k3
   ></v-item-k3>
 </template>
