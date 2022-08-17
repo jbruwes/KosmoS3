@@ -3,7 +3,6 @@
     <v-card
       v-animate-onscroll.repeat="animate"
       v-bind="props"
-      class="ma-auto"
       :height="height"
       :width="width"
       :elevation="isHovering ? 6 : undefined"
