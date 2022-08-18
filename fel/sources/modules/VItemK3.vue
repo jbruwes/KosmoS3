@@ -4,6 +4,8 @@
     :class="class"
     :width="width"
     :height="height"
+    :minWidth="minWidth"
+    :minHeight="minHeight"
     :title="
       typeof this.title === 'string'
         ? this.title
@@ -62,6 +64,8 @@ export default {
     class: String,
     width: Number,
     height: Number,
+    minWidth: Number,
+    minHeight: Number,
     title: String,
     icon: String,
     image: String,
