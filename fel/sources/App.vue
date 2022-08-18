@@ -47,7 +47,6 @@ export default {
     const store = core();
     const { title, id, context } = storeToRefs(store);
     useTitle(title);
-    let status;
     const { data, statusCode } = useFetch(
       computed(() => `${encodeURIComponent(get(id))}.htm`),
       {
@@ -75,9 +74,9 @@ export default {
         refetch: true,
       }
     );
-    return { title, id, context, data, statusCode, status };
+    return { title, id, context, data, statusCode };
   },
-  data: () => ({ drawer: false }),
+  data: () => ({ drawer: false, template: String }),
   computed: {
     ...mapState(core, [
       "tree",
@@ -105,13 +104,14 @@ export default {
       "parentImage",
       "routePath",
     ]),
-    template() {
-      return !this.status || this.status === 200 ? this.data : "<div></div>";
-    },
   },
   watch: {
-    statusCode(newStatusCode) {
-      this.status = newStatusCode;
+    data: {
+      handler: function (newData) {
+        this.template =
+          !this.statusCode || this.statusCode === 200 ? newData : "<div></div>";
+      },
+      immediate: true,
     },
     template() {
       nextTick(() => {
