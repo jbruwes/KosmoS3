@@ -5,6 +5,8 @@
       v-bind="props"
       :height="height"
       :width="width"
+      :minWidth="minWidth"
+      :minHeight="minHeight"
       :elevation="isHovering ? 6 : undefined"
       :class="class"
       :href="href"
@@ -24,7 +26,7 @@
               :href="href"
             ></v-btn></div></v-expand-transition
       ></v-img>
-      <v-card-item density="compact" :title="title"
+      <v-card-item :title="title"
         ><v-card-subtitle v-if="subtitle"
           ><v-chip
             size="x-small"
@@ -45,6 +47,8 @@ export default {
     class: String,
     width: Number,
     height: Number,
+    minWidth: Number,
+    minHeight: Number,
     title: String,
     subtitle: String,
     text: String,
