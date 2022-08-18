@@ -4,6 +4,7 @@
       class="ma-4"
       :animate="slot.animate"
       :item="slot.item"
+      :width="slot.width"
     ></v-card-k3
   ></v-slide-k3>
 </template>
