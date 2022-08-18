@@ -4,7 +4,6 @@
       class="fill-height ma-auto"
       :animate="slot.animate"
       :item="slot.item"
-      :width="slot.width"
     ></v-card-k3
   ></v-grid-k3>
 </template>
