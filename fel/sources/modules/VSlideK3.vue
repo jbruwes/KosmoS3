@@ -1,20 +1,7 @@
 <template>
   <v-slide-group show-arrows>
     <v-slide-group-item v-for="item in items">
-      <v-item-k3
-        :item="item"
-        :animate="animate"
-        :class="class"
-        :width="width"
-        :height="height"
-        :icon="icon"
-        :date="date"
-        :title="title"
-        :image="image"
-        :href="href"
-        :description="description"
-        :type="type"
-      ></v-item-k3>
+      <slot :item="item" :animate="animate" :width="width"></slot>
     </v-slide-group-item>
   </v-slide-group>
 </template>
@@ -24,23 +11,14 @@ import core from "../stores/core.js";
 import VItemK3 from "./VItemK3.vue";
 export default {
   props: {
+    width: { default: 320, type: Number },
     animate: String,
-    class: { default: "ma-4", type: String },
-    width: Number,
-    height: Number,
-    icon: String,
-    date: String,
-    title: String,
-    image: String,
-    href: String,
-    description: String,
     deep: Boolean,
     length: Number,
     reveal: Boolean,
     sort: String,
     path: String,
     children: Boolean,
-    type: String,
   },
   components: { VItemK3 },
   computed: {
