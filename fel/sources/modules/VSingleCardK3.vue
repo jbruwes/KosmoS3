@@ -1,0 +1,27 @@
+<template>
+  <v-single-k3 #="slot"
+    ><v-template-card-k3
+      :animate="slot.animate"
+      :class="slot.class"
+      :width="slot.width"
+      :height="slot.height"
+      :minWidth="slot.minWidth"
+      :minHeight="slot.minHeight"
+      :title="slot.title"
+      :icon="slot.icon"
+      :image="slot.image"
+      :href="slot.href"
+      :path="slot.path"
+      :item="slot.item"
+      :subtitle="slot.subtitle"
+      :text="slot.text"
+    ></v-template-card-k3
+  ></v-single-k3>
+</template>
+<script>
+import VSingleK3 from "./VSingleK3.vue";
+import VTemplateCardK3 from "./VTemplateCardK3.vue";
+export default {
+  components: { VSingleK3, VTemplateCardK3 },
+};
+</script>
