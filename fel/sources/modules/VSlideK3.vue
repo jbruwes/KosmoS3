@@ -8,7 +8,7 @@
 <script>
 import { mapActions } from "pinia";
 import core from "../stores/core.js";
-import VItemK3 from "./VItemK3.vue";
+import VSingleK3 from "./VSingleK3.vue";
 export default {
   props: {
     width: { default: 320, type: Number },
@@ -20,7 +20,7 @@ export default {
     path: String,
     children: Boolean,
   },
-  components: { VItemK3 },
+  components: { VSingleK3 },
   computed: {
     items() {
       return this.getItems(
