@@ -5,8 +5,6 @@
       :class="slot.class"
       :width="slot.width"
       :height="slot.height"
-      :minWidth="slot.minWidth"
-      :minHeight="slot.minHeight"
       :title="slot.title"
       :icon="slot.icon"
       :image="slot.image"
