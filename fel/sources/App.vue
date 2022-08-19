@@ -24,9 +24,7 @@ import parentbutton from "./modules/parentbutton";
 
 import core from "./stores/core.js";
 
-import VTemplateCardK3 from "./modules/VTemplateCardK3.vue";
-
-import VSingleK3 from "./modules/VSingleK3.vue";
+import VSingleBannerK3 from "./modules/VSingleBannerK3.vue";
 import VSingleCardK3 from "./modules/VSingleCardK3.vue";
 import VSlideCardK3 from "./modules/VSlideCardK3.vue";
 import VGridCardK3 from "./modules/VGridCardK3.vue";
@@ -265,13 +263,12 @@ export default {
     },
   },
   components: {
-    VTemplateCardK3,
-    VSingleK3,
+    VSingleBannerK3,
     VSingleCardK3,
-    VSlideCardK3,
-    VGridCardK3,
     VSingleIconK3,
+    VSlideCardK3,
     VSlideIconK3,
+    VGridCardK3,
     VGridIconK3,
     VMenuK3,
     VNavigationDrawerK3,
