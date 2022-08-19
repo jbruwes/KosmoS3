@@ -3,8 +3,6 @@
     v-animate-onscroll.repeat="animate"
     :height="height"
     :width="width"
-    :minWidth="minWidth"
-    :minHeight="minHeight"
     :class="class"
     :href="href"
     variant="plain"
@@ -35,8 +33,6 @@ export default {
     class: String,
     width: Number,
     height: Number,
-    minWidth: Number,
-    minHeight: Number,
     title: String,
     subtitle: String,
     text: String,
