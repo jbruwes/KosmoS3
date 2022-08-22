@@ -5,6 +5,7 @@
     >
       <v-card
         v-animate-onscroll.repeat="animate"
+        class="pa-16 ma-16"
         :height="height"
         :width="width"
         :class="class"
