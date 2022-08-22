@@ -13,17 +13,16 @@ import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
 import GLightbox from "glightbox";
 import DOMPurify from "dompurify";
-import carousel from "./modules/carousel";
 import list from "./modules/list";
 import breadcrumbs from "./modules/breadcrumbs";
 import header from "./modules/header";
-import pageheader from "./modules/pageheader";
 import doubleheader from "./modules/doubleheader";
 import pagination from "./modules/pagination";
 import parentbutton from "./modules/parentbutton";
 
 import core from "./stores/core.js";
 
+import VCarouselBannerK3 from "./modules/VCarouselBannerK3.vue";
 import VSingleBannerK3 from "./modules/VSingleBannerK3.vue";
 import VSingleCardK3 from "./modules/VSingleCardK3.vue";
 import VSlideCardK3 from "./modules/VSlideCardK3.vue";
@@ -209,12 +208,9 @@ export default {
      */
     onhashchange(pSel = "#content") {
       if (this.tree) {
-        //const tree = structuredClone(this.tree);
         const tree = { ...this.tree };
-        carousel(tree, pSel);
         list(tree, pSel);
         header(tree, pSel);
-        pageheader(tree, pSel);
         doubleheader(tree, pSel);
         breadcrumbs(tree, pSel);
         pagination(tree, pSel);
@@ -263,6 +259,7 @@ export default {
     },
   },
   components: {
+    VCarouselBannerK3,
     VSingleBannerK3,
     VSingleCardK3,
     VSingleIconK3,
