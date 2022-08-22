@@ -72,7 +72,7 @@
     "webpack-dev-server": "^4.10.0"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.150.0",
+    "@aws-sdk/client-s3": "^3.154.0",
     "@fontsource/arsenal": "^4.5.8",
     "@fontsource/bad-script": "^4.5.8",
     "@fontsource/caveat": "^4.5.8",
@@ -117,7 +117,7 @@
     "jsel": "^1.1.6",
     "lightslider": "^1.1.6",
     "page": "^1.11.6",
-    "pinia": "^2.0.19",
+    "pinia": "^2.0.20",
     "pure": "^2.85.0",
     "regenerator-runtime": "^0.13.9",
     "tinymce": "^6.1.2",
