@@ -5,8 +5,6 @@
       v-bind="props"
       :height="height"
       :width="width"
-      :minWidth="minWidth"
-      :minHeight="minHeight"
       :elevation="isHovering ? 6 : undefined"
       :class="class"
       :href="href"
@@ -47,8 +45,6 @@ export default {
     class: String,
     width: Number,
     height: Number,
-    minWidth: Number,
-    minHeight: Number,
     title: String,
     subtitle: String,
     text: String,
