@@ -1,9 +1,5 @@
 <template>
-  <v-carousel
-    cycle
-    hide-delimiter-background
-    show-arrows="hover"
-  >
+  <v-carousel cycle>
     <v-carousel-item v-for="item in items">
       <slot :item="item" :animate="animate"></slot>
     </v-carousel-item>
