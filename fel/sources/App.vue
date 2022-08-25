@@ -9,19 +9,14 @@ import {
   mapWritableState,
 } from "pinia";
 import VRuntimeTemplate from "vue3-runtime-template";
-import { jarallax, jarallaxVideo } from "jarallax";
 import page from "page";
 import GLightbox from "glightbox";
 import DOMPurify from "dompurify";
-import list from "./modules/list";
-import breadcrumbs from "./modules/breadcrumbs";
-import header from "./modules/header";
-import doubleheader from "./modules/doubleheader";
-import pagination from "./modules/pagination";
-import parentbutton from "./modules/parentbutton";
 
 import core from "./stores/core.js";
 
+import VSingleItemK3 from "./modules/VSingleItemK3.vue";
+import VListItemK3 from "./modules/VListItemK3.vue";
 import VCarouselBannerK3 from "./modules/VCarouselBannerK3.vue";
 import VSingleBannerK3 from "./modules/VSingleBannerK3.vue";
 import VSingleCardK3 from "./modules/VSingleCardK3.vue";
@@ -103,17 +98,13 @@ export default {
     ]),
   },
   watch: {
-    data: {
-      handler: function (newData) {
-        this.template =
-          !this.statusCode || this.statusCode === 200 ? newData : "<div></div>";
-      },
-      immediate: true,
+    data(newData) {
+      this.template = this.statusCode === 200 ? newData : "<div></div>";
     },
     template() {
       nextTick(() => {
         this.GLightbox();
-        this.onhashchange();
+        if (typeof init === "function") init.call({ ...this.tree });
         window.scrollTo(0, 0);
       });
     },
@@ -161,8 +152,6 @@ export default {
    * Обработчик монтирования приложения
    */
   async mounted() {
-    jarallaxVideo();
-    this.GLightbox();
     await Promise.allSettled(
       [
         ...(
@@ -178,7 +167,7 @@ export default {
           useScriptTag(script.url, undefined, { manual: true }).load()
         )
     );
-    this.onhashchange("#kosmos3");
+    this.template = "";
   },
   methods: {
     ...mapActions(core, [
@@ -200,24 +189,6 @@ export default {
     meta(e) {
       const element = document.head.querySelector(e[0]);
       element.content = e[1] ? e[1].replace(/"/g, "&quot;") : "";
-    },
-    /**
-     * Обработчик загруженного контента
-     *
-     * @param {string} pSel Селектор
-     */
-    onhashchange(pSel = "#content") {
-      if (this.tree) {
-        const tree = { ...this.tree };
-        list(tree, pSel);
-        header(tree, pSel);
-        doubleheader(tree, pSel);
-        breadcrumbs(tree, pSel);
-        pagination(tree, pSel);
-        parentbutton(tree, pSel);
-        if (typeof init === "function") init.call(tree);
-      }
-      jarallax(document.querySelectorAll(".jarallax"));
     },
     /**
      * Натравливаем GLightbox на всё подряд
@@ -259,6 +230,8 @@ export default {
     },
   },
   components: {
+    VListItemK3,
+    VSingleItemK3,
     VCarouselBannerK3,
     VSingleBannerK3,
     VSingleCardK3,
