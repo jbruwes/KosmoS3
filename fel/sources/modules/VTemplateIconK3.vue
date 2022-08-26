@@ -5,7 +5,7 @@
     :width="width"
     :class="class"
     :href="href"
-    variant="plain"
+    :variant="variant"
   >
     <div class="text-center">
       <v-icon
@@ -38,6 +38,7 @@ export default {
     text: String,
     icon: String,
     href: String,
+    variant: { default: "plain", type: String },
   },
 };
 </script>
