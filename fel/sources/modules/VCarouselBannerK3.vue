@@ -3,6 +3,7 @@
     ><v-single-banner-k3
       :animate="slot.animate"
       :item="slot.item"
+      :variant="slot.variant"
     ></v-single-banner-k3
   ></v-carousel-k3>
 </template>
