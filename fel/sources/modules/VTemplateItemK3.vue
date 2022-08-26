@@ -8,6 +8,7 @@
     :prepend-icon="icon"
     :title="title"
     :subtitle="text"
+    :variant="variant"
     ><v-chip
       v-if="subtitle"
       size="x-small"
@@ -31,6 +32,7 @@ export default {
     text: String,
     icon: String,
     href: String,
+    variant: String,
   },
 };
 </script>
