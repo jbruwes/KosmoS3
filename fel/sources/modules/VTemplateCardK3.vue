@@ -8,6 +8,7 @@
       :elevation="isHovering ? 6 : undefined"
       :class="class"
       :href="href"
+      :variant="variant"
     >
       <v-img :src="image" :aspect-ratio="16 / 9" cover
         ><v-expand-transition
@@ -51,6 +52,7 @@ export default {
     icon: String,
     image: String,
     href: String,
+    variant: String,
   },
 };
 </script>
