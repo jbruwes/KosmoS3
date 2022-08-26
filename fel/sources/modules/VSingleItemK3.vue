@@ -12,6 +12,7 @@
       :item="slot.item"
       :subtitle="slot.subtitle"
       :text="slot.text"
+      :variant="slot.variant"
     ></v-template-item-k3
   ></v-single-k3>
 </template>
