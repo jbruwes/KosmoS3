@@ -13,6 +13,7 @@
       :item="slot.item"
       :subtitle="slot.subtitle"
       :text="slot.text"
+      :variant="slot.variant"
     ></v-template-banner-k3
   ></v-single-k3>
 </template>
