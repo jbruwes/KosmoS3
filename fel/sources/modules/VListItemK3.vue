@@ -5,6 +5,7 @@
       :animate="slot.animate"
       :item="slot.item"
       :width="slot.width"
+      :variant="slot.variant"
     ></v-single-item-k3
   ></v-list-k3>
 </template>
