@@ -5,6 +5,7 @@
       :animate="slot.animate"
       :item="slot.item"
       :width="slot.width"
+      :variant="slot.variant"
     ></v-single-icon-k3
   ></v-slide-k3>
 </template>
