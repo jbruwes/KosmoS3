@@ -15,6 +15,7 @@ import DOMPurify from "dompurify";
 
 import core from "./stores/core.js";
 
+import VSingleButtonK3 from "./modules/VSingleButtonK3.vue";
 import VSingleItemK3 from "./modules/VSingleItemK3.vue";
 import VListItemK3 from "./modules/VListItemK3.vue";
 import VCarouselBannerK3 from "./modules/VCarouselBannerK3.vue";
@@ -230,6 +231,7 @@ export default {
     },
   },
   components: {
+    VSingleButtonK3,
     VListItemK3,
     VSingleItemK3,
     VCarouselBannerK3,
