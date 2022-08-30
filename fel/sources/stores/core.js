@@ -1,12 +1,18 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
-import { useFetch, get, set } from "@vueuse/core";
+import { useFetch, get, computedWithControl } from "@vueuse/core";
 import jsel from "jsel";
+import DOMPurify from "dompurify";
 
 export default defineStore("core", () => {
-  const tree = ref({});
-  const context = ref({});
-  const routePath = computed(() => get(context).routePath);
+  const { data: treeData, statusCode: treeStatusCode } =
+    useFetch("index.json").json();
+  const tree = computedWithControl(
+    () => get(treeData),
+    () => (get(treeStatusCode) === 200 ? get(treeData)[0] : {})
+  );
+  const pageLen = ref(0);
+  const routePath = ref("");
   /**
    * Вычисление вектора
    *
@@ -77,17 +83,6 @@ export default defineStore("core", () => {
       ) || {}
   );
 
-  /**
-   * Загрузка данных в tree
-   */
-  async function initIndex() {
-    const { data } = await useFetch("index.json").json();
-    set(
-      tree,
-      // (await (await fetch("index.json", { cache: "no-store" })).json())[0]
-      get(data)[0]
-    );
-  }
   /**
    * Получение массива дочерних объектов
    *
@@ -195,9 +190,56 @@ export default defineStore("core", () => {
   const treeImage = computed(() => get(item).tree);
   const parentImage = computed(() => get(parent).image);
 
+  const { data: templateData, statusCode: templateStatusCode } = useFetch(
+    computed(() => `${encodeURIComponent(get(id))}.htm`),
+    {
+      /**
+       *
+       * @param {object} root0 Объект параметров
+       * @param {Function} root0.cancel Ф-ция отмены запроса
+       */
+      beforeFetch({ cancel }) {
+        if (!get(pageLen)) cancel();
+      },
+      /**
+       *
+       * @param {object} ctx Контекст запроса
+       * @returns {object} Возврат измененного контекста
+       */
+      afterFetch(ctx) {
+        ctx.data = DOMPurify.sanitize(ctx.data, {
+          ADD_TAGS: ["iframe"],
+          ADD_ATTR: [
+            "target",
+            "allow",
+            "allowfullscreen",
+            "frameborder",
+            "scrolling",
+          ],
+          CUSTOM_ELEMENT_HANDLING: {
+            tagNameCheck: /^v-/,
+            attributeNameCheck: /\w+/,
+            allowCustomizedBuiltInElements: true,
+          },
+        });
+        return ctx;
+      },
+      refetch: true,
+    }
+  );
+  const template = computedWithControl(
+    () => get(templateData),
+    () =>
+      !get(templateStatusCode) || get(templateStatusCode) === 200
+        ? get(templateData)
+        : "<div></div>"
+  );
+
   return {
+    template,
     tree,
-    context,
+    pageLen,
+    routePath,
     list,
     siblings,
     children,
@@ -223,8 +265,6 @@ export default defineStore("core", () => {
     image,
     treeImage,
     parentImage,
-    routePath,
-    initIndex,
     getPath,
     getTitle,
     getVector,
