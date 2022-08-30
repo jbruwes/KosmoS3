@@ -38,40 +38,16 @@ export default {
    */
   setup() {
     const store = core();
-    const { title, id, context } = storeToRefs(store);
+    const { title } = storeToRefs(store);
     useTitle(title);
-    const { data, statusCode } = useFetch(
-      computed(() => `${encodeURIComponent(get(id))}.htm`),
-      {
-        beforeFetch({ cancel }) {
-          if (!(get(context).page && get(context).page.len)) cancel();
-        },
-        afterFetch(ctx) {
-          ctx.data = DOMPurify.sanitize(ctx.data, {
-            ADD_TAGS: ["iframe"],
-            ADD_ATTR: [
-              "target",
-              "allow",
-              "allowfullscreen",
-              "frameborder",
-              "scrolling",
-            ],
-            CUSTOM_ELEMENT_HANDLING: {
-              tagNameCheck: /^v-/,
-              attributeNameCheck: /\w+/,
-              allowCustomizedBuiltInElements: true,
-            },
-          });
-          return ctx;
-        },
-        refetch: true,
-      }
-    );
-    return { title, id, context, data, statusCode };
+    return { title };
   },
-  data: () => ({ drawer: false, template: String }),
+  data: () => ({
+    drawer: false,
+  }),
   computed: {
     ...mapState(core, [
+      "id",
       "tree",
       "list",
       "siblings",
@@ -97,11 +73,9 @@ export default {
       "parentImage",
       "routePath",
     ]),
+    ...mapWritableState(core, ["template", "routePath", "pageLen"]),
   },
   watch: {
-    data(newData) {
-      this.template = this.statusCode === 200 ? newData : "<div></div>";
-    },
     template() {
       nextTick(() => {
         this.GLightbox();
@@ -158,7 +132,6 @@ export default {
         ...(
           await Promise.all([
             (await fetch("index.cdn.json", { cache: "no-store" })).json(),
-            await this.initIndex(),
           ])
         )[0],
         { url: "index.js" },
@@ -172,7 +145,6 @@ export default {
   },
   methods: {
     ...mapActions(core, [
-      "initIndex",
       "getPath",
       "getTitle",
       "getVector",
@@ -185,7 +157,10 @@ export default {
      * @param {Context} context Объект роутинга
      */
     route(context) {
-      this.context = context;
+      nextTick(() => {
+        this.pageLen = context.page.len;
+        this.routePath = context.routePath;
+      });
     },
     meta(e) {
       const element = document.head.querySelector(e[0]);
