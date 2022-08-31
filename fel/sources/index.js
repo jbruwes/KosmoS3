@@ -44,10 +44,6 @@ import * as directives from "vuetify/directives";
 import VueAnimateOnScroll from "vue3-animate-onscroll";
 import App from "./App.vue";
 
-window.$ = $;
-window.jQuery = jQuery;
-$.ajaxSetup({ cache: false });
-
 document.addEventListener("click", (event) => {
   const element = event.target;
   const href = element.getAttribute("href");
