@@ -92,10 +92,12 @@ module.exports = {
   },
   stats: "minimal",
   resolve: {
-    extensions: [".js"],
+    extensions: [".js", ".vue", ".json"],
     modules: ["./sources", "node_modules"],
     alias: {
       vue$: "vue/dist/vue.esm-bundler.js",
+      "@": path.resolve("sources"),
+      "+": path.join(__dirname, "../"),
     },
   },
   plugins: [
