@@ -13,7 +13,7 @@ import page from "page";
 import GLightbox from "glightbox";
 import DOMPurify from "dompurify";
 
-import core from "+/core.js";
+import core from "~/core.js";
 
 import VSingleButtonK3 from "./modules/VSingleButtonK3.vue";
 import VSingleItemK3 from "./modules/VSingleItemK3.vue";
