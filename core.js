@@ -117,9 +117,9 @@ export default defineStore("core", () => {
         if (children === undefined || children === null || children === "")
           lChildren = "";
         else lChildren = children ? "[*]" : "[not(*)]";
-        $.merge(
-          dataChildren,
-          jsel(get(tree)).selectAll(
+        dataChildren = [
+          ...dataChildren,
+          ...jsel(get(tree)).selectAll(
             `/*${
               dataHash
                 ? `/data/*[@value="${dataHash
@@ -131,8 +131,8 @@ export default defineStore("core", () => {
             }${lAttr ? "/" : ""}${axe ? `${axe}::` : ""}${lAttr}${
               lAttr && !axe && !reveal ? "[@visible=1]" : ""
             }${lChildren}`
-          )
-        );
+          ),
+        ];
       } catch (e) {
         // console.log(e.message);
       }
