@@ -4,7 +4,7 @@
       <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
     </template>
     <v-list nav>
-      <template v-for="(item, i) in items" :key="i" :value="item">
+      <template v-for="(item, i) in items" :key="i">
         <v-list-subheader
           v-if="item.visible"
           :prepend-icon="`mdi-${item.icon}`"
