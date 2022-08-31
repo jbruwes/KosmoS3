@@ -9,7 +9,7 @@
 </template>
 <script>
 import { mapActions } from "pinia";
-import core from "../stores/core.js";
+import core from "+/core.js";
 import VSingleK3 from "./VSingleK3.vue";
 export default {
   props: {
