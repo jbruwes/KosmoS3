@@ -56,7 +56,7 @@
 <script>
 import { ref } from "vue";
 import { mapState, mapActions } from "pinia";
-import core from "../stores/core.js";
+import core from "+/core.js";
 export default {
   props: {
     animate: String,
