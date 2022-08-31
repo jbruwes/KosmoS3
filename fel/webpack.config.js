@@ -97,7 +97,7 @@ module.exports = {
     alias: {
       vue$: "vue/dist/vue.esm-bundler.js",
       "@": path.resolve("sources"),
-      "+": path.join(__dirname, "../"),
+      "~": path.join(__dirname, "../"),
     },
   },
   plugins: [
@@ -133,10 +133,6 @@ module.exports = {
         { from: "./resource/site.webmanifest" },
         { from: "./resource/browserconfig.xml" },
       ],
-    }),
-    new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery",
     }),
   ],
   performance: { hints: false },
