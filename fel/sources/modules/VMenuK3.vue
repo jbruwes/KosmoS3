@@ -16,7 +16,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
-import core from "+/core.js";
+import core from "~/core.js";
 export default {
   computed: {
     items() {
