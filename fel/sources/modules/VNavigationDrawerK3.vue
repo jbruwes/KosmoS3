@@ -11,7 +11,7 @@
     ></v-list>
     <v-divider></v-divider>
     <v-list nav>
-      <template v-for="(item, i) in treeChildren" :key="i" :value="item">
+      <template v-for="(item, i) in treeChildren">
         <v-list-item
           v-if="item.visible"
           :prepend-icon="`mdi-${item.icon}`"
