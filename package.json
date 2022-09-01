@@ -72,7 +72,7 @@
     "webpack-dev-server": "^4.10.1"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.161.0",
+    "@aws-sdk/client-s3": "^3.162.0",
     "@fontsource/arsenal": "^4.5.8",
     "@fontsource/bad-script": "^4.5.8",
     "@fontsource/caveat": "^4.5.8",
@@ -102,11 +102,11 @@
     "@mdi/font": "^7.0.96",
     "@mdi/svg": "^7.0.96",
     "@vueuse/core": "^9.1.1",
-    "ace-builds": "^1.9.6",
+    "ace-builds": "^1.10.0",
     "animate.css": "^4.1.1",
     "core-js": "^3.25.0",
     "dompurify": "^2.4.0",
-    "electron": "^20.1.0",
+    "electron": "^20.1.1",
     "electron-serve": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "fabric": "^5.2.4",
