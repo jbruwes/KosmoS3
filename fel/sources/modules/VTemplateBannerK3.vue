@@ -8,7 +8,6 @@
         class="pa-16 ma-16"
         :height="height"
         :width="width"
-        :class="class"
         :href="href"
         :variant="variant"
       >
@@ -37,7 +36,6 @@
 export default {
   props: {
     animate: { default: "animate__animated animate__bounce", type: String },
-    class: String,
     width: Number,
     height: Number,
     title: String,
