@@ -49,7 +49,7 @@ export default defineStore("core", () => {
    * @param {object} item Объект вычисления
    * @returns {string} Путь
    */
-  const getPath = (item) => (item.path ? item.path : item.href);
+  const getPath = (item) => (item.href ? item.href : item.path);
   /**
    * Вычисление заголовка
    *
