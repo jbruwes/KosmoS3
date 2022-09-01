@@ -1,8 +1,7 @@
 <script>
-import { nextTick, computed } from "vue";
-import { useScriptTag, useTitle, useFetch, get } from "@vueuse/core";
+import { nextTick } from "vue";
+import { useScriptTag, useTitle } from "@vueuse/core";
 import {
-  useStore,
   storeToRefs,
   mapState,
   mapActions,
@@ -71,7 +70,6 @@ export default {
       "image",
       "treeImage",
       "parentImage",
-      "routePath",
     ]),
     ...mapWritableState(core, ["template", "routePath", "pageLen"]),
   },
