@@ -1,7 +1,6 @@
 <template>
   <slot
     :animate="animate"
-    :class="class"
     :width="width"
     :height="height"
     :variant="variant"
@@ -54,24 +53,22 @@
   </slot>
 </template>
 <script>
-import { ref } from "vue";
 import { mapState, mapActions } from "pinia";
 import core from "~/core.js";
 export default {
   props: {
     animate: String,
-    class: String,
     width: Number,
     height: Number,
     variant: String,
-    title: { default: true, type: String },
-    icon: { default: true, type: String },
-    image: { default: true, type: String },
-    href: { default: true, type: String },
+    title: { default: true, type: [Boolean, String] },
+    icon: { default: true, type: [Boolean, String] },
+    image: { default: true, type: [Boolean, String] },
+    href: { default: true, type: [Boolean, String] },
     path: String,
-    item: { default: true, type: Object },
-    date: { default: true, type: String },
-    description: { default: true, type: String },
+    item: { default: true, type: [Boolean, Object] },
+    date: { default: true, type: [Boolean, String] },
+    description: { default: true, type: [Boolean, String] },
   },
   computed: {
     ...mapState(core, ["routePath"]),
