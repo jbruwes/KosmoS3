@@ -1,6 +1,6 @@
 <template>
   <v-carousel cycle>
-    <v-carousel-item v-for="item in items">
+    <v-carousel-item v-for="(item, i) in items" :key="i">
       <slot :item="item" :animate="animate"></slot>
     </v-carousel-item>
   </v-carousel>
@@ -8,7 +8,6 @@
 <script>
 import { mapActions } from "pinia";
 import core from "~/core.js";
-import VSingleK3 from "./VSingleK3.vue";
 export default {
   props: {
     animate: String,
@@ -19,7 +18,6 @@ export default {
     path: String,
     children: Boolean,
   },
-  components: { VSingleK3 },
   computed: {
     items() {
       return this.getItems(
