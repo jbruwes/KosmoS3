@@ -173,6 +173,7 @@ export default defineStore("core", () => {
   const parentChildren = computed(() => get(parent).data);
   const vector = computed(() => getVector(get(item)));
   const id = computed(() => get(item).id);
+  const value = computed(() => get(item).value);
   const title = computed(() => getTitle(get(item)));
   const treeTitle = computed(() => getTitle(get(tree)));
   const parentTitle = computed(() => getTitle(get(parent)));
@@ -236,6 +237,7 @@ export default defineStore("core", () => {
   );
 
   return {
+    value,
     template,
     tree,
     pageLen,
