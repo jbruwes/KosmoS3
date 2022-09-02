@@ -1,7 +1,14 @@
 <template>
   <v-slide-group show-arrows>
     <v-slide-group-item v-for="item in items">
-      <slot :item="item" :animate="animate" :width="width"></slot>
+      <slot
+        :item="item"
+        :animate="animate"
+        :date="date"
+        :variant="variant"
+        :width="width"
+        :height="height"
+      ></slot>
     </v-slide-group-item>
   </v-slide-group>
 </template>
@@ -11,8 +18,11 @@ import core from "~/core.js";
 import VSingleK3 from "./VSingleK3.vue";
 export default {
   props: {
-    width: { default: 320, type: Number },
     animate: String,
+    date: String,
+    variant: String,
+    height: Number,
+    width: { default: 320, type: Number },
     deep: Boolean,
     length: Number,
     reveal: Boolean,
