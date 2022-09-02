@@ -2,9 +2,12 @@
   <v-grid-k3 #="slot"
     ><v-single-card-k3
       class="fill-height ma-auto"
-      :animate="slot.animate"
       :item="slot.item"
+      :animate="slot.animate"
+      :date="slot.date"
       :variant="slot.variant"
+      :height="slot.height"
+      :width="slot.width"
     ></v-single-card-k3
   ></v-grid-k3>
 </template>
