@@ -16,7 +16,7 @@ import core from "~/core.js";
 export default {
   props: {
     animate: String,
-    date: String,
+    date: [Boolean, String],
     variant: String,
     height: Number,
     width: Number,
