@@ -2,10 +2,12 @@
   <v-slide-k3 #="slot"
     ><v-single-card-k3
       class="ma-4"
-      :animate="slot.animate"
-      :item="slot.item"
-      :width="slot.width"
-      :variant="slot.variant"
+      :item="item"
+      :animate="animate"
+      :date="date"
+      :variant="variant"
+      :width="width"
+      :height="height"
     ></v-single-card-k3
   ></v-slide-k3>
 </template>
