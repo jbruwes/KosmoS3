@@ -2,7 +2,14 @@
   <v-container>
     <v-row justify="center">
       <v-col v-for="item in items" cols="12" sm="6" md="4" lg="3" xl="2">
-        <slot :item="item" :animate="animate"></slot>
+        <slot
+        :item="item"
+        :animate="animate"
+        :date="date"
+        :variant="variant"
+        :width="width"
+        :height="height"
+        ></slot>
       </v-col>
     </v-row>
   </v-container>
@@ -14,6 +21,10 @@ import VSingleK3 from "./VSingleK3.vue";
 export default {
   props: {
     animate: String,
+    date: String,
+    variant: String,
+    height: Number,
+    width: Number,
     deep: Boolean,
     length: Number,
     reveal: Boolean,
