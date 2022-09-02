@@ -2,10 +2,12 @@
   <v-list-k3 #="slot"
     ><v-single-item-k3
       class="ma-4"
-      :animate="slot.animate"
       :item="slot.item"
-      :width="slot.width"
+      :animate="slot.animate"
+      :date="slot.date"
       :variant="slot.variant"
+      :height="slot.height"
+      :width="slot.width"
     ></v-single-item-k3
   ></v-list-k3>
 </template>
