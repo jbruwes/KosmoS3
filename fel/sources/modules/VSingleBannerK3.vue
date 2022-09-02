@@ -2,7 +2,6 @@
   <v-single-k3 #="slot"
     ><v-template-banner-k3
       :animate="slot.animate"
-      :class="slot.class"
       :width="slot.width"
       :height="slot.height"
       :title="slot.title"
