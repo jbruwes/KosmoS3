@@ -1,11 +1,14 @@
 <template>
-  <v-parallax :src="image">
-    <div
-      class="d-flex flex-column fill-height justify-center align-center text-white"
-    >
+  <v-img
+    height="100%"
+    tile
+    :src="image"
+    cover
+    v-animate-onscroll.repeat="animate"
+  >
+    <v-row class="fill-height" align="center" justify="center">
       <v-card
-        v-animate-onscroll.repeat="animate"
-        class="pa-16 ma-16"
+        class="pa-16 ma-16 text-white"
         :height="height"
         :width="width"
         :href="href"
@@ -29,20 +32,20 @@
         ></v-card-item>
         <v-card-text v-if="text" class="text-center">{{ text }}</v-card-text>
       </v-card>
-    </div>
-  </v-parallax>
+    </v-row>
+  </v-img>
 </template>
 <script>
 export default {
   props: {
-    animate: { default: "animate__animated animate__bounce", type: String },
+    animate: { default: "animate__animated animate__fadeIn", type: String },
     width: Number,
     height: Number,
     title: String,
     subtitle: String,
     text: String,
-    icon: String,
     image: String,
+    icon: String,
     href: String,
     variant: { default: "tonal", type: String },
   },
