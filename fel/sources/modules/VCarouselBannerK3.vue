@@ -1,8 +1,9 @@
 <template>
   <v-carousel-k3 #="slot"
     ><v-single-banner-k3
-      :animate="slot.animate"
       :item="slot.item"
+      :animate="slot.animate"
+      :date="slot.date"
       :variant="slot.variant"
     ></v-single-banner-k3
   ></v-carousel-k3>
