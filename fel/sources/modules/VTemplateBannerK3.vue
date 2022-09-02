@@ -1,10 +1,11 @@
 <template>
-  <v-img
+  <v-parallax
     height="100%"
     tile
     :src="image"
     cover
     v-animate-onscroll.repeat="animate"
+    :aspect-ratio="16 / 9"
   >
     <v-row class="fill-height" align="center" justify="center">
       <v-card
@@ -33,7 +34,7 @@
         <v-card-text v-if="text" class="text-center">{{ text }}</v-card-text>
       </v-card>
     </v-row>
-  </v-img>
+  </v-parallax>
 </template>
 <script>
 export default {
