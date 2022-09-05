@@ -2,7 +2,7 @@
   <v-parallax
     height="100%"
     tile
-    :src="`/${image}`"
+    :src="image"
     cover
     v-animate-onscroll.repeat="animate"
     :aspect-ratio="16 / 9"
