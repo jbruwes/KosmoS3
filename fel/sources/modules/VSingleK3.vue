@@ -73,7 +73,7 @@ export default {
   computed: {
     ...mapState(core, ["routePath"]),
     url() {
-      const href = this.getPath(this.theItem);
+      const href = this.getHref(this.theItem);
       return href === this.routePath ? "" : href;
     },
     theItem() {
@@ -84,6 +84,6 @@ export default {
         : undefined;
     },
   },
-  methods: { ...mapActions(core, ["getTitle", "getPath", "getItems"]) },
+  methods: { ...mapActions(core, ["getTitle", "getHref", "getItems"]) },
 };
 </script>
