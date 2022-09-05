@@ -6,7 +6,7 @@ import DOMPurify from "dompurify";
 
 export default defineStore("core", () => {
   const { data: treeData, statusCode: treeStatusCode } =
-    useFetch("/index.json").json();
+    useFetch("index.json").json();
   const tree = computedWithControl(
     () => get(treeData),
     () => (get(treeStatusCode) === 200 ? get(treeData)[0] : {})
@@ -192,7 +192,7 @@ export default defineStore("core", () => {
   const parentImage = computed(() => get(parent).image);
 
   const { data: templateData, statusCode: templateStatusCode } = useFetch(
-    computed(() => `/${encodeURIComponent(get(id))}.htm`),
+    computed(() => `${encodeURIComponent(get(id))}.htm`),
     {
       /**
        *
