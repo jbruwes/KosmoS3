@@ -1,6 +1,6 @@
 <script>
 import { nextTick } from "vue";
-import { useScriptTag, useTitle } from "@vueuse/core";
+import { useScriptTag, useTitle, set } from "@vueuse/core";
 import {
   storeToRefs,
   mapState,
@@ -41,6 +41,37 @@ export default {
     useTitle(title);
     return { title };
   },
+
+/*
+setup() {
+    const store = core();
+    const { title, path, description, keywords, image } = storeToRefs(store);
+    useHead({
+      title,
+      base: { href: "/" },
+      meta: [
+        { property: "og:title", content: title },
+        {
+          property: "og:url",
+          content: computed(
+            () =>
+              `${window.location.origin}${
+                path === "/" ? "" : `${encodeURI(path)}`
+              }`
+          ),
+        },
+        { name: "description", content: description },
+        { property: "og:description", content: description },
+        { name: "keywords", content: keywords },
+        {
+          property: "og:image",
+          content: image ? `${window.location.origin}/${image}` : "",
+        },
+      ],
+    });
+  },
+*/
+
   data: () => ({
     drawer: false,
   }),
