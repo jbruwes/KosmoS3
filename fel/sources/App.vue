@@ -143,7 +143,7 @@ export default {
   },
   methods: {
     ...mapActions(core, [
-      "getPath",
+      "getHref",
       "getTitle",
       "getVector",
       "getParent",
