@@ -49,7 +49,7 @@ export default defineStore("core", () => {
    * @param {object} item Объект вычисления
    * @returns {string} Путь
    */
-  const getPath = (item) => (item.href ? item.href : item.path);
+  const getHref = (item) => (item.href ? item.href : item.path);
   /**
    * Вычисление заголовка
    *
@@ -83,89 +83,6 @@ export default defineStore("core", () => {
       ) || {}
   );
 
-  /**
-   * Получение массива дочерних объектов
-   *
-   * @param {(number | boolean)} deep Флаг использования рекурсии
-   *  по дочерним объектам
-   * @param {number} length Количество дочерних объектов для изъятия
-   * @param {(number | boolean)} reveal Флаг указывающий показывать ли
-   *  скрытые объекты
-   * @param {string} sort Флаг указывающий на необходимость
-   *  отсортировать результат
-   * @param {string} path CSV путей до дочерних объектов
-   * @param {(number | boolean)} children Выбирать папки или файлы?
-   * Если путое значение то всё
-   * @param {string} [attr=""] Путь xpath
-   * @param {string} axe Заведует включением параметра xpath axe
-   * @returns {object[]} Массив дочерних объектов
-   */
-  function getItems(deep, length, reveal, sort, path, children, attr, axe) {
-    let lChildren = null;
-    const lAttr = attr || "";
-    let dataChildren = [];
-    const dataHashes = (
-      Array.isArray(path) ? path : [path || get(routePath) || ""]
-    ).map((value) =>
-      decodeURIComponent(value.trim())
-        .replace(/_/g, " ")
-        .replace(/\/+/g, "/")
-        .replace(/^\/+|\/+$/g, "")
-    );
-    dataHashes.forEach((dataHash) => {
-      try {
-        if (children === undefined || children === null || children === "")
-          lChildren = "";
-        else lChildren = children ? "[*]" : "[not(*)]";
-        dataChildren = [
-          ...dataChildren,
-          ...jsel(get(tree)).selectAll(
-            `/*${
-              dataHash
-                ? `/data/*[@value="${dataHash
-                    .split("/")
-                    .join('"]/data/*[@value="')}"]`
-                : ""
-            }${lAttr && !axe ? "/data" : ""}${
-              deep && lAttr && !axe ? "/" : ""
-            }${lAttr ? "/" : ""}${axe ? `${axe}::` : ""}${lAttr}${
-              lAttr && !axe && !reveal ? "[@visible=1]" : ""
-            }${lChildren}`
-          ),
-        ];
-      } catch (e) {
-        // console.log(e.message);
-      }
-    });
-    // if (lAttr && !axe) {
-    //  dataChildren = dataChildren.filter(
-    //    (element) => element.$href.replace(/^\/+|\/+$/g, "") !== hash
-    //  );
-    // }
-    if (
-      length &&
-      !Number.isNaN(Number(length)) &&
-      length > 0 &&
-      length < dataChildren.length
-    ) {
-      dataChildren = dataChildren.slice(0, length);
-    }
-    switch (sort) {
-      case "random":
-        dataChildren.sort(() => 0.5 - Math.random());
-        break;
-      case "date":
-        dataChildren.sort((a, b) => {
-          if (a.date > b.date) return -1;
-          if (a.date < b.date) return 1;
-          return 0;
-        });
-        break;
-      default:
-    }
-    return dataChildren;
-  }
-
   const siblings = computed(() => getSiblings(get(item)));
   const children = computed(() => get(item).data);
   const treeChildren = computed(() => get(tree).data);
@@ -184,12 +101,111 @@ export default defineStore("core", () => {
   const icon = computed(() => get(item).icon);
   const treeIcon = computed(() => get(tree).icon);
   const parentIcon = computed(() => get(parent).icon);
-  const path = computed(() => getPath(get(item)));
-  const treePath = computed(() => getPath(get(tree)));
-  const parentPath = computed(() => getPath(get(parent)));
+  const path = computed(() => get(item).path);
+  const treePath = computed(() => get(tree).path);
+  const parentPath = computed(() => get(parent).path);
+  const href = computed(() => getHref(get(item)));
+  const treeHref = computed(() => getHref(get(tree)));
+  const parentHref = computed(() => getHref(get(parent)));
   const image = computed(() => get(item).image);
   const treeImage = computed(() => get(item).tree);
   const parentImage = computed(() => get(parent).image);
+
+  /**
+   * Получение массива дочерних объектов
+   *
+   * @param {(number | boolean)} pDeep Флаг использования рекурсии
+   *  по дочерним объектам
+   * @param {number} pLength Количество дочерних объектов для изъятия
+   * @param {(number | boolean)} pReveal Флаг указывающий показывать ли
+   *  скрытые объекты
+   * @param {string} pSort Флаг указывающий на необходимость
+   *  отсортировать результат
+   * @param {string} pPath CSV путей до дочерних объектов
+   * @param {(number | boolean)} pChildren Выбирать папки или файлы?
+   * Если путое значение то всё
+   * @param {string} [pAttr=""] Путь xpath
+   * @param {string} pAxe Заведует включением параметра xpath pAxe
+   * @returns {object[]} Массив дочерних объектов
+   */
+  function getItems(
+    pDeep,
+    pLength,
+    pReveal,
+    pSort,
+    pPath,
+    pChildren,
+    pAttr,
+    pAxe
+  ) {
+    let lChildren = null;
+    const lAttr = pAttr || "";
+    let dataChildren = [];
+    console.log("path = ", get(path));
+    console.log("pPath = ", pPath);
+    const dataHashes = (
+      Array.isArray(pPath) ? pPath : [pPath || get(path) || ""]
+    ).map((pValue) =>
+      decodeURIComponent(pValue.trim())
+        .replace(/_/g, " ")
+        .replace(/\/+/g, "/")
+        .replace(/^\/+|\/+$/g, "")
+    );
+    console.log("dataHashes = ", dataHashes);
+    dataHashes.forEach((dataHash) => {
+      try {
+        if (pChildren === undefined || pChildren === null || pChildren === "")
+          lChildren = "";
+        else lChildren = pChildren ? "[*]" : "[not(*)]";
+        dataChildren = [
+          ...dataChildren,
+          ...jsel(get(tree)).selectAll(
+            `/*${
+              dataHash
+                ? `/data/*[@value="${dataHash
+                    .split("/")
+                    .join('"]/data/*[@value="')}"]`
+                : ""
+            }${lAttr && !pAxe ? "/data" : ""}${
+              pDeep && lAttr && !pAxe ? "/" : ""
+            }${lAttr ? "/" : ""}${pAxe ? `${pAxe}::` : ""}${lAttr}${
+              lAttr && !pAxe && !pReveal ? "[@visible=1]" : ""
+            }${lChildren}`
+          ),
+        ];
+      } catch (e) {
+        // console.log(e.message);
+      }
+    });
+    // if (lAttr && !pAxe) {
+    //  dataChildren = dataChildren.filter(
+    //    (element) => element.$href.replace(/^\/+|\/+$/g, "") !== hash
+    //  );
+    // }
+    if (
+      pLength &&
+      !Number.isNaN(Number(pLength)) &&
+      pLength > 0 &&
+      pLength < dataChildren.length
+    ) {
+      dataChildren = dataChildren.slice(0, pLength);
+    }
+    switch (pSort) {
+      case "random":
+        dataChildren.sort(() => 0.5 - Math.random());
+        break;
+      case "date":
+        dataChildren.sort((a, b) => {
+          if (a.date > b.date) return -1;
+          if (a.date < b.date) return 1;
+          return 0;
+        });
+        break;
+      default:
+    }
+    console.log("dataChildren = ", dataChildren);
+    return dataChildren;
+  }
 
   const { data: templateData, statusCode: templateStatusCode } = useFetch(
     computed(() => `${encodeURIComponent(get(id))}.htm`),
@@ -264,10 +280,13 @@ export default defineStore("core", () => {
     path,
     treePath,
     parentPath,
+    href,
+    treeHref,
+    parentHref,
     image,
     treeImage,
     parentImage,
-    getPath,
+    getHref,
     getTitle,
     getVector,
     getParent,
