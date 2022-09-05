@@ -102,6 +102,7 @@
     "@mdi/font": "^7.0.96",
     "@mdi/svg": "^7.0.96",
     "@vueuse/core": "^9.1.1",
+    "@vueuse/head": "^0.7.9",
     "ace-builds": "^1.10.0",
     "animate.css": "^4.1.1",
     "core-js": "^3.25.0",
