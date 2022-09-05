@@ -17,8 +17,8 @@
           :prepend-icon="`mdi-${item.icon}`"
           :title="getTitle(item)"
           :subtitle="item.description"
-          :href="getPath(item)"
-          :active="getPath(item) === routePath"
+          :href="getHref(item)"
+          :active="getHref(item) === routePath"
           active-color="primary"
         >
         </v-list-item
@@ -39,6 +39,6 @@ export default {
       "routePath",
     ]),
   },
-  methods: { ...mapActions(core, ["getPath", "getTitle"]) },
+  methods: { ...mapActions(core, ["getHref", "getTitle"]) },
 };
 </script>
