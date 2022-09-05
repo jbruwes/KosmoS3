@@ -37,6 +37,7 @@ import "./styles/index.css";
 import { createApp } from "vue";
 import { createVuetify } from "vuetify";
 import { createPinia } from "pinia";
+// import { createHead } from "@vueuse/head";
 
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
@@ -51,12 +52,14 @@ document.addEventListener("click", (event) => {
     element.href = window.location.href.split("#")[0] + href;
 });
 
-const app = createApp(App);
-const vuetify = createVuetify({
-  components,
-  directives,
-});
-app.use(vuetify);
-app.use(VueAnimateOnScroll);
-app.use(createPinia());
-app.mount("#app");
+createApp(App)
+  .use(
+    createVuetify({
+      components,
+      directives,
+    })
+  )
+  //  .use(createHead())
+  .use(VueAnimateOnScroll)
+  .use(createPinia())
+  .mount("#app");
