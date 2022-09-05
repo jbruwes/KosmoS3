@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { defineStore } from "pinia";
 import { useFetch, get, computedWithControl } from "@vueuse/core";
 import jsel from "jsel";
@@ -12,7 +12,7 @@ export default defineStore("core", () => {
     () => (get(treeStatusCode) === 200 ? get(treeData)[0] : {})
   );
   const pageLen = ref(0);
-  const routePath = ref("");
+  const routePath = ref(undefined);
   /**
    * Вычисление вектора
    *
@@ -76,13 +76,64 @@ export default defineStore("core", () => {
       `//*[@id="${item.id}"]/preceding-sibling::*[@id]|//*[@id="${item.id}"]|//*[@id="${item.id}"]/following-sibling::*[@id]`
     );
 
-  const item = computed(
+  const nextItem = computed(
     () =>
       get(list).find(
         (e) => e.path === get(routePath) || e.href === get(routePath)
       ) || {}
   );
-
+  // const nextId = computed(() => get(nextItem).id);
+  const { data: templateData, statusCode: templateStatusCode } = useFetch(
+    computed(() => `${encodeURIComponent(get(nextItem).id)}.htm`),
+    {
+      /**
+       *
+       * @param {object} root0 Объект параметров
+       * @param {Function} root0.cancel Ф-ция отмены запроса
+       */
+      beforeFetch({ cancel }) {
+        if (!get(pageLen)) cancel();
+      },
+      /**
+       *
+       * @param {object} ctx Контекст запроса
+       * @returns {object} Возврат измененного контекста
+       */
+      afterFetch(ctx) {
+        ctx.data = DOMPurify.sanitize(ctx.data, {
+          ADD_TAGS: ["iframe"],
+          ADD_ATTR: [
+            "target",
+            "allow",
+            "allowfullscreen",
+            "frameborder",
+            "scrolling",
+          ],
+          CUSTOM_ELEMENT_HANDLING: {
+            tagNameCheck: /^v-/,
+            attributeNameCheck: /\w+/,
+            allowCustomizedBuiltInElements: true,
+          },
+        });
+        return ctx;
+      },
+      refetch: true,
+    }
+  );
+  const item = computedWithControl(
+    () => get(templateData),
+    () => get(nextItem)
+  );
+  watch(nextItem, (newItem) => {
+    if (get(newItem).id && !get(pageLen)) item.trigger();
+  });
+  const template = computedWithControl(
+    () => get(item),
+    () =>
+      !get(templateStatusCode) || get(templateStatusCode) === 200
+        ? get(templateData)
+        : "<div></div>"
+  );
   const siblings = computed(() => getSiblings(get(item)));
   const children = computed(() => get(item).data);
   const treeChildren = computed(() => get(tree).data);
@@ -141,8 +192,6 @@ export default defineStore("core", () => {
     let lChildren = null;
     const lAttr = pAttr || "";
     let dataChildren = [];
-    console.log("path = ", get(path));
-    console.log("pPath = ", pPath);
     const dataHashes = (
       Array.isArray(pPath) ? pPath : [pPath || get(path) || ""]
     ).map((pValue) =>
@@ -151,7 +200,6 @@ export default defineStore("core", () => {
         .replace(/\/+/g, "/")
         .replace(/^\/+|\/+$/g, "")
     );
-    console.log("dataHashes = ", dataHashes);
     dataHashes.forEach((dataHash) => {
       try {
         if (pChildren === undefined || pChildren === null || pChildren === "")
@@ -203,55 +251,8 @@ export default defineStore("core", () => {
         break;
       default:
     }
-    console.log("dataChildren = ", dataChildren);
     return dataChildren;
   }
-
-  const { data: templateData, statusCode: templateStatusCode } = useFetch(
-    computed(() => `${encodeURIComponent(get(id))}.htm`),
-    {
-      /**
-       *
-       * @param {object} root0 Объект параметров
-       * @param {Function} root0.cancel Ф-ция отмены запроса
-       */
-      beforeFetch({ cancel }) {
-        if (!get(pageLen)) cancel();
-      },
-      /**
-       *
-       * @param {object} ctx Контекст запроса
-       * @returns {object} Возврат измененного контекста
-       */
-      afterFetch(ctx) {
-        ctx.data = DOMPurify.sanitize(ctx.data, {
-          ADD_TAGS: ["iframe"],
-          ADD_ATTR: [
-            "target",
-            "allow",
-            "allowfullscreen",
-            "frameborder",
-            "scrolling",
-          ],
-          CUSTOM_ELEMENT_HANDLING: {
-            tagNameCheck: /^v-/,
-            attributeNameCheck: /\w+/,
-            allowCustomizedBuiltInElements: true,
-          },
-        });
-        return ctx;
-      },
-      refetch: true,
-    }
-  );
-  const template = computedWithControl(
-    () => get(templateData),
-    () =>
-      !get(templateStatusCode) || get(templateStatusCode) === 200
-        ? get(templateData)
-        : "<div></div>"
-  );
-
   return {
     value,
     template,
