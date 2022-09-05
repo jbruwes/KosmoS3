@@ -1,7 +1,6 @@
 <template>
   <v-parallax
     height="100%"
-    tile
     :src="image"
     cover
     v-animate-onscroll.repeat="animate"
