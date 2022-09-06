@@ -25,16 +25,22 @@
               :href="href"
             ></v-btn></div></v-expand-transition
       ></v-img>
-      <v-card-item :title="title"
-        ><v-card-subtitle v-if="subtitle"
-          ><v-chip
-            size="x-small"
-            label
-            variant="outlined"
-            prepend-icon="mdi-calendar"
-            :text="subtitle"
-          ></v-chip></v-card-subtitle
-      ></v-card-item>
+      <v-card-item>
+        <div>
+          <div class="text-h6 mb-1" v-if="title">
+            {{ title }}
+          </div>
+          <div class="text-caption" v-if="subtitle">
+            <v-chip
+              size="x-small"
+              label
+              variant="outlined"
+              prepend-icon="mdi-calendar"
+              :text="subtitle"
+            ></v-chip>
+          </div>
+        </div>
+      </v-card-item>
       <v-card-text v-if="text">{{ text }}</v-card-text>
     </v-card>
   </v-hover>
