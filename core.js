@@ -202,8 +202,7 @@ export default defineStore("core", () => {
     );
     dataHashes.forEach((dataHash) => {
       try {
-        if (pChildren === undefined || pChildren === null || pChildren === "")
-          lChildren = "";
+        if (pChildren === undefined) lChildren = "";
         else lChildren = pChildren ? "[*]" : "[not(*)]";
         dataChildren = [
           ...dataChildren,
