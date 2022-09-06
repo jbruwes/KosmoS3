@@ -1,12 +1,8 @@
 <script>
-import { nextTick } from "vue";
-import { useScriptTag, useTitle, set } from "@vueuse/core";
-import {
-  storeToRefs,
-  mapState,
-  mapActions,
-  mapWritableState,
-} from "pinia";
+import { nextTick, computed } from "vue";
+import { useScriptTag, useBrowserLocation, set } from "@vueuse/core";
+import { useHead } from "@vueuse/head";
+import { storeToRefs, mapState, mapActions, mapWritableState } from "pinia";
 import VRuntimeTemplate from "vue3-runtime-template";
 import page from "page";
 import GLightbox from "glightbox";
@@ -33,31 +29,21 @@ export default {
   /**
    * Инициализация данных приложения
    *
-   * @returns {Data} Объект data
+   * @returns {Object} Объект data
    */
   setup() {
     const store = core();
-    const { title } = storeToRefs(store);
-    useTitle(title);
-    return { title };
-  },
-
-/*
-setup() {
-    const store = core();
     const { title, path, description, keywords, image } = storeToRefs(store);
+    const location = useBrowserLocation();
     useHead({
       title,
-      base: { href: "/" },
       meta: [
         { property: "og:title", content: title },
         {
           property: "og:url",
           content: computed(
             () =>
-              `${window.location.origin}${
-                path === "/" ? "" : `${encodeURI(path)}`
-              }`
+              `${location.origin}${path === "/" ? "" : `${encodeURI(path)}`}`
           ),
         },
         { name: "description", content: description },
@@ -65,12 +51,12 @@ setup() {
         { name: "keywords", content: keywords },
         {
           property: "og:image",
-          content: image ? `${window.location.origin}/${image}` : "",
+          content: image ? `${location.origin}/${image}` : "",
         },
       ],
     });
+    return { title, path, description, keywords, image };
   },
-*/
 
   data: () => ({
     drawer: false,
@@ -87,7 +73,6 @@ setup() {
       "vector",
       "parent",
       "item",
-      "description",
       "treeTitle",
       "parentTitle",
       "treeDescription",
@@ -95,10 +80,8 @@ setup() {
       "icon",
       "treeIcon",
       "parentIcon",
-      "path",
       "treePath",
       "parentPath",
-      "image",
       "treeImage",
       "parentImage",
     ]),
@@ -111,32 +94,6 @@ setup() {
         if (typeof init === "function") init.call({ ...this.tree });
         window.scrollTo(0, 0);
       });
-    },
-    title(newTitle) {
-      this.meta(['meta[property="og:title"]', newTitle]);
-    },
-    path(newPath) {
-      this.meta([
-        'meta[property="og:url"]',
-        `${window.location.origin}${
-          newPath === "/" ? "" : `${encodeURI(newPath)}`
-        }`,
-      ]);
-    },
-    description(newDescription) {
-      [
-        ['meta[name="description"]', newDescription],
-        ['meta[property="og:description"]', newDescription],
-      ].forEach(this.meta);
-    },
-    keywords(newKeywords) {
-      this.meta(['meta[name="keywords"]', newKeywords]);
-    },
-    image(newImage) {
-      this.meta([
-        'meta[property="og:image"]',
-        newImage ? `${window.location.origin}/${newImage}` : "",
-      ]);
     },
     /**
      * При изменении индекса создаем роутер
@@ -190,10 +147,6 @@ setup() {
         this.pageLen = context.page.len;
         this.routePath = context.routePath;
       });
-    },
-    meta(e) {
-      const element = document.head.querySelector(e[0]);
-      element.content = e[1] ? e[1].replace(/"/g, "&quot;") : "";
     },
     /**
      * Натравливаем GLightbox на всё подряд
