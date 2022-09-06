@@ -82,9 +82,9 @@ export default defineStore("core", () => {
         (e) => e.path === get(routePath) || e.href === get(routePath)
       ) || {}
   );
-  // const nextId = computed(() => get(nextItem).id);
+  const nextId = computed(() => get(nextItem).id);
   const { data: templateData, statusCode: templateStatusCode } = useFetch(
-    computed(() => `${encodeURIComponent(get(nextItem).id)}.htm`),
+    computed(() => `${encodeURIComponent(get(nextId))}.htm`),
     {
       /**
        *
@@ -124,8 +124,8 @@ export default defineStore("core", () => {
     () => get(templateData),
     () => get(nextItem)
   );
-  watch(nextItem, (newItem) => {
-    if (get(newItem).id && !get(pageLen)) item.trigger();
+  watch(nextId, (newNextId) => {
+    if (newNextId && !get(pageLen)) item.trigger();
   });
   const template = computedWithControl(
     () => get(item),
