@@ -40,7 +40,7 @@ export default {
         this.sort,
         this.path,
         this.children,
-        "*[@id]"
+        "*[@id][string(@image)]"
       );
     },
   },
