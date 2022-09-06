@@ -19,7 +19,7 @@ import VSingleK3 from "./VSingleK3.vue";
 export default {
   props: {
     animate: String,
-    date: String,
+    date: [Boolean, String],
     variant: String,
     height: Number,
     width: { default: 320, type: Number },
