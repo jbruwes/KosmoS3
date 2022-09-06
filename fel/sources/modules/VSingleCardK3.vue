@@ -2,7 +2,7 @@
   <v-single-k3 #="slot"
     ><v-template-card-k3
       :animate="slot.animate"
-      :class="slot.class"
+      :classes="slot.classes"
       :width="slot.width"
       :height="slot.height"
       :title="slot.title"
