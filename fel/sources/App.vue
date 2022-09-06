@@ -10,6 +10,7 @@ import DOMPurify from "dompurify";
 
 import core from "~/core.js";
 
+import VSingleHeaderK3 from "./modules/VSingleHeaderK3.vue";
 import VSingleButtonK3 from "./modules/VSingleButtonK3.vue";
 import VSingleItemK3 from "./modules/VSingleItemK3.vue";
 import VListItemK3 from "./modules/VListItemK3.vue";
@@ -188,6 +189,7 @@ export default {
     },
   },
   components: {
+    VSingleHeaderK3,
     VSingleButtonK3,
     VListItemK3,
     VSingleItemK3,
