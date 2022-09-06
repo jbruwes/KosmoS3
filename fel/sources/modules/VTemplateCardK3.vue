@@ -42,7 +42,7 @@
 <script>
 export default {
   props: {
-    animate: { default: "animate__animated animate__fadeIn", type: String },
+    animate: { default: "animate__animated animate__bounceIn", type: String },
     classes: String,
     width: Number,
     height: Number,
