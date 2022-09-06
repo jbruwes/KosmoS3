@@ -37,7 +37,7 @@ import "./styles/index.css";
 import { createApp } from "vue";
 import { createVuetify } from "vuetify";
 import { createPinia } from "pinia";
-// import { createHead } from "@vueuse/head";
+import { createHead } from "@vueuse/head";
 
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
@@ -59,7 +59,7 @@ createApp(App)
       directives,
     })
   )
-  //  .use(createHead())
+  .use(createHead())
   .use(VueAnimateOnScroll)
   .use(createPinia())
   .mount("#app");
