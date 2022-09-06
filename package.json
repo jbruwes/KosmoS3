@@ -41,7 +41,7 @@
   "license": "GNU AGPL",
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
-    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-env": "^7.19.0",
     "babel-loader": "^8.2.5",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
@@ -101,7 +101,7 @@
     "@fontsource/tenor-sans": "^4.5.10",
     "@mdi/font": "^7.0.96",
     "@mdi/svg": "^7.0.96",
-    "@vueuse/core": "^9.1.1",
+    "@vueuse/core": "^9.2.0",
     "@vueuse/head": "^0.7.9",
     "ace-builds": "^1.10.0",
     "animate.css": "^4.1.1",
