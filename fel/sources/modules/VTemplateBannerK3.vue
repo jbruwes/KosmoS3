@@ -1,11 +1,5 @@
 <template>
-  <v-parallax
-    height="100%"
-    :src="image"
-    cover
-    v-animate-onscroll.repeat="animate"
-    :aspect-ratio="16 / 9"
-  >
+  <v-parallax height="100%" :src="image" cover :aspect-ratio="16 / 9">
     <v-row class="fill-height" align="center" justify="center">
       <v-card
         class="pa-16 ma-16 text-white"
@@ -13,6 +7,7 @@
         :width="width"
         :href="href"
         :variant="variant"
+        v-animate-onscroll.repeat="animate"
       >
         <div class="text-center">
           <v-icon
@@ -38,7 +33,7 @@
 <script>
 export default {
   props: {
-    animate: { default: "animate__animated animate__fadeIn", type: String },
+    animate: { default: "animate__animated animate__bounceIn", type: String },
     width: Number,
     height: Number,
     title: String,
