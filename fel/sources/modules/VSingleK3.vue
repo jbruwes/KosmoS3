@@ -1,5 +1,6 @@
 <template>
   <slot
+    :classes="classes"
     :animate="animate"
     :width="width"
     :height="height"
@@ -57,6 +58,7 @@ import { mapState, mapActions } from "pinia";
 import core from "~/core.js";
 export default {
   props: {
+    classes: String,
     animate: String,
     width: Number,
     height: Number,
