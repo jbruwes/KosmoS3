@@ -6,7 +6,7 @@
       :height="height"
       :width="width"
       :elevation="isHovering ? 6 : undefined"
-      :class="class"
+      :class="classes"
       :href="href"
       :variant="variant"
     >
@@ -43,7 +43,7 @@
 export default {
   props: {
     animate: { default: "animate__animated animate__fadeIn", type: String },
-    class: String,
+    classes: String,
     width: Number,
     height: Number,
     title: String,
