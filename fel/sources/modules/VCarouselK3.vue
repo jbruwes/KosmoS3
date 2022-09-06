@@ -25,7 +25,7 @@ export default {
     reveal: Boolean,
     sort: String,
     path: String,
-    children: Boolean,
+    children: { default: undefined, type: Boolean },
   },
   computed: {
     items() {
