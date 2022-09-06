@@ -8,6 +8,7 @@
     :href="href"
     :variant="variant"
     :title="title"
+    prominent
     ><v-chip
       v-if="subtitle"
       size="x-small"
@@ -24,7 +25,7 @@
 export default {
   props: {
     animate: { default: "animate__animated animate__bounce", type: String },
-    class: String,
+    classes: String,
     width: Number,
     height: Number,
     title: String,
