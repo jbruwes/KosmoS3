@@ -9,8 +9,6 @@
       :icon="slot.icon"
       :image="slot.image"
       :href="slot.href"
-      :path="slot.path"
-      :item="slot.item"
       :subtitle="slot.subtitle"
       :text="slot.text"
       :variant="slot.variant"
