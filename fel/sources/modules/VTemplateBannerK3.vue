@@ -15,17 +15,23 @@
             style="font-size: calc(var(--v-icon-size-multiplier) * 4em);"
           ></v-icon>
         </div>
-        <v-card-item :title="title" class="justify-center text-center"
-          ><v-card-subtitle v-if="subtitle"
-            ><v-chip
-              size="x-small"
-              label
-              variant="outlined"
-              prepend-icon="mdi-calendar"
-              :text="subtitle"
-            ></v-chip></v-card-subtitle
-        ></v-card-item>
-        <v-card-text v-if="text" class="text-center">{{ text }}</v-card-text>
+        <v-card-item class="justify-center text-center">
+          <div>
+            <div class="text-h4 mb-1" v-if="title">
+              {{ title }}
+            </div>
+            <div v-if="date">
+              <v-chip
+                size="x-small"
+                label
+                variant="outlined"
+                prepend-icon="mdi-calendar"
+                :text="date"
+              ></v-chip>
+            </div>
+          </div>
+        </v-card-item>
+        <v-card-text v-if="description" class="text-center">{{ description }}</v-card-text>
       </v-card>
     </v-row>
   </v-parallax>
@@ -37,8 +43,8 @@ export default {
     width: Number,
     height: Number,
     title: String,
-    subtitle: String,
-    text: String,
+    date: String,
+    description: String,
     image: String,
     icon: String,
     href: String,
