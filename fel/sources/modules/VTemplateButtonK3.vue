@@ -5,7 +5,7 @@
     v-animate-onscroll.repeat="animate"
     :height="height"
     :width="width"
-    :class="class"
+    :class="classes"
     :href="href"
     :prepend-icon="icon"
   >{{ title }}</v-btn>
@@ -14,7 +14,7 @@
 export default {
   props: {
     animate: { default: "animate__animated animate__bounce", type: String },
-    class: String,
+    classes: String,
     width: [String, Number],
     height: [String, Number],
     title: String,
