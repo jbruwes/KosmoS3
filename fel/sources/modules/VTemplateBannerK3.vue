@@ -1,10 +1,14 @@
 <template>
-  <v-parallax height="100%" :src="image" cover :aspect-ratio="16 / 9">
+  <v-parallax
+    :height="height"
+    :width="width"
+    :src="image"
+    cover
+    :aspect-ratio="16 / 9"
+  >
     <v-row class="fill-height" align="center" justify="center">
       <v-card
         class="pa-16 ma-16 text-white"
-        :height="height"
-        :width="width"
         :href="href"
         :variant="variant"
         v-animate-onscroll.repeat="animate"
@@ -31,7 +35,9 @@
             </div>
           </div>
         </v-card-item>
-        <v-card-text v-if="description" class="text-center">{{ description }}</v-card-text>
+        <v-card-text v-if="description" class="text-center">{{
+          description
+        }}</v-card-text>
       </v-card>
     </v-row>
   </v-parallax>
