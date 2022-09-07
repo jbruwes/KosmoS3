@@ -31,7 +31,7 @@ export default {
     sort: String,
     path: String,
     children: { default: undefined, type: Boolean },
-    xpath: { default: "*[@id]", type: Boolean },
+    xpath: { default: "*[@id]", type: String },
   },
   components: { VSingleK3 },
   computed: {
