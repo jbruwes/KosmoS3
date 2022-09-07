@@ -1,57 +1,59 @@
 <template>
-  <slot
-    :classes="classes"
-    :animate="animate"
-    :width="width"
-    :height="height"
-    :variant="variant"
-    :title="
-      typeof this.title === 'string'
-        ? this.title
-        : this.title
-        ? this.getTitle(this.theItem)
-        : undefined
-    "
-    :date="
-      typeof this.date === 'string'
-        ? this.date
-        : this.date &&
-          !isNaN(new Date(this.theItem.date || this.theItem.lastmod))
-        ? new Date(
-            this.theItem.date || this.theItem.lastmod
-          ).toLocaleDateString()
-        : undefined
-    "
-    :description="
-      typeof this.description === 'string'
-        ? this.description
-        : this.description
-        ? this.theItem.description
-        : undefined
-    "
-    :icon="
-      typeof this.icon === 'string'
-        ? `mdi-${this.icon}`
-        : this.icon
-        ? `mdi-${this.theItem.icon || 'open-in-new'}`
-        : undefined
-    "
-    :image="
-      typeof this.image === 'string'
-        ? this.image
-        : this.image
-        ? this.theItem.image
-        : undefined
-    "
-    :href="
-      typeof this.href === 'string'
-        ? this.href
-        : this.href
-        ? this.url
-        : undefined
-    "
-  >
-  </slot>
+  <v-responsive>
+    <slot
+      :classes="classes"
+      :animate="animate"
+      :width="width"
+      :height="height"
+      :variant="variant"
+      :title="
+        typeof this.title === 'string'
+          ? this.title
+          : this.title
+          ? this.getTitle(this.theItem)
+          : undefined
+      "
+      :date="
+        typeof this.date === 'string'
+          ? this.date
+          : this.date &&
+            !isNaN(new Date(this.theItem.date || this.theItem.lastmod))
+          ? new Date(
+              this.theItem.date || this.theItem.lastmod
+            ).toLocaleDateString()
+          : undefined
+      "
+      :description="
+        typeof this.description === 'string'
+          ? this.description
+          : this.description
+          ? this.theItem.description
+          : undefined
+      "
+      :icon="
+        typeof this.icon === 'string'
+          ? `mdi-${this.icon}`
+          : this.icon
+          ? `mdi-${this.theItem.icon || 'open-in-new'}`
+          : undefined
+      "
+      :image="
+        typeof this.image === 'string'
+          ? this.image
+          : this.image
+          ? this.theItem.image
+          : undefined
+      "
+      :href="
+        typeof this.href === 'string'
+          ? this.href
+          : this.href
+          ? this.url
+          : undefined
+      "
+    >
+    </slot>
+  </v-responsive>
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
