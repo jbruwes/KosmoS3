@@ -12,7 +12,7 @@
         ? this.getTitle(this.theItem)
         : undefined
     "
-    :subtitle="
+    :date="
       typeof this.date === 'string'
         ? this.date
         : this.date &&
@@ -22,7 +22,7 @@
           ).toLocaleDateString()
         : undefined
     "
-    :text="
+    :description="
       typeof this.description === 'string'
         ? this.description
         : this.description
