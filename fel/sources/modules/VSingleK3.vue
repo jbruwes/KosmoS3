@@ -69,7 +69,7 @@ export default {
     href: { default: true, type: [Boolean, String] },
     path: String,
     item: { default: true, type: [Boolean, Object] },
-    date: { default: true, type: [Boolean, String] },
+    date: { default: false, type: [Boolean, String] },
     description: { default: true, type: [Boolean, String] },
   },
   computed: {
