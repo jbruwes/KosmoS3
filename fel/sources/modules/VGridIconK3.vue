@@ -4,6 +4,7 @@
       :item="slot.item"
       :animate="slot.animate"
       :date="slot.date"
+      :description="slot.description"
       :variant="slot.variant"
       :height="slot.height"
       :width="slot.width"
