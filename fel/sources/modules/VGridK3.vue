@@ -9,6 +9,7 @@
         :variant="variant"
         :width="width"
         :height="height"
+        :description="description"
         ></slot>
       </v-col>
     </v-row>
@@ -21,6 +22,7 @@ export default {
   props: {
     animate: String,
     date: [Boolean, String],
+    description: [Boolean, String],
     variant: String,
     height: [String, Number],
     width: [String, Number],
