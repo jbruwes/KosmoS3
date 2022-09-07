@@ -1,6 +1,7 @@
 <template>
   <v-carousel-k3 #="slot"
     ><v-single-banner-k3
+      attr="*[@id][string(@image)]"
       :item="slot.item"
       :animate="slot.animate"
       :date="slot.date"
