@@ -1,7 +1,7 @@
 <template>
   <v-slide-k3 #="slot"
     ><v-single-card-k3
-      class="ma-4"
+      classes="ma-4"
       :item="slot.item"
       :animate="slot.animate"
       :date="slot.date"
