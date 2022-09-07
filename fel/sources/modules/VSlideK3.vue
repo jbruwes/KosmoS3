@@ -8,6 +8,7 @@
         :variant="variant"
         :width="width"
         :height="height"
+        :description="description"
       ></slot>
     </v-slide-group-item>
   </v-slide-group>
@@ -20,6 +21,7 @@ export default {
   props: {
     animate: String,
     date: [Boolean, String],
+    description: [Boolean, String],
     variant: String,
     height: [String, Number],
     width: { default: 320, type: [String, Number] },
