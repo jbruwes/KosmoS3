@@ -2,12 +2,13 @@
   <v-slide-k3 #="slot"
     ><v-single-icon-k3
       class="ma-4"
-      :item="item"
-      :animate="animate"
-      :date="date"
-      :variant="variant"
-      :width="width"
-      :height="height"
+      :item="slot.item"
+      :animate="slot.animate"
+      :date="slot.date"
+      :description="slot.description"
+      :variant="slot.variant"
+      :height="slot.height"
+      :width="slot.width"
     ></v-single-icon-k3
   ></v-slide-k3>
 </template>
