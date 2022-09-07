@@ -1,8 +1,7 @@
 <template>
-  <v-grid-k3 #="slot"
+  <v-grid-k3 #="slot" xpath="*[@id][string(@image)]"
     ><v-single-card-k3
       classes="fill-height ma-auto"
-      xpath="*[@id][string(@image)]"
       :item="slot.item"
       :animate="slot.animate"
       :date="slot.date"
