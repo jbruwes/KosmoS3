@@ -82,7 +82,7 @@ export default defineStore("core", () => {
         (e) => e.path === get(routePath) || e.href === get(routePath)
       ) || {}
   );
-  const nextId = computed(() => get(nextItem).id);
+  const nextId = computed(() => get(nextItem).page || get(nextItem).id);
   const { data: templateData, statusCode: templateStatusCode } = useFetch(
     computed(() => `${encodeURIComponent(get(nextId))}.htm`),
     {
@@ -142,6 +142,7 @@ export default defineStore("core", () => {
   const vector = computed(() => getVector(get(item)));
   const id = computed(() => get(item).id);
   const value = computed(() => get(item).value);
+  const page = computed(() => get(item).page);
   const title = computed(() => getTitle(get(item)));
   const treeTitle = computed(() => getTitle(get(tree)));
   const parentTitle = computed(() => getTitle(get(parent)));
@@ -254,6 +255,7 @@ export default defineStore("core", () => {
   }
   return {
     value,
+    page,
     template,
     tree,
     pageLen,
