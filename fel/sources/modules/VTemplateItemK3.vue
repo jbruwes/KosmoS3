@@ -7,15 +7,15 @@
     :href="href"
     :prepend-icon="icon"
     :title="title"
-    :subtitle="text"
+    :subtitle="description"
     :variant="variant"
     ><v-chip
-      v-if="subtitle"
+      v-if="date"
       size="x-small"
       label
       variant="outlined"
       prepend-icon="mdi-calendar"
-      :text="subtitle"
+      :text="date"
       class="mr-1"
     ></v-chip>
   </v-list-item>
@@ -28,8 +28,8 @@ export default {
     width: Number,
     height: Number,
     title: String,
-    subtitle: String,
-    text: String,
+    date: String,
+    description: String,
     icon: String,
     href: String,
     variant: String,
