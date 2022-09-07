@@ -50,8 +50,8 @@ export default {
   props: {
     animate: { default: "animate__animated animate__bounceIn", type: String },
     classes: String,
-    width: Number,
-    height: Number,
+    width: [String, Number],
+    height: [String, Number],
     title: String,
     date: String,
     description: String,
