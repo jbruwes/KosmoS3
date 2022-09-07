@@ -30,18 +30,18 @@
           <div class="text-h6 mb-1" v-if="title">
             {{ title }}
           </div>
-          <div class="text-caption" v-if="subtitle">
+          <div v-if="date">
             <v-chip
               size="x-small"
               label
               variant="outlined"
               prepend-icon="mdi-calendar"
-              :text="subtitle"
+              :text="date"
             ></v-chip>
           </div>
         </div>
       </v-card-item>
-      <v-card-text v-if="text">{{ text }}</v-card-text>
+      <v-card-text v-if="description">{{ description }}</v-card-text>
     </v-card>
   </v-hover>
 </template>
@@ -53,8 +53,8 @@ export default {
     width: Number,
     height: Number,
     title: String,
-    subtitle: String,
-    text: String,
+    date: String,
+    description: String,
     icon: String,
     image: String,
     href: String,
