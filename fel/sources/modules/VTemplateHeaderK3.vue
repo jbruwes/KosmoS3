@@ -18,7 +18,7 @@
       prepend-icon="mdi-calendar"
       :text="date"
     ></v-chip
-    >{{ text }}</v-alert
+    >{{ description }}</v-alert
   >
 </template>
 <script>
