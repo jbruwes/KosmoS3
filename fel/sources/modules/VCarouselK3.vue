@@ -6,6 +6,7 @@
         :animate="animate"
         :date="date"
         :variant="variant"
+        :description="description"
       ></slot>
     </v-carousel-item>
   </v-carousel>
@@ -17,6 +18,7 @@ export default {
   props: {
     animate: String,
     date: [Boolean, String],
+    description: [Boolean, String],
     variant: String,
     height: [String, Number],
     width: [String, Number],
