@@ -1,7 +1,6 @@
 <template>
-  <v-carousel-k3 #="slot"
+  <v-carousel-k3 #="slot" xpath="*[@id][string(@image)]"
     ><v-single-banner-k3
-      xpath="*[@id][string(@image)]"
       :item="slot.item"
       :animate="slot.animate"
       :date="slot.date"
