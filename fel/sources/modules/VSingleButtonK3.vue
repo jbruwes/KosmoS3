@@ -8,6 +8,7 @@
       :title="slot.title"
       :icon="slot.icon"
       :href="slot.href"
+      :description="slot.description"
       :variant="slot.variant"
     ></v-template-button-k3
   ></v-single-k3>
