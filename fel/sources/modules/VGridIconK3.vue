@@ -1,7 +1,6 @@
 <template>
   <v-grid-k3 #="slot"
     ><v-single-icon-k3
-      class="fill-height ma-auto"
       :item="slot.item"
       :animate="slot.animate"
       :date="slot.date"
