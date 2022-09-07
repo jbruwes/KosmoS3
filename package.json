@@ -72,7 +72,7 @@
     "webpack-dev-server": "^4.10.1"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.163.0",
+    "@aws-sdk/client-s3": "^3.165.0",
     "@fontsource/arsenal": "^4.5.8",
     "@fontsource/bad-script": "^4.5.8",
     "@fontsource/caveat": "^4.5.8",
@@ -103,7 +103,7 @@
     "@mdi/svg": "^7.0.96",
     "@vueuse/core": "^9.2.0",
     "@vueuse/head": "^0.7.9",
-    "ace-builds": "^1.10.0",
+    "ace-builds": "^1.10.1",
     "animate.css": "^4.1.1",
     "core-js": "^3.25.0",
     "dompurify": "^2.4.0",
@@ -115,7 +115,7 @@
     "jquery": "^3.6.1",
     "jsel": "^1.1.6",
     "page": "^1.11.6",
-    "pinia": "^2.0.21",
+    "pinia": "^2.0.22",
     "regenerator-runtime": "^0.13.9",
     "tinymce": "^6.1.2",
     "vue": "^3.2.37",
