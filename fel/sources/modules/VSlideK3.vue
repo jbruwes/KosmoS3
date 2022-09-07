@@ -1,6 +1,6 @@
 <template>
   <v-slide-group show-arrows>
-    <v-slide-group-item v-for="item in items">
+    <v-slide-group-item v-for="(item, i) in items" :key="i">
       <slot
         :item="item"
         :animate="animate"
@@ -16,7 +16,6 @@
 <script>
 import { mapActions } from "pinia";
 import core from "~/core.js";
-import VSingleK3 from "./VSingleK3.vue";
 export default {
   props: {
     animate: String,
@@ -32,7 +31,6 @@ export default {
     path: String,
     children: { default: undefined, type: Boolean },
   },
-  components: { VSingleK3 },
   computed: {
     items() {
       return this.getItems(
