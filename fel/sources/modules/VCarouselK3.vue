@@ -17,8 +17,8 @@ import core from "~/core.js";
 export default {
   props: {
     animate: String,
-    date: [Boolean, String],
-    description: [Boolean, String],
+    date: { default: false, type: [Boolean, String] },
+    description: { default: true, type: [Boolean, String] },
     variant: String,
     height: [String, Number],
     width: [String, Number],
