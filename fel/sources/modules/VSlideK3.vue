@@ -30,7 +30,7 @@ export default {
     sort: String,
     path: String,
     children: { default: undefined, type: Boolean },
-    attr: { default: "*[@id]", type: Boolean },
+    xpath: { default: "*[@id]", type: Boolean },
   },
   computed: {
     items() {
@@ -41,7 +41,7 @@ export default {
         this.sort,
         this.path,
         this.children,
-        this.attr,
+        this.xpath,
       );
     },
   },
