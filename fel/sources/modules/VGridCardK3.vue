@@ -2,6 +2,7 @@
   <v-grid-k3 #="slot"
     ><v-single-card-k3
       classes="fill-height ma-auto"
+      attr="*[@id][string(@image)]"
       :item="slot.item"
       :animate="slot.animate"
       :date="slot.date"
