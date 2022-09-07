@@ -15,8 +15,8 @@ export default {
   props: {
     animate: { default: "animate__animated animate__bounce", type: String },
     class: String,
-    width: Number,
-    height: Number,
+    width: [String, Number],
+    height: [String, Number],
     title: String,
     icon: String,
     href: String,
