@@ -60,8 +60,8 @@ export default {
   props: {
     classes: String,
     animate: String,
-    width: Number,
-    height: Number,
+    width: [String, Number],
+    height: [String, Number],
     variant: String,
     title: { default: true, type: [Boolean, String] },
     icon: { default: true, type: [Boolean, String] },
