@@ -8,8 +8,8 @@
       :title="slot.title"
       :icon="slot.icon"
       :href="slot.href"
-      :subtitle="slot.subtitle"
-      :text="slot.text"
+      :date="slot.date"
+      :description="slot.description"
       :variant="slot.variant"
     ></v-template-header-k3
   ></v-single-k3>
