@@ -2,6 +2,7 @@
   <v-slide-k3 #="slot"
     ><v-single-card-k3
       classes="ma-4"
+      attr="*[@id][string(@image)]"
       :item="slot.item"
       :animate="slot.animate"
       :date="slot.date"
