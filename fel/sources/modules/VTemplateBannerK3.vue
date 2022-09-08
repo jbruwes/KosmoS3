@@ -4,7 +4,7 @@
     :width="width"
     :src="image"
     cover
-    :aspect-ratio="16 / 9"
+    :aspect-ratio="4 / 3"
   >
     <v-row class="fill-height" align="center" justify="center">
       <v-card
