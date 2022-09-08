@@ -89,12 +89,11 @@ export default {
     ...mapWritableState(core, ["template", "routePath", "pageLen"]),
   },
   watch: {
-    template() {
-      nextTick(() => {
-        this.GLightbox();
-        if (typeof init === "function") init.call({ ...this.tree });
-        window.scrollTo(0, 0);
-      });
+    async template() {
+      await nextTick();
+      this.GLightbox();
+      if (typeof init === "function") init.call({ ...this.tree });
+      window.scrollTo(0, 0);
     },
     /**
      * При изменении индекса создаем роутер
@@ -143,11 +142,12 @@ export default {
      *
      * @param {Context} context Объект роутинга
      */
-    route(context) {
-      nextTick(() => {
+    async route(context) {
+      await nextTick();
+      if (this.routePath !== context.routePath) {
         this.pageLen = context.page.len;
         this.routePath = context.routePath;
-      });
+      }
     },
     /**
      * Натравливаем GLightbox на всё подряд
