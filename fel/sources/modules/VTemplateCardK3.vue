@@ -10,7 +10,7 @@
       :href="href"
       :variant="variant"
     >
-      <v-img :src="image" :aspect-ratio="16 / 9" cover
+      <v-img :src="image" :aspect-ratio="4 / 3" cover
         ><v-expand-transition
           ><div
             v-if="isHovering"
@@ -27,7 +27,7 @@
       ></v-img>
       <v-card-item>
         <div>
-          <div class="text-h6 mb-1" v-if="title">
+          <div class="text-subtitle-2 mb-1" v-if="title">
             {{ title }}
           </div>
           <div v-if="date">
