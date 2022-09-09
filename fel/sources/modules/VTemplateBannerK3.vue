@@ -3,8 +3,7 @@
     :height="height"
     :width="width"
     :src="image"
-    cover
-    :aspect-ratio="4 / 3"
+    :aspect-ratio="1"
   >
     <v-row class="fill-height" align="center" justify="center">
       <v-card
@@ -21,7 +20,7 @@
         </div>
         <v-card-item class="justify-center text-center">
           <div>
-            <div class="text-h4 mb-1" v-if="title">
+            <div class="text-h3 mb-1" v-if="title">
               {{ title }}
             </div>
             <div v-if="date">
@@ -35,9 +34,7 @@
             </div>
           </div>
         </v-card-item>
-        <v-card-text v-if="description" class="text-center">{{
-          description
-        }}</v-card-text>
+        <v-alert v-if="description" :title="description" variant="text" prominent class="text-center"></v-alert>
       </v-card>
     </v-row>
   </v-parallax>
