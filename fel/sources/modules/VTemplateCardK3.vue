@@ -27,10 +27,7 @@
       ></v-img>
       <v-card-item>
         <div>
-          <div class="text-subtitle-2 mb-1" v-if="title">
-            {{ title }}
-          </div>
-          <div v-if="date">
+          <div v-if="date" class="mb-1">
             <v-chip
               size="x-small"
               label
@@ -39,9 +36,14 @@
               :text="date"
             ></v-chip>
           </div>
+          <div class="text-subtitle-1" v-if="title">
+            {{ title }}
+          </div>
         </div>
       </v-card-item>
-      <v-card-text v-if="description">{{ description }}</v-card-text>
+      <v-card-text v-if="description" class="text-caption">{{
+        description
+      }}</v-card-text>
     </v-card>
   </v-hover>
 </template>
