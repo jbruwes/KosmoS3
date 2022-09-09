@@ -1,6 +1,6 @@
 <template>
   <v-carousel cycle show-arrows="hover" :height="height" :width="width">
-    <v-carousel-item v-for="(item, i) in items" :key="i">
+    <v-carousel-item v-for="(item, i) in items" :key="i" :ripple="true">
       <slot
         :item="item"
         :animate="animate"
