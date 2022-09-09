@@ -185,6 +185,7 @@ export default class TinymceView extends JetView {
       document_base_url: `${this.app.io.getWendpoint()}/${this.app.io.getBucket()}/`,
       statusbar: false,
       resize: false,
+      promotion: false,
       templates: [
         {
           title: "carousel",
