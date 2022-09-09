@@ -16,7 +16,6 @@
 <script>
 import { mapActions } from "pinia";
 import core from "~/core.js";
-import VSingleK3 from "./VSingleK3.vue";
 export default {
   props: {
     animate: String,
@@ -33,7 +32,6 @@ export default {
     children: { default: undefined, type: Boolean },
     xpath: { default: "*[@id]", type: String },
   },
-  components: { VSingleK3 },
   computed: {
     items() {
       return this.getItems(
