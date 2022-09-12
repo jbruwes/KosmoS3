@@ -40,6 +40,7 @@ export default defineStore("core", () => {
               .replace(/^\/+|\/+$/g, "")
           : "";
         lNode.href = lNode.href ? `/${lNode.href}/` : "";
+        lNode.route = lNode.route ? `/${lNode.route}/` : "";
         return lNode;
       })
   );
