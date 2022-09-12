@@ -3,7 +3,7 @@
     :height="height"
     :width="width"
     :src="image"
-    :aspect-ratio="1"
+    aspect-ratio="1"
   >
     <v-row class="fill-height" align="center" justify="center">
       <v-card
