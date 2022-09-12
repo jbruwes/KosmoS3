@@ -254,6 +254,7 @@ export default defineStore("core", () => {
     return dataChildren;
   }
   return {
+    treeData,
     value,
     page,
     template,
