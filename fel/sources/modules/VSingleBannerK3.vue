@@ -9,7 +9,7 @@
       :icon="slot.icon"
       :image="slot.image"
       :href="slot.href"
-      :date="slot.sate"
+      :date="slot.date"
       :description="slot.description"
       :variant="slot.variant"
     ></v-template-banner-k3
