@@ -153,6 +153,7 @@ export default defineStore("core", () => {
   const icon = computed(() => get(item).icon);
   const treeIcon = computed(() => get(tree).icon);
   const parentIcon = computed(() => get(parent).icon);
+  const route = computed(() => get(item).route);
   const path = computed(() => get(item).path);
   const treePath = computed(() => get(tree).path);
   const parentPath = computed(() => get(parent).path);
@@ -279,6 +280,7 @@ export default defineStore("core", () => {
     icon,
     treeIcon,
     parentIcon,
+    route,
     path,
     treePath,
     parentPath,
