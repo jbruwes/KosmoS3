@@ -13,6 +13,7 @@ export default defineStore("core", () => {
   );
   const pageLen = ref(0);
   const routePath = ref(undefined);
+  const routeParams = ref(undefined);
   /**
    * Вычисление вектора
    *
@@ -262,6 +263,7 @@ export default defineStore("core", () => {
     tree,
     pageLen,
     routePath,
+    routeParams,
     list,
     siblings,
     children,
