@@ -1,18 +1,20 @@
 <template>
   <v-single-k3 #="slot"
-    ><v-template-banner-k3
-      :animate="slot.animate"
-      :classes="slot.classes"
-      :width="slot.width"
+    ><v-parallax
       :height="slot.height"
-      :title="slot.title"
-      :icon="slot.icon"
-      :image="slot.image"
-      :href="slot.href"
-      :date="slot.date"
-      :description="slot.description"
-      :variant="slot.variant"
-    ></v-template-banner-k3
+      :width="slot.width"
+      :src="slot.image"
+      aspect-ratio="1"
+      ><v-template-banner-k3
+        :animate="slot.animate"
+        :classes="slot.classes"
+        :title="slot.title"
+        :icon="slot.icon"
+        :href="slot.href"
+        :date="slot.date"
+        :description="slot.description"
+        :variant="slot.variant"
+      ></v-template-banner-k3></v-parallax
   ></v-single-k3>
 </template>
 <script>
