@@ -51,3 +51,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+:deep(.v-card--variant-tonal .v-card__underlay) {
+  color: black;
+  z-index: -1;
+}
+</style>
