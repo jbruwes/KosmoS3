@@ -33,6 +33,7 @@ export default {
     path: String,
     children: { default: undefined, type: Boolean },
     xpath: { default: "*[@id]", type: String },
+    axe: String,
   },
   computed: {
     items() {
@@ -44,6 +45,7 @@ export default {
         this.path,
         this.children,
         this.xpath,
+        this.axe,
       );
     },
   },
