@@ -73,7 +73,7 @@
     "webpack-dev-server": "^4.11.0"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.169.0",
+    "@aws-sdk/client-s3": "^3.170.0",
     "@fontsource/arsenal": "^4.5.8",
     "@fontsource/bad-script": "^4.5.8",
     "@fontsource/caveat": "^4.5.8",
