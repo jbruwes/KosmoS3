@@ -84,7 +84,7 @@ export default defineStore("core", () => {
         (e) => e.path === get(routePath) || e.href === get(routePath)
       ) || {}
   );
-  const nextId = computed(() => get(nextItem).page || get(nextItem).id);
+  const nextId = computed(() => get(nextItem).id);
   const { data: templateData, statusCode: templateStatusCode } = useFetch(
     computed(() => `${encodeURIComponent(get(nextId))}.htm`),
     {
@@ -94,7 +94,7 @@ export default defineStore("core", () => {
        * @param {Function} root0.cancel Ф-ция отмены запроса
        */
       beforeFetch({ cancel }) {
-        if (!get(pageLen)) cancel();
+        if (!get(pageLen) || get(nextItem).page) cancel();
       },
       /**
        *
