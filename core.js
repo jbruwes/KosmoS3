@@ -127,7 +127,7 @@ export default defineStore("core", () => {
     () => get(nextItem)
   );
   watch(nextId, (newNextId) => {
-    if (newNextId && !get(pageLen)) item.trigger();
+    if (newNextId && (!get(pageLen) || get(nextItem).page)) item.trigger();
   });
   const template = computedWithControl(
     () => get(item),
