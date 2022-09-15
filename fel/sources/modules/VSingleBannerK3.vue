@@ -5,7 +5,7 @@
       :width="slot.width"
       :src="slot.image"
       :eager="true"
-      aspect-ratio="1"
+      :aspect-ratio="1"
       ><v-template-banner-k3
         :animate="slot.animate"
         :classes="slot.classes"
