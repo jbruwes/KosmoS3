@@ -24,6 +24,7 @@ import VSlideIconK3 from "./modules/VSlideIconK3.vue";
 import VGridIconK3 from "./modules/VGridIconK3.vue";
 import VMenuK3 from "./modules/VMenuK3.vue";
 import VPaginationK3 from "./modules/VPaginationK3.vue";
+import VBreadcrumbsK3 from "./modules/VBreadcrumbsK3.vue";
 import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
 
 export default {
@@ -204,6 +205,7 @@ export default {
     VGridIconK3,
     VMenuK3,
     VPaginationK3,
+    VBreadcrumbsK3,
     VNavigationDrawerK3,
     VRuntimeTemplate,
   },
