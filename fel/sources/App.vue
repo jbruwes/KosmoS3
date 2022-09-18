@@ -12,6 +12,7 @@ import core from "~/core.js";
 
 import VSingleHeaderK3 from "./modules/VSingleHeaderK3.vue";
 import VSingleButtonK3 from "./modules/VSingleButtonK3.vue";
+import VParentButtonK3 from "./modules/VParentButtonK3.vue";
 import VSingleItemK3 from "./modules/VSingleItemK3.vue";
 import VListItemK3 from "./modules/VListItemK3.vue";
 import VCarouselBannerK3 from "./modules/VCarouselBannerK3.vue";
@@ -191,6 +192,7 @@ export default {
     },
   },
   components: {
+    VParentButtonK3,
     VSingleHeaderK3,
     VSingleButtonK3,
     VListItemK3,
