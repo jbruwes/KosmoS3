@@ -67,10 +67,17 @@ export default {
     icon: { default: true, type: [Boolean, String] },
     image: { default: true, type: [Boolean, String] },
     href: { default: true, type: [Boolean, String] },
-    path: String,
     item: { default: true, type: [Boolean, Object] },
     date: { default: false, type: [Boolean, String] },
     description: { default: true, type: [Boolean, String] },
+    deep: { default: undefined, type: Boolean },
+    length: { default: undefined, type: Number },
+    reveal: { default: undefined, type: Boolean },
+    sort: { default: undefined, type: String },
+    path: { default: undefined, type: String },
+    children: { default: undefined, type: Boolean },
+    xpath: { default: undefined, type: String },
+    axe: { default: undefined, type: String },
   },
   computed: {
     ...mapState(core, ["routePath"]),
@@ -82,8 +89,17 @@ export default {
       return typeof this.item === "object"
         ? this.item
         : this.item
-        ? this.getItems(null, null, null, null, this.path)[0]
-        : undefined;
+        ? this.getItems(
+            this.deep,
+            this.length,
+            this.reveal,
+            this.sort,
+            this.path,
+            this.children,
+            this.xpath,
+            this.axe
+          )[0] || {}
+        : {};
     },
   },
   methods: { ...mapActions(core, ["getTitle", "getHref", "getItems"]) },
