@@ -10,11 +10,11 @@ import page from "page";
 import core from "~/core.js";
 const props = defineProps({
   variant: String,
-  deep: Boolean,
-  length: Number,
-  reveal: Boolean,
-  sort: String,
-  path: String,
+  deep: { default: undefined, type: Boolean },
+  length: { default: undefined, type: Number },
+  reveal: { default: undefined, type: Boolean },
+  sort: { default: undefined, type: String },
+  path: { default: undefined, type: String },
   children: { default: undefined, type: Boolean },
   xpath: { default: "*/*[@id]", type: String },
   axe: { default: "parent", type: String },
