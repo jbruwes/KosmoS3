@@ -76,7 +76,7 @@ export default {
     sort: { default: undefined, type: String },
     path: { default: undefined, type: String },
     children: { default: undefined, type: Boolean },
-    xpath: { default: undefined, type: String },
+    selector: { default: undefined, type: String },
     axe: { default: undefined, type: String },
   },
   computed: {
@@ -96,7 +96,7 @@ export default {
             this.sort,
             this.path,
             this.children,
-            this.xpath,
+            this.selector,
             this.axe
           )[0] || {}
         : {};
