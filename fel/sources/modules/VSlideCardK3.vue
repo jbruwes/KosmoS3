@@ -1,5 +1,5 @@
 <template>
-  <v-slide-k3 #="slot" xpath="*[@id][string(@image)]"
+  <v-slide-k3 #="slot" selector="*[@id][string(@image)]"
     ><v-single-card-k3
       classes="ma-4"
       :item="slot.item"
