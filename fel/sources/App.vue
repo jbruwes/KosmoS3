@@ -1,8 +1,8 @@
 <script>
-import { nextTick, computed } from "vue";
-import { useScriptTag, useBrowserLocation, set } from "@vueuse/core";
+import { nextTick, computed, ref, watch, onMounted } from "vue";
+import { useScriptTag, useBrowserLocation, set, get } from "@vueuse/core";
 import { useHead } from "@vueuse/head";
-import { storeToRefs, mapState, mapActions, mapWritableState } from "pinia";
+import { storeToRefs } from "pinia";
 import VRuntimeTemplate from "vue3-runtime-template";
 import page from "page";
 import GLightbox from "glightbox";
@@ -28,6 +28,35 @@ import VPaginationK3 from "./modules/VPaginationK3.vue";
 import VBreadcrumbsK3 from "./modules/VBreadcrumbsK3.vue";
 import VNavigationDrawerK3 from "./modules/VNavigationDrawerK3.vue";
 
+import VVantaBirdsK3 from "./modules/VVantaBirdsK3.vue";
+import VSingleBannerBirdsK3 from "./modules/VSingleBannerBirdsK3.vue";
+import VVantaCellsK3 from "./modules/VVantaCellsK3.vue";
+import VSingleBannerCellsK3 from "./modules/VSingleBannerCellsK3.vue";
+import VVantaCloudsK3 from "./modules/VVantaCloudsK3.vue";
+import VSingleBannerCloudsK3 from "./modules/VSingleBannerCloudsK3.vue";
+import VVantaClouds2K3 from "./modules/VVantaClouds2K3.vue";
+import VSingleBannerClouds2K3 from "./modules/VSingleBannerClouds2K3.vue";
+import VVantaDotsK3 from "./modules/VVantaDotsK3.vue";
+import VSingleBannerDotsK3 from "./modules/VSingleBannerDotsK3.vue";
+import VVantaFogK3 from "./modules/VVantaFogK3.vue";
+import VSingleBannerFogK3 from "./modules/VSingleBannerFogK3.vue";
+import VVantaGlobeK3 from "./modules/VVantaGlobeK3.vue";
+import VSingleBannerGlobeK3 from "./modules/VSingleBannerGlobeK3.vue";
+import VVantaHaloK3 from "./modules/VVantaHaloK3.vue";
+import VSingleBannerHaloK3 from "./modules/VSingleBannerHaloK3.vue";
+import VVantaNetK3 from "./modules/VVantaNetK3.vue";
+import VSingleBannerNetK3 from "./modules/VSingleBannerNetK3.vue";
+import VVantaRingsK3 from "./modules/VVantaRingsK3.vue";
+import VSingleBannerRingsK3 from "./modules/VSingleBannerRingsK3.vue";
+import VVantaRippleK3 from "./modules/VVantaRippleK3.vue";
+import VSingleBannerRippleK3 from "./modules/VSingleBannerRippleK3.vue";
+import VVantaTopologyK3 from "./modules/VVantaTopologyK3.vue";
+import VSingleBannerTopologyK3 from "./modules/VSingleBannerTopologyK3.vue";
+import VVantaTrunkK3 from "./modules/VVantaTrunkK3.vue";
+import VSingleBannerTrunkK3 from "./modules/VSingleBannerTrunkK3.vue";
+import VVantaWavesK3 from "./modules/VVantaWavesK3.vue";
+import VSingleBannerWavesK3 from "./modules/VSingleBannerWavesK3.vue";
+
 export default {
   name: "App",
   /**
@@ -36,8 +65,47 @@ export default {
    * @returns {Object} Объект data
    */
   setup() {
+    const drawer = ref(false);
     const store = core();
-    const { title, path, description, keywords, image } = storeToRefs(store);
+    const {
+      treeData,
+      value,
+      template,
+      tree,
+      pageLen,
+      routePath,
+      routeParams,
+      list,
+      siblings,
+      children,
+      treeChildren,
+      parentChildren,
+      vector,
+      parent,
+      item,
+      id,
+      title,
+      treeTitle,
+      parentTitle,
+      description,
+      keywords,
+      treeDescription,
+      parentDescription,
+      icon,
+      treeIcon,
+      parentIcon,
+      path,
+      treePath,
+      parentPath,
+      href,
+      treeHref,
+      parentHref,
+      image,
+      treeImage,
+      parentImage,
+    } = storeToRefs(store);
+    const { getHref, getTitle, getVector, getParent, getSiblings, getItems } =
+      store;
     const location = useBrowserLocation();
     useHead({
       title,
@@ -59,103 +127,9 @@ export default {
         },
       ],
     });
-    return { title, path, description, keywords, image };
-  },
 
-  data: () => ({
-    drawer: false,
-  }),
-  computed: {
-    ...mapState(core, [
-      "id",
-      "tree",
-      "list",
-      "siblings",
-      "children",
-      "treeChildren",
-      "parentChildren",
-      "vector",
-      "parent",
-      "item",
-      "treeTitle",
-      "parentTitle",
-      "treeDescription",
-      "parentDescription",
-      "icon",
-      "treeIcon",
-      "parentIcon",
-      "treePath",
-      "parentPath",
-      "treeImage",
-      "parentImage",
-    ]),
-    ...mapWritableState(core, ["template", "routePath", "pageLen"]),
-  },
-  watch: {
-    async template() {
+    watch(template, async () => {
       await nextTick();
-      this.GLightbox();
-      if (typeof init === "function") init.call({ ...this.tree });
-      window.scrollTo(0, 0);
-    },
-    /**
-     * При изменении индекса создаем роутер
-     */
-    tree() {
-      if (!window.frameElement) {
-        page.stop();
-        this.list.forEach((node) => {
-          if (node.href) page(node.href, this.route);
-          page(node.path, this.route);
-        });
-        page.start();
-      }
-    },
-  },
-  /**
-   * Обработчик монтирования приложения
-   */
-  async mounted() {
-    await Promise.allSettled(
-      [
-        ...(
-          await Promise.all([
-            (await fetch("index.cdn.json", { cache: "no-store" })).json(),
-          ])
-        )[0],
-        { url: "index.js" },
-      ]
-        .filter((script) => script.url)
-        .map((script) =>
-          useScriptTag(script.url, undefined, { manual: true }).load()
-        )
-    );
-    this.template = "";
-  },
-  methods: {
-    ...mapActions(core, [
-      "getHref",
-      "getTitle",
-      "getVector",
-      "getParent",
-      "getSiblings",
-    ]),
-    /**
-     * Обработка роутинга
-     *
-     * @param {Context} context Объект роутинга
-     */
-    async route(context) {
-      await nextTick();
-      if (this.routePath !== context.routePath) {
-        this.pageLen = context.page.len;
-        this.routePath = context.routePath;
-      }
-    },
-    /**
-     * Натравливаем GLightbox на всё подряд
-     */
-    GLightbox() {
       document
         .querySelectorAll(
           'a[href$=".jpeg"],' +
@@ -189,7 +163,93 @@ export default {
         autoplayVideos: true,
         zoomable: false,
       });
-    },
+      if (typeof init === "function") init.call({ ...get(tree) });
+      window.scrollTo(0, 0);
+    });
+    watch(tree, () => {
+      if (!window.frameElement) {
+        const route = async (context) => {
+          await nextTick();
+          if (get(routePath) !== context.routePath) {
+            set(pageLen, context.page.len);
+            set(routePath, context.routePath);
+          }
+        };
+        page.stop();
+        get(list).forEach((node) => {
+          if (node.href) page(node.href, route);
+          page(node.path, route);
+        });
+        page.start();
+      }
+    });
+
+    onMounted(async () => {
+      await Promise.allSettled(
+        [
+          ...(
+            await Promise.all([
+              (await fetch("index.cdn.json", { cache: "no-store" })).json(),
+            ])
+          )[0],
+          { url: "index.js" },
+        ]
+          .filter((script) => script.url)
+          .map((script) =>
+            useScriptTag(script.url, undefined, { manual: true }).load()
+          )
+      );
+      set(template, "");
+    });
+
+    return {
+      ...{ drawer },
+      ...{
+        treeData,
+        value,
+        template,
+        tree,
+        pageLen,
+        routePath,
+        routeParams,
+        list,
+        siblings,
+        children,
+        treeChildren,
+        parentChildren,
+        vector,
+        parent,
+        item,
+        id,
+        title,
+        treeTitle,
+        parentTitle,
+        description,
+        keywords,
+        treeDescription,
+        parentDescription,
+        icon,
+        treeIcon,
+        parentIcon,
+        path,
+        treePath,
+        parentPath,
+        href,
+        treeHref,
+        parentHref,
+        image,
+        treeImage,
+        parentImage,
+      },
+      ...{
+        getHref,
+        getTitle,
+        getVector,
+        getParent,
+        getSiblings,
+        getItems,
+      },
+    };
   },
   components: {
     VParentButtonK3,
@@ -210,6 +270,36 @@ export default {
     VBreadcrumbsK3,
     VNavigationDrawerK3,
     VRuntimeTemplate,
+
+    VVantaBirdsK3,
+    VSingleBannerBirdsK3,
+    VVantaCellsK3,
+    VSingleBannerCellsK3,
+    VVantaCloudsK3,
+    VSingleBannerCloudsK3,
+    VVantaClouds2K3,
+    VSingleBannerClouds2K3,
+    VVantaDotsK3,
+    VSingleBannerDotsK3,
+    VVantaFogK3,
+    VSingleBannerFogK3,
+    VVantaGlobeK3,
+    VSingleBannerGlobeK3,
+    VVantaHaloK3,
+    VSingleBannerHaloK3,
+    VVantaNetK3,
+    VSingleBannerNetK3,
+    VVantaRingsK3,
+    VSingleBannerRingsK3,
+    VVantaRippleK3,
+    VSingleBannerRippleK3,
+    VVantaTopologyK3,
+    VSingleBannerTopologyK3,
+    VVantaTrunkK3,
+    VSingleBannerTrunkK3,
+
+    VVantaWavesK3,
+    VSingleBannerWavesK3,
   },
 };
 </script>
