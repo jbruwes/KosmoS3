@@ -1,5 +1,5 @@
 <template>
-  <v-grid-k3 #="slot" xpath="*[@id][string(@image)]"
+  <v-grid-k3 #="slot" selector="*[@id][string(@image)]"
     ><v-single-card-k3
       classes="fill-height ma-auto"
       :item="slot.item"
