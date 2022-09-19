@@ -131,6 +131,7 @@ module.exports = {
         { from: "./resource/robots.txt" },
         { from: "./resource/site.webmanifest" },
         { from: "./resource/browserconfig.xml" },
+        { from: "./resource/noise.png" },
       ],
     }),
   ],
