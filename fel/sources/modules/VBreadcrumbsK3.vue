@@ -13,7 +13,7 @@ const props = defineProps({
   sort: { default: undefined, type: String },
   path: { default: undefined, type: String },
   children: { default: undefined, type: Boolean },
-  xpath: { default: "*[@id]", type: String },
+  selector: { default: "*[@id]", type: String },
   axe: { default: "ancestor-or-self", type: String },
 });
 const store = core();
@@ -26,7 +26,7 @@ const items = computed(() =>
     props.sort,
     props.path,
     props.children,
-    props.xpath,
+    props.selector,
     props.axe
   ).map((item, index, array) => ({
     title: getTitle(item),
