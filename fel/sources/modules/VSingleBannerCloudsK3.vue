@@ -17,8 +17,6 @@
       :sunColor="sunColor"
       :sunGlareColor="sunGlareColor"
       :sunlightColor="sunlightColor"
-      :scale="scale"
-      :scaleMobile="scaleMobile"
       :speed="speed"
       :mouseEase="mouseEase"
       ><v-template-banner-k3
@@ -57,8 +55,6 @@ const props = defineProps({
   sunColor: { default: undefined, type: Number },
   sunGlareColor: { default: undefined, type: Number },
   sunlightColor: { default: undefined, type: Number },
-  scale: { default: undefined, type: Number },
-  scaleMobile: { default: undefined, type: Number },
   speed: { default: undefined, type: Number },
   mouseEase: { default: undefined, type: Boolean },
 });
