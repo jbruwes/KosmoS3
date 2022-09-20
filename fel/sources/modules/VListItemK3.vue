@@ -17,9 +17,9 @@ import VListK3 from "./VListK3.vue";
 import VSingleItemK3 from "./VSingleItemK3.vue";
 const props = defineProps({
   classes: { default: "ma-4", type: String },
-  animate: { default: undefined, type: String },
-  width: { default: undefined, type: [String, Number] },
-  height: { default: undefined, type: [String, Number] },
-  variant: { default: undefined, type: String },
+  animate: String,
+  width: [String, Number],
+  height: [String, Number],
+  variant: String,
 });
 </script>
