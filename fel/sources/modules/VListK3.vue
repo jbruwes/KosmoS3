@@ -3,11 +3,7 @@
     <template v-for="item in items">
       <slot
         :item="item"
-        :animate="animate"
         :date="date"
-        :variant="variant"
-        :width="width"
-        :height="height"
         :description="description"
       ></slot>
     </template>
@@ -18,12 +14,8 @@ import { mapActions } from "pinia";
 import core from "~/core.js";
 export default {
   props: {
-    animate: String,
     date: { default: false, type: [Boolean, String] },
     description: { default: true, type: [Boolean, String] },
-    variant: String,
-    height: [String, Number],
-    width: [String, Number],
     deep: { default: undefined, type: Boolean },
     length: Number,
     reveal: { default: undefined, type: Boolean },
