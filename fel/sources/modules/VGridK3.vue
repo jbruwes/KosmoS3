@@ -3,13 +3,13 @@
     <v-row justify="center">
       <v-col v-for="(item, i) in items" :key="i" cols="12" sm="6" md="4" lg="3">
         <slot
-        :item="item"
-        :animate="animate"
-        :date="date"
-        :variant="variant"
-        :width="width"
-        :height="height"
-        :description="description"
+          :item="item"
+          :animate="animate"
+          :date="date"
+          :variant="variant"
+          :width="width"
+          :height="height"
+          :description="description"
         ></slot>
       </v-col>
     </v-row>
@@ -27,13 +27,13 @@ export default {
     height: [String, Number],
     width: [String, Number],
     deep: { default: undefined, type: Boolean },
-    length: { default: undefined, type: Number },
+    length: Number,
     reveal: { default: undefined, type: Boolean },
-    sort: { default: undefined, type: String },
-    path: { default: undefined, type: String },
+    sort: String,
+    path: String,
     children: { default: undefined, type: Boolean },
     selector: { default: "*[@id]", type: String },
-    axe: { default: undefined, type: String },
+    axe: String,
   },
   computed: {
     items() {
@@ -45,7 +45,7 @@ export default {
         this.path,
         this.children,
         this.selector,
-        this.axe,
+        this.axe
       );
     },
   },
