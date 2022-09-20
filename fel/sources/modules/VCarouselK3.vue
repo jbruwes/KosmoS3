@@ -23,13 +23,13 @@ export default {
     height: [String, Number],
     width: [String, Number],
     deep: { default: undefined, type: Boolean },
-    length: { default: undefined, type: Number },
+    length: Number,
     reveal: { default: undefined, type: Boolean },
-    sort: { default: undefined, type: String },
-    path: { default: undefined, type: String },
+    sort: String,
+    path: String,
     children: { default: undefined, type: Boolean },
     selector: { default: "*[@id]", type: String },
-    axe: { default: undefined, type: String },
+    axe: String,
   },
   computed: {
     items() {
@@ -41,7 +41,7 @@ export default {
         this.path,
         this.children,
         this.selector,
-        this.axe,
+        this.axe
       );
     },
   },
