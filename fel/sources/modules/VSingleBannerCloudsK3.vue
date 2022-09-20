@@ -1,6 +1,26 @@
 <template>
   <v-single-k3 #="slot"
-    ><v-vanta-clouds-k3 :height="height" :width="width"
+    ><v-vanta-clouds-k3
+      :height="height"
+      :width="width"
+      :mouseControls="mouseControls"
+      :touchControls="touchControls"
+      :gyroControls="gyroControls"
+      :minHeight="minHeight"
+      :minWidth="minWidth"
+      :scale="scale"
+      :scaleMobile="scaleMobile"
+      :backgroundColor="backgroundColor"
+      :skyColor="skyColor"
+      :cloudColor="cloudColor"
+      :cloudShadowColor="cloudShadowColor"
+      :sunColor="sunColor"
+      :sunGlareColor="sunGlareColor"
+      :sunlightColor="sunlightColor"
+      :scale="scale"
+      :scaleMobile="scaleMobile"
+      :speed="speed"
+      :mouseEase="mouseEase"
       ><v-template-banner-k3
         :animate="animate"
         :classes="classes"
@@ -23,5 +43,23 @@ const props = defineProps({
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
   variant: { default: undefined, type: String },
+  mouseControls: { default: undefined, type: Boolean },
+  touchControls: { default: undefined, type: Boolean },
+  gyroControls: { default: undefined, type: Boolean },
+  minHeight: { default: undefined, type: Number },
+  minWidth: { default: undefined, type: Number },
+  scale: { default: undefined, type: Number },
+  scaleMobile: { default: undefined, type: Number },
+  backgroundColor: { default: undefined, type: Number },
+  skyColor: { default: undefined, type: Number },
+  cloudColor: { default: undefined, type: Number },
+  cloudShadowColor: { default: undefined, type: Number },
+  sunColor: { default: undefined, type: Number },
+  sunGlareColor: { default: undefined, type: Number },
+  sunlightColor: { default: undefined, type: Number },
+  scale: { default: undefined, type: Number },
+  scaleMobile: { default: undefined, type: Number },
+  speed: { default: undefined, type: Number },
+  mouseEase: { default: undefined, type: Boolean },
 });
 </script>
