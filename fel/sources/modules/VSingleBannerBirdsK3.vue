@@ -1,6 +1,26 @@
 <template>
   <v-single-k3 #="slot"
-    ><v-vanta-birds-k3 :height="height" :width="width"
+    ><v-vanta-birds-k3
+      :height="height"
+      :width="width"
+      :mouseControls="mouseControls"
+      :touchControls="touchControls"
+      :gyroControls="gyroControls"
+      :minHeight="minHeight"
+      :minWidth="minWidth"
+      :scale="scale"
+      :scaleMobile="scaleMobile"
+      :backgroundColor="backgroundColor"
+      :color1="color1"
+      :color2="color2"
+      :colorMode="colorMode"
+      :birdSize="birdSize"
+      :wingSpan="wingSpan"
+      :speedLimit="speedLimit"
+      :separation="separation"
+      :alignment="alignment"
+      :cohesion="cohesion"
+      :quantity="quantity"
       ><v-template-banner-k3
         :animate="animate"
         :classes="classes"
@@ -23,5 +43,23 @@ const props = defineProps({
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
   variant: { default: undefined, type: String },
+  mouseControls: { default: undefined, type: Boolean },
+  touchControls: { default: undefined, type: Boolean },
+  gyroControls: { default: undefined, type: Boolean },
+  minHeight: { default: undefined, type: Number },
+  minWidth: { default: undefined, type: Number },
+  scale: { default: undefined, type: Number },
+  scaleMobile: { default: undefined, type: Number },
+  backgroundColor: { default: undefined, type: Number },
+  color1: { default: undefined, type: Number },
+  color2: { default: undefined, type: Number },
+  colorMode: { default: undefined, type: String },
+  birdSize: { default: undefined, type: Number },
+  wingSpan: { default: undefined, type: Number },
+  speedLimit: { default: undefined, type: Number },
+  separation: { default: undefined, type: Number },
+  alignment: { default: undefined, type: Number },
+  cohesion: { default: undefined, type: Number },
+  quantity: { default: undefined, type: Number },
 });
 </script>
