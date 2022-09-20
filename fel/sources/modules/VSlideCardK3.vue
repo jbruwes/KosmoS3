@@ -18,7 +18,7 @@ import VSingleCardK3 from "./VSingleCardK3.vue";
 const props = defineProps({
   classes: { default: "ma-4", type: String },
   animate: String,
-  width: [String, Number],
+  width: { default: 320, type: [String, Number] },
   height: [String, Number],
   variant: String,
 });
