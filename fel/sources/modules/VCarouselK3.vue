@@ -3,9 +3,7 @@
     <v-carousel-item v-for="(item, i) in items" :key="i" :ripple="true">
       <slot
         :item="item"
-        :animate="animate"
         :date="date"
-        :variant="variant"
         :description="description"
       ></slot>
     </v-carousel-item>
@@ -16,12 +14,8 @@ import { mapActions } from "pinia";
 import core from "~/core.js";
 export default {
   props: {
-    animate: String,
     date: { default: false, type: [Boolean, String] },
     description: { default: true, type: [Boolean, String] },
-    variant: String,
-    height: [String, Number],
-    width: [String, Number],
     deep: { default: undefined, type: Boolean },
     length: Number,
     reveal: { default: undefined, type: Boolean },
