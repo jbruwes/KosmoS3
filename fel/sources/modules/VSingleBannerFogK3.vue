@@ -1,6 +1,22 @@
 <template>
   <v-single-k3 #="slot"
-    ><v-vanta-fog-k3 :height="height" :width="width"
+    ><v-vanta-fog-k3
+      :height="height"
+      :width="width"
+      :mouseControls="mouseControls"
+      :touchControls="touchControls"
+      :gyroControls="gyroControls"
+      :minHeight="minHeight"
+      :minWidth="minWidth"
+      :scale="scale"
+      :scaleMobile="scaleMobile"
+      :highlightColor="highlightColor"
+      :midtoneColor="midtoneColor"
+      :lowlightColor="lowlightColor"
+      :baseColor="baseColor"
+      :blurFactor="blurFactor"
+      :speed="speed"
+      :zoom="zoom"
       ><v-template-banner-k3
         :animate="animate"
         :classes="classes"
@@ -23,5 +39,19 @@ const props = defineProps({
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
   variant: { default: undefined, type: String },
+  mouseControls: { default: undefined, type: Boolean },
+  touchControls: { default: undefined, type: Boolean },
+  gyroControls: { default: undefined, type: Boolean },
+  minHeight: { default: undefined, type: Number },
+  minWidth: { default: undefined, type: Number },
+  scale: { default: undefined, type: Number },
+  scaleMobile: { default: undefined, type: Number },
+  highlightColor: { default: undefined, type: Number },
+  midtoneColor: { default: undefined, type: Number },
+  lowlightColor: { default: undefined, type: Number },
+  baseColor: { default: undefined, type: Number },
+  blurFactor: { default: undefined, type: Number },
+  speed: { default: undefined, type: Number },
+  zoom: { default: undefined, type: Number },
 });
 </script>
