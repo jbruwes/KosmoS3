@@ -1,23 +1,27 @@
 <template>
   <v-single-k3 #="slot"
     ><v-template-item-k3
-      :animate="slot.animate"
-      :classes="slot.classes"
-      :width="slot.width"
-      :height="slot.height"
+      :animate="animate"
+      :classes="classes"
+      :width="width"
+      :height="height"
       :title="slot.title"
       :icon="slot.icon"
       :href="slot.href"
       :date="slot.date"
       :description="slot.description"
-      :variant="slot.variant"
+      :variant="variant"
     ></v-template-item-k3
   ></v-single-k3>
 </template>
-<script>
+<script setup>
 import VSingleK3 from "./VSingleK3.vue";
 import VTemplateItemK3 from "./VTemplateItemK3.vue";
-export default {
-  components: { VSingleK3, VTemplateItemK3 },
-};
+const props = defineProps({
+  classes: { default: undefined, type: String },
+  animate: { default: undefined, type: String },
+  width: { default: undefined, type: [String, Number] },
+  height: { default: undefined, type: [String, Number] },
+  variant: { default: undefined, type: String },
+});
 </script>
