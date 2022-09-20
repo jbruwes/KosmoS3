@@ -1,21 +1,25 @@
 <template>
   <v-grid-k3 #="slot" selector="*[@id][string(@image)]"
     ><v-single-card-k3
-      classes="fill-height ma-auto"
+      :classes="classes"
       :item="slot.item"
-      :animate="slot.animate"
+      :animate="animate"
       :date="slot.date"
       :description="slot.description"
-      :variant="slot.variant"
-      :height="slot.height"
-      :width="slot.width"
+      :variant="variant"
+      :height="height"
+      :width="width"
     ></v-single-card-k3
   ></v-grid-k3>
 </template>
-<script>
+<script setup>
 import VGridK3 from "./VGridK3.vue";
 import VSingleCardK3 from "./VSingleCardK3.vue";
-export default {
-  components: { VGridK3, VSingleCardK3 },
-};
+const props = defineProps({
+  classes: { default: "fill-height ma-auto", type: String },
+  animate: { default: undefined, type: String },
+  width: { default: undefined, type: [String, Number] },
+  height: { default: undefined, type: [String, Number] },
+  variant: { default: undefined, type: String },
+});
 </script>
