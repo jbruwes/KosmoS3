@@ -11,10 +11,10 @@ import core from "~/core.js";
 const props = defineProps({
   variant: String,
   deep: { default: undefined, type: Boolean },
-  length: { default: undefined, type: Number },
+  length: Number,
   reveal: { default: undefined, type: Boolean },
-  sort: { default: undefined, type: String },
-  path: { default: undefined, type: String },
+  sort: String,
+  path: String,
   children: { default: undefined, type: Boolean },
   selector: { default: "*/*[@id]", type: String },
   axe: { default: "parent", type: String },
