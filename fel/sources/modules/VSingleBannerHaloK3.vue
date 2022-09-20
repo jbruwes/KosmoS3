@@ -1,15 +1,15 @@
 <template>
   <v-single-k3 #="slot"
-    ><v-vanta-halo-k3 :height="slot.height" :width="slot.width"
+    ><v-vanta-halo-k3 :height="height" :width="width"
       ><v-template-banner-k3
-        :animate="slot.animate"
-        :classes="slot.classes"
+        :animate="animate"
+        :classes="classes"
         :title="slot.title"
         :icon="slot.icon"
         :href="slot.href"
         :date="slot.date"
         :description="slot.description"
-        :variant="slot.variant"
+        :variant="variant"
       ></v-template-banner-k3></v-vanta-halo-k3
   ></v-single-k3>
 </template>
@@ -17,4 +17,11 @@
 import VSingleK3 from "./VSingleK3.vue";
 import VVantaHaloK3 from "./VVantaHaloK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
+const props = defineProps({
+  classes: { default: undefined, type: String },
+  animate: { default: undefined, type: String },
+  width: { default: undefined, type: [String, Number] },
+  height: { default: undefined, type: [String, Number] },
+  variant: { default: undefined, type: String },
+});
 </script>
