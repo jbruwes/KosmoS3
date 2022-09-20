@@ -22,10 +22,10 @@
 import VSingleK3 from "./VSingleK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
 const props = defineProps({
-  classes: { default: undefined, type: String },
-  animate: { default: undefined, type: String },
-  width: { default: undefined, type: [String, Number] },
-  height: { default: undefined, type: [String, Number] },
-  variant: { default: undefined, type: String },
+  classes: String,
+  animate: String,
+  width: [String, Number],
+  height: [String, Number],
+  variant: String,
 });
 </script>
