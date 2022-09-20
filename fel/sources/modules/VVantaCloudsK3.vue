@@ -22,8 +22,6 @@ const props = defineProps({
   sunColor: { default: 0xff9919, type: Number },
   sunGlareColor: { default: 0xff6633, type: Number },
   sunlightColor: { default: 0xff9933, type: Number },
-  scale: { default: 3, type: Number },
-  scaleMobile: { default: 12, type: Number },
   speed: { default: 1, type: Number },
   mouseEase: { default: true, type: Boolean },
 });
@@ -48,8 +46,6 @@ onMounted(() => {
     sunColor: props.sunColor,
     sunGlareColor: props.sunGlareColor,
     sunlightColor: props.sunlightColor,
-    scale: props.scale,
-    scaleMobile: props.scaleMobile,
     speed: props.speed,
     mouseEase: props.mouseEase,
   });
