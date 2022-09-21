@@ -39,24 +39,6 @@ import "@fontsource/neucha";
 export default class TinymceView extends JetView {
   #tinymce;
 
-  #itemsTemplate;
-
-  #grid;
-
-  #segments;
-
-  #header;
-
-  #dimmedImage;
-
-  #commonData;
-
-  #singleData;
-
-  #multiData;
-
-  #sliderData;
-
   /**
    * Деструктор
    */
@@ -66,64 +48,6 @@ export default class TinymceView extends JetView {
       this.#tinymce.off("Change");
     }
     this.#tinymce = null;
-    this.#itemsTemplate = null;
-    this.#grid = null;
-    this.#segments = null;
-    this.#header = null;
-    this.#dimmedImage = null;
-    this.#commonData = null;
-    this.#singleData = null;
-    this.#multiData = null;
-    this.#sliderData = null;
-  }
-
-  /**
-   * Коструктор
-   *
-   * @param {object} app Приложение
-   */
-  constructor(app) {
-    super(app);
-    this.#itemsTemplate =
-      '<div class="ui items mceNonEditable" #{data}>' +
-      '<div class="item">#{content}</div>' +
-      "</div>";
-    this.#grid =
-      '<div class="' +
-      "ui #{count} column #{centered} stretched padded grid #{editable} " +
-      "#{adaptive}" +
-      '" #{data}>' +
-      "#{divider}" +
-      '<div class="column #{align}" data-aos="#{aos}">#{content}</div>' +
-      "</div>";
-    this.#segments =
-      '<div class="' +
-      "ui vertical padded basic segments mceNonEditable" +
-      '" #{data}>' +
-      "#{content}" +
-      "</div>";
-    this.#header =
-      '<div class="content">' +
-      '<a class="ui header hvr-icon-wobble-vertical">' +
-      '<i class="hvr-icon icon"><!-- --></i>' +
-      '<span class="ui">' +
-      '<span class="sub header"><!-- --></span>' +
-      "</span></a></div>";
-    this.#dimmedImage =
-      '<div class="ui #{size} image">' +
-      '<div class="ui inverted dimmer">' +
-      '<a class="ui circular inverted secondary icon button">' +
-      '<i class="icon"><!-- --></i>' +
-      '</a></div><img class="ui image" loading="#{loading}"></div>';
-    this.#commonData = 'data-auto="" data-path=""';
-    this.#singleData = 'data-description="true" data-date="true"';
-    this.#multiData =
-      'data-length="" ' +
-      'data-deep="false" ' +
-      'data-reveal="true" ' +
-      'data-sort="false" ' +
-      'data-children=""';
-    this.#sliderData = 'data-pager="true" data-controls="true"';
   }
 
   /**
@@ -188,169 +112,151 @@ export default class TinymceView extends JetView {
       promotion: false,
       templates: [
         {
-          title: "carousel",
-          description: "слайдер",
-          content: this.#segments
-            .replace(
-              "#{data}",
-              [
-                'data-id="carousel"',
-                this.#commonData,
-                this.#singleData,
-                this.#multiData,
-                this.#sliderData,
-              ].join(" ")
-            )
-            .replace(
-              "#{content}",
-              `${
-                "<div" +
-                " " +
-                'class="ui basic fitted segment jarallax"' +
-                " " +
-                'style="min-height:100vh;"' +
-                ">" +
-                '<div class="ui active very light dimmer">'
-              }${this.#header}</div></div>`
-            ),
-        },
-        {
-          title: "pageheader",
-          description: "заголовок с картинкой на подложке",
-          content:
-            `${
-              '<div class="' +
-              "ui basic vertical fitted segment jarallax mceNonEditable" +
-              '"' +
-              " "
-            }${[
-              'data-id="pageheader"',
-              this.#commonData,
-              this.#singleData,
-            ].join(" ")} ` +
-            `style="min-height:100vh;">` +
-            `<div class="ui active very light dimmer">${
-              this.#header
-            }</div></div>`,
-        },
-        {
-          title: "headerlist",
-          description: "вертикальный список заголовков",
-          content: this.#itemsTemplate
-            .replace(
-              "#{data}",
-              [
-                'data-id="list"',
-                this.#commonData,
-                this.#singleData,
-                this.#multiData,
-              ].join(" ")
-            )
-            .replace(
-              "#{content}",
-              this.#dimmedImage
-                .replace("#{loading}", "lazy")
-                .replace("#{size}", "small") + this.#header
-            ),
-        },
-        {
-          title: "header",
-          description: "одиночный заголовок",
-          content: `<div class="ui basic fitted segment mceNonEditable" ${[
-            'data-id="header"',
-            this.#commonData,
-            this.#singleData,
-          ].join(" ")}>${this.#header}</div>`,
-        },
-        {
-          title: "Card Single",
-          description: "v-single-card-k3",
-          content: '<v-single-card-k3 date=""></v-single-card-k3>',
-        },
-        {
-          title: "Card Slide",
-          description: "v-slide-card-k3",
-          content: '<v-slide-card-k3 date=""></v-slide-card-k3>',
-        },
-        {
-          title: "Card Grid",
-          description: "v-grid-card-k3",
-          content: '<v-grid-card-k3 date=""></v-grid-card-k3>',
-        },
-        {
-          title: "Icon Single",
-          description: "v-single-icon-k3",
-          content:
-            '<v-single-icon-k3 date="" description=""></v-single-icon-k3>',
-        },
-        {
-          title: "Icon Slide",
-          description: "v-slide-icon-k3",
-          content: '<v-slide-icon-k3 date="" description=""></v-slide-icon-k3>',
-        },
-        {
-          title: "Icon Grid",
-          description: "v-grid-icon-k3",
-          content: '<v-grid-icon-k3 date="" description=""></v-grid-icon-k3>',
-        },
-        {
-          title: "doubleheader",
-          description: "двойной заголовок",
-          content: `<div class="ui placeholder segment mceNonEditable">${this.#grid
-            .replace("#{divider}", '<div class="ui vertical divider">☆</div>')
-            .replace("#{editable}", "")
-            .replace("#{centered}", "")
-            .replace("#{count}", "two")
-            .replace("#{aos}", "fade-up")
-            .replace("#{align}", "center aligned")
-            .replace("#{adaptive}", "stackable doubling")
-            .replace(
-              "#{data}",
-              [
-                'data-id="doubleheader"',
-                this.#commonData,
-                this.#singleData,
-                this.#multiData,
-              ].join(" ")
-            )
-            .replace("#{content}", this.#header)}</div>`,
-        },
-        {
           title: "breadcrumbs",
-          description: "путь до текущей страницы",
-          content:
-            `<div class="ui mini fluid steps mceNonEditable" ${[
-              'data-id="breadcrumbs"',
-              'data-reveal="true"',
-              this.#commonData,
-              this.#singleData,
-              this.#multiData,
-            ].join(" ")}><a class="step">` +
-            `<i class="hvr-wobble-vertical icon"><!-- --></i>` +
-            `<span class="content">` +
-            `<span class="ui title tiny header">` +
-            `<span class="ui">` +
-            `<span class="sub header"><!-- --></span>` +
-            `</span></span></span>` +
-            `</a></div>`,
+          description: "v-breadcrumbs-k3",
+          content: '<v-breadcrumbs-k3></v-breadcrumbs-k3>',
+        },
+        {
+          title: "carousel banner",
+          description: "v-carousel-banner-k3",
+          content: '<v-carousel-banner-k3></v-carousel-banner-k3>',
+        },
+        {
+          title: "grid card",
+          description: "v-grid-card-k3",
+          content: '<v-grid-card-k3></v-grid-card-k3>',
+        },
+        {
+          title: "grid icon",
+          description: "v-grid-icon-k3",
+          content: '<v-grid-icon-k3></v-grid-icon-k3>',
+        },
+        {
+          title: "list item",
+          description: "v-list-item-k3",
+          content: '<v-list-item-k3></v-list-item-k3>',
         },
         {
           title: "pagination",
-          description: "пейджер с номерами страниц и стрелками",
-          content: `<div class="ui pagination menu mceNonEditable" ${[
-            'data-id="pagination"',
-            this.#commonData,
-            this.#multiData,
-          ].join(" ")}><a class="item"><!-- --></a></div>`,
+          description: "v-pagination-k3",
+          content: '<v-pagination-k3></v-pagination-k3>',
         },
         {
-          title: "parentbutton",
-          description: "кнопка к родительской странице",
-          content: `<a class="ui labeled icon button mceNonEditable" ${[
-            'data-id="parentbutton"',
-            this.#commonData,
-            'data-reveal="true"',
-          ].join(" ")}><i class="left arrow icon"></i>Back</a>`,
+          title: "parent button",
+          description: "v-parent-button-k3",
+          content: '<v-parent-button-k3></v-parent-button-k3>',
+        },
+        {
+          title: "single banner",
+          description: "v-single-banner-k3",
+          content: '<v-single-banner-k3></v-single-banner-k3>',
+        },
+        {
+          title: "single banner birds",
+          description: "v-single-banner-birds-k3",
+          content: '<v-single-banner-birds-k3></v-single-banner-birds-k3>',
+        },
+        {
+          title: "single banner cells",
+          description: "v-single-banner-cells-k3",
+          content: '<v-single-banner-cells-k3></v-single-banner-cells-k3>',
+        },
+        {
+          title: "single banner clouds",
+          description: "v-single-banner-clouds-k3",
+          content: '<v-single-banner-clouds-k3></v-single-banner-clouds-k3>',
+        },
+        {
+          title: "single banner clouds2",
+          description: "v-single-banner-clouds2-k3",
+          content: '<v-single-banner-clouds2-k3></v-single-banner-clouds2-k3>',
+        },
+        {
+          title: "single banner dots",
+          description: "v-single-banner-dots-k3",
+          content: '<v-single-banner-dots-k3></v-single-banner-dots-k3>',
+        },
+        {
+          title: "single banner fog",
+          description: "v-single-banner-fog-k3",
+          content: '<v-single-banner-fog-k3></v-single-banner-fog-k3>',
+        },
+        {
+          title: "single banner globe",
+          description: "v-single-banner-globe-k3",
+          content: '<v-single-banner-globe-k3></v-single-banner-globe-k3>',
+        },
+        {
+          title: "single banner halo",
+          description: "v-single-banner-halo-k3",
+          content: '<v-single-banner-halo-k3></v-single-banner-halo-k3>',
+        },
+        {
+          title: "single banner net",
+          description: "v-single-banner-net-k3",
+          content: '<v-single-banner-net-k3></v-single-banner-net-k3>',
+        },
+        {
+          title: "single banner rings",
+          description: "v-single-banner-rings-k3",
+          content: '<v-single-banner-rings-k3></v-single-banner-rings-k3>',
+        },
+        {
+          title: "single banner ripple",
+          description: "v-single-banner-ripple-k3",
+          content: '<v-single-banner-ripple-k3></v-single-banner-ripple-k3>',
+        },
+        {
+          title: "single banner topology",
+          description: "v-single-banner-topology-k3",
+          content: '<v-single-banner-topology-k3></v-single-banner-topology-k3>',
+        },
+        {
+          title: "single banner trunk",
+          description: "v-single-banner-trunk-k3",
+          content: '<v-single-banner-trunk-k3></v-single-banner-trunk-k3>',
+        },
+        {
+          title: "single banner waves",
+          description: "v-single-banner-waves-k3",
+          content: '<v-single-banner-waves-k3></v-single-banner-waves-k3>',
+        },
+        {
+          title: "single button",
+          description: "v-single-button-k3",
+          content: '<v-single-button-k3></v-single-button-k3>',
+        },
+        {
+          title: "single card",
+          description: "v-single-card-k3",
+          content: '<v-single-card-k3></v-single-card-k3>',
+        },
+        {
+          title: "single header",
+          description: "v-single-header-k3",
+          content: '<v-single-header-k3></v-single-header-k3>',
+        },
+        {
+          title: "single icon",
+          description: "v-single-icon-k3",
+          content:
+            '<v-single-icon-k3></v-single-icon-k3>',
+        },
+        {
+          title: "single item",
+          description: "v-single-item-k3",
+          content:
+            '<v-single-item-k3></v-single-item-k3>',
+        },
+        {
+          title: "slide card",
+          description: "v-slide-card-k3",
+          content: '<v-slide-card-k3></v-slide-card-k3>',
+        },
+        {
+          title: "slide icon",
+          description: "v-slide-icon-k3",
+          content: '<v-slide-icon-k3></v-slide-icon-k3>',
         },
       ],
       font_family_formats:
