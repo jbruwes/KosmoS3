@@ -1,11 +1,7 @@
 <template>
   <v-slide-group show-arrows>
     <v-slide-group-item v-for="(item, i) in items" :key="i">
-      <slot
-        :item="item"
-        :date="date"
-        :description="description"
-      ></slot>
+      <slot :item="item" :date="date" :description="description"></slot>
     </v-slide-group-item>
   </v-slide-group>
 </template>
@@ -35,7 +31,7 @@ export default {
         this.path,
         this.children,
         this.selector,
-        this.axe,
+        this.axe
       );
     },
   },
