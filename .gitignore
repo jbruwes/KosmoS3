@@ -1,6 +1,9 @@
 .DS_Store
 node_modules
 /dist
+/out
+/icons
+icon.png
 
 
 # local env files
