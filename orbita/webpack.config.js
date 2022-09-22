@@ -8,7 +8,7 @@ const WebpackAssetsManifest = require("webpack-assets-manifest");
 const { VueLoaderPlugin } = require("vue-loader");
 
 const babelSettings = {
-  extends: path.join(__dirname, "../.babelrc.json"),
+  extends: path.join(__dirname, "../babel.config.js"),
 };
 module.exports = {
   mode: "production",
