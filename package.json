@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "format": "prettier -w .",
+    "clean:icons": "rimraf icons icon.png",
     "orbita": "webpack --config ./orbita/webpack.config.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
