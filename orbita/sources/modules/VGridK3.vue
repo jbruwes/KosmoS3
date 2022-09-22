@@ -2,11 +2,7 @@
   <v-container>
     <v-row justify="center">
       <v-col v-for="(item, i) in items" :key="i" cols="12" sm="6" md="4" lg="3">
-        <slot
-          :item="item"
-          :date="date"
-          :description="description"
-        ></slot>
+        <slot :item="item" :date="date" :description="description"></slot>
       </v-col>
     </v-row>
   </v-container>
