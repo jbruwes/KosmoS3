@@ -10,7 +10,7 @@
     <div class="text-center">
       <v-icon
         :icon="icon"
-        style="font-size: calc(var(--v-icon-size-multiplier) * 4em);"
+        style="font-size: calc(var(--v-icon-size-multiplier) * 4em)"
       ></v-icon>
     </div>
     <v-card-item class="justify-center text-center">
