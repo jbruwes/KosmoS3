@@ -1,0 +1,5 @@
+User-agent: *
+Disallow:
+Disallow: /*.htm$
+Disallow: /*.html$
+Sitemap: https://{{ domain }}/sitemap.xml
