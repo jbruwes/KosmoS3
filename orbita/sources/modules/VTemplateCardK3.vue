@@ -15,7 +15,7 @@
           ><div
             v-if="isHovering"
             class="d-flex transition-fast-in-slow-out bg-white align-center justify-center position-absolute w-100"
-            style="height:100%;bottom:0;opacity:.9;"
+            style="height: 100%; bottom: 0; opacity: 0.9"
           >
             <v-btn
               variant="outlined"
