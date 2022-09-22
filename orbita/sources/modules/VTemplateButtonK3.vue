@@ -8,7 +8,8 @@
     :class="classes"
     :href="href"
     :prepend-icon="icon"
-  >{{ title }}</v-btn>
+    >{{ title }}</v-btn
+  >
 </template>
 <script>
 export default {
