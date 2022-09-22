@@ -1,11 +1,7 @@
 <template>
   <v-list>
     <template v-for="item in items">
-      <slot
-        :item="item"
-        :date="date"
-        :description="description"
-      ></slot>
+      <slot :item="item" :date="date" :description="description"></slot>
     </template>
   </v-list>
 </template>
@@ -35,7 +31,7 @@ export default {
         this.path,
         this.children,
         this.selector,
-        this.axe,
+        this.axe
       );
     },
   },
