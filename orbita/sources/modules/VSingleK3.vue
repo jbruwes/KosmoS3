@@ -50,7 +50,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
-import core from "~/core.js";
+import sputnik from "~/sputnik.js";
 export default {
   props: {
     title: { default: true, type: [Boolean, String] },
@@ -70,7 +70,7 @@ export default {
     axe: String,
   },
   computed: {
-    ...mapState(core, ["routePath"]),
+    ...mapState(sputnik, ["routePath"]),
     url() {
       const href = this.getHref(this.theItem);
       return href === this.routePath ? "" : href;
@@ -92,6 +92,6 @@ export default {
         : {};
     },
   },
-  methods: { ...mapActions(core, ["getTitle", "getHref", "getItems"]) },
+  methods: { ...mapActions(sputnik, ["getTitle", "getHref", "getItems"]) },
 };
 </script>
