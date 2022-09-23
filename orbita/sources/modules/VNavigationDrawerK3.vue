@@ -28,10 +28,10 @@
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
-import core from "~/core.js";
+import sputnik from "~/sputnik.js";
 export default {
   computed: {
-    ...mapState(core, [
+    ...mapState(sputnik, [
       "tree",
       "treeChildren",
       "treeIcon",
@@ -39,6 +39,6 @@ export default {
       "routePath",
     ]),
   },
-  methods: { ...mapActions(core, ["getHref", "getTitle"]) },
+  methods: { ...mapActions(sputnik, ["getHref", "getTitle"]) },
 };
 </script>
