@@ -8,7 +8,7 @@ import page from "page";
 import GLightbox from "glightbox";
 import DOMPurify from "dompurify";
 
-import core from "~/core.js";
+import sputnik from "~/sputnik.js";
 
 import VSingleHeaderK3 from "./modules/VSingleHeaderK3.vue";
 import VSingleButtonK3 from "./modules/VSingleButtonK3.vue";
@@ -66,7 +66,7 @@ export default {
    */
   setup() {
     const drawer = ref(false);
-    const store = core();
+    const store = sputnik();
     const {
       treeData,
       value,
