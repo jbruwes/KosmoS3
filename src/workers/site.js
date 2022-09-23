@@ -1,5 +1,3 @@
-import "core-js/stable";
-import "regenerator-runtime/runtime";
 import jsel from "jsel";
 import S3 from "../s3";
 import html from "./html";
