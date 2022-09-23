@@ -4,7 +4,7 @@
 <script setup>
 import { computed } from "vue";
 import page from "page";
-import core from "~/core.js";
+import sputnik from "~/sputnik.js";
 const props = defineProps({
   variant: String,
   deep: { default: undefined, type: Boolean },
@@ -16,7 +16,7 @@ const props = defineProps({
   selector: { default: "*[@id]", type: String },
   axe: { default: "ancestor-or-self", type: String },
 });
-const store = core();
+const store = sputnik();
 const { getItems, getTitle, getHref } = store;
 const items = computed(() =>
   getItems(
