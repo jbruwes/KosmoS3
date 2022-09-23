@@ -1,5 +1,3 @@
-import "core-js/stable";
-import "regenerator-runtime/runtime";
 import S3 from "../s3";
 
 /**
