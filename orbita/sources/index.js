@@ -1,6 +1,3 @@
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-
 import "@fontsource/arsenal";
 import "@fontsource/bad-script";
 import "@fontsource/caveat";
