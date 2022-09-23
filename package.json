@@ -72,6 +72,7 @@
     "three": "^0.144.0",
     "vanta": "^0.5.24",
     "vue": "^3.2.39",
+    "vue-router": "^4.1.5",
     "vue3-animate-onscroll": "^1.0.6",
     "vue3-runtime-template": "^1.0.2",
     "vuetify": "^3.0.0-beta.11",
