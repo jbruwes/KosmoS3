@@ -9,7 +9,7 @@
 </template>
 <script>
 import { mapActions } from "pinia";
-import core from "~/core.js";
+import sputnik from "~/sputnik.js";
 export default {
   props: {
     date: { default: false, type: [Boolean, String] },
@@ -37,6 +37,6 @@ export default {
       );
     },
   },
-  methods: { ...mapActions(core, ["getItems"]) },
+  methods: { ...mapActions(sputnik, ["getItems"]) },
 };
 </script>
