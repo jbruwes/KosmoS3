@@ -27,8 +27,7 @@
 <script setup>
 import { ref } from "vue";
 import { useDisplay } from "vuetify";
-import { get, useStyleTag } from "@vueuse/core";
-useStyleTag("html { overflow-y: auto }");
+import { get } from "@vueuse/core";
 const { mobile } = useDisplay();
 const drawer = ref(!get(mobile));
 const items = ref([
@@ -48,3 +47,6 @@ const items = ref([
   },
 ]);
 </script>
+<style>
+html { overflow-y: auto }
+</style>
