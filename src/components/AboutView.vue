@@ -23,8 +23,8 @@
   </v-sheet>
   <v-divider></v-divider>
   <v-sheet class="ma-16">
-    <h3 style="text-align: center;">GNU AFFERO GENERAL PUBLIC LICENSE</h3>
-    <p style="text-align: center;">Version 3, 19 November 2007</p>
+    <h3 style="text-align: center">GNU AFFERO GENERAL PUBLIC LICENSE</h3>
+    <p style="text-align: center">Version 3, 19 November 2007</p>
 
     <p>
       Copyright &copy; 2007 Free Software Foundation, Inc. &lt;<a
