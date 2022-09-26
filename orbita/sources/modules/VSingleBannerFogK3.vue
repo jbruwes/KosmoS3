@@ -18,6 +18,7 @@
       :speed="speed"
       :zoom="zoom"
       ><v-template-banner-k3
+        :innerColor="innerColor"
         :animate="animate"
         :classes="classes"
         :title="slot.title"
@@ -35,6 +36,7 @@ import VVantaFogK3 from "./VVantaFogK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
 const props = defineProps({
   classes: String,
+  innerColor: String,
   animate: String,
   width: [String, Number],
   height: [String, Number],
