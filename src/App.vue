@@ -8,8 +8,8 @@
       ><v-toolbar-title text="kosmoS3"></v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer
-      app
       v-model="drawer"
+      app
       :temporary="mobile"
       :expand-on-hover="!mobile"
       :rail="!mobile"
@@ -28,6 +28,7 @@
 import { ref } from "vue";
 import { useDisplay } from "vuetify";
 import { get } from "@vueuse/core";
+
 const { mobile } = useDisplay();
 const drawer = ref(!get(mobile));
 const items = ref([
