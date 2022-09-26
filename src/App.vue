@@ -48,5 +48,7 @@ const items = ref([
 ]);
 </script>
 <style>
-html { overflow-y: auto }
+html {
+  overflow-y: auto;
+}
 </style>
