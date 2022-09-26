@@ -22,6 +22,7 @@
       :cohesion="cohesion"
       :quantity="quantity"
       ><v-template-banner-k3
+        :innerColor="innerColor"
         :animate="animate"
         :classes="classes"
         :title="slot.title"
@@ -39,6 +40,7 @@ import VVantaBirdsK3 from "./VVantaBirdsK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
 const props = defineProps({
   classes: String,
+  innerColor: String,
   animate: String,
   width: [String, Number],
   height: [String, Number],
