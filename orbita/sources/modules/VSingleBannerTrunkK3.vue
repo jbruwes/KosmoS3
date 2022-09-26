@@ -15,6 +15,7 @@
       :spacing="spacing"
       :chaos="chaos"
       ><v-template-banner-k3
+        :innerColor="innerColor"
         :animate="animate"
         :classes="classes"
         :title="slot.title"
@@ -32,6 +33,7 @@ import VVantaTrunkK3 from "./VVantaTrunkK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
 const props = defineProps({
   classes: String,
+  innerColor: String,
   animate: String,
   width: [String, Number],
   height: [String, Number],
