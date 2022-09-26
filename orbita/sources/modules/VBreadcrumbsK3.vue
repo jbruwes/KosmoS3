@@ -15,6 +15,7 @@ const props = defineProps({
   children: { default: undefined, type: Boolean },
   selector: { default: "*[@id]", type: String },
   axe: { default: "ancestor-or-self", type: String },
+  disabled: { default: true, type: Boolean },
 });
 const store = sputnik();
 const { getItems, getTitle, getHref } = store;
@@ -31,7 +32,7 @@ const items = computed(() =>
   ).map((item, index, array) => ({
     title: getTitle(item),
     href: getHref(item),
-    disabled: index === array.length - 1 ? true : !item.visible,
+    disabled: index === (array.length - 1 && disabled) || !item.visible,
   }))
 );
 </script>
