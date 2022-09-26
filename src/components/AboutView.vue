@@ -6,7 +6,7 @@
         icon-color="white"
         icon="mdi-rocket-launch-outline"
       >
-        <template v-slot:opposite>Homepage</template>
+        <template #opposite>Homepage</template>
         <a href="https://kosmos3.ru" target="_blank">kosmos3.ru</a>
       </v-timeline-item>
       <v-timeline-item
@@ -14,7 +14,7 @@
         icon-color="white"
         icon="mdi-github"
       >
-        <template v-slot:opposite>Repository</template>
+        <template #opposite>Repository</template>
         <a href="https://github.com/jbruwes/kosmos3" target="_blank"
           >github.com/jbruwes/kosmos3</a
         >
