@@ -8,6 +8,7 @@
     <v-single-banner-k3
       :classes="classes"
       :item="slot.item"
+      :innerColor="innerColor"
       :animate="animate"
       :date="slot.date"
       :variant="variant"
@@ -19,6 +20,7 @@ import VCarouselK3 from "./VCarouselK3.vue";
 import VSingleBannerK3 from "./VSingleBannerK3.vue";
 const props = defineProps({
   classes: String,
+  innerColor: String,
   animate: String,
   width: [String, Number],
   height: [String, Number],
