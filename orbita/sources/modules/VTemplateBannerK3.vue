@@ -5,6 +5,7 @@
       :href="href"
       :variant="variant"
       v-animate-onscroll.repeat="animate"
+      :color="innerColor"
     >
       <div class="text-center">
         <v-icon
@@ -41,19 +42,14 @@
 <script>
 export default {
   props: {
+    innerColor: { default: "#00000011", type: String },
     animate: { default: "animate__animated animate__bounceIn", type: String },
     title: String,
     date: String,
     description: String,
     icon: String,
     href: String,
-    variant: { default: "tonal", type: String },
+    variant: String,
   },
 };
 </script>
-<style scoped>
-:deep(.v-card--variant-tonal .v-card__underlay) {
-  color: black;
-  z-index: -1;
-}
-</style>
