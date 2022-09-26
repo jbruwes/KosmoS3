@@ -59,11 +59,6 @@ import VSingleBannerWavesK3 from "./modules/VSingleBannerWavesK3.vue";
 
 export default {
   name: "App",
-  /**
-   * Инициализация данных приложения
-   *
-   * @returns {Object} Объект data
-   */
   setup() {
     const drawer = ref(false);
     const store = sputnik();
