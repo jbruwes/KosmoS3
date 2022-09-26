@@ -42,7 +42,7 @@
 <script>
 export default {
   props: {
-    innerColor: { default: "#00000011", type: String },
+    innerColor: { default: "#00000033", type: String },
     animate: { default: "animate__animated animate__bounceIn", type: String },
     title: String,
     date: String,
