@@ -3,16 +3,15 @@
 </template>
 <script setup>
 import { computed } from "vue";
-import page from "page";
-import sputnik from "~/sputnik.js";
+import sputnik from "~/sputnik";
 
 const props = defineProps({
-  variant: String,
+  variant: { default: undefined, type: String },
   deep: { default: undefined, type: Boolean },
-  length: Number,
+  length: { default: undefined, type: Number },
   reveal: { default: undefined, type: Boolean },
-  sort: String,
-  path: String,
+  sort: { default: undefined, type: String },
+  path: { default: undefined, type: String },
   children: { default: undefined, type: Boolean },
   selector: { default: "*[@id]", type: String },
   axe: { default: "ancestor-or-self", type: String },
