@@ -44,12 +44,12 @@ export default {
   props: {
     innerColor: { default: "#00000033", type: String },
     animate: { default: "animate__animated animate__bounceIn", type: String },
-    title: String,
-    date: String,
-    description: String,
-    icon: String,
-    href: String,
-    variant: String,
+    title: { default: undefined, type: String },
+    date: { default: undefined, type: String },
+    description: { default: undefined, type: String },
+    icon: { default: undefined, type: String },
+    href: { default: undefined, type: String },
+    variant: { default: undefined, type: String },
   },
 };
 </script>
