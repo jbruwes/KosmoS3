@@ -3,6 +3,7 @@
 </template>
 <script>
 import VSingleButtonK3 from "./VSingleButtonK3.vue";
+
 export default {
   components: { VSingleButtonK3 },
 };
