@@ -31,20 +31,20 @@ import VVantaTopologyK3 from "./VVantaTopologyK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
 
 const props = defineProps({
-  classes: String,
-  innerColor: String,
-  animate: String,
-  width: [String, Number],
-  height: [String, Number],
-  variant: String,
+  classes: { default: undefined, type: String },
+  innerColor: { default: undefined, type: String },
+  animate: { default: undefined, type: String },
+  width: { default: undefined, type: [String, Number] },
+  height: { default: undefined, type: [String, Number] },
+  variant: { default: undefined, type: String },
   mouseControls: { default: undefined, type: Boolean },
   touchControls: { default: undefined, type: Boolean },
   gyroControls: { default: undefined, type: Boolean },
-  minHeight: Number,
-  minWidth: Number,
-  scale: Number,
-  scaleMobile: Number,
-  color: Number,
-  backgroundColor: Number,
+  minHeight: { default: undefined, type: Number },
+  minWidth: { default: undefined, type: Number },
+  scale: { default: undefined, type: Number },
+  scaleMobile: { default: undefined, type: Number },
+  color: { default: undefined, type: Number },
+  backgroundColor: { default: undefined, type: Number },
 });
 </script>
