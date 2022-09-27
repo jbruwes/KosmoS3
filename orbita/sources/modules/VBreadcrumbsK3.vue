@@ -5,6 +5,7 @@
 import { computed } from "vue";
 import page from "page";
 import sputnik from "~/sputnik.js";
+
 const props = defineProps({
   variant: String,
   deep: { default: undefined, type: Boolean },
