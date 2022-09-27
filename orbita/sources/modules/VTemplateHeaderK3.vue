@@ -25,14 +25,14 @@
 export default {
   props: {
     animate: { default: "animate__animated animate__bounce", type: String },
-    classes: String,
-    width: [String, Number],
-    height: [String, Number],
-    title: String,
-    date: String,
-    description: String,
-    icon: String,
-    href: String,
+    classes: { default: undefined, type: String },
+    width: { default: undefined, type: [String, Number] },
+    height: { default: undefined, type: [String, Number] },
+    title: { default: undefined, type: String },
+    date: { default: undefined, type: String },
+    description: { default: undefined, type: String },
+    icon: { default: undefined, type: String },
+    href: { default: undefined, type: String },
     variant: { default: "plain", type: String },
   },
 };
