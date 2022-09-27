@@ -7,6 +7,7 @@ import p5 from "p5";
 import CELLS from "vanta/dist/vanta.cells.min";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { get, useResizeObserver } from "@vueuse/core";
+
 const props = defineProps({
   mouseControls: { default: true, type: Boolean },
   touchControls: { default: true, type: Boolean },
@@ -29,8 +30,8 @@ let vantaEffect;
 onMounted(() => {
   vantaEffect = CELLS({
     el: get(vantaRef).$el,
-    THREE: THREE,
-    p5: p5,
+    THREE,
+    p5,
     mouseControls: props.mouseControls,
     touchControls: props.touchControls,
     gyroControls: props.gyroControls,
