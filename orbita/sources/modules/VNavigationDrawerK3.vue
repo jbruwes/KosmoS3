@@ -29,6 +29,7 @@
 <script>
 import { mapState, mapActions } from "pinia";
 import sputnik from "~/sputnik.js";
+
 export default {
   computed: {
     ...mapState(sputnik, [
