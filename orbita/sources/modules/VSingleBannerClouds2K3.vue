@@ -3,21 +3,21 @@
     ><v-vanta-clouds2-k3
       :height="height"
       :width="width"
-      :mouseControls="mouseControls"
-      :touchControls="touchControls"
-      :gyroControls="gyroControls"
-      :minHeight="minHeight"
-      :minWidth="minWidth"
+      :mouse-controls="mouseControls"
+      :touch-controls="touchControls"
+      :gyro-controls="gyroControls"
+      :min-height="minHeight"
+      :min-width="minWidth"
       :scale="scale"
-      :scaleMobile="scaleMobile"
-      :backgroundColor="backgroundColor"
-      :skyColor="skyColor"
-      :cloudColor="cloudColor"
-      :lightColor="lightColor"
+      :scale-mobile="scaleMobile"
+      :background-color="backgroundColor"
+      :sky-color="skyColor"
+      :cloud-color="cloudColor"
+      :light-color="lightColor"
       :speed="speed"
-      :texturePath="texturePath"
+      :texture-path="texturePath"
       ><v-template-banner-k3
-        :innerColor="innerColor"
+        :inner-color="innerColor"
         :animate="animate"
         :classes="classes"
         :title="slot.title"
@@ -33,6 +33,7 @@
 import VSingleK3 from "./VSingleK3.vue";
 import VVantaClouds2K3 from "./VVantaClouds2K3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
+
 const props = defineProps({
   classes: String,
   innerColor: String,
