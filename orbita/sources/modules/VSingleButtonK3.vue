@@ -16,6 +16,7 @@
 <script setup>
 import VSingleK3 from "./VSingleK3.vue";
 import VTemplateButtonK3 from "./VTemplateButtonK3.vue";
+
 const props = defineProps({
   classes: String,
   animate: String,
