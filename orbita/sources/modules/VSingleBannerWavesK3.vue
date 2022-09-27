@@ -3,20 +3,20 @@
     ><v-vanta-waves-k3
       :height="height"
       :width="width"
-      :mouseControls="mouseControls"
-      :touchControls="touchControls"
-      :gyroControls="gyroControls"
-      :minHeight="minHeight"
-      :minWidth="minWidth"
+      :mouse-controls="mouseControls"
+      :touch-controls="touchControls"
+      :gyro-controls="gyroControls"
+      :min-height="minHeight"
+      :min-width="minWidth"
       :scale="scale"
-      :scaleMobile="scaleMobile"
+      :scale-mobile="scaleMobile"
       :color="color"
       :shininess="shininess"
-      :waveHeight="waveHeight"
-      :waveSpeed="waveSpeed"
+      :wave-height="waveHeight"
+      :wave-speed="waveSpeed"
       :zoom="zoom"
       ><v-template-banner-k3
-        :innerColor="innerColor"
+        :inner-color="innerColor"
         :animate="animate"
         :classes="classes"
         :title="slot.title"
@@ -32,6 +32,7 @@
 import VSingleK3 from "./VSingleK3.vue";
 import VVantaWavesK3 from "./VVantaWavesK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
+
 const props = defineProps({
   classes: String,
   innerColor: String,
