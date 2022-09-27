@@ -7,24 +7,24 @@
 </template>
 <script>
 import { mapActions } from "pinia";
-import sputnik from "~/sputnik.js";
+import sputnik from "~/sputnik";
 
 export default {
   props: {
     date: { default: false, type: [Boolean, String] },
     description: { default: true, type: [Boolean, String] },
     deep: { default: undefined, type: Boolean },
-    length: Number,
+    length: { default: undefined, type: Number },
     reveal: { default: undefined, type: Boolean },
-    sort: String,
-    path: String,
+    sort: { default: undefined, type: String },
+    path: { default: undefined, type: String },
     children: { default: undefined, type: Boolean },
     selector: { default: "*[@id]", type: String },
-    axe: String,
+    axe: { default: undefined, type: String },
   },
   computed: {
     /**
-     *
+     * @returns {Array} Элементы списка
      */
     items() {
       return this.getItems(
