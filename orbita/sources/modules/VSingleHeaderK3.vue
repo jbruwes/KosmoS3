@@ -17,6 +17,7 @@
 <script setup>
 import VSingleK3 from "./VSingleK3.vue";
 import VTemplateHeaderK3 from "./VTemplateHeaderK3.vue";
+
 const props = defineProps({
   classes: String,
   animate: String,
