@@ -59,6 +59,59 @@ import VSingleBannerWavesK3 from "./modules/VSingleBannerWavesK3.vue";
 
 export default {
   name: "App",
+  components: {
+    VParentButtonK3,
+    VSingleHeaderK3,
+    VSingleButtonK3,
+    VListItemK3,
+    VSingleItemK3,
+    VCarouselBannerK3,
+    VSingleBannerK3,
+    VSingleCardK3,
+    VSingleIconK3,
+    VSlideCardK3,
+    VSlideIconK3,
+    VGridCardK3,
+    VGridIconK3,
+    VMenuK3,
+    VPaginationK3,
+    VBreadcrumbsK3,
+    VNavigationDrawerK3,
+    VRuntimeTemplate,
+
+    VVantaBirdsK3,
+    VSingleBannerBirdsK3,
+    VVantaCellsK3,
+    VSingleBannerCellsK3,
+    VVantaCloudsK3,
+    VSingleBannerCloudsK3,
+    VVantaClouds2K3,
+    VSingleBannerClouds2K3,
+    VVantaDotsK3,
+    VSingleBannerDotsK3,
+    VVantaFogK3,
+    VSingleBannerFogK3,
+    VVantaGlobeK3,
+    VSingleBannerGlobeK3,
+    VVantaHaloK3,
+    VSingleBannerHaloK3,
+    VVantaNetK3,
+    VSingleBannerNetK3,
+    VVantaRingsK3,
+    VSingleBannerRingsK3,
+    VVantaRippleK3,
+    VSingleBannerRippleK3,
+    VVantaTopologyK3,
+    VSingleBannerTopologyK3,
+    VVantaTrunkK3,
+    VSingleBannerTrunkK3,
+
+    VVantaWavesK3,
+    VSingleBannerWavesK3,
+  },
+  /**
+   *
+   */
   setup() {
     const drawer = ref(false);
     const store = sputnik();
@@ -163,6 +216,10 @@ export default {
     });
     watch(tree, () => {
       if (!window.frameElement) {
+        /**
+         *
+         * @param context
+         */
         const route = async (context) => {
           await nextTick();
           if (get(routePath) !== context.routePath) {
@@ -245,56 +302,6 @@ export default {
         getItems,
       },
     };
-  },
-  components: {
-    VParentButtonK3,
-    VSingleHeaderK3,
-    VSingleButtonK3,
-    VListItemK3,
-    VSingleItemK3,
-    VCarouselBannerK3,
-    VSingleBannerK3,
-    VSingleCardK3,
-    VSingleIconK3,
-    VSlideCardK3,
-    VSlideIconK3,
-    VGridCardK3,
-    VGridIconK3,
-    VMenuK3,
-    VPaginationK3,
-    VBreadcrumbsK3,
-    VNavigationDrawerK3,
-    VRuntimeTemplate,
-
-    VVantaBirdsK3,
-    VSingleBannerBirdsK3,
-    VVantaCellsK3,
-    VSingleBannerCellsK3,
-    VVantaCloudsK3,
-    VSingleBannerCloudsK3,
-    VVantaClouds2K3,
-    VSingleBannerClouds2K3,
-    VVantaDotsK3,
-    VSingleBannerDotsK3,
-    VVantaFogK3,
-    VSingleBannerFogK3,
-    VVantaGlobeK3,
-    VSingleBannerGlobeK3,
-    VVantaHaloK3,
-    VSingleBannerHaloK3,
-    VVantaNetK3,
-    VSingleBannerNetK3,
-    VVantaRingsK3,
-    VSingleBannerRingsK3,
-    VVantaRippleK3,
-    VSingleBannerRippleK3,
-    VVantaTopologyK3,
-    VSingleBannerTopologyK3,
-    VVantaTrunkK3,
-    VSingleBannerTrunkK3,
-
-    VVantaWavesK3,
-    VSingleBannerWavesK3,
   },
 };
 </script>
