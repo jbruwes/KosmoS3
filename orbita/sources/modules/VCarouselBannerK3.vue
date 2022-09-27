@@ -19,7 +19,7 @@
 import VCarouselK3 from "./VCarouselK3.vue";
 import VSingleBannerK3 from "./VSingleBannerK3.vue";
 
-const props = defineProps({
+defineProps({
   classes: { default: undefined, type: String },
   innerColor: { default: undefined, type: String },
   animate: { default: undefined, type: String },
