@@ -15,6 +15,7 @@
 <script setup>
 import VGridK3 from "./VGridK3.vue";
 import VSingleIconK3 from "./VSingleIconK3.vue";
+
 const props = defineProps({
   classes: String,
   animate: String,
