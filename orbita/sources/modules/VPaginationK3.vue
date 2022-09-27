@@ -8,6 +8,7 @@ import { ref, computed, watch } from "vue";
 import { get, set, watchTriggerable } from "@vueuse/core";
 import page from "page";
 import sputnik from "~/sputnik.js";
+
 const props = defineProps({
   variant: String,
   deep: { default: undefined, type: Boolean },
