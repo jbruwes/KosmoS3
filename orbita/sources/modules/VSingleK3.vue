@@ -1,56 +1,40 @@
 <template>
   <slot
     :title="
-      typeof this.title === 'string'
-        ? this.title
-        : this.title
-        ? this.getTitle(this.theItem)
-        : undefined
+      typeof title === 'string' ? title : title ? getTitle(theItem) : undefined
     "
     :date="
-      typeof this.date === 'string'
-        ? this.date
-        : this.date &&
-          !isNaN(new Date(this.theItem.date || this.theItem.lastmod))
-        ? new Date(
-            this.theItem.date || this.theItem.lastmod
-          ).toLocaleDateString()
+      typeof date === 'string'
+        ? date
+        : date && !isNaN(new Date(theItem.date || theItem.lastmod))
+        ? new Date(theItem.date || theItem.lastmod).toLocaleDateString()
         : undefined
     "
     :description="
-      typeof this.description === 'string'
-        ? this.description
-        : this.description
-        ? this.theItem.description
+      typeof description === 'string'
+        ? description
+        : description
+        ? theItem.description
         : undefined
     "
     :icon="
-      typeof this.icon === 'string'
-        ? `mdi-${this.icon}`
-        : this.icon
-        ? `mdi-${this.theItem.icon || 'open-in-new'}`
+      typeof icon === 'string'
+        ? `mdi-${icon}`
+        : icon
+        ? `mdi-${theItem.icon || 'open-in-new'}`
         : undefined
     "
     :image="
-      typeof this.image === 'string'
-        ? this.image
-        : this.image
-        ? this.theItem.image
-        : undefined
+      typeof image === 'string' ? image : image ? theItem.image : undefined
     "
-    :href="
-      typeof this.href === 'string'
-        ? this.href
-        : this.href
-        ? this.url
-        : undefined
-    "
+    :href="typeof href === 'string' ? href : href ? url : undefined"
   >
   </slot>
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
 import sputnik from "~/sputnik.js";
+
 export default {
   props: {
     title: { default: true, type: [Boolean, String] },
@@ -71,10 +55,16 @@ export default {
   },
   computed: {
     ...mapState(sputnik, ["routePath"]),
+    /**
+     *
+     */
     url() {
       const href = this.getHref(this.theItem);
       return href === this.routePath ? "" : href;
     },
+    /**
+     *
+     */
     theItem() {
       return typeof this.item === "object"
         ? this.item
