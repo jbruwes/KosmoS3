@@ -7,7 +7,7 @@
       :eager="true"
       :aspect-ratio="1"
       ><v-template-banner-k3
-        :innerColor="innerColor"
+        :inner-color="innerColor"
         :animate="animate"
         :classes="classes"
         :title="slot.title"
@@ -22,6 +22,7 @@
 <script setup>
 import VSingleK3 from "./VSingleK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
+
 const props = defineProps({
   classes: String,
   innerColor: String,
