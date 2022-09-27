@@ -33,8 +33,8 @@
                 label="secret access key"
                 prepend-inner-icon="mdi-lock"
                 variant="underlined"
-                @click:append-inner="visible = !visible"
                 :rules="[(v) => !!v || 'Item is required']"
+                @click:append-inner="visible = !visible"
               ></v-text-field> </v-col
             ><v-col cols="12" md="6">
               <div class="text-subtitle-1 text-medium-emphasis mb-1">CLOUD</div>
@@ -158,6 +158,9 @@ watch(provider, (newProvider) => {
       set(wendpoint, "");
   }
 });
+/**
+ *
+ */
 const login = () => {
   get(form).validate();
 };
