@@ -34,7 +34,7 @@ import VSingleK3 from "./VSingleK3.vue";
 import VVantaNetK3 from "./VVantaNetK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
 
-const props = defineProps({
+defineProps({
   classes: { default: undefined, type: String },
   innerColor: { default: undefined, type: String },
   animate: { default: undefined, type: String },
