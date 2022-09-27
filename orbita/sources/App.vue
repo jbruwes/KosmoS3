@@ -6,9 +6,8 @@ import { storeToRefs } from "pinia";
 import VRuntimeTemplate from "vue3-runtime-template";
 import page from "page";
 import GLightbox from "glightbox";
-import DOMPurify from "dompurify";
 
-import sputnik from "~/sputnik.js";
+import sputnik from "~/sputnik";
 
 import VSingleHeaderK3 from "./modules/VSingleHeaderK3.vue";
 import VSingleButtonK3 from "./modules/VSingleButtonK3.vue";
@@ -110,7 +109,7 @@ export default {
     VSingleBannerWavesK3,
   },
   /**
-   *
+   * @returns {object} Параметры спутника
    */
   setup() {
     const drawer = ref(false);
@@ -218,7 +217,7 @@ export default {
       if (!window.frameElement) {
         /**
          *
-         * @param context
+         * @param {object} context Контекст роутера
          */
         const route = async (context) => {
           await nextTick();
