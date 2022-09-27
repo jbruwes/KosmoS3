@@ -3,24 +3,24 @@
     ><v-vanta-clouds-k3
       :height="height"
       :width="width"
-      :mouseControls="mouseControls"
-      :touchControls="touchControls"
-      :gyroControls="gyroControls"
-      :minHeight="minHeight"
-      :minWidth="minWidth"
+      :mouse-controls="mouseControls"
+      :touch-controls="touchControls"
+      :gyro-controls="gyroControls"
+      :min-height="minHeight"
+      :min-width="minWidth"
       :scale="scale"
-      :scaleMobile="scaleMobile"
-      :backgroundColor="backgroundColor"
-      :skyColor="skyColor"
-      :cloudColor="cloudColor"
-      :cloudShadowColor="cloudShadowColor"
-      :sunColor="sunColor"
-      :sunGlareColor="sunGlareColor"
-      :sunlightColor="sunlightColor"
+      :scale-mobile="scaleMobile"
+      :background-color="backgroundColor"
+      :sky-color="skyColor"
+      :cloud-color="cloudColor"
+      :cloud-shadow-color="cloudShadowColor"
+      :sun-color="sunColor"
+      :sun-glare-color="sunGlareColor"
+      :sunlight-color="sunlightColor"
       :speed="speed"
-      :mouseEase="mouseEase"
+      :mouse-ease="mouseEase"
       ><v-template-banner-k3
-        :innerColor="innerColor"
+        :inner-color="innerColor"
         :animate="animate"
         :classes="classes"
         :title="slot.title"
@@ -36,6 +36,7 @@
 import VSingleK3 from "./VSingleK3.vue";
 import VVantaCloudsK3 from "./VVantaCloudsK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
+
 const props = defineProps({
   classes: String,
   innerColor: String,
