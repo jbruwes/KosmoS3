@@ -18,9 +18,9 @@ import VSingleIconK3 from "./VSingleIconK3.vue";
 
 const props = defineProps({
   classes: { default: "ma-4", type: String },
-  animate: String,
+  animate: { default: undefined, type: String },
   width: { default: 320, type: [String, Number] },
-  height: [String, Number],
-  variant: String,
+  height: { default: undefined, type: [String, Number] },
+  variant: { default: undefined, type: String },
 });
 </script>
