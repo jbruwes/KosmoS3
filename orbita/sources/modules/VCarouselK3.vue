@@ -8,6 +8,7 @@
 <script>
 import { mapActions } from "pinia";
 import sputnik from "~/sputnik.js";
+
 export default {
   props: {
     date: { default: false, type: [Boolean, String] },
@@ -22,6 +23,9 @@ export default {
     axe: String,
   },
   computed: {
+    /**
+     *
+     */
     items() {
       return this.getItems(
         this.deep,
