@@ -15,7 +15,7 @@
     </div>
     <v-card-item class="justify-center text-center">
       <div>
-        <div class="text-h6 mb-1" v-if="title">
+        <div v-if="title" class="text-h6 mb-1">
           {{ title }}
         </div>
         <div v-if="date">
