@@ -18,7 +18,7 @@
 import VSingleK3 from "./VSingleK3.vue";
 import VTemplateIconK3 from "./VTemplateIconK3.vue";
 
-const props = defineProps({
+defineProps({
   classes: { default: undefined, type: String },
   animate: { default: undefined, type: String },
   width: { default: undefined, type: [String, Number] },
