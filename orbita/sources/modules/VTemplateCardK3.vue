@@ -36,7 +36,7 @@
               :text="date"
             ></v-chip>
           </div>
-          <div class="text-subtitle-1" v-if="title">
+          <div v-if="title" class="text-subtitle-1">
             {{ title }}
           </div>
         </div>
