@@ -33,7 +33,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
-import sputnik from "~/sputnik.js";
+import sputnik from "~/sputnik";
 
 export default {
   props: {
@@ -45,30 +45,29 @@ export default {
     date: { default: false, type: [Boolean, String] },
     description: { default: true, type: [Boolean, String] },
     deep: { default: undefined, type: Boolean },
-    length: Number,
+    length: { default: undefined, type: Number },
     reveal: { default: undefined, type: Boolean },
-    sort: String,
-    path: String,
+    sort: { default: undefined, type: String },
+    path: { default: undefined, type: String },
     children: { default: undefined, type: Boolean },
-    selector: String,
-    axe: String,
+    selector: { default: undefined, type: String },
+    axe: { default: undefined, type: String },
   },
   computed: {
     ...mapState(sputnik, ["routePath"]),
     /**
-     *
+     * @returns {string} Вычесленный урл
      */
     url() {
       const href = this.getHref(this.theItem);
       return href === this.routePath ? "" : href;
     },
     /**
-     *
+     * @returns {object} Текущий объект
      */
     theItem() {
-      return typeof this.item === "object"
-        ? this.item
-        : this.item
+      if (typeof this.item === "object") return this.item;
+      return this.item
         ? this.getItems(
             this.deep,
             this.length,
