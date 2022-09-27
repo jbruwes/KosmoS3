@@ -16,7 +16,7 @@
 import VSlideK3 from "./VSlideK3.vue";
 import VSingleCardK3 from "./VSingleCardK3.vue";
 
-const props = defineProps({
+defineProps({
   classes: { default: "ma-4", type: String },
   animate: { default: undefined, type: String },
   width: { default: 320, type: [String, Number] },
