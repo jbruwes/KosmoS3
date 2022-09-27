@@ -13,7 +13,7 @@
     "orbita": "webpack --config ./orbita/webpack.config.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "lint": "vue-cli-service lint '**/*.js' '**/*.vue'",
     "darwin": "npx electron-packager dist kosmos3 --platform=darwin --arch=universal --overwrite --prune=true --asar --out=out --icon=./icons/icon",
     "win32": "npx electron-packager dist kosmos3 --platform=win32 --arch=x64 --overwrite --prune=true --asar --out=out --icon=./icons/icon",
     "linux": "npx electron-packager dist --platform=linux --arch=x64 --overwrite --prune=true --asar --out=out --icon=./icons/icon",
@@ -107,7 +107,8 @@
   "eslintConfig": {
     "root": true,
     "env": {
-      "node": true
+      "node": true,
+      "browser": true
     },
     "extends": [
       "eslint:recommended",
