@@ -3,21 +3,21 @@
     ><v-vanta-dots-k3
       :height="height"
       :width="width"
-      :mouseControls="mouseControls"
-      :touchControls="touchControls"
-      :gyroControls="gyroControls"
-      :minHeight="minHeight"
-      :minWidth="minWidth"
+      :mouse-controls="mouseControls"
+      :touch-controls="touchControls"
+      :gyro-controls="gyroControls"
+      :min-height="minHeight"
+      :min-width="minWidth"
       :scale="scale"
-      :scaleMobile="scaleMobile"
+      :scale-mobile="scaleMobile"
       :color="color"
       :color2="color2"
-      :backgroundColor="backgroundColor"
+      :background-color="backgroundColor"
       :size="size"
       :spacing="spacing"
-      :showLines="showLines"
+      :show-lines="showLines"
       ><v-template-banner-k3
-        :innerColor="innerColor"
+        :inner-color="innerColor"
         :animate="animate"
         :classes="classes"
         :title="slot.title"
@@ -33,6 +33,7 @@
 import VSingleK3 from "./VSingleK3.vue";
 import VVantaDotsK3 from "./VVantaDotsK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
+
 const props = defineProps({
   classes: String,
   innerColor: String,
