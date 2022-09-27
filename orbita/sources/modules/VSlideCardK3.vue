@@ -15,6 +15,7 @@
 <script setup>
 import VSlideK3 from "./VSlideK3.vue";
 import VSingleCardK3 from "./VSingleCardK3.vue";
+
 const props = defineProps({
   classes: { default: "ma-4", type: String },
   animate: String,
