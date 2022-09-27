@@ -7,6 +7,7 @@ import p5 from "p5";
 import WAVES from "vanta/dist/vanta.waves.min";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { get, useResizeObserver } from "@vueuse/core";
+
 const props = defineProps({
   mouseControls: { default: true, type: Boolean },
   touchControls: { default: true, type: Boolean },
@@ -26,8 +27,8 @@ let vantaEffect;
 onMounted(() => {
   vantaEffect = WAVES({
     el: get(vantaRef).$el,
-    THREE: THREE,
-    p5: p5,
+    THREE,
+    p5,
     mouseControls: props.mouseControls,
     touchControls: props.touchControls,
     gyroControls: props.gyroControls,
