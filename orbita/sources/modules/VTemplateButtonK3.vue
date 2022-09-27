@@ -1,8 +1,8 @@
 <template>
   <v-btn
+    v-animate-onscroll.repeat="animate"
     class="text-none"
     :variant="variant"
-    v-animate-onscroll.repeat="animate"
     :height="height"
     :width="width"
     :class="classes"
