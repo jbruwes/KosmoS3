@@ -3,22 +3,22 @@
     ><v-vanta-fog-k3
       :height="height"
       :width="width"
-      :mouseControls="mouseControls"
-      :touchControls="touchControls"
-      :gyroControls="gyroControls"
-      :minHeight="minHeight"
-      :minWidth="minWidth"
+      :mouse-controls="mouseControls"
+      :touch-controls="touchControls"
+      :gyro-controls="gyroControls"
+      :min-height="minHeight"
+      :min-width="minWidth"
       :scale="scale"
-      :scaleMobile="scaleMobile"
-      :highlightColor="highlightColor"
-      :midtoneColor="midtoneColor"
-      :lowlightColor="lowlightColor"
-      :baseColor="baseColor"
-      :blurFactor="blurFactor"
+      :scale-mobile="scaleMobile"
+      :highlight-color="highlightColor"
+      :midtone-color="midtoneColor"
+      :lowlight-color="lowlightColor"
+      :base-color="baseColor"
+      :blur-factor="blurFactor"
       :speed="speed"
       :zoom="zoom"
       ><v-template-banner-k3
-        :innerColor="innerColor"
+        :inner-color="innerColor"
         :animate="animate"
         :classes="classes"
         :title="slot.title"
@@ -34,6 +34,7 @@
 import VSingleK3 from "./VSingleK3.vue";
 import VVantaFogK3 from "./VVantaFogK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
+
 const props = defineProps({
   classes: String,
   innerColor: String,
