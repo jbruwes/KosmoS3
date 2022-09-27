@@ -18,9 +18,9 @@ import VSingleCardK3 from "./VSingleCardK3.vue";
 
 const props = defineProps({
   classes: { default: "fill-height ma-auto", type: String },
-  animate: String,
-  width: [String, Number],
-  height: [String, Number],
-  variant: String,
+  animate: { default: undefined, type: String },
+  width: { default: undefined, type: [String, Number] },
+  height: { default: undefined, type: [String, Number] },
+  variant: { default: undefined, type: String },
 });
 </script>
