@@ -7,15 +7,15 @@ import { storeToRefs } from "pinia";
 import { ref, computed, watch } from "vue";
 import { get, set, watchTriggerable } from "@vueuse/core";
 import page from "page";
-import sputnik from "~/sputnik.js";
+import sputnik from "~/sputnik";
 
 const props = defineProps({
-  variant: String,
+  variant: { default: undefined, type: String },
   deep: { default: undefined, type: Boolean },
-  length: Number,
+  length: { default: undefined, type: Number },
   reveal: { default: undefined, type: Boolean },
-  sort: String,
-  path: String,
+  sort: { default: undefined, type: String },
+  path: { default: undefined, type: String },
   children: { default: undefined, type: Boolean },
   selector: { default: "*/*[@id]", type: String },
   axe: { default: "parent", type: String },
