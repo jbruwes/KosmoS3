@@ -162,7 +162,9 @@ export default {
           property: "og:url",
           content: computed(
             () =>
-              `${location.origin}${path === "/" ? "" : `${encodeURI(path)}`}`
+              `${get(location).origin}${
+                get(path) === "/" ? "" : encodeURI(get(path))
+              }`
           ),
         },
         { name: "description", content: description },
@@ -170,7 +172,9 @@ export default {
         { name: "keywords", content: keywords },
         {
           property: "og:image",
-          content: image ? `${location.origin}/${image}` : "",
+          content: computed(() =>
+            get(image) ? `${get(location).origin}/${get(image)}` : ""
+          ),
         },
       ],
     });
