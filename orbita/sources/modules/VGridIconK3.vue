@@ -16,7 +16,7 @@
 import VGridK3 from "./VGridK3.vue";
 import VSingleIconK3 from "./VSingleIconK3.vue";
 
-const props = defineProps({
+defineProps({
   classes: { default: undefined, type: String },
   animate: { default: undefined, type: String },
   width: { default: undefined, type: [String, Number] },
