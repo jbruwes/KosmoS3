@@ -1,6 +1,6 @@
 <template>
   <v-menu close-on-click location="start">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
     </template>
     <v-list nav>
@@ -17,8 +17,12 @@
 <script>
 import { mapState, mapActions } from "pinia";
 import sputnik from "~/sputnik.js";
+
 export default {
   computed: {
+    /**
+     *
+     */
     items() {
       return !this.routePath || this.routePath === "/"
         ? this.treeChildren
