@@ -117,6 +117,9 @@
       "node": true,
       "browser": true
     },
+    "globals": {
+      "init": true
+    },
     "extends": [
       "eslint:recommended",
       "airbnb-base",
