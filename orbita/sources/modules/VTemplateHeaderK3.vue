@@ -1,7 +1,7 @@
 <template>
   <v-alert
-    :icon="icon"
     v-animate-onscroll.repeat="animate"
+    :icon="icon"
     :height="height"
     :width="width"
     :class="classes"
