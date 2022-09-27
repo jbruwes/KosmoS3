@@ -3,22 +3,22 @@
     ><v-vanta-ripple-k3
       :height="height"
       :width="width"
-      :mouseControls="mouseControls"
-      :touchControls="touchControls"
-      :gyroControls="gyroControls"
-      :minHeight="minHeight"
-      :minWidth="minWidth"
+      :mouse-controls="mouseControls"
+      :touch-controls="touchControls"
+      :gyro-controls="gyroControls"
+      :min-height="minHeight"
+      :min-width="minWidth"
       :scale="scale"
-      :scaleMobile="scaleMobile"
+      :scale-mobile="scaleMobile"
       :color1="color1"
       :color2="color2"
-      :backgroundColor="backgroundColor"
-      :amplitudeFactor="amplitudeFactor"
-      :ringFactor="ringFactor"
-      :rotationFactor="rotationFactor"
+      :background-color="backgroundColor"
+      :amplitude-factor="amplitudeFactor"
+      :ring-factor="ringFactor"
+      :rotation-factor="rotationFactor"
       :speed="speed"
       ><v-template-banner-k3
-        :innerColor="innerColor"
+        :inner-color="innerColor"
         :animate="animate"
         :classes="classes"
         :title="slot.title"
@@ -34,6 +34,7 @@
 import VSingleK3 from "./VSingleK3.vue";
 import VVantaRippleK3 from "./VVantaRippleK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
+
 const props = defineProps({
   classes: String,
   innerColor: String,
