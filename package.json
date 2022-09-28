@@ -29,7 +29,7 @@
     "start": "electron ."
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.179.0",
+    "@aws-sdk/client-s3": "^3.180.0",
     "@fontsource/arsenal": "^4.5.8",
     "@fontsource/bad-script": "^4.5.8",
     "@fontsource/caveat": "^4.5.8",
@@ -80,7 +80,7 @@
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.1",
+    "@babel/core": "^7.19.3",
     "@babel/eslint-parser": "^7.19.1",
     "@vue/cli-plugin-babel": "^5.0.8",
     "@vue/cli-plugin-eslint": "^5.0.8",
