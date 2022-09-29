@@ -210,18 +210,17 @@ watch(cred, (newCred) => {
   }
 });
 watch(auth, (newAuth) => {
-  if (newAuth) {
-    const lCreds = get(creds).filter((pCred) => pCred.domain !== get(domain));
-    if (get(remember))
-      lCreds.push({
-        title: get(domain),
-        username: get(username),
-        password: get(password),
-        region: get(region),
-        endpoint: get(endpoint),
-        wendpoint: get(wendpoint),
-        provider: get(provider).title,
-      });
+  if (newAuth && get(remember)) {
+    const lCreds = get(creds);
+    lCreds.push({
+      title: get(domain),
+      username: get(username),
+      password: get(password),
+      region: get(region),
+      endpoint: get(endpoint),
+      wendpoint: get(wendpoint),
+      provider: get(provider).title,
+    });
     set(creds, lCreds);
   }
 });
@@ -229,6 +228,10 @@ watch(auth, (newAuth) => {
  *
  */
 const login = async () => {
+  set(
+    creds,
+    get(creds).filter((pCred) => pCred.title !== get(domain))
+  );
   get(form).validate();
   if (get(valid) && !get(io) && !get(auth))
     try {
