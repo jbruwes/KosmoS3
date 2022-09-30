@@ -14,16 +14,6 @@ export default class S3 {
 
   #bucket;
 
-  #region;
-
-  #endpoint;
-
-  #wendpoint;
-
-  #accessKeyId;
-
-  #secretAccessKey;
-
   /**
    * Конструктор
    *
@@ -32,22 +22,9 @@ export default class S3 {
    * @param {string} bucket Корзина
    * @param {string} region Регион
    * @param {string} endpoint Урл для api
-   * @param {string} wendpoint Урл для доступа к сайту
    */
-  constructor(
-    accessKeyId,
-    secretAccessKey,
-    bucket,
-    region,
-    endpoint = null,
-    wendpoint = null
-  ) {
-    this.#accessKeyId = accessKeyId;
-    this.#secretAccessKey = secretAccessKey;
+  constructor(accessKeyId, secretAccessKey, bucket, region, endpoint = null) {
     this.#bucket = bucket;
-    this.#region = region;
-    this.#wendpoint = wendpoint;
-    this.#endpoint = endpoint;
     const config = {
       region,
       credentials: {
@@ -58,48 +35,6 @@ export default class S3 {
     if (endpoint) config.endpoint = endpoint;
     this.#s3Client = new S3Client(config);
   }
-
-  /**
-   * Геттер для идентификатора доступа
-   *
-   * @returns {string} Идентификатор доступа
-   */
-  getAccessKeyId = () => this.#accessKeyId;
-
-  /**
-   * Геттер для ключа доступа
-   *
-   * @returns {string} Ключ доступа
-   */
-  getSecretAccessKey = () => this.#secretAccessKey;
-
-  /**
-   * Геттер для корзины
-   *
-   * @returns {string} Корзина
-   */
-  getBucket = () => this.#bucket;
-
-  /**
-   * Геттер для региона
-   *
-   * @returns {string} Регион
-   */
-  getRegion = () => this.#region;
-
-  /**
-   * Геттер урла для api
-   *
-   * @returns {string} Урл для api
-   */
-  getEndpoint = () => this.#endpoint;
-
-  /**
-   * Геттер урла для сайта
-   *
-   * @returns {string} Урл для сайта
-   */
-  getWendpoint = () => this.#wendpoint;
 
   /**
    * Считываение заголовка корзины
