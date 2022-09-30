@@ -32,7 +32,7 @@ const items = computed(() =>
   ).map((item, index, array) => ({
     title: getTitle(item),
     href: getHref(item),
-    disabled: index === (array.length - 1 && props.disabled) || !item.visible,
+    disabled: (index === array.length - 1 && props.disabled) || !item.visible,
   }))
 );
 </script>
