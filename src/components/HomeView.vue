@@ -19,7 +19,7 @@
                 :clearable="true"
               ></v-select>
               <v-text-field
-                v-model.trim="domain"
+                v-model.trim="bucket"
                 label="domain"
                 placeholder="example.com"
                 prepend-inner-icon="mdi-web"
@@ -27,14 +27,14 @@
                 :rules="[(v) => !!v || 'Item is required']"
               ></v-text-field>
               <v-text-field
-                v-model.trim="username"
+                v-model.trim="accessKeyId"
                 label="access key id"
                 prepend-inner-icon="mdi-key"
                 variant="underlined"
                 :rules="[(v) => !!v || 'Item is required']"
               ></v-text-field>
               <v-text-field
-                v-model.trim="password"
+                v-model.trim="secretAccessKey"
                 :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                 :type="visible ? 'text' : 'password'"
                 label="secret access key"
@@ -97,7 +97,7 @@
                 variant="outlined"
                 @click="login"
               >
-                Log In
+                LogIn
               </v-btn></v-col
             ></v-row
           ></v-form
@@ -110,16 +110,30 @@
 import { ref, watch, computed } from "vue";
 import { get, set, useStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import S3 from "../s3";
 import kosmos3 from "../kosmos3";
 
 const store = kosmos3();
-const { io, auth } = storeToRefs(store);
+const {
+  s3,
+  auth,
+  bucket,
+  accessKeyId,
+  secretAccessKey,
+  endpoint,
+  wendpoint,
+  region,
+} = storeToRefs(store);
+set(auth, false);
+set(bucket, "");
+set(accessKeyId, "");
+set(secretAccessKey, "");
+set(region, "");
+set(endpoint, "");
+set(wendpoint, "");
 const error = ref("");
 const visible = ref(false);
 const snackbar = ref(false);
 const remember = ref(true);
-const region = ref("");
 const providers = ref([
   {
     title: "aws",
@@ -161,17 +175,13 @@ const providers = ref([
     wendpoint: "https://website.yandexcloud.net",
   },
 ]);
-const domain = ref("");
-const username = ref("");
-const password = ref("");
 const provider = ref(null);
-const endpoint = ref("");
-const wendpoint = ref("");
 const regions = ref([]);
 const valid = ref(true);
 const form = ref(null);
 const creds = useStorage("kosmos3", []);
 const cred = ref(null);
+set(cred, null);
 watch(provider, (newProvider) => {
   if (newProvider) {
     set(regions, newProvider.regions);
@@ -189,9 +199,9 @@ watch(region, () => {
 });
 watch(cred, (newCred) => {
   if (newCred) {
-    set(domain, newCred.title);
-    set(username, newCred.username);
-    set(password, newCred.password);
+    set(bucket, newCred.title);
+    set(accessKeyId, newCred.accessKeyId);
+    set(secretAccessKey, newCred.secretAccessKey);
     set(
       provider,
       get(providers).find((pProvider) => pProvider.title === newCred.provider)
@@ -200,58 +210,91 @@ watch(cred, (newCred) => {
     set(endpoint, newCred.endpoint);
     set(wendpoint, newCred.wendpoint);
   } else {
-    set(domain, "");
-    set(username, "");
-    set(password, "");
+    set(bucket, "");
+    set(accessKeyId, "");
+    set(secretAccessKey, "");
     set(provider, null);
     set(region, "");
     set(endpoint, "");
     set(wendpoint, "");
   }
 });
-watch(auth, (newAuth) => {
-  if (newAuth && get(remember)) {
-    const lCreds = get(creds);
-    lCreds.push({
-      title: get(domain),
-      username: get(username),
-      password: get(password),
-      region: get(region),
-      endpoint: get(endpoint),
-      wendpoint: get(wendpoint),
-      provider: get(provider).title,
-    });
-    set(creds, lCreds);
-  }
-});
+let isLogining = false;
 /**
  *
  */
 const login = async () => {
-  set(
-    creds,
-    get(creds).filter((pCred) => pCred.title !== get(domain))
-  );
   get(form).validate();
-  if (get(valid) && !get(io) && !get(auth))
+  if (!isLogining && get(valid) && !get(auth))
     try {
-      set(
-        io,
-        new S3(
-          get(username),
-          get(password),
-          get(domain),
-          get(region),
-          get(endpoint).replace(/\/$/, ""),
-          get(wendpoint).replace(/\/$/, "")
-        )
-      );
-      await get(io).headBucket();
-      set(auth, true);
+      isLogining = true;
+      const lCreds = get(creds).filter((pCred) => pCred.title !== get(bucket));
+      if (get(remember))
+        lCreds.push({
+          title: get(bucket),
+          accessKeyId: get(accessKeyId),
+          secretAccessKey: get(secretAccessKey),
+          region: get(region),
+          endpoint: get(endpoint),
+          wendpoint: get(wendpoint),
+          provider: get(provider).title,
+        });
+      set(creds, lCreds);
+      await get(s3).headBucket();
+      try {
+        const head = await Promise.allSettled([
+          get(s3).headObject("index.json"),
+          get(s3).headObject("index.cdn.json"),
+          get(s3).headObject("index.js"),
+          get(s3).headObject("index.css"),
+          get(s3).headObject("index.cdn.css"),
+          get(s3).headObject("index.htm"),
+        ]);
+        const put = [];
+        if (head[0].status === "rejected") {
+          const id = new Date().valueOf();
+          put.push(
+            get(s3).putObject(
+              "index.json",
+              "application/json",
+              `{"visible":true,"value":"${get(bucket)}","id":${id}}`
+            )
+          );
+          put.push(get(s3).putObject(`${id}.htm`, "text/html", ""));
+        }
+        if (head[1].status === "rejected")
+          put.push(
+            get(s3).putObject("index.cdn.json", "application/json", "[]")
+          );
+        if (head[2].status === "rejected")
+          put.push(
+            get(s3).putObject(
+              "index.js",
+              "application/javascript",
+              "function init(){try{}catch(e){}}"
+            )
+          );
+        if (head[3].status === "rejected")
+          put.push(get(s3).putObject("index.css", "text/css", ""));
+        if (head[4].status === "rejected")
+          put.push(get(s3).putObject("index.cdn.css", "text/css", ""));
+        if (head[5].status === "rejected")
+          put.push(
+            get(s3).putObject(
+              "index.htm",
+              "text/html",
+              '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else><v-runtime-template :parent="this" :template="template"></v-runtime-template></article></div></div>'
+            )
+          );
+        await Promise.all(put);
+      } finally {
+        set(auth, true);
+      }
     } catch (err) {
-      set(io, undefined);
       set(error, err.message);
       set(snackbar, true);
+    } finally {
+      isLogining = false;
     }
 };
 </script>
