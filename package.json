@@ -29,7 +29,7 @@
     "start": "electron ."
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.180.0",
+    "@aws-sdk/client-s3": "^3.181.0",
     "@fontsource/arsenal": "^4.5.8",
     "@fontsource/bad-script": "^4.5.8",
     "@fontsource/caveat": "^4.5.8",
@@ -86,7 +86,7 @@
     "@vue/cli-plugin-eslint": "^5.0.8",
     "@vue/cli-service": "^5.0.8",
     "copy-webpack-plugin": "^11.0.0",
-    "css-minimizer-webpack-plugin": "^4.1.0",
+    "css-minimizer-webpack-plugin": "^4.2.0",
     "electron-icon-builder": "^2.0.1",
     "electron-packager": "^16.0.0",
     "eslint": "^8.24.0",
