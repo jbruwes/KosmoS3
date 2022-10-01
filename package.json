@@ -57,7 +57,7 @@
     "@fontsource/tenor-sans": "^4.5.10",
     "@mdi/font": "^7.0.96",
     "@vueuse/core": "^9.3.0",
-    "@vueuse/head": "^0.7.12",
+    "@vueuse/head": "^0.7.13",
     "animate.css": "^4.1.1",
     "core-js": "^3.25.3",
     "dompurify": "^2.4.0",
