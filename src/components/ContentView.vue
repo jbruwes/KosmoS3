@@ -179,17 +179,29 @@
       ],
       link_class_list: [
         {
+          title: 'None',
+          value: '',
+        },
+        {
           title: 'v-btn',
           value: 'v-btn',
         },
       ],
       image_class_list: [
         {
+          title: 'None',
+          value: '',
+        },
+        {
           title: 'v-img',
           value: 'v-img',
         },
       ],
       table_class_list: [
+        {
+          title: 'None',
+          value: '',
+        },
         {
           title: 'v-table',
           value: 'v-table',
