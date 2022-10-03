@@ -77,7 +77,6 @@
                 prepend-inner-icon="mdi-server-network"
                 variant="underlined"
                 :disabled="!!provider"
-                :rules="[(v) => !!v || 'Item is required']"
               ></v-text-field> </v-col
           ></v-row>
           <v-row
