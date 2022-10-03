@@ -21,6 +21,11 @@ export default defineStore("kosmos3", () => {
         get(endpoint).replace(/\/$/, "")
       )
   );
+  const base = computed(() =>
+    get(wendpoint)
+      ? `${get(wendpoint)}/${get(bucket)}/`
+      : `https://${get(bucket)}/`
+  );
   return {
     s3,
     auth,
@@ -30,5 +35,6 @@ export default defineStore("kosmos3", () => {
     endpoint,
     wendpoint,
     region,
+    base,
   };
 });
