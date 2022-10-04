@@ -1,25 +1,29 @@
 <template>
   <v-app>
     <v-app-bar app>
-      <v-app-bar-nav-icon
-        variant="text"
-        @click.stop="drawer = !drawer"
-      ></v-app-bar-nav-icon
-      ><v-toolbar-title
+      <template #prepend>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      </template>
+      <v-app-bar-title
         ><v-icon icon="mdi-rocket-launch" class="mr-2"></v-icon
-        >kosmoS3</v-toolbar-title
+        >kosmoS3</v-app-bar-title
       >
+      <template v-if="panel !== null" #append>
+        <v-btn icon @click.stop="panel = !panel">
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </template>
     </v-app-bar>
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-      :temporary="mobile"
-      :expand-on-hover="!mobile"
-      :rail="!mobile"
-    >
-      <v-list nav :items="items"></v-list>
-    </v-navigation-drawer>
     <v-main>
+      <v-navigation-drawer
+        v-model="drawer"
+        app
+        :temporary="mobile"
+        :expand-on-hover="!mobile"
+        :rail="!mobile"
+      >
+        <v-list nav :items="items"></v-list>
+      </v-navigation-drawer>
       <v-container fluid class="fill-height">
         <router-view></router-view>
       </v-container>
@@ -37,7 +41,7 @@ import kosmos3 from "./kosmos3";
 
 const router = useRouter();
 const store = kosmos3();
-const { auth } = storeToRefs(store);
+const { auth, panel } = storeToRefs(store);
 const { mobile } = useDisplay();
 const drawer = ref(!get(mobile));
 const items = computed(() =>
