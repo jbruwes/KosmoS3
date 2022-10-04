@@ -111,4 +111,8 @@ watch(auth, (newAuth) => {
 html {
   overflow-y: auto !important;
 }
+.tox.tox-tinymce {
+  height: 100% !important;
+  border: 0px !important;
+}
 </style>
