@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer permanent location="right"> </v-navigation-drawer>
+  <v-navigation-drawer permanent location="right"></v-navigation-drawer>
   <v-window v-model="edit" class="fill-height"
     ><v-window-item class="fill-height" value="visual">
       <editor
@@ -238,57 +238,16 @@
 
 <script setup>
 import Editor from "@tinymce/tinymce-vue";
-import "tinymce";
-import "tinymce/icons/default";
-import "tinymce/themes/silver";
-import "tinymce/models/dom";
-import "tinymce/plugins/preview";
-import "tinymce/plugins/importcss";
-import "tinymce/plugins/searchreplace";
-import "tinymce/plugins/autolink";
-import "tinymce/plugins/autosave";
-import "tinymce/plugins/save";
-import "tinymce/plugins/directionality";
-import "tinymce/plugins/code";
-import "tinymce/plugins/visualblocks";
-import "tinymce/plugins/visualchars";
-import "tinymce/plugins/fullscreen";
-import "tinymce/plugins/image";
-import "tinymce/plugins/link";
-import "tinymce/plugins/media";
-import "tinymce/plugins/template";
-import "tinymce/plugins/codesample";
-import "tinymce/plugins/table";
-import "tinymce/plugins/charmap";
-import "tinymce/plugins/pagebreak";
-import "tinymce/plugins/nonbreaking";
-import "tinymce/plugins/anchor";
-import "tinymce/plugins/insertdatetime";
-import "tinymce/plugins/advlist";
-import "tinymce/plugins/lists";
-import "tinymce/plugins/wordcount";
-import "tinymce/plugins/quickbars";
-import "tinymce/plugins/emoticons";
-import "tinymce/plugins/emoticons/js/emojis";
-import "tinymce/skins/ui/oxide/skin.css";
 import { VAceEditor } from "vue3-ace-editor";
 import "ace-builds/webpack-resolver";
-
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
-import contentUiSkinCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css"; // eslint-disable-line import/no-unresolved, import/no-webpack-loader-syntax
-import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css"; // eslint-disable-line import/no-unresolved, import/no-webpack-loader-syntax
-import kosmos3 from "../kosmos3";
+import kosmos3 from "@/kosmos3";
+import contentUiSkinCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css"; // eslint-disable-line
+import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css"; // eslint-disable-line
 
 const store = kosmos3();
 const { base } = storeToRefs(store);
 const edit = ref("visual");
 const content = ref("");
 </script>
-
-<style scoped>
-:deep(.tox.tox-tinymce) {
-  height: 100% !important;
-  border: 0px !important;
-}
-</style>
