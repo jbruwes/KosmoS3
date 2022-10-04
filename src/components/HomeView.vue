@@ -121,6 +121,7 @@ const {
   endpoint,
   wendpoint,
   region,
+  panel,
 } = storeToRefs(store);
 set(auth, false);
 set(bucket, "");
@@ -129,6 +130,7 @@ set(secretAccessKey, "");
 set(region, "");
 set(endpoint, "");
 set(wendpoint, "");
+set(panel, null);
 const error = ref("");
 const visible = ref(false);
 const snackbar = ref(false);
