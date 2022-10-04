@@ -7,7 +7,7 @@ import { storeToRefs } from "pinia";
 import { ref, computed, watch } from "vue";
 import { get, set, watchTriggerable } from "@vueuse/core";
 import page from "page";
-import sputnik from "~/sputnik";
+import sputnik from "@/sputnik";
 
 const props = defineProps({
   variant: { default: undefined, type: String },
