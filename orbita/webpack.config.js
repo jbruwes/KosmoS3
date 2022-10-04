@@ -95,8 +95,7 @@ module.exports = {
     modules: ["./sources", "node_modules"],
     alias: {
       vue$: "vue/dist/vue.esm-bundler.js",
-      "@": path.resolve("sources"),
-      "~": path.join(__dirname, "../"),
+      "@": path.join(__dirname, "./sources"),
     },
   },
   plugins: [
