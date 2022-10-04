@@ -7,10 +7,10 @@
     "format": "prettier -w .",
     "clean:icons": "rimraf icons icon.png",
     "clean": "rimraf dist out && npm run clean:icons",
-    "all": "npm run clean && npm run build && npm run orbita && npm run icons && npm run proton",
+    "all": "npm run clean && npm run build && npm run build:orbita && npm run icons && npm run build:proton",
     "icons": "npm run clean:icons && .\"/node_modules/.bin/svg2png\" .\"/rocket.svg\" --output=.\"/icon.png\" && .\"/node_modules/.bin/electron-icon-builder\" --flatten --input=.\"/icon.png\" --output=.",
-    "proton": "webpack --config ./proton/webpack.config.js",
-    "orbita": "webpack --config ./orbita/webpack.config.js",
+    "build:proton": "webpack --config ./proton/webpack.config.js",
+    "build:orbita": "webpack --config ./orbita/webpack.config.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint '**/*.js' '**/*.vue'",
@@ -156,6 +156,16 @@
       "vue"
     ],
     "settings": {
+      "import/resolver": {
+        "alias": {
+          "map": [
+            [
+              "@",
+              "./src"
+            ]
+          ]
+        }
+      },
       "import/core-modules": [
         "vuetify/styles",
         "vuetify/iconsets/fa",
