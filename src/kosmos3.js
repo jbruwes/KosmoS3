@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 import S3 from "./s3";
 
 export default defineStore("kosmos3", () => {
+  const panel = ref(null);
   const auth = ref(false);
   const bucket = ref("");
   const accessKeyId = ref("");
@@ -36,5 +37,6 @@ export default defineStore("kosmos3", () => {
     wendpoint,
     region,
     base,
+    panel,
   };
 });
