@@ -28,7 +28,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
-import sputnik from "~/sputnik";
+import sputnik from "@/sputnik";
 
 export default {
   computed: {
