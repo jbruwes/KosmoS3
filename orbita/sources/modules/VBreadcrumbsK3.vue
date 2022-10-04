@@ -3,7 +3,7 @@
 </template>
 <script setup>
 import { computed } from "vue";
-import sputnik from "~/sputnik";
+import sputnik from "@/sputnik";
 
 const props = defineProps({
   variant: { default: undefined, type: String },
