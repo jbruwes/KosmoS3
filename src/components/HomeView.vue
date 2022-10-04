@@ -1,6 +1,6 @@
 <template>
   <v-snackbar v-model="snackbar" location="top right">{{ error }}</v-snackbar>
-  <v-card :image="require('../assets/bg.jpg')" class="fill-height"
+  <v-card :image="require('@/assets/bg.jpg')" class="fill-height"
     ><v-row class="fill-height" align="center" justify="center"
       ><v-card class="pa-8 ma-8" :width="640" color="#ffffffee"
         ><v-form ref="form" v-model="valid" lazy-validation>
