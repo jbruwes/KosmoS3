@@ -1,6 +1,27 @@
 <template>
-  <v-navigation-drawer permanent location="right"></v-navigation-drawer>
-  <v-window v-model="edit" class="fill-height"
+  <v-navigation-drawer
+    v-model="panel"
+    location="right"
+    :width="320"
+    :temporary="mobile"
+    ><v-tabs v-model="properties" :grow="true" density="compact">
+      <v-tab value="tree" prepend-icon="mdi-file-tree">Structure</v-tab>
+      <v-tab value="attrs" prepend-icon="mdi-card-bulleted-settings-outline"
+        >Attributes</v-tab
+      > </v-tabs
+    ><v-window v-model="properties"
+      ><v-window-item value="tree"
+        ><v-container fluid class="fill-height"
+          >tree</v-container
+        ></v-window-item
+      ><v-window-item value="attrs"
+        ><v-container fluid class="fill-height"
+          >attrs</v-container
+        ></v-window-item
+      ></v-window
+    ></v-navigation-drawer
+  >
+  <v-window v-model="edit" class="tox-tinymce fill-height"
     ><v-window-item class="fill-height" value="visual">
       <editor
         v-model="content"
@@ -215,9 +236,9 @@
           table_cell_class_list: [],
           table_row_class_list: [],
         }"
-      ></editor> </v-window-item
-    ><v-window-item class="fill-height" value="source"
-      ><v-ace-editor
+      ></editor></v-window-item
+    ><v-window-item class="fill-height" value="source">
+      <v-ace-editor
         v-model:value="content"
         lang="html"
         theme="chrome"
@@ -241,13 +262,18 @@ import Editor from "@tinymce/tinymce-vue";
 import { VAceEditor } from "vue3-ace-editor";
 import "ace-builds/webpack-resolver";
 import { ref } from "vue";
+import { useDisplay } from "vuetify";
+import { get, set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import kosmos3 from "@/kosmos3";
 import contentUiSkinCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css"; // eslint-disable-line
 import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css"; // eslint-disable-line
 
 const store = kosmos3();
-const { base } = storeToRefs(store);
+const { base, panel } = storeToRefs(store);
+const { mobile } = useDisplay();
+set(panel, !get(mobile));
 const edit = ref("visual");
+const properties = ref("tree");
 const content = ref("");
 </script>
