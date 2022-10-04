@@ -7,7 +7,7 @@ import VRuntimeTemplate from "vue3-runtime-template";
 import page from "page";
 import GLightbox from "glightbox";
 
-import sputnik from "~/sputnik";
+import sputnik from "./sputnik";
 
 import VSingleHeaderK3 from "./modules/VSingleHeaderK3.vue";
 import VSingleButtonK3 from "./modules/VSingleButtonK3.vue";
