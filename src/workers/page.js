@@ -1,5 +1,5 @@
 import jsel from "jsel";
-import S3 from "../s3";
+import S3 from "@/s3";
 import html from "./html";
 
 /**
