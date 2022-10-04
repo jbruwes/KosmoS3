@@ -109,7 +109,7 @@
 import { ref, watch, computed } from "vue";
 import { get, set, useStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import kosmos3 from "../kosmos3";
+import kosmos3 from "@/kosmos3";
 
 const store = kosmos3();
 const {
