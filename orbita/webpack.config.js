@@ -13,7 +13,7 @@ const babelSettings = {
 module.exports = {
   mode: "production",
   context: path.resolve(__dirname),
-  entry: { fel: "./sources/index.js" },
+  entry: { orbita: "./src/index.js" },
   output: {
     path: path.join(__dirname, "../dist"),
     filename: "[contenthash].js",
@@ -92,10 +92,10 @@ module.exports = {
   stats: "minimal",
   resolve: {
     extensions: [".js", ".vue", ".json"],
-    modules: ["./sources", "node_modules"],
+    modules: ["./src", "node_modules"],
     alias: {
       vue$: "vue/dist/vue.esm-bundler.js",
-      "@": path.join(__dirname, "./sources"),
+      "@": path.join(__dirname, "./src"),
     },
   },
   plugins: [
