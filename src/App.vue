@@ -41,11 +41,11 @@ import kosmos3 from "./kosmos3";
 
 const router = useRouter();
 const store = kosmos3();
-const { auth, panel } = storeToRefs(store);
+const { s3, panel } = storeToRefs(store);
 const { mobile } = useDisplay();
 const drawer = ref(!get(mobile));
 const items = computed(() =>
-  get(auth)
+  get(s3)
     ? [
         {
           title: "Content",
@@ -107,8 +107,8 @@ const items = computed(() =>
         },
       ]
 );
-watch(auth, (newAuth) => {
-  if (newAuth) router.push("/content");
+watch(s3, (newS3) => {
+  if (newS3) router.push("/content");
 });
 </script>
 <style>
