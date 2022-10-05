@@ -36,13 +36,13 @@ import { createPinia } from "pinia";
 import { createRouter, createMemoryHistory } from "vue-router";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
-import HomeView from "./components/HomeView.vue";
-import AboutView from "./components/AboutView.vue";
-import ContentView from "./components/ContentView.vue";
-import TemplateView from "./components/TemplateView.vue";
-import CssView from "./components/CssView.vue";
-import JsView from "./components/JsView.vue";
-import SettingsView from "./components/SettingsView.vue";
+import HomeView from "./views/HomeView.vue";
+import AboutView from "./views/AboutView.vue";
+import ContentView from "./views/ContentView.vue";
+import TemplateView from "./views/TemplateView.vue";
+import CssView from "./views/CssView.vue";
+import JsView from "./views/JsView.vue";
+import SettingsView from "./views/SettingsView.vue";
 
 createApp(App)
   .use(vuetify)
