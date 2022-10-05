@@ -1,7 +1,7 @@
 module.exports = {
   settings: {
     "import/resolver": {
-      alias: [["@", "./orbita/sources"]],
+      alias: [["@", "./orbita/src"]],
     },
   },
 };
