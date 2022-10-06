@@ -29,6 +29,7 @@
       </v-container>
     </v-main>
   </v-app>
+  <v-snackbar v-model="snackbar" location="top right">{{ error }}</v-snackbar>
 </template>
 
 <script setup>
@@ -41,7 +42,7 @@ import kosmos3 from "./kosmos3";
 
 const router = useRouter();
 const store = kosmos3();
-const { s3, panel } = storeToRefs(store);
+const { s3, panel, snackbar, error } = storeToRefs(store);
 const { mobile } = useDisplay();
 const drawer = ref(!get(mobile));
 const items = computed(() =>
