@@ -8,6 +8,23 @@ import {
 } from "@aws-sdk/client-s3";
 
 export default defineStore("kosmos3", () => {
+  /**
+   * текст сообщения об ошибке
+   *
+   * @type {string}
+   */
+  const error = ref("");
+  /**
+   * переключатель видимости сообщения об ошибке
+   *
+   * @type {boolean}
+   */
+  const snackbar = ref(false);
+  /**
+   * переключатель видимости правой панели
+   *
+   * @type {boolean}
+   */
   const panel = ref(null);
   const bucket = ref("");
   const wendpoint = ref("");
@@ -143,5 +160,7 @@ export default defineStore("kosmos3", () => {
     javascript,
     css,
     style,
+    snackbar,
+    error,
   };
 });
