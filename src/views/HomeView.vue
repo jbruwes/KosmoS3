@@ -1,5 +1,4 @@
 <template>
-  <v-snackbar v-model="snackbar" location="top right">{{ error }}</v-snackbar>
   <v-card :image="require('@/assets/bg.jpg')" class="fill-height"
     ><v-row class="fill-height" align="center" justify="center"
       ><v-card class="pa-8 ma-8" :width="640" color="#ffffffee"
@@ -113,7 +112,7 @@ import { S3Client, HeadBucketCommand } from "@aws-sdk/client-s3";
 import kosmos3 from "@/kosmos3";
 
 const store = kosmos3();
-const { s3, bucket, wendpoint, panel } = storeToRefs(store);
+const { s3, bucket, wendpoint, panel, snackbar, error } = storeToRefs(store);
 set(s3, null);
 set(bucket, "");
 set(wendpoint, "");
@@ -122,9 +121,7 @@ const accessKeyId = ref("");
 const secretAccessKey = ref("");
 const region = ref("");
 const endpoint = ref("");
-const error = ref("");
 const visible = ref(false);
-const snackbar = ref(false);
 const remember = ref(true);
 const providers = ref([
   {
