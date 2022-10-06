@@ -116,8 +116,4 @@ watch(s3, (newS3) => {
 html {
   overflow-y: auto !important;
 }
-.tox.tox-tinymce {
-  height: 100% !important;
-  border: 0px !important;
-}
 </style>
