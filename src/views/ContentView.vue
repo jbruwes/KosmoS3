@@ -23,16 +23,9 @@
   >
   <v-window v-model="edit" class="tox-tinymce fill-height"
     ><v-window-item class="fill-height" value="visual">
-      <v-tinymce-editor
-        v-model:value="content"
-      ></v-tinymce-editor></v-window-item
-    ><v-window-item class="fill-height" value="source">
-      <v-ace-editor
-        v-model:value="content"
-        lang="html"
-        theme="chrome"
-        style="height: 100%"
-      ></v-ace-editor></v-window-item
+      <v-wysiwyg></v-wysiwyg></v-window-item
+    ><v-window-item class="fill-height" value="source"
+      ><v-source-code></v-source-code></v-window-item
   ></v-window>
   <v-bottom-navigation
     v-model="edit"
@@ -47,14 +40,13 @@
 </template>
 
 <script setup>
-import { VAceEditor } from "vue3-ace-editor";
-import "ace-builds/webpack-resolver";
 import { ref } from "vue";
 import { useDisplay } from "vuetify";
 import { get, set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import kosmos3 from "@/kosmos3";
-import VTinymceEditor from "@/components/VTinymceEditor.vue";
+import VWysiwyg from "@/components/VWysiwyg.vue";
+import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = kosmos3();
 const { panel } = storeToRefs(store);
@@ -62,5 +54,4 @@ const { mobile } = useDisplay();
 set(panel, !get(mobile));
 const edit = ref("visual");
 const properties = ref("tree");
-const content = ref("");
 </script>
