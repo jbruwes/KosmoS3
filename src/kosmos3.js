@@ -53,7 +53,7 @@ export default defineStore("kosmos3", () => {
   /**
    * семантическое ядро сайта
    *
-   * @type {array}
+   * @type {object}
    */
   const semantic = ref([]);
   /**
