@@ -210,6 +210,21 @@
         ],
         table_cell_class_list: [],
         table_row_class_list: [],
+        file_picker_callback: (cb) => {
+          filePicker = cb;
+        },
+        images_upload_handler: async (blobInfo) => {
+          try {
+            const filePath = `${crypto.randomUUID()}.${blobInfo
+              .filename()
+              .split('.')
+              .pop()}`;
+            await putObject(filePath, blobInfo.blob().type, blobInfo.blob());
+            return filePath;
+          } catch (err) {
+            throw err;
+          }
+        },
       }"
     ></editor>
   </div>
@@ -250,13 +265,46 @@ import "tinymce/plugins/quickbars";
 import "tinymce/plugins/emoticons";
 import "tinymce/plugins/emoticons/js/emojis";
 import "tinymce/skins/ui/oxide/skin.css";
+import { watch, ref } from "vue";
+import { useFileDialog, set, get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import kosmos3 from "@/kosmos3";
 import contentUiSkinCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css"; // eslint-disable-line
 import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css"; // eslint-disable-line
 
 const store = kosmos3();
-const { base, content } = storeToRefs(store);
+const { base, content, error, snackbar } = storeToRefs(store);
+const { putObject } = store;
+const filePicker = ref(undefined);
+const { files, open } = useFileDialog({
+  multiple: false,
+  accept: "image/*,video/*",
+});
+watch(filePicker, () => {
+  open();
+});
+watch(files, async (newFiles) => {
+  if (newFiles.length)
+    try {
+      const filePath = `${crypto.randomUUID()}.${newFiles[0].name
+        .split(".")
+        .pop()}`;
+      await putObject(
+        filePath,
+        newFiles[0].type,
+        await new Promise((resolve) => {
+          const reader = new FileReader();
+          /** @returns {Buffer} загруженный файл */
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsArrayBuffer(newFiles[0]);
+        })
+      );
+      get(filePicker)(filePath, { alt: newFiles[0].name });
+    } catch (err) {
+      set(error, err.message);
+      set(snackbar, true);
+    }
+});
 </script>
 <style scoped>
 :deep(.tox.tox-tinymce) {
