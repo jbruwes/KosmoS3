@@ -135,7 +135,7 @@ export default defineStore("kosmos3", () => {
         ]);
         const object = [];
         if (head[0].status === "rejected") {
-          const id = new Date().valueOf();
+          const id = crypto.randomUUID();
           object.push(
             putObject(
               "index.json",
@@ -180,19 +180,17 @@ export default defineStore("kosmos3", () => {
     }
   });
   return {
-    s3,
-    bucket,
-    wendpoint,
-    base,
-    panel,
-    content,
-    semantic,
-    template,
-    js,
-    javascript,
-    css,
-    style,
-    snackbar,
-    error,
+    ...{ bucket, wendpoint, base },
+    ...{ panel, snackbar, error },
+    ...{
+      content,
+      semantic,
+      template,
+      js,
+      javascript,
+      css,
+      style,
+    },
+    ...{ s3, putObject },
   };
 });
