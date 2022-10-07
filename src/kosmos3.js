@@ -26,10 +26,41 @@ export default defineStore("kosmos3", () => {
    * @type {boolean}
    */
   const panel = ref(null);
+  /**
+   * корзина в сервисе s3
+   *
+   * @type {string}
+   */
   const bucket = ref("");
+  /**
+   * путь к сайту через сервис s3
+   *
+   * @type {string}
+   */
   const wendpoint = ref("");
+  /**
+   * клиент к сервису s3
+   *
+   * @type {object}
+   */
   const s3 = ref(null);
+  /**
+   * контент выбранной страницы сайта
+   *
+   * @type {string}
+   */
+  const content = ref("");
+  /**
+   * семантическое ядро сайта
+   *
+   * @type {array}
+   */
   const semantic = ref([]);
+  /**
+   * дизайн-шаблон сайта
+   *
+   * @type {string}
+   */
   const template = ref("");
   const style = ref("");
   const css = ref("");
@@ -154,6 +185,7 @@ export default defineStore("kosmos3", () => {
     wendpoint,
     base,
     panel,
+    content,
     semantic,
     template,
     js,
