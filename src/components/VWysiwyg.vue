@@ -5,28 +5,21 @@
       :init="{
         plugins:
           'preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount charmap quickbars emoticons',
-        menubar: 'file edit view insert format tools table',
         toolbar:
           'undo redo | rlink | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview print | insertfile image media template link anchor codesample | ltr rtl',
-        content_css_cors: true,
-        skin: false,
         content_css: 'index.cdn.css,index.css',
         content_style: `${contentUiSkinCss.toString()}\n${contentCss.toString()}`,
         document_base_url: base,
-        //file_picker_types: 'image media file',
         quickbars_insert_toolbar: 'template',
         body_class: 'pa-2 ma-0',
         valid_elements: '*[*]',
         protect: [/<v-.+(<\/v-.+?>)/g],
-        branding: false,
-        browser_spellcheck: true,
-        //convert_urls: false,
-        //relative_urls: false,
-        //remove_script_host: false,
         image_advtab: true,
         image_caption: true,
         image_title: true,
-        //images_reuse_filename: true,
+        convert_urls: false,
+        branding: false,
+        skin: false,
         resize: false,
         promotion: false,
         templates: [
@@ -213,18 +206,6 @@
         file_picker_callback: (cb) => {
           filePicker = cb;
         },
-        images_upload_handler: async (blobInfo) => {
-          try {
-            const filePath = `${crypto.randomUUID()}.${blobInfo
-              .filename()
-              .split('.')
-              .pop()}`;
-            await putObject(filePath, blobInfo.blob().type, blobInfo.blob());
-            return filePath;
-          } catch (err) {
-            throw err;
-          }
-        },
       }"
     ></editor>
   </div>
@@ -265,7 +246,7 @@ import "tinymce/plugins/quickbars";
 import "tinymce/plugins/emoticons";
 import "tinymce/plugins/emoticons/js/emojis";
 import "tinymce/skins/ui/oxide/skin.css";
-import { watch, ref } from "vue";
+import { watch, ref, computed } from "vue";
 import { useFileDialog, set, get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import kosmos3 from "@/kosmos3";
@@ -273,35 +254,27 @@ import contentUiSkinCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.cs
 import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css"; // eslint-disable-line
 
 const store = kosmos3();
-const { base, content, error, snackbar } = storeToRefs(store);
-const { putObject } = store;
+const { base, content, message, snackbar } = storeToRefs(store);
+const { putFile } = store;
 const filePicker = ref(undefined);
 const { files, open } = useFileDialog({
   multiple: false,
   accept: "image/*,video/*",
 });
+const file = computed(() => (get(files) ? get(files)[0] : undefined));
 watch(filePicker, () => {
   open();
 });
-watch(files, async (newFiles) => {
-  if (newFiles.length)
+watch(file, async (newFile) => {
+  if (newFile)
     try {
-      const filePath = `${crypto.randomUUID()}.${newFiles[0].name
+      const filePath = `${crypto.randomUUID()}.${newFile.name
         .split(".")
         .pop()}`;
-      await putObject(
-        filePath,
-        newFiles[0].type,
-        await new Promise((resolve) => {
-          const reader = new FileReader();
-          /** @returns {Buffer} загруженный файл */
-          reader.onloadend = () => resolve(reader.result);
-          reader.readAsArrayBuffer(newFiles[0]);
-        })
-      );
-      get(filePicker)(filePath, { alt: newFiles[0].name });
+      await putFile(filePath, newFile.type, newFile);
+      get(filePicker)(filePath, { alt: newFile.name });
     } catch (err) {
-      set(error, err.message);
+      set(message, err.message);
       set(snackbar, true);
     }
 });
