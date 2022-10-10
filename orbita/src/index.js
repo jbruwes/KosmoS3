@@ -39,6 +39,7 @@ import { createHead } from "@vueuse/head";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
+import Particles from "vue3-particles";
 import VueAnimateOnScroll from "vue3-animate-onscroll";
 import App from "./App.vue";
 
@@ -57,6 +58,7 @@ createApp(App)
     })
   )
   .use(createHead())
+  .use(Particles)
   .use(VueAnimateOnScroll)
   .use(createPinia())
   .mount("#app");
