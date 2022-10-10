@@ -112,7 +112,7 @@ import { S3Client, HeadBucketCommand } from "@aws-sdk/client-s3";
 import kosmos3 from "@/kosmos3";
 
 const store = kosmos3();
-const { s3, bucket, wendpoint, panel, snackbar, error } = storeToRefs(store);
+const { s3, bucket, wendpoint, panel, snackbar, message } = storeToRefs(store);
 set(s3, null);
 set(bucket, "");
 set(wendpoint, "");
@@ -243,7 +243,7 @@ const login = async () => {
       set(s3, s3Client);
     } catch (err) {
       s3Client = null;
-      set(error, err.message);
+      set(message, err.message);
       set(snackbar, true);
     }
 };
