@@ -13,9 +13,7 @@ const props = defineProps({
     /**
      * @returns {object} default options
      */
-    default: () => ({
-      texturePath: "noise.png",
-    }),
+    default: () => ({}),
     type: Object,
   },
 });
