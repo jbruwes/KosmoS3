@@ -1,5 +1,5 @@
 import { ref, computed, watch } from "vue";
-import { get, set } from "@vueuse/core";
+import { get, set, watchDebounced } from "@vueuse/core";
 import { defineStore } from "pinia";
 import {
   HeadObjectCommand,
@@ -9,11 +9,17 @@ import {
 
 export default defineStore("kosmos3", () => {
   /**
+   * настройки фильтра
+   *
+   * @constant {object}
+   */
+  const debounce = { debounce: 1000, maxWait: 10000 };
+  /**
    * текст сообщения об ошибке
    *
    * @type {string}
    */
-  const error = ref("");
+  const message = ref("");
   /**
    * переключатель видимости сообщения об ошибке
    *
@@ -49,23 +55,43 @@ export default defineStore("kosmos3", () => {
    *
    * @type {string}
    */
-  const content = ref("");
+  const content = ref(null);
   /**
    * семантическое ядро сайта
    *
    * @type {object}
    */
-  const semantic = ref([]);
+  const semantics = ref(null);
   /**
    * дизайн-шаблон сайта
    *
    * @type {string}
    */
-  const template = ref("");
-  const style = ref("");
-  const css = ref("");
-  const javascript = ref("");
-  const js = ref("");
+  const template = ref(null);
+  /**
+   * инлайн стили сайта
+   *
+   * @type {string}
+   */
+  const style = ref(null);
+  /**
+   * подключаемые стили сайта
+   *
+   * @type {string}
+   */
+  const css = ref(null);
+  /**
+   * инлайн скрипт сайта
+   *
+   * @type {string}
+   */
+  const javascript = ref(null);
+  /**
+   * подключаемые скрипты сайта
+   *
+   * @type {object}
+   */
+  const js = ref(null);
   const base = computed(() =>
     get(wendpoint)
       ? `${get(wendpoint)}/${get(bucket)}/`
@@ -83,9 +109,9 @@ export default defineStore("kosmos3", () => {
   /**
    * Запись объекта
    *
-   * @param {string} Key Имя файла
-   * @param {string} ContentType Тип mime
-   * @param {string | Uint8Array | Buffer} body Тело файла
+   * @param {string} Key имя файла
+   * @param {string} ContentType тип mime
+   * @param {string | Uint8Array | Buffer} body тело файла
    */
   const putObject = async (Key, ContentType, body) => {
     const Bucket = get(bucket);
@@ -93,6 +119,25 @@ export default defineStore("kosmos3", () => {
       typeof body === "string" ? new TextEncoder().encode(body) : body;
     await get(s3).send(
       new PutObjectCommand({ Bucket, Key, ContentType, Body })
+    );
+  };
+  /**
+   * Запись файла
+   *
+   * @param {string} Key имя файла
+   * @param {string} ContentType тип mime
+   * @param {File} file файл
+   */
+  const putFile = async (Key, ContentType, file) => {
+    await putObject(
+      Key,
+      ContentType,
+      await new Promise((resolve) => {
+        const reader = new FileReader();
+        /** @returns {Buffer} загруженный файл */
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsArrayBuffer(file);
+      })
     );
   };
   /**
@@ -121,7 +166,6 @@ export default defineStore("kosmos3", () => {
     });
     return ret;
   };
-
   watch(s3, async (newS3) => {
     if (newS3)
       try {
@@ -133,22 +177,22 @@ export default defineStore("kosmos3", () => {
           headObject("index.cdn.css"),
           headObject("index.htm"),
         ]);
-        const object = [];
+        const put = [];
         if (head[0].status === "rejected") {
           const id = crypto.randomUUID();
-          object.push(
+          put.push(
             putObject(
               "index.json",
               "application/json",
               `{"visible":true,"value":"${get(bucket)}","id":${id}}`
             )
           );
-          object.push(putObject(`${id}.htm`, "text/html", ""));
+          put.push(putObject(`${id}.htm`, "text/html", ""));
         }
         if (head[1].status === "rejected")
-          object.push(putObject("index.cdn.json", "application/json", "[]"));
+          put.push(putObject("index.cdn.json", "application/json", "[]"));
         if (head[2].status === "rejected")
-          object.push(
+          put.push(
             putObject(
               "index.js",
               "application/javascript",
@@ -156,41 +200,113 @@ export default defineStore("kosmos3", () => {
             )
           );
         if (head[3].status === "rejected")
-          object.push(putObject("index.css", "text/css", ""));
+          put.push(putObject("index.css", "text/css", ""));
         if (head[4].status === "rejected")
-          object.push(putObject("index.cdn.css", "text/css", ""));
+          put.push(putObject("index.cdn.css", "text/css", ""));
         if (head[5].status === "rejected")
-          object.push(
+          put.push(
             putObject(
               "index.htm",
               "text/html",
               '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else><v-runtime-template :parent="this" :template="template"></v-runtime-template></article></div></div>'
             )
           );
-        await Promise.all(object);
-        object.length = 0;
-        object.push(getObject("index.json"));
-        const file = await Promise.all(object);
-        set(semantic, JSON.parse(file[0]));
+        await Promise.all(put);
+        const file = await Promise.all([
+          getObject("index.json"),
+          getObject("index.cdn.json"),
+          getObject("index.js"),
+          getObject("index.css"),
+          getObject("index.cdn.css"),
+          getObject("index.htm"),
+        ]);
+        set(semantics, JSON.parse(file[0]));
+        set(js, JSON.parse(file[1]));
+        set(javascript, file[2]);
+        set(style, file[3]);
+        set(css, file[4]);
+        set(template, file[5]);
       } catch (err) {
-        // console.log(err.message);
+        set(message, err.message);
+        set(snackbar, true);
       }
     else {
-      set(semantic, []);
+      set(semantics, null);
+      set(js, null);
+      set(javascript, null);
+      set(style, null);
+      set(css, null);
+      set(template, null);
     }
   });
+  watchDebounced(
+    semantics,
+    () => {
+      set(message, "semantics changed!");
+      set(snackbar, true);
+    },
+    { deep: true, ...debounce }
+  );
+  watchDebounced(
+    js,
+    () => {
+      set(message, "js changed!");
+      set(snackbar, true);
+    },
+    debounce
+  );
+  watchDebounced(
+    javascript,
+    () => {
+      set(message, "javascript changed!");
+      set(snackbar, true);
+    },
+    debounce
+  );
+  watchDebounced(
+    style,
+    () => {
+      set(message, "style changed!");
+      set(snackbar, true);
+    },
+    debounce
+  );
+  watchDebounced(
+    css,
+    () => {
+      set(message, "css changed!");
+      set(snackbar, true);
+    },
+    debounce
+  );
+  watchDebounced(
+    template,
+    () => {
+      set(message, "template changed!");
+      set(snackbar, true);
+    },
+    debounce
+  );
+  watchDebounced(
+    content,
+    () => {
+      set(message, "content changed!");
+      set(snackbar, true);
+    },
+    debounce
+  );
   return {
     ...{ bucket, wendpoint, base },
-    ...{ panel, snackbar, error },
+    ...{ panel, snackbar, message },
     ...{
       content,
-      semantic,
+      semantics,
       template,
       js,
       javascript,
       css,
       style,
     },
-    ...{ s3, putObject },
+    ...{ s3, putObject, putFile },
   };
 });
