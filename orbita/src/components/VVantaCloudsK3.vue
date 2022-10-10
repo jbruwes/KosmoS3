@@ -10,9 +10,7 @@ import { get, useResizeObserver } from "@vueuse/core";
 
 const props = defineProps({
   options: {
-    /**
-     * @returns {object} default options
-     */
+    /** @returns {object} default options */
     default: () => ({}),
     type: Object,
   },
