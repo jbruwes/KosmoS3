@@ -33,6 +33,7 @@
         accept="image/vnd.microsoft.icon"
         label="favicon.ico (32x32)"
         prepend-icon="mdi-postage-stamp"
+        variant="underlined"
         :clearable="false"
       ></v-file-input>
       <v-file-input
@@ -40,6 +41,7 @@
         accept="image/svg+xml"
         label="icon.svg"
         prepend-icon="mdi-svg"
+        variant="underlined"
         :clearable="false"
       ></v-file-input>
       <v-file-input
@@ -47,6 +49,7 @@
         accept="image/png"
         label="icon.png (192x192)"
         prepend-icon="mdi-file-png-box"
+        variant="underlined"
         :clearable="false"
       ></v-file-input>
       <v-file-input
@@ -54,6 +57,7 @@
         accept="image/png"
         label="tile.png (558x558)"
         prepend-icon="mdi-file-png-box"
+        variant="underlined"
         :clearable="false"
       ></v-file-input>
       <v-file-input
@@ -61,6 +65,7 @@
         accept="image/png"
         label="tile-wide.png (558x270)"
         prepend-icon="mdi-file-png-box"
+        variant="underlined"
         :clearable="false"
       ></v-file-input>
     </div>
