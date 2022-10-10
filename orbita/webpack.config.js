@@ -15,7 +15,7 @@ module.exports = {
   context: path.resolve(__dirname),
   entry: { orbita: "./src/index.js" },
   output: {
-    path: path.join(__dirname, "../dist"),
+    path: path.join(__dirname, "../dist/orbita"),
     filename: "[contenthash].js",
     assetModuleFilename: "[contenthash][ext]",
   },
@@ -130,7 +130,7 @@ module.exports = {
         { from: "./resource/robots.txt" },
         { from: "./resource/site.webmanifest" },
         { from: "./resource/browserconfig.xml" },
-        { from: "./resource/noise.png" },
+        { from: "./resource/noise.png", to: "gallery" },
       ],
     }),
   ],
