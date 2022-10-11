@@ -261,18 +261,16 @@ const { files, open } = useFileDialog({
   multiple: false,
   accept: "image/*,video/*",
 });
-const file = computed(() => (get(files) ? get(files)[0] : undefined));
 watch(filePicker, () => {
   open();
 });
-watch(file, async (newFile) => {
-  if (newFile)
+watch(files, async (newFiles) => {
+  if (newFiles.length)
     try {
-      const filePath = `${crypto.randomUUID()}.${newFile.name
-        .split(".")
-        .pop()}`;
-      await putFile(filePath, newFile.type, newFile);
-      get(filePicker)(filePath, { alt: newFile.name });
+      const [file] = newFiles;
+      const filePath = `${crypto.randomUUID()}.${file.name.split(".").pop()}`;
+      await putFile(filePath, file.type, file);
+      get(filePicker)(filePath, { alt: file.name });
     } catch (err) {
       set(message, err.message);
       set(snackbar, true);
