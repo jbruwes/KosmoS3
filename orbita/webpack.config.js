@@ -15,7 +15,7 @@ module.exports = {
   context: path.resolve(__dirname),
   entry: { orbita: "./src/index.js" },
   output: {
-    path: path.join(__dirname, "../dist/orbita"),
+    path: path.join(__dirname, "../public/orbita"),
     filename: "[contenthash].js",
     assetModuleFilename: "[contenthash][ext]",
   },
