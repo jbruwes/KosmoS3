@@ -58,7 +58,7 @@
     "@mdi/font": "^7.0.96",
     "@tinymce/tinymce-vue": "^5.0.0",
     "@vueuse/core": "^9.3.0",
-    "@vueuse/head": "^0.9.7",
+    "@vueuse/head": "^0.9.8",
     "ace-builds": "^1.11.2",
     "animate.css": "^4.1.1",
     "core-js": "^3.25.5",
