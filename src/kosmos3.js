@@ -98,13 +98,15 @@ export default defineStore("kosmos3", () => {
       : `https://${get(bucket)}/`
   );
   /**
-   * Считывание заголовка объекта
+   * считывание заголовка файла
    *
-   * @param {string} Key Имя файла
+   * @param {string} Key имя файла
+   * @returns {object} заголовок файла
    */
   const headObject = async (Key) => {
     const Bucket = get(bucket);
-    await get(s3).send(new HeadObjectCommand({ Bucket, Key }));
+    const head = await get(s3).send(new HeadObjectCommand({ Bucket, Key }));
+    return head;
   };
   /**
    * Запись объекта
@@ -167,76 +169,108 @@ export default defineStore("kosmos3", () => {
     return ret;
   };
   watch(s3, async (newS3) => {
-    if (newS3)
+    const files = [
+      {
+        key: "index.json",
+        contentType: "application/json",
+        value: `{"visible":true,"value":"${get(
+          bucket
+        )}","id":"${crypto.randomUUID()}"}`,
+        ref: semantics,
+        parse: true,
+      },
+      {
+        key: "index.cdn.json",
+        contentType: "application/json",
+        value: "[]",
+        ref: js,
+        parse: true,
+      },
+      {
+        key: "index.js",
+        contentType: "application/javascript",
+        value: "function init(){try{}catch(e){}}",
+        ref: javascript,
+        parse: false,
+      },
+      { key: "index.css", contentType: "text/css", value: "", ref: style },
+      {
+        key: "index.cdn.css",
+        contentType: "text/css",
+        value: "",
+        ref: css,
+        parse: false,
+      },
+      {
+        key: "index.htm",
+        contentType: "text/html",
+        value:
+          '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else><v-runtime-template :parent="this" :template="template"></v-runtime-template></article></div></div>',
+        ref: template,
+        parse: false,
+      },
+    ];
+    if (newS3) {
       try {
-        const head = await Promise.allSettled([
-          headObject("index.json"),
-          headObject("index.cdn.json"),
-          headObject("index.js"),
-          headObject("index.css"),
-          headObject("index.cdn.css"),
-          headObject("index.htm"),
-        ]);
-        const put = [];
-        if (head[0].status === "rejected") {
-          const id = crypto.randomUUID();
-          put.push(
-            putObject(
-              "index.json",
-              "application/json",
-              `{"visible":true,"value":"${get(bucket)}","id":${id}}`
-            )
-          );
-          put.push(putObject(`${id}.htm`, "text/html", ""));
-        }
-        if (head[1].status === "rejected")
-          put.push(putObject("index.cdn.json", "application/json", "[]"));
-        if (head[2].status === "rejected")
-          put.push(
-            putObject(
-              "index.js",
-              "application/javascript",
-              "function init(){try{}catch(e){}}"
-            )
-          );
-        if (head[3].status === "rejected")
-          put.push(putObject("index.css", "text/css", ""));
-        if (head[4].status === "rejected")
-          put.push(putObject("index.cdn.css", "text/css", ""));
-        if (head[5].status === "rejected")
-          put.push(
-            putObject(
-              "index.htm",
-              "text/html",
-              '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else><v-runtime-template :parent="this" :template="template"></v-runtime-template></article></div></div>'
-            )
-          );
-        await Promise.all(put);
-        const file = await Promise.all([
-          getObject("index.json"),
-          getObject("index.cdn.json"),
-          getObject("index.js"),
-          getObject("index.css"),
-          getObject("index.cdn.css"),
-          getObject("index.htm"),
-        ]);
-        set(semantics, JSON.parse(file[0]));
-        set(js, JSON.parse(file[1]));
-        set(javascript, file[2]);
-        set(style, file[3]);
-        set(css, file[4]);
-        set(template, file[5]);
+        const objects = await Promise.allSettled(
+          files.map((file) => getObject(file.key))
+        );
+        objects.forEach((object, index) => {
+          const value = object.value || files[index].value;
+          if (object.status === "rejected")
+            putObject(files[index].key, files[index].contentType, value);
+          set(files[index].ref, files[index].parse ? JSON.parse(value) : value);
+        });
       } catch (err) {
-        set(message, err.message);
-        set(snackbar, true);
+        // console.log(err.message);
       }
-    else {
-      set(semantics, null);
-      set(js, null);
-      set(javascript, null);
-      set(style, null);
-      set(css, null);
-      set(template, null);
+      try {
+        const excluded = ["index.htm", "site.webmanifest"];
+        const included = ["robots.txt", "error.html", "browserconfig.xml"];
+        const assets = Object.values(
+          await (await fetch("orbita/assets-manifest.json")).json()
+        ).filter((asset) => !excluded.includes(asset));
+        const heads = await Promise.allSettled(
+          assets.map((asset) => headObject(asset))
+        );
+        const names = assets.filter(
+          (asset, index) =>
+            heads[index].status === "rejected" || included.includes(asset)
+        );
+        const bodies = await Promise.all(
+          names.map((name) => fetch(`orbita/${name}`))
+        );
+        const blobs = await Promise.all(
+          bodies.map((body, index) =>
+            included.includes(names[index]) ? body.text() : body.blob()
+          )
+        );
+        blobs.forEach((blob, index) => {
+          const name = names[index];
+          const head = included.includes(name)
+            ? heads[assets.indexOf(name)]
+            : null;
+          if (
+            !head ||
+            (head.status === "fulfilled" &&
+              head.value.ContentLength !==
+                new TextEncoder().encode(blob).length)
+          )
+            putObject(
+              name,
+              blob.type,
+              name === "robot.txt"
+                ? blob.replace(/{{ domain }}/g, get(bucket))
+                : blob
+            );
+        });
+      } catch (err) {
+        // console.log(err.message);
+      }
+    } else {
+      files.forEach((file) => {
+        set(file.ref, null);
+      });
     }
   });
   watchDebounced(
@@ -307,6 +341,6 @@ export default defineStore("kosmos3", () => {
       css,
       style,
     },
-    ...{ s3, putObject, putFile },
+    ...{ s3, putFile },
   };
 });
