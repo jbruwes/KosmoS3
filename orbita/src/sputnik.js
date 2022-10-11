@@ -9,7 +9,7 @@ export default defineStore("sputnik", () => {
     useFetch("index.json").json();
   const tree = computedWithControl(
     () => get(treeData),
-    () => (get(treeStatusCode) === 200 ? get(treeData)[0] : {})
+    () => (get(treeStatusCode) === 200 ? get(treeData, 0) : {})
   );
   const pageLen = ref(0);
   const routePath = ref(undefined);
