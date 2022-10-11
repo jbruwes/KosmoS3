@@ -42,7 +42,7 @@ const { trigger } = watchTriggerable(items, (newItems) => {
   if (index) set(itemIndex, index);
 });
 watch(itemIndex, (newItemIndex, oldItemIndex) => {
-  if (oldItemIndex) page(getHref(get(items)[newItemIndex - 1]));
+  if (oldItemIndex) page(getHref(get(items, newItemIndex - 1)));
 });
 if (get(id)) trigger();
 </script>
