@@ -55,43 +55,43 @@ export default defineStore("kosmos3", () => {
    *
    * @type {string}
    */
-  const content = ref(null);
+  const content = ref(undefined);
   /**
    * семантическое ядро сайта
    *
    * @type {object}
    */
-  const semantics = ref(null);
+  const semantics = ref(undefined);
   /**
    * дизайн-шаблон сайта
    *
    * @type {string}
    */
-  const template = ref(null);
+  const template = ref(undefined);
   /**
    * инлайн стили сайта
    *
    * @type {string}
    */
-  const style = ref(null);
+  const style = ref(undefined);
   /**
    * подключаемые стили сайта
    *
    * @type {string}
    */
-  const css = ref(null);
+  const css = ref(undefined);
   /**
    * инлайн скрипт сайта
    *
    * @type {string}
    */
-  const javascript = ref(null);
+  const javascript = ref(undefined);
   /**
    * подключаемые скрипты сайта
    *
    * @type {object}
    */
-  const js = ref(null);
+  const js = ref(undefined);
   const base = computed(() =>
     get(wendpoint)
       ? `${get(wendpoint)}/${get(bucket)}/`
@@ -211,62 +211,42 @@ export default defineStore("kosmos3", () => {
       },
     ];
     if (newS3) {
-      try {
-        const objects = await Promise.allSettled(
-          files.map((file) => getObject(file.key))
-        );
-        objects.forEach((object, index) => {
-          const value = object.value || files[index].value;
-          if (object.status === "rejected")
-            putObject(files[index].key, files[index].contentType, value);
-          set(files[index].ref, files[index].parse ? JSON.parse(value) : value);
-        });
-      } catch (err) {
-        // console.log(err.message);
-      }
-      try {
-        const excluded = ["index.htm", "site.webmanifest"];
-        const included = ["robots.txt", "error.html", "browserconfig.xml"];
-        const assets = Object.values(
-          await (await fetch("orbita/assets-manifest.json")).json()
-        ).filter((asset) => !excluded.includes(asset));
-        const heads = await Promise.allSettled(
-          assets.map((asset) => headObject(asset))
-        );
-        const names = assets.filter(
-          (asset, index) =>
-            heads[index].status === "rejected" || included.includes(asset)
-        );
-        const bodies = await Promise.all(
-          names.map((name) => fetch(`orbita/${name}`))
-        );
-        const blobs = await Promise.all(
-          bodies.map((body, index) =>
-            included.includes(names[index]) ? body.text() : body.blob()
-          )
-        );
-        blobs.forEach((blob, index) => {
-          const name = names[index];
-          const head = included.includes(name)
-            ? heads[assets.indexOf(name)]
-            : null;
-          if (
-            !head ||
-            (head.status === "fulfilled" &&
-              head.value.ContentLength !==
-                new TextEncoder().encode(blob).length)
-          )
-            putObject(
-              name,
-              blob.type,
-              name === "robot.txt"
-                ? blob.replace(/{{ domain }}/g, get(bucket))
-                : blob
-            );
-        });
-      } catch (err) {
-        // console.log(err.message);
-      }
+      files.forEach((file) => {
+        (async () => {
+          let { value } = file;
+          try {
+            value = await getObject(file.key);
+          } catch (err) {
+            putObject(file.key, file.contentType, value);
+          }
+          set(file.ref, file.parse ? JSON.parse(value) : value);
+        })();
+      });
+      const assets = Object.values(
+        await (await fetch("orbita/assets-manifest.json")).json()
+      ).filter((asset) => !["index.htm", "site.webmanifest"].includes(asset));
+      assets.forEach((asset) => {
+        (async () => {
+          let body = null;
+          try {
+            const head = await headObject(asset);
+            if (
+              ["robots.txt", "error.html", "browserconfig.xml"].includes(asset)
+            ) {
+              const text = (
+                await (await fetch(`orbita/${asset}`)).text()
+              ).replace(/{{ domain }}/g, get(bucket));
+              body =
+                head.ContentLength !== new TextEncoder().encode(text).length
+                  ? text
+                  : null;
+            }
+          } catch (err) {
+            body = await (await fetch(`orbita/${asset}`)).blob();
+          }
+          if (body) putObject(asset, body.type, body);
+        })();
+      });
     } else {
       files.forEach((file) => {
         set(file.ref, null);
