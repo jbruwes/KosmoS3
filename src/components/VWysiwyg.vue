@@ -1,7 +1,7 @@
 <template>
   <div class="fill-height">
     <editor
-      v-model="content"
+      :model-value="modelValue"
       :init="{
         plugins:
           'preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount charmap quickbars emoticons',
@@ -207,6 +207,7 @@
           filePicker = cb;
         },
       }"
+      @update:model-value="$emit('update:modelValue', $event)"
     ></editor>
   </div>
 </template>
@@ -246,15 +247,19 @@ import "tinymce/plugins/quickbars";
 import "tinymce/plugins/emoticons";
 import "tinymce/plugins/emoticons/js/emojis";
 import "tinymce/skins/ui/oxide/skin.css";
-import { watch, ref, computed } from "vue";
+import { watch, ref } from "vue";
 import { useFileDialog, set, get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import kosmos3 from "@/kosmos3";
 import contentUiSkinCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css"; // eslint-disable-line
 import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css"; // eslint-disable-line
 
+defineProps({
+  modelValue: { default: "", type: String },
+});
+defineEmits(["update:modelValue"]);
 const store = kosmos3();
-const { base, content, message, snackbar } = storeToRefs(store);
+const { base, message, snackbar } = storeToRefs(store);
 const { putFile } = store;
 const filePicker = ref(undefined);
 const { files, open } = useFileDialog({
