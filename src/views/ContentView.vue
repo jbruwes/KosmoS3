@@ -23,9 +23,9 @@
   >
   <v-window v-model="edit" class="tox-tinymce fill-height"
     ><v-window-item class="fill-height" value="visual">
-      <v-wysiwyg></v-wysiwyg></v-window-item
+      <v-wysiwyg v-model="content"></v-wysiwyg></v-window-item
     ><v-window-item class="fill-height" value="source"
-      ><v-source-code></v-source-code></v-window-item
+      ><v-source-code v-model="content"></v-source-code></v-window-item
   ></v-window>
   <v-bottom-navigation
     v-model="edit"
@@ -49,7 +49,7 @@ import VWysiwyg from "@/components/VWysiwyg.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = kosmos3();
-const { panel } = storeToRefs(store);
+const { panel, content } = storeToRefs(store);
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
 const edit = ref("visual");
