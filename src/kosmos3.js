@@ -177,21 +177,30 @@ export default defineStore("kosmos3", () => {
           bucket
         )}","id":"${crypto.randomUUID()}"}`,
         ref: semantics,
-        parse: true,
+        /**
+         *
+         * @param {string} e параметр трансформации
+         * @returns {object} результат трасформации
+         */
+        transform: (e) => JSON.parse(e),
       },
       {
         key: "index.cdn.json",
         contentType: "application/json",
         value: "[]",
         ref: js,
-        parse: true,
+        /**
+         *
+         * @param {string} e параметр трансформации
+         * @returns {object} результат трасформации
+         */
+        transform: (e) => JSON.parse(e),
       },
       {
         key: "index.js",
         contentType: "application/javascript",
         value: "function init(){try{}catch(e){}}",
         ref: javascript,
-        parse: false,
       },
       { key: "index.css", contentType: "text/css", value: "", ref: style },
       {
@@ -199,7 +208,6 @@ export default defineStore("kosmos3", () => {
         contentType: "text/css",
         value: "",
         ref: css,
-        parse: false,
       },
       {
         key: "index.htm",
@@ -207,7 +215,6 @@ export default defineStore("kosmos3", () => {
         value:
           '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else><v-runtime-template :parent="this" :template="template"></v-runtime-template></article></div></div>',
         ref: template,
-        parse: false,
       },
     ];
     if (newS3) {
@@ -219,7 +226,7 @@ export default defineStore("kosmos3", () => {
           } catch (err) {
             putObject(file.key, file.contentType, value);
           }
-          set(file.ref, file.parse ? JSON.parse(value) : value);
+          set(file.ref, file.transform ? file.transform(value) : value);
         })();
       });
       const assets = Object.values(
