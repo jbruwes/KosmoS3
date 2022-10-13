@@ -7,7 +7,7 @@
 </template>
 <script>
 import { mapActions } from "pinia";
-import sputnik from "@/sputnik";
+import orbita from "@/orbita";
 
 export default {
   props: {
@@ -39,6 +39,6 @@ export default {
       );
     },
   },
-  methods: { ...mapActions(sputnik, ["getItems"]) },
+  methods: { ...mapActions(orbita, ["getItems"]) },
 };
 </script>
