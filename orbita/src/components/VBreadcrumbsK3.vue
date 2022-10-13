@@ -3,7 +3,7 @@
 </template>
 <script setup>
 import { computed } from "vue";
-import sputnik from "@/sputnik";
+import orbita from "@/orbita";
 
 const props = defineProps({
   variant: { default: undefined, type: String },
@@ -17,7 +17,7 @@ const props = defineProps({
   axe: { default: "ancestor-or-self", type: String },
   disabled: { default: true, type: Boolean },
 });
-const store = sputnik();
+const store = orbita();
 const { getItems, getTitle, getHref } = store;
 const items = computed(() =>
   getItems(
