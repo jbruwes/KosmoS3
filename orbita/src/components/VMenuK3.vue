@@ -16,7 +16,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
-import sputnik from "@/sputnik";
+import orbita from "@/orbita";
 
 export default {
   computed: {
@@ -28,8 +28,8 @@ export default {
         ? this.treeChildren
         : this.siblings;
     },
-    ...mapState(sputnik, ["treeChildren", "siblings", "routePath"]),
+    ...mapState(orbita, ["treeChildren", "siblings", "routePath"]),
   },
-  methods: { ...mapActions(sputnik, ["getTitle"]) },
+  methods: { ...mapActions(orbita, ["getTitle"]) },
 };
 </script>
