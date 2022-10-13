@@ -23,9 +23,9 @@
   >
   <v-window v-model="edit" class="tox-tinymce fill-height"
     ><v-window-item class="fill-height" value="visual">
-      <v-wysiwyg v-model="content"></v-wysiwyg></v-window-item
+      <v-wysiwyg v-model.trim="content"></v-wysiwyg></v-window-item
     ><v-window-item class="fill-height" value="source"
-      ><v-source-code v-model="content"></v-source-code></v-window-item
+      ><v-source-code v-model.trim="content"></v-source-code></v-window-item
   ></v-window>
   <v-bottom-navigation
     v-model="edit"
