@@ -201,6 +201,17 @@ export default defineStore("kosmos3", () => {
         contentType: "application/javascript",
         value: "function init(){try{}catch(e){}}",
         ref: javascript,
+        /**
+         *
+         * @param {string} e параметр трансформации
+         * @returns {object} результат трасформации
+         */
+        transform: (e) =>
+          e
+            .trim()
+            .replace(/^function init\(\){try{/, "")
+            .replace(/}catch\(e\){}}$/, "")
+            .trim(),
       },
       { key: "index.css", contentType: "text/css", value: "", ref: style },
       {
@@ -278,17 +289,21 @@ export default defineStore("kosmos3", () => {
   );
   watchDebounced(
     javascript,
-    () => {
-      set(message, "javascript changed!");
-      set(snackbar, true);
+    (value, oldValue) => {
+      if (value && oldValue)
+        putObject(
+          "index.js",
+          "application/javascript",
+          `function init(){try{${value}
+}catch(e){}}`
+        );
     },
     debounce
   );
   watchDebounced(
     style,
-    () => {
-      set(message, "style changed!");
-      set(snackbar, true);
+    (value, oldValue) => {
+      if (value && oldValue) putObject("index.css", "text/css", value);
     },
     debounce
   );
