@@ -28,11 +28,11 @@
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
-import sputnik from "@/sputnik";
+import orbita from "@/orbita";
 
 export default {
   computed: {
-    ...mapState(sputnik, [
+    ...mapState(orbita, [
       "tree",
       "treeChildren",
       "treeIcon",
@@ -40,6 +40,6 @@ export default {
       "routePath",
     ]),
   },
-  methods: { ...mapActions(sputnik, ["getHref", "getTitle"]) },
+  methods: { ...mapActions(orbita, ["getHref", "getTitle"]) },
 };
 </script>
