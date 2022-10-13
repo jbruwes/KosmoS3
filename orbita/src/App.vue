@@ -7,7 +7,7 @@ import VRuntimeTemplate from "vue3-runtime-template";
 import page from "page";
 import GLightbox from "glightbox";
 
-import sputnik from "./sputnik";
+import orbita from "./orbita";
 
 import VSingleHeaderK3 from "./components/VSingleHeaderK3.vue";
 import VSingleButtonK3 from "./components/VSingleButtonK3.vue";
@@ -113,7 +113,7 @@ export default {
    */
   setup() {
     const drawer = ref(false);
-    const store = sputnik();
+    const store = orbita();
     const {
       treeData,
       value,
