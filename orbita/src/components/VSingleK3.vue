@@ -33,7 +33,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
-import sputnik from "@/sputnik";
+import orbita from "@/orbita";
 
 export default {
   props: {
@@ -54,7 +54,7 @@ export default {
     axe: { default: undefined, type: String },
   },
   computed: {
-    ...mapState(sputnik, ["routePath"]),
+    ...mapState(orbita, ["routePath"]),
     /**
      * @returns {string} Вычесленный урл
      */
@@ -81,6 +81,6 @@ export default {
         : {};
     },
   },
-  methods: { ...mapActions(sputnik, ["getTitle", "getHref", "getItems"]) },
+  methods: { ...mapActions(orbita, ["getTitle", "getHref", "getItems"]) },
 };
 </script>
