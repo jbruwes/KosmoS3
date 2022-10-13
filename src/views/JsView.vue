@@ -6,7 +6,7 @@
     :temporary="mobile"
   ></v-navigation-drawer>
   <div class="tox-tinymce fill-height">
-    <v-source-code v-model="javascript" lang="javascript"></v-source-code>
+    <v-source-code v-model.trim="javascript" lang="javascript"></v-source-code>
   </div>
 </template>
 <script setup>
