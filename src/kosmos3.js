@@ -81,17 +81,23 @@ export default defineStore("kosmos3", () => {
    */
   const css = ref(undefined);
   /**
-   * инлайн скрипт сайта
+   * глобальный джаваскрипт
    *
    * @type {string}
    */
-  const javascript = ref(undefined);
+  const jsJs = ref(undefined);
   /**
    * подключаемые скрипты сайта
    *
    * @type {object}
    */
-  const js = ref(undefined);
+  const jsJson = ref(undefined);
+  /**
+   * скрипт запускаемый на каждой странице
+   *
+   * @type {string}
+   */
+  const indexJs = ref(undefined);
   const base = computed(() =>
     get(wendpoint)
       ? `${get(wendpoint)}/${get(bucket)}/`
@@ -185,22 +191,25 @@ export default defineStore("kosmos3", () => {
         transform: (e) => JSON.parse(e),
       },
       {
-        key: "index.cdn.json",
+        key: "js.json",
         contentType: "application/json",
         value: "[]",
-        ref: js,
+        ref: jsJson,
         /**
          *
          * @param {string} e параметр трансформации
          * @returns {object} результат трасформации
          */
-        transform: (e) => JSON.parse(e),
+        transform: (e) => {
+          const js = JSON.parse(e);
+          return js.length ? js : [""];
+        },
       },
       {
-        key: "index.js",
+        key: "js.js",
         contentType: "application/javascript",
-        value: "function init(){try{}catch(e){}}",
-        ref: javascript,
+        value: "try{}catch(e){console.log(e.message)}",
+        ref: jsJs,
         /**
          *
          * @param {string} e параметр трансформации
@@ -209,8 +218,25 @@ export default defineStore("kosmos3", () => {
         transform: (e) =>
           e
             .trim()
-            .replace(/^function init\(\){try{/, "")
-            .replace(/}catch\(e\){}}$/, "")
+            .replace(/^try{/, "")
+            .replace(/}catch\(e\){console.log\(e.message\)}$/, "")
+            .trim(),
+      },
+      {
+        key: "index.js",
+        contentType: "application/javascript",
+        value: "try{}catch(e){console.log(e.message)}",
+        ref: indexJs,
+        /**
+         *
+         * @param {string} e параметр трансформации
+         * @returns {object} результат трасформации
+         */
+        transform: (e) =>
+          e
+            .trim()
+            .replace(/^try{/, "")
+            .replace(/}catch\(e\){console.log\(e.message\)}$/, "")
             .trim(),
       },
       { key: "index.css", contentType: "text/css", value: "", ref: style },
@@ -280,22 +306,39 @@ export default defineStore("kosmos3", () => {
     { deep: true, ...debounce }
   );
   watchDebounced(
-    js,
-    () => {
-      set(message, "js changed!");
-      set(snackbar, true);
+    jsJson,
+    (value, oldValue) => {
+      if (value && oldValue)
+        putObject(
+          "js.json",
+          "application/json",
+          JSON.stringify(value.filter((e) => e))
+        );
+    },
+    { deep: true, ...debounce }
+  );
+  watchDebounced(
+    jsJs,
+    (value, oldValue) => {
+      if (value && oldValue)
+        putObject(
+          "js.js",
+          "application/javascript",
+          `try{${value}
+}catch(e){console.log(e.message)}`
+        );
     },
     debounce
   );
   watchDebounced(
-    javascript,
+    indexJs,
     (value, oldValue) => {
       if (value && oldValue)
         putObject(
           "index.js",
           "application/javascript",
-          `function init(){try{${value}
-}catch(e){}}`
+          `try{${value}
+}catch(e){console.log(e.message)}`
         );
     },
     debounce
@@ -338,8 +381,9 @@ export default defineStore("kosmos3", () => {
       content,
       semantics,
       template,
-      js,
-      javascript,
+      jsJson,
+      jsJs,
+      indexJs,
       css,
       style,
     },
