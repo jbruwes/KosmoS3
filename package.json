@@ -111,6 +111,7 @@
     "raw-loader": "^4.0.2",
     "svg2png": "^4.1.1",
     "terser-webpack-plugin": "^5.3.6",
+    "vue-cli-plugin-pug": "~2.0.0",
     "vue-cli-plugin-vuetify": "^2.5.8",
     "vue-loader": "^17.0.0",
     "webpack-assets-manifest": "^5.1.0",
