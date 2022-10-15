@@ -1,108 +1,96 @@
-<template>
-  <v-card :image="require('@/assets/bg.jpg')" class="fill-height"
-    ><v-row class="fill-height" align="center" justify="center"
-      ><v-card class="pa-8 ma-8" :width="640" color="#ffffffee"
-        ><v-form ref="form" v-model="valid" lazy-validation>
-          <v-row
-            ><v-col cols="12" md="6">
-              <div class="text-subtitle-1 text-medium-emphasis mb-1">
-                WEBSITE
-              </div>
-              <v-select
-                v-model="cred"
-                label="select saved credential"
-                prepend-inner-icon="mdi-content-save"
-                variant="underlined"
-                return-object
-                :items="creds"
-                :clearable="true"
-              ></v-select>
-              <v-text-field
-                v-model.trim="bucket"
-                label="domain"
-                placeholder="example.com"
-                prepend-inner-icon="mdi-web"
-                variant="underlined"
-                :rules="[(v) => !!v || 'Item is required']"
-              ></v-text-field>
-              <v-text-field
-                v-model.trim="accessKeyId"
-                label="access key id"
-                prepend-inner-icon="mdi-key"
-                variant="underlined"
-                :rules="[(v) => !!v || 'Item is required']"
-              ></v-text-field>
-              <v-text-field
-                v-model.trim="secretAccessKey"
-                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                :type="visible ? 'text' : 'password'"
-                label="secret access key"
-                prepend-inner-icon="mdi-lock"
-                variant="underlined"
-                :rules="[(v) => !!v || 'Item is required']"
-                @click:append-inner="visible = !visible"
-              ></v-text-field> </v-col
-            ><v-col cols="12" md="6">
-              <div class="text-subtitle-1 text-medium-emphasis mb-1">CLOUD</div>
-              <v-select
-                v-model="provider"
-                label="cloud provider"
-                prepend-inner-icon="mdi-cloud"
-                variant="underlined"
-                return-object
-                :items="providers"
-                :clearable="true"
-              ></v-select
-              ><v-combobox
-                v-model.trim="region"
-                :items="regions"
-                label="region"
-                prepend-inner-icon="mdi-flag"
-                variant="underlined"
-                :disabled="provider && provider.title === 'yandex'"
-                :hide-no-data="true"
-                :rules="[(v) => !!v || 'Item is required']"
-              ></v-combobox
-              ><v-text-field
-                v-model.trim="endpoint"
-                label="endpoint url"
-                prepend-inner-icon="mdi-database"
-                variant="underlined"
-                :disabled="!!provider"
-              ></v-text-field
-              ><v-text-field
-                v-model.trim="wendpoint"
-                label="website endpoint url"
-                prepend-inner-icon="mdi-server-network"
-                variant="underlined"
-                :disabled="!!provider"
-              ></v-text-field> </v-col
-          ></v-row>
-          <v-row
-            ><v-col cols="12" md="6"
-              ><v-switch
-                v-model="remember"
-                label="remember credentials"
-                color="info"
-              ></v-switch></v-col
-          ></v-row>
-          <v-row
-            ><v-col cols="12"
-              ><v-btn
-                block
-                plain
-                size="large"
-                variant="outlined"
-                @click="login"
-              >
-                LogIn
-              </v-btn></v-col
-            ></v-row
-          ></v-form
-        >
-      </v-card></v-row
-    ></v-card
-  >
+<template lang="pug">
+v-card.fill-height(:image="require('@/assets/bg.jpg')")
+  v-row.fill-height(align="center", justify="center")
+    v-card.pa-8.ma-8(:width="640", color="#ffffffee")
+      v-form(ref="form", v-model="valid", lazy-validation)
+        v-row
+          v-col(cols="12", md="6")
+            .text-subtitle-1.text-medium-emphasis.mb-1 WEBSITE
+            v-select(
+              v-model="cred",
+              label="select saved credential",
+              prepend-inner-icon="mdi-content-save",
+              variant="underlined",
+              return-object,
+              :items="creds",
+              :clearable="true"
+            )
+            v-text-field(
+              v-model.trim="bucket",
+              label="domain",
+              placeholder="example.com",
+              prepend-inner-icon="mdi-web",
+              variant="underlined",
+              :rules="[(v) => !!v || 'Item is required']"
+            )
+            v-text-field(
+              v-model.trim="accessKeyId",
+              label="access key id",
+              prepend-inner-icon="mdi-key",
+              variant="underlined",
+              :rules="[(v) => !!v || 'Item is required']"
+            )
+            v-text-field(
+              v-model.trim="secretAccessKey",
+              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'",
+              :type="visible ? 'text' : 'password'",
+              label="secret access key",
+              prepend-inner-icon="mdi-lock",
+              variant="underlined",
+              :rules="[(v) => !!v || 'Item is required']",
+              @click:append-inner="visible = !visible"
+            )
+          v-col(cols="12", md="6")
+            .text-subtitle-1.text-medium-emphasis.mb-1 CLOUD
+            v-select(
+              v-model="provider",
+              label="cloud provider",
+              prepend-inner-icon="mdi-cloud",
+              variant="underlined",
+              return-object,
+              :items="providers",
+              :clearable="true"
+            )
+            v-combobox(
+              v-model.trim="region",
+              :items="regions",
+              label="region",
+              prepend-inner-icon="mdi-flag",
+              variant="underlined",
+              :disabled="provider && provider.title === 'yandex'",
+              :hide-no-data="true",
+              :rules="[(v) => !!v || 'Item is required']"
+            )
+            v-text-field(
+              v-model.trim="endpoint",
+              label="endpoint url",
+              prepend-inner-icon="mdi-database",
+              variant="underlined",
+              :disabled="!!provider"
+            )
+            v-text-field(
+              v-model.trim="wendpoint",
+              label="website endpoint url",
+              prepend-inner-icon="mdi-server-network",
+              variant="underlined",
+              :disabled="!!provider"
+            )
+        v-row
+          v-col(cols="12", md="6")
+            v-switch(
+              v-model="remember",
+              label="remember credentials",
+              color="info"
+            )
+        v-row
+          v-col(cols="12")
+            v-btn(
+              block,
+              plain,
+              size="large",
+              variant="outlined",
+              @click="login"
+            ) LogIn
 </template>
 <script setup>
 import { ref, watch, computed } from "vue";
@@ -170,11 +158,11 @@ const valid = ref(true);
 const form = ref(null);
 const creds = useStorage("kosmos3", []);
 const cred = ref(null);
-watch(provider, (newProvider) => {
-  if (newProvider) {
-    set(regions, newProvider.regions);
-    set(region, newProvider.region);
-    set(endpoint, newProvider.endpoint);
+watch(provider, (value) => {
+  if (value) {
+    set(regions, value.regions);
+    set(region, value.region);
+    set(endpoint, value.endpoint);
   } else {
     set(regions, []);
     set(region, "");
@@ -185,18 +173,18 @@ watch(region, () => {
   if (get(provider)) set(wendpoint, get(provider).wendpoint);
   else set(wendpoint, "");
 });
-watch(cred, (newCred) => {
-  if (newCred) {
-    set(bucket, newCred.title);
-    set(accessKeyId, newCred.accessKeyId);
-    set(secretAccessKey, newCred.secretAccessKey);
+watch(cred, (value) => {
+  if (value) {
+    set(bucket, value.title);
+    set(accessKeyId, value.accessKeyId);
+    set(secretAccessKey, value.secretAccessKey);
     set(
       provider,
-      get(providers).find((pProvider) => pProvider.title === newCred.provider)
+      get(providers).find((pProvider) => pProvider.title === value.provider)
     );
-    set(region, newCred.region);
-    set(endpoint, newCred.endpoint);
-    set(wendpoint, newCred.wendpoint);
+    set(region, value.region);
+    set(endpoint, value.endpoint);
+    set(wendpoint, value.wendpoint);
   } else {
     set(bucket, "");
     set(accessKeyId, "");
