@@ -1,11 +1,11 @@
-<template>
-  <v-navigation-drawer
-    v-model="panel"
-    location="right"
-    :width="320"
-    :temporary="mobile"
-  ></v-navigation-drawer>
-  <div>TemplateView</div>
+<template lang="pug">
+v-navigation-drawer(
+  v-model="panel",
+  location="right",
+  :width="320",
+  :temporary="mobile"
+)
+div TemplateView
 </template>
 <script setup>
 import { set, get } from "@vueuse/core";
