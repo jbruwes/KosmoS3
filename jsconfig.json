@@ -8,5 +8,8 @@
       "@/*": ["src/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "vueCompilerOptions": {
+    "plugins": ["@volar/vue-language-plugin-pug"]
   }
 }
