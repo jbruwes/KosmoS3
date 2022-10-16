@@ -73,13 +73,13 @@ export default defineStore("kosmos3", () => {
    *
    * @type {string}
    */
-  const style = ref(undefined);
+  const indexCss = ref(undefined);
   /**
    * подключаемые стили сайта
    *
    * @type {string}
    */
-  const css = ref(undefined);
+  const cssCss = ref(undefined);
   /**
    * глобальный джаваскрипт
    *
@@ -185,10 +185,10 @@ export default defineStore("kosmos3", () => {
         ref: semantics,
         /**
          *
-         * @param {string} e параметр трансформации
+         * @param {string} text параметр трансформации
          * @returns {object} результат трасформации
          */
-        transform: (e) => JSON.parse(e),
+        transform: (text) => JSON.parse(text),
       },
       {
         key: "js.json",
@@ -197,54 +197,67 @@ export default defineStore("kosmos3", () => {
         ref: jsJson,
         /**
          *
-         * @param {string} e параметр трансформации
+         * @param {string} text параметр трансформации
          * @returns {object} результат трасформации
          */
-        transform: (e) => {
-          const js = JSON.parse(e);
+        transform: (text) => {
+          const js = JSON.parse(text).filter((element) => element);
           return js.length ? js : [""];
         },
       },
       {
         key: "js.js",
         contentType: "application/javascript",
-        value: "try{}catch(e){console.log(e.message)}",
+        value: "try{}catch(e){console.error(e.message)}",
         ref: jsJs,
         /**
          *
-         * @param {string} e параметр трансформации
+         * @param {string} text параметр трансформации
          * @returns {object} результат трасформации
          */
-        transform: (e) =>
-          e
+        transform: (text) =>
+          text
             .trim()
             .replace(/^try{/, "")
-            .replace(/}catch\(e\){console.log\(e.message\)}$/, "")
+            .replace(/}catch\(e\){console.error\(e.message\)}$/, "")
             .trim(),
       },
       {
         key: "index.js",
         contentType: "application/javascript",
-        value: "try{}catch(e){console.log(e.message)}",
+        value: "try{}catch(e){console.error(e.message)}",
         ref: indexJs,
         /**
          *
-         * @param {string} e параметр трансформации
+         * @param {string} text параметр трансформации
          * @returns {object} результат трасформации
          */
-        transform: (e) =>
-          e
+        transform: (text) =>
+          text
             .trim()
             .replace(/^try{/, "")
-            .replace(/}catch\(e\){console.log\(e.message\)}$/, "")
+            .replace(/}catch\(e\){console.error\(e.message\)}$/, "")
             .trim(),
       },
-      { key: "index.css", contentType: "text/css", value: "", ref: style },
+      { key: "index.css", contentType: "text/css", value: "", ref: indexCss },
       {
-        key: "index.cdn.css",
+        key: "css.css",
         contentType: "text/css",
         value: "",
-        ref: css,
+        ref: cssCss,
+        /**
+         *
+         * @param {string} text параметр трансформации
+         * @returns {object} результат трасформации
+         */
+        transform: (text) => {
+          const css = [
+            ...text.matchAll(/@import.*?["'(]([^"']+)["')].*?[;]?/gm),
+          ]
+            .map((element) => decodeURI(element[1]).trim())
+            .filter((element) => element);
+          return css.length ? css : [""];
+        },
       },
       {
         key: "index.htm",
@@ -312,7 +325,7 @@ export default defineStore("kosmos3", () => {
         putObject(
           "js.json",
           "application/json",
-          JSON.stringify(value.filter((e) => e))
+          JSON.stringify(value.filter((element) => element))
         );
     },
     { deep: true, ...debounce }
@@ -325,7 +338,7 @@ export default defineStore("kosmos3", () => {
           "js.js",
           "application/javascript",
           `try{${value}
-}catch(e){console.log(e.message)}`
+}catch(e){console.error(e.message)}`
         );
     },
     debounce
@@ -338,25 +351,32 @@ export default defineStore("kosmos3", () => {
           "index.js",
           "application/javascript",
           `try{${value}
-}catch(e){console.log(e.message)}`
+}catch(e){console.error(e.message)}`
         );
     },
     debounce
   );
   watchDebounced(
-    style,
+    indexCss,
     (value, oldValue) => {
       if (value && oldValue) putObject("index.css", "text/css", value);
     },
     debounce
   );
   watchDebounced(
-    css,
-    () => {
-      set(message, "css changed!");
-      set(snackbar, true);
+    cssCss,
+    (value, oldValue) => {
+      if (value && oldValue)
+        putObject(
+          "css.css",
+          "text/css",
+          value
+            .filter((element) => element)
+            .map((element) => `@import url("${encodeURI(element)}");`)
+            .join("")
+        );
     },
-    debounce
+    { deep: true, ...debounce }
   );
   watchDebounced(
     template,
@@ -384,8 +404,8 @@ export default defineStore("kosmos3", () => {
       jsJson,
       jsJs,
       indexJs,
-      css,
-      style,
+      cssCss,
+      indexCss,
     },
     ...{ s3, putFile },
   };
