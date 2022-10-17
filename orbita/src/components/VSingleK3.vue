@@ -1,35 +1,12 @@
-<template>
-  <slot
-    :title="
-      typeof title === 'string' ? title : title ? getTitle(theItem) : undefined
-    "
-    :date="
-      typeof date === 'string'
-        ? date
-        : date && !isNaN(new Date(theItem.date || theItem.lastmod))
-        ? new Date(theItem.date || theItem.lastmod).toLocaleDateString()
-        : undefined
-    "
-    :description="
-      typeof description === 'string'
-        ? description
-        : description
-        ? theItem.description
-        : undefined
-    "
-    :icon="
-      typeof icon === 'string'
-        ? `mdi-${icon}`
-        : icon
-        ? `mdi-${theItem.icon || 'open-in-new'}`
-        : undefined
-    "
-    :image="
-      typeof image === 'string' ? image : image ? theItem.image : undefined
-    "
-    :href="typeof href === 'string' ? href : href ? url : undefined"
-  >
-  </slot>
+<template lang="pug">
+slot(
+  :title="typeof title === 'string' ? title : title ? getTitle(theItem) : undefined",
+  :date="typeof date === 'string' ? date : date && !isNaN(new Date(theItem.date || theItem.lastmod)) ? new Date(theItem.date || theItem.lastmod).toLocaleDateString() : undefined",
+  :description="typeof description === 'string' ? description : description ? theItem.description : undefined",
+  :icon="typeof icon === 'string' ? `mdi-${icon}` : icon ? `mdi-${theItem.icon || 'open-in-new'}` : undefined",
+  :image="typeof image === 'string' ? image : image ? theItem.image : undefined",
+  :href="typeof href === 'string' ? href : href ? url : undefined"
+)
 </template>
 <script>
 import { mapState, mapActions } from "pinia";
