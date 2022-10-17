@@ -1,19 +1,18 @@
-<template>
-  <v-single-k3 #="slot"
-    ><v-template-card-k3
-      :animate="animate"
-      :classes="classes"
-      :width="width"
-      :height="height"
-      :title="slot.title"
-      :icon="slot.icon"
-      :image="slot.image"
-      :href="slot.href"
-      :date="slot.date"
-      :description="slot.description"
-      :variant="variant"
-    ></v-template-card-k3
-  ></v-single-k3>
+<template lang="pug">
+v-single-k3(#="slot")
+  v-template-card-k3(
+    :animate="animate",
+    :classes="classes",
+    :width="width",
+    :height="height",
+    :title="slot.title",
+    :icon="slot.icon",
+    :image="slot.image",
+    :href="slot.href",
+    :date="slot.date",
+    :description="slot.description",
+    :variant="variant"
+  )
 </template>
 <script setup>
 import VSingleK3 from "./VSingleK3.vue";
