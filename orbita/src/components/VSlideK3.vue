@@ -1,9 +1,7 @@
-<template>
-  <v-slide-group show-arrows>
-    <v-slide-group-item v-for="(item, i) in items" :key="i">
-      <slot :item="item" :date="date" :description="description"></slot>
-    </v-slide-group-item>
-  </v-slide-group>
+<template lang="pug">
+v-slide-group(show-arrows)
+  v-slide-group-item(v-for="(item, i) in items", :key="i")
+    slot(:item="item", :date="date", :description="description")
 </template>
 <script>
 import { mapActions } from "pinia";
