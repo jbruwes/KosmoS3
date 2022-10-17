@@ -1,43 +1,34 @@
-<template>
-  <v-row class="fill-height" align="center" justify="center">
-    <v-card
-      v-animate-onscroll.repeat="animate"
-      class="pa-16 ma-16 text-white"
-      :href="href"
-      :variant="variant"
-      :color="innerColor"
-    >
-      <div class="text-center">
-        <v-icon
-          :icon="icon"
-          style="font-size: calc(var(--v-icon-size-multiplier) * 4em)"
-        ></v-icon>
-      </div>
-      <v-card-item class="justify-center text-center">
-        <div>
-          <div v-if="title" class="text-h4 mb-1">
-            {{ title }}
-          </div>
-          <div v-if="date">
-            <v-chip
-              size="x-small"
-              label
-              variant="outlined"
-              prepend-icon="mdi-calendar"
-              :text="date"
-            ></v-chip>
-          </div>
-        </div>
-      </v-card-item>
-      <v-alert
-        v-if="description"
-        :title="description"
-        variant="text"
-        prominent
-        class="text-center"
-      ></v-alert>
-    </v-card>
-  </v-row>
+<template lang="pug">
+v-row.fill-height(align="center", justify="center")
+  v-card.pa-16.ma-16.text-white(
+    v-animate-onscroll.repeat="animate",
+    :href="href",
+    :variant="variant",
+    :color="innerColor"
+  )
+    .text-center
+      v-icon(
+        :icon="icon",
+        style="font-size: calc(var(--v-icon-size-multiplier) * 4em)"
+      )
+    v-card-item.justify-center.text-center
+      div
+        .text-h4.mb-1(v-if="title")
+          | {{ title }}
+        div(v-if="date")
+          v-chip(
+            size="x-small",
+            label,
+            variant="outlined",
+            prepend-icon="mdi-calendar",
+            :text="date"
+          )
+    v-alert.text-center(
+      v-if="description",
+      :title="description",
+      variant="text",
+      prominent
+    )
 </template>
 <script>
 export default {
