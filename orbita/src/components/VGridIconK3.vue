@@ -1,16 +1,15 @@
-<template>
-  <v-grid-k3 #="slot"
-    ><v-single-icon-k3
-      :classes="classes"
-      :item="slot.item"
-      :animate="animate"
-      :date="slot.date"
-      :description="slot.description"
-      :variant="variant"
-      :height="height"
-      :width="width"
-    ></v-single-icon-k3
-  ></v-grid-k3>
+<template lang="pug">
+v-grid-k3(#="slot")
+  v-single-icon-k3(
+    :classes="classes",
+    :item="slot.item",
+    :animate="animate",
+    :date="slot.date",
+    :description="slot.description",
+    :variant="variant",
+    :height="height",
+    :width="width"
+  )
 </template>
 <script setup>
 import VGridK3 from "./VGridK3.vue";
