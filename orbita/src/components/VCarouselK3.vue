@@ -1,9 +1,7 @@
-<template>
-  <v-carousel cycle show-arrows="hover" :height="height" :width="width">
-    <v-carousel-item v-for="(item, i) in items" :key="i" :ripple="true">
-      <slot :item="item" :date="date" :description="description"></slot>
-    </v-carousel-item>
-  </v-carousel>
+<template lang="pug">
+v-carousel(cycle, show-arrows="hover", :height="height", :width="width")
+  v-carousel-item(v-for="(item, i) in items", :key="i", :ripple="true")
+    slot(:item="item", :date="date", :description="description")
 </template>
 <script>
 import { mapActions } from "pinia";
