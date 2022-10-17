@@ -1,35 +1,26 @@
-<template>
-  <v-app>
-    <v-app-bar app>
-      <template #prepend>
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      </template>
-      <v-app-bar-title
-        ><v-icon icon="mdi-rocket-launch" class="mr-2"></v-icon
-        >kosmoS3</v-app-bar-title
-      >
-      <template v-if="panel !== null" #append>
-        <v-btn icon @click.stop="panel = !panel">
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
-      </template>
-    </v-app-bar>
-    <v-main>
-      <v-navigation-drawer
-        v-model="drawer"
-        app
-        :temporary="mobile"
-        :expand-on-hover="!mobile"
-        :rail="!mobile"
-      >
-        <v-list nav :items="items"></v-list>
-      </v-navigation-drawer>
-      <v-container fluid class="fill-height">
-        <router-view></router-view>
-      </v-container>
-    </v-main>
-  </v-app>
-  <v-snackbar v-model="snackbar" location="top right">{{ message }}</v-snackbar>
+<template lang="pug">
+v-app
+  v-app-bar(app)
+    template(#prepend)
+      v-app-bar-nav-icon(@click.stop="drawer = !drawer")
+    v-app-bar-title
+      v-icon.mr-2(icon="mdi-rocket-launch")
+      | kosmoS3
+    template(v-if="panel !== null", #append)
+      v-btn(icon, @click.stop="panel = !panel")
+        v-icon mdi-dots-vertical
+  v-main
+    v-navigation-drawer(
+      v-model="drawer",
+      app,
+      :temporary="mobile",
+      :expand-on-hover="!mobile",
+      :rail="!mobile"
+    )
+      v-list(nav, :items="items")
+    v-container.fill-height(fluid)
+      router-view
+v-snackbar(v-model="snackbar", location="top right") {{ message }}
 </template>
 
 <script setup>
@@ -108,8 +99,8 @@ const items = computed(() =>
         },
       ]
 );
-watch(s3, (newS3) => {
-  if (newS3) router.push("/content");
+watch(s3, (value) => {
+  if (value) router.push("/content");
 });
 </script>
 <style>
