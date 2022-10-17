@@ -1,16 +1,15 @@
-<template>
-  <v-slide-k3 #="slot"
-    ><v-single-icon-k3
-      :classes="classes"
-      :item="slot.item"
-      :animate="animate"
-      :date="slot.date"
-      :description="slot.description"
-      :variant="variant"
-      :height="height"
-      :width="width"
-    ></v-single-icon-k3
-  ></v-slide-k3>
+<template lang="pug">
+v-slide-k3(#="slot")
+  v-single-icon-k3(
+    :classes="classes",
+    :item="slot.item",
+    :animate="animate",
+    :date="slot.date",
+    :description="slot.description",
+    :variant="variant",
+    :height="height",
+    :width="width"
+  )
 </template>
 <script setup>
 import VSlideK3 from "./VSlideK3.vue";
