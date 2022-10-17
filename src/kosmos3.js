@@ -73,31 +73,25 @@ export default defineStore("kosmos3", () => {
    *
    * @type {string}
    */
-  const indexCss = ref(undefined);
+  const stylesheet = ref(undefined);
   /**
    * подключаемые стили сайта
    *
    * @type {string}
    */
-  const cssCss = ref(undefined);
-  /**
-   * глобальный джаваскрипт
-   *
-   * @type {string}
-   */
-  const jsJs = ref(undefined);
+  const stylesheets = ref(undefined);
   /**
    * подключаемые скрипты сайта
    *
    * @type {object}
    */
-  const jsJson = ref(undefined);
+  const javascripts = ref(undefined);
   /**
    * скрипт запускаемый на каждой странице
    *
    * @type {string}
    */
-  const indexJs = ref(undefined);
+  const javascript = ref(undefined);
   const base = computed(() =>
     get(wendpoint)
       ? `${get(wendpoint)}/${get(bucket)}/`
@@ -191,10 +185,10 @@ export default defineStore("kosmos3", () => {
         transform: (text) => JSON.parse(text),
       },
       {
-        key: "js.json",
+        key: "javascripts.json",
         contentType: "application/json",
         value: "[]",
-        ref: jsJson,
+        ref: javascripts,
         /**
          *
          * @param {string} text параметр трансформации
@@ -206,45 +200,17 @@ export default defineStore("kosmos3", () => {
         },
       },
       {
-        key: "js.js",
-        contentType: "application/javascript",
-        value: "try{}catch(e){console.error(e.message)}",
-        ref: jsJs,
-        /**
-         *
-         * @param {string} text параметр трансформации
-         * @returns {object} результат трасформации
-         */
-        transform: (text) =>
-          text
-            .trim()
-            .replace(/^try{/, "")
-            .replace(/}catch\(e\){console.error\(e.message\)}$/, "")
-            .trim(),
-      },
-      {
         key: "index.js",
         contentType: "application/javascript",
-        value: "try{}catch(e){console.error(e.message)}",
-        ref: indexJs,
-        /**
-         *
-         * @param {string} text параметр трансформации
-         * @returns {object} результат трасформации
-         */
-        transform: (text) =>
-          text
-            .trim()
-            .replace(/^try{/, "")
-            .replace(/}catch\(e\){console.error\(e.message\)}$/, "")
-            .trim(),
+        value: "",
+        ref: javascript,
       },
-      { key: "index.css", contentType: "text/css", value: "", ref: indexCss },
+      { key: "index.css", contentType: "text/css", value: "", ref: stylesheet },
       {
-        key: "css.css",
+        key: "stylesheets.css",
         contentType: "text/css",
         value: "",
-        ref: cssCss,
+        ref: stylesheets,
         /**
          *
          * @param {string} text параметр трансформации
@@ -319,11 +285,11 @@ export default defineStore("kosmos3", () => {
     { deep: true, ...debounce }
   );
   watchDebounced(
-    jsJson,
+    javascripts,
     (value, oldValue) => {
       if (value && oldValue)
         putObject(
-          "js.json",
+          "javascripts.json",
           "application/json",
           JSON.stringify(value.filter((element) => element))
         );
@@ -331,44 +297,26 @@ export default defineStore("kosmos3", () => {
     { deep: true, ...debounce }
   );
   watchDebounced(
-    jsJs,
+    javascript,
     (value, oldValue) => {
       if (value && oldValue)
-        putObject(
-          "js.js",
-          "application/javascript",
-          `try{${value}
-}catch(e){console.error(e.message)}`
-        );
+        putObject("index.js", "application/javascript", value);
     },
     debounce
   );
   watchDebounced(
-    indexJs,
-    (value, oldValue) => {
-      if (value && oldValue)
-        putObject(
-          "index.js",
-          "application/javascript",
-          `try{${value}
-}catch(e){console.error(e.message)}`
-        );
-    },
-    debounce
-  );
-  watchDebounced(
-    indexCss,
+    stylesheet,
     (value, oldValue) => {
       if (value && oldValue) putObject("index.css", "text/css", value);
     },
     debounce
   );
   watchDebounced(
-    cssCss,
+    stylesheets,
     (value, oldValue) => {
       if (value && oldValue)
         putObject(
-          "css.css",
+          "stylesheets.css",
           "text/css",
           value
             .filter((element) => element)
@@ -401,11 +349,10 @@ export default defineStore("kosmos3", () => {
       content,
       semantics,
       template,
-      jsJson,
-      jsJs,
-      indexJs,
-      cssCss,
-      indexCss,
+      javascripts,
+      javascript,
+      stylesheets,
+      stylesheet,
     },
     ...{ s3, putFile },
   };
