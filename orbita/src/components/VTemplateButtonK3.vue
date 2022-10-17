@@ -1,15 +1,13 @@
-<template>
-  <v-btn
-    v-animate-onscroll.repeat="animate"
-    class="text-none"
-    :variant="variant"
-    :height="height"
-    :width="width"
-    :class="classes"
-    :href="href"
-    :prepend-icon="icon"
-    >{{ title }}</v-btn
-  >
+<template lang="pug">
+v-btn.text-none(
+  v-animate-onscroll.repeat="animate",
+  :variant="variant",
+  :height="height",
+  :width="width",
+  :class="classes",
+  :href="href",
+  :prepend-icon="icon"
+) {{ title }}
 </template>
 <script>
 export default {
