@@ -1,25 +1,23 @@
-<template>
-  <v-alert
-    v-animate-onscroll.repeat="animate"
-    :icon="icon"
-    :height="height"
-    :width="width"
-    :class="classes"
-    :href="href"
-    :variant="variant"
-    :title="title"
-    prominent
-    ><v-chip
-      v-if="date"
-      size="x-small"
-      class="mr-1"
-      label
-      variant="outlined"
-      prepend-icon="mdi-calendar"
-      :text="date"
-    ></v-chip
-    >{{ description }}</v-alert
-  >
+<template lang="pug">
+v-alert(
+  v-animate-onscroll.repeat="animate",
+  :icon="icon",
+  :height="height",
+  :width="width",
+  :class="classes",
+  :href="href",
+  :variant="variant",
+  :title="title",
+  prominent
+)
+  v-chip.mr-1(
+    v-if="date",
+    size="x-small",
+    label,
+    variant="outlined",
+    prepend-icon="mdi-calendar",
+    :text="date"
+  ) {{ description }}
 </template>
 <script>
 export default {
