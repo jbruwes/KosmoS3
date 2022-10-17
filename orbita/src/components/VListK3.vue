@@ -1,9 +1,7 @@
-<template>
-  <v-list>
-    <template v-for="item in items">
-      <slot :item="item" :date="date" :description="description"></slot>
-    </template>
-  </v-list>
+<template lang="pug">
+v-list
+  template(v-for="item in items")
+    slot(:item="item", :date="date", :description="description")
 </template>
 <script>
 import { mapActions } from "pinia";
