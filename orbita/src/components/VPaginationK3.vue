@@ -1,6 +1,5 @@
-<template>
-  <v-pagination v-model="itemIndex" :length="itemsLength" :total-visible="7">
-  </v-pagination>
+<template lang="pug">
+v-pagination(v-model="itemIndex", :length="itemsLength", :total-visible="7")
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
