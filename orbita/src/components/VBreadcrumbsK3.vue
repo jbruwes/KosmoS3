@@ -1,5 +1,5 @@
-<template>
-  <v-breadcrumbs :items="items"></v-breadcrumbs>
+<template lang="pug">
+v-breadcrumbs(:items="items")
 </template>
 <script setup>
 import { computed } from "vue";
