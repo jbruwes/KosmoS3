@@ -1,32 +1,32 @@
-<template>
-  <v-single-k3 #="slot"
-    ><v-vanta-waves-k3
-      :height="height"
-      :width="width"
-      :mouse-controls="mouseControls"
-      :touch-controls="touchControls"
-      :gyro-controls="gyroControls"
-      :min-height="minHeight"
-      :min-width="minWidth"
-      :scale="scale"
-      :scale-mobile="scaleMobile"
-      :color="color"
-      :shininess="shininess"
-      :wave-height="waveHeight"
-      :wave-speed="waveSpeed"
-      :zoom="zoom"
-      ><v-template-banner-k3
-        :inner-color="innerColor"
-        :animate="animate"
-        :classes="classes"
-        :title="slot.title"
-        :icon="slot.icon"
-        :href="slot.href"
-        :date="slot.date"
-        :description="slot.description"
-        :variant="variant"
-      ></v-template-banner-k3></v-vanta-waves-k3
-  ></v-single-k3>
+<template lang="pug">
+v-single-k3(#="slot")
+  v-vanta-waves-k3(
+    :height="height",
+    :width="width",
+    :mouse-controls="mouseControls",
+    :touch-controls="touchControls",
+    :gyro-controls="gyroControls",
+    :min-height="minHeight",
+    :min-width="minWidth",
+    :scale="scale",
+    :scale-mobile="scaleMobile",
+    :color="color",
+    :shininess="shininess",
+    :wave-height="waveHeight",
+    :wave-speed="waveSpeed",
+    :zoom="zoom"
+  )
+    v-template-banner-k3(
+      :inner-color="innerColor",
+      :animate="animate",
+      :classes="classes",
+      :title="slot.title",
+      :icon="slot.icon",
+      :href="slot.href",
+      :date="slot.date",
+      :description="slot.description",
+      :variant="variant"
+    )
 </template>
 <script setup>
 import VSingleK3 from "./VSingleK3.vue";
