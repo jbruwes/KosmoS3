@@ -1,19 +1,18 @@
-<template>
-  <v-carousel-k3
-    #="slot"
-    selector="*[@id][string(@image)]"
-    :width="width"
-    :height="height"
-  >
-    <v-single-banner-k3
-      :classes="classes"
-      :item="slot.item"
-      :inner-color="innerColor"
-      :animate="animate"
-      :date="slot.date"
-      :variant="variant"
-    ></v-single-banner-k3
-  ></v-carousel-k3>
+<template lang="pug">
+v-carousel-k3(
+  #="slot",
+  selector="*[@id][string(@image)]",
+  :width="width",
+  :height="height"
+)
+  v-single-banner-k3(
+    :classes="classes",
+    :item="slot.item",
+    :inner-color="innerColor",
+    :animate="animate",
+    :date="slot.date",
+    :variant="variant"
+  )
 </template>
 <script setup>
 import VCarouselK3 from "./VCarouselK3.vue";
