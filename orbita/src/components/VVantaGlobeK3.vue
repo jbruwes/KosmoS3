@@ -1,5 +1,6 @@
-<template>
-  <v-sheet ref="vantaRef"><slot></slot></v-sheet>
+<template lang="pug">
+v-sheet(ref="vantaRef")
+  slot
 </template>
 <script setup>
 import * as THREE from "three";
