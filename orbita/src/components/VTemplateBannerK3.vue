@@ -4,7 +4,7 @@ v-row.fill-height(align="center", justify="center")
     v-animate-onscroll.repeat="animate",
     :href="href",
     :variant="variant",
-    :color="innerColor"
+    :color="color"
   )
     .text-center
       v-icon(
@@ -13,8 +13,7 @@ v-row.fill-height(align="center", justify="center")
       )
     v-card-item.justify-center.text-center
       div
-        .text-h4.mb-1(v-if="title")
-          | {{ title }}
+        .text-h4.mb-1(v-if="title") {{ title }}
         div(v-if="date")
           v-chip(
             size="x-small",
@@ -30,17 +29,15 @@ v-row.fill-height(align="center", justify="center")
       prominent
     )
 </template>
-<script>
-export default {
-  props: {
-    innerColor: { default: "#00000033", type: String },
-    animate: { default: "animate__animated animate__bounceIn", type: String },
-    title: { default: undefined, type: String },
-    date: { default: undefined, type: String },
-    description: { default: undefined, type: String },
-    icon: { default: undefined, type: String },
-    href: { default: undefined, type: String },
-    variant: { default: undefined, type: String },
-  },
-};
+<script setup>
+defineProps({
+  color: { default: "#00000033", type: String },
+  animate: { default: "animate__animated animate__bounceIn", type: String },
+  title: { default: undefined, type: String },
+  date: { default: undefined, type: String },
+  description: { default: undefined, type: String },
+  icon: { default: undefined, type: String },
+  href: { default: undefined, type: String },
+  variant: { default: undefined, type: String },
+});
 </script>
