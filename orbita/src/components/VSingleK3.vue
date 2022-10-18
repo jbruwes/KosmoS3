@@ -8,56 +8,49 @@ slot(
   :href="typeof href === 'string' ? href : href ? url : undefined"
 )
 </template>
-<script>
-import { mapState, mapActions } from "pinia";
+<script setup>
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { get } from "@vueuse/core";
 import orbita from "@/orbita";
 
-export default {
-  props: {
-    title: { default: true, type: [Boolean, String] },
-    icon: { default: true, type: [Boolean, String] },
-    image: { default: true, type: [Boolean, String] },
-    href: { default: true, type: [Boolean, String] },
-    item: { default: true, type: [Boolean, Object] },
-    date: { default: false, type: [Boolean, String] },
-    description: { default: true, type: [Boolean, String] },
-    deep: { default: undefined, type: Boolean },
-    length: { default: undefined, type: Number },
-    reveal: { default: undefined, type: Boolean },
-    sort: { default: undefined, type: String },
-    path: { default: undefined, type: String },
-    children: { default: undefined, type: Boolean },
-    selector: { default: undefined, type: String },
-    axe: { default: undefined, type: String },
-  },
-  computed: {
-    ...mapState(orbita, ["routePath"]),
-    /**
-     * @returns {string} Вычесленный урл
-     */
-    url() {
-      const href = this.getHref(this.theItem);
-      return href === this.routePath ? "" : href;
-    },
-    /**
-     * @returns {object} Текущий объект
-     */
-    theItem() {
-      if (typeof this.item === "object") return this.item;
-      return this.item
-        ? this.getItems(
-            this.deep,
-            this.length,
-            this.reveal,
-            this.sort,
-            this.path,
-            this.children,
-            this.selector,
-            this.axe
-          )[0] || {}
-        : {};
-    },
-  },
-  methods: { ...mapActions(orbita, ["getTitle", "getHref", "getItems"]) },
-};
+const props = defineProps({
+  title: { default: true, type: [Boolean, String] },
+  icon: { default: true, type: [Boolean, String] },
+  image: { default: true, type: [Boolean, String] },
+  href: { default: true, type: [Boolean, String] },
+  item: { default: true, type: [Boolean, Object] },
+  date: { default: false, type: [Boolean, String] },
+  description: { default: true, type: [Boolean, String] },
+  deep: { default: undefined, type: Boolean },
+  length: { default: undefined, type: Number },
+  reveal: { default: undefined, type: Boolean },
+  sort: { default: undefined, type: String },
+  path: { default: undefined, type: String },
+  children: { default: undefined, type: Boolean },
+  selector: { default: undefined, type: String },
+  axe: { default: undefined, type: String },
+});
+const store = orbita();
+const { routePath } = storeToRefs(store);
+const { getTitle, getHref, getItems } = store;
+const theItem = computed(() => {
+  if (typeof props.item === "object") return props.item;
+  return props.item
+    ? getItems(
+        props.deep,
+        props.length,
+        props.reveal,
+        props.sort,
+        props.path,
+        props.children,
+        props.selector,
+        props.axe
+      )[0] || {}
+    : {};
+});
+const url = computed(() => {
+  const href = getHref(get(theItem));
+  return href === get(routePath) ? "" : href;
+});
 </script>
