@@ -15,7 +15,7 @@ v-navigation-drawer(
       .fill-height(ref="el")
         v-stage(
           ref="stage",
-          :config="stageSize",
+          :config="{ width, height }",
           @mousedown="handleStageMouseDown",
           @touchstart="handleStageMouseDown"
         )
@@ -51,7 +51,6 @@ const el = ref(null);
 const transformer = ref(null);
 const stage = ref(null);
 const { width, height } = useElementSize(el);
-const stageSize = ref({ width, height });
 const rectangles = ref([
   {
     rotation: 0,
