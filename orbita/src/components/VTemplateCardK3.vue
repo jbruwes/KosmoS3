@@ -36,20 +36,18 @@ v-hover(v-slot="{ isHovering, props }")
         .text-subtitle-1(v-if="title") {{ title }}
     v-card-text.text-caption(v-if="description") {{ description }}
 </template>
-<script>
-export default {
-  props: {
-    animate: { default: "animate__animated animate__bounceIn", type: String },
-    classes: { default: undefined, type: String },
-    width: { default: undefined, type: [String, Number] },
-    height: { default: undefined, type: [String, Number] },
-    title: { default: undefined, type: String },
-    date: { default: undefined, type: String },
-    description: { default: undefined, type: String },
-    icon: { default: undefined, type: String },
-    image: { default: undefined, type: String },
-    href: { default: undefined, type: String },
-    variant: { default: undefined, type: String },
-  },
-};
+<script setup>
+defineProps({
+  animate: { default: "animate__animated animate__bounceIn", type: String },
+  classes: { default: undefined, type: String },
+  width: { default: undefined, type: [String, Number] },
+  height: { default: undefined, type: [String, Number] },
+  title: { default: undefined, type: String },
+  date: { default: undefined, type: String },
+  description: { default: undefined, type: String },
+  icon: { default: undefined, type: String },
+  image: { default: undefined, type: String },
+  href: { default: undefined, type: String },
+  variant: { default: undefined, type: String },
+});
 </script>
