@@ -8,7 +8,7 @@ v-carousel-k3(
   v-single-banner-k3(
     :classes="classes",
     :item="slot.item",
-    :inner-color="innerColor",
+    :color="color",
     :animate="animate",
     :date="slot.date",
     :variant="variant"
@@ -20,7 +20,7 @@ import VSingleBannerK3 from "./VSingleBannerK3.vue";
 
 defineProps({
   classes: { default: undefined, type: String },
-  innerColor: { default: undefined, type: String },
+  color: { default: undefined, type: String },
   animate: { default: undefined, type: String },
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
