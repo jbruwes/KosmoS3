@@ -19,19 +19,17 @@ v-list-item(
     :text="date"
   )
 </template>
-<script>
-export default {
-  props: {
-    animate: { default: "animate__animated animate__bounce", type: String },
-    classes: { default: undefined, type: String },
-    width: { default: undefined, type: [String, Number] },
-    height: { default: undefined, type: [String, Number] },
-    title: { default: undefined, type: String },
-    date: { default: undefined, type: String },
-    description: { default: undefined, type: String },
-    icon: { default: undefined, type: String },
-    href: { default: undefined, type: String },
-    variant: { default: undefined, type: String },
-  },
-};
+<script setup>
+defineProps({
+  animate: { default: "animate__animated animate__bounce", type: String },
+  classes: { default: undefined, type: String },
+  width: { default: undefined, type: [String, Number] },
+  height: { default: undefined, type: [String, Number] },
+  title: { default: undefined, type: String },
+  date: { default: undefined, type: String },
+  description: { default: undefined, type: String },
+  icon: { default: undefined, type: String },
+  href: { default: undefined, type: String },
+  variant: { default: undefined, type: String },
+});
 </script>
