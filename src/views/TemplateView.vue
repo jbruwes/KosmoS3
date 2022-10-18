@@ -26,7 +26,7 @@ v-navigation-drawer(
               :config="item",
               @transformend="handleTransformEnd"
             )
-            v-transformer(ref="transformer")
+            v-transformer(ref="transformer", :config="{ flipEnabled: false }")
     v-window-item.fill-height(value="2")
       v-wysiwyg
     v-window-item.fill-height(value="3")
