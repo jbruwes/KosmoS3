@@ -10,22 +10,16 @@ v-menu(close-on-click, location="start")
         :title="getTitle(item)"
       )
 </template>
-<script>
-import { mapState, mapActions } from "pinia";
+<script setup>
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { get } from "@vueuse/core";
 import orbita from "@/orbita";
 
-export default {
-  computed: {
-    /**
-     * @returns {Array} Элементы меню
-     */
-    items() {
-      return !this.routePath || this.routePath === "/"
-        ? this.treeChildren
-        : this.siblings;
-    },
-    ...mapState(orbita, ["treeChildren", "siblings", "routePath"]),
-  },
-  methods: { ...mapActions(orbita, ["getTitle"]) },
-};
+const store = orbita();
+const { treeChildren, siblings, routePath } = storeToRefs(store);
+const { getTitle } = store;
+const items = computed(() =>
+  !get(routePath) || get(routePath) === "/" ? get(treeChildren) : get(siblings)
+);
 </script>
