@@ -20,20 +20,12 @@ v-navigation-drawer(app, temporary)
         active-color="primary"
       )
 </template>
-<script>
-import { mapState, mapActions } from "pinia";
+<script setup>
+import { storeToRefs } from "pinia";
 import orbita from "@/orbita";
 
-export default {
-  computed: {
-    ...mapState(orbita, [
-      "tree",
-      "treeChildren",
-      "treeIcon",
-      "treeDescription",
-      "routePath",
-    ]),
-  },
-  methods: { ...mapActions(orbita, ["getHref", "getTitle"]) },
-};
+const store = orbita();
+const { tree, treeChildren, treeIcon, treeDescription, routePath } =
+  storeToRefs(store);
+const { getHref, getTitle } = store;
 </script>
