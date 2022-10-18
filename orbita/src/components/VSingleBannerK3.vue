@@ -8,7 +8,7 @@ v-single-k3(#="slot")
     :aspect-ratio="1"
   )
     v-template-banner-k3(
-      :inner-color="innerColor",
+      :color="color",
       :animate="animate",
       :classes="classes",
       :title="slot.title",
@@ -25,7 +25,7 @@ import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
 
 defineProps({
   classes: { default: undefined, type: String },
-  innerColor: { default: undefined, type: String },
+  color: { default: undefined, type: String },
   animate: { default: undefined, type: String },
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
