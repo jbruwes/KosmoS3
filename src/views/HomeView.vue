@@ -1,6 +1,6 @@
 <template lang="pug">
-v-card.fill-height(:image="require('@/assets/bg.jpg')")
-  v-row.fill-height(align="center", justify="center")
+v-card.h-100(:image="require('@/assets/bg.jpg')")
+  v-row.h-100(align="center", justify="center")
     v-card.pa-8.ma-8(:width="640", color="#ffffffee")
       v-form(ref="form", v-model="valid", lazy-validation)
         v-row
