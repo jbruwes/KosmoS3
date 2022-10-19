@@ -1,11 +1,10 @@
-<template>
-  <v-ace-editor
-    :value="modelValue"
-    :lang="lang"
-    theme="chrome"
-    style="height: 100%"
-    @update:value="$emit('update:modelValue', $event)"
-  ></v-ace-editor>
+<template lang="pug">
+v-ace-editor.h-100(
+  :value="modelValue",
+  :lang="lang",
+  theme="chrome",
+  @update:value="$emit('update:modelValue', $event)"
+)
 </template>
 
 <script setup>
