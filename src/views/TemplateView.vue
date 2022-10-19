@@ -5,7 +5,7 @@ v-navigation-drawer(
   :width="320",
   :temporary="mobile"
 )
-.tox-tinymce.h-100
+.rounded.border.d-flex.flex-column.overflow-hidden.h-100
   v-tabs(v-model="tab", show-arrows, grow, density="compact")
     v-tab(value="1", prepend-icon="mdi-eye") Visual
     v-tab(value="2", prepend-icon="mdi-eye") Visual
@@ -13,7 +13,7 @@ v-navigation-drawer(
   v-window.h-100(v-model="tab")
     v-window-item.h-100(value="1", :eager="true")
       .h-100(ref="el")
-        iframe.h-100.w-100
+        iframe.h-100.w-100.border-0
         // eslint-disable-next-line
         v-overlay(:model-value="true", :scrim="false", :zIndex="0", contained)
           v-stage(
