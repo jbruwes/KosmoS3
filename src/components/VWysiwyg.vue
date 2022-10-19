@@ -1,6 +1,6 @@
 <template lang="pug">
 .h-100
-  editor(
+  editor.h-100(
     :model-value="modelValue",
     :init="init",
     @update:model-value="$emit('update:modelValue', $event)"
@@ -287,7 +287,6 @@ const init = ref({
 </script>
 <style scoped>
 :deep(.tox.tox-tinymce) {
-  height: 100% !important;
   border: 0px !important;
 }
 </style>
