@@ -5,31 +5,37 @@ v-navigation-drawer(
   :width="320",
   :temporary="mobile"
 )
-.tox-tinymce.fill-height
+.tox-tinymce.h-100
   v-tabs(v-model="tab", show-arrows, grow, density="compact")
     v-tab(value="1", prepend-icon="mdi-eye") Visual
     v-tab(value="2", prepend-icon="mdi-eye") Visual
     v-tab(value="3", prepend-icon="mdi-code-tags") Source
-  v-window.fill-height(v-model="tab")
-    v-window-item.fill-height(value="1", :eager="true")
-      .fill-height(ref="el")
-        v-stage(
-          ref="stage",
-          :config="{ width, height }",
-          @mousedown="handleStageMouseDown",
-          @touchstart="handleStageMouseDown"
-        )
-          v-layer(ref="layer")
-            v-rect(
-              v-for="item in rectangles",
-              :key="item.id",
-              :config="item",
-              @transformend="handleTransformEnd"
-            )
-            v-transformer(ref="transformer", :config="{ flipEnabled: false }")
-    v-window-item.fill-height(value="2")
+  v-window.h-100(v-model="tab")
+    v-window-item.h-100(value="1", :eager="true")
+      .h-100(ref="el")
+        iframe.h-100.w-100
+        // eslint-disable-next-line
+        v-overlay(:model-value="true", :scrim="false", :zIndex="0", contained)
+          v-stage(
+            ref="stage",
+            :config="{ width, height }",
+            @mousedown="handleStageMouseDown",
+            @touchstart="handleStageMouseDown"
+          )
+            v-layer(ref="layer")
+              v-rect(
+                v-for="item in rectangles",
+                :key="item.id",
+                :config="item",
+                @transformend="handleTransformEnd"
+              )
+              v-transformer(
+                ref="transformer",
+                :config="{ flipEnabled: false }"
+              )
+    v-window-item.h-100(value="2")
       v-wysiwyg
-    v-window-item.fill-height(value="3")
+    v-window-item.h-100(value="3")
       v-source-code
 </template>
 <script setup>
