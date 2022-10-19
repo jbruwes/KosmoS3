@@ -18,7 +18,7 @@ v-app
       :rail="!mobile"
     )
       v-list(nav, :items="items")
-    v-container.fill-height(fluid)
+    v-container.h-100(fluid)
       router-view
 v-snackbar(v-model="snackbar", location="top right") {{ message }}
 </template>
