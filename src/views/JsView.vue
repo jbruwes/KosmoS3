@@ -1,10 +1,10 @@
 <template lang="pug">
-.tox-tinymce.fill-height
+.tox-tinymce.h-100
   v-tabs(v-model="tab", show-arrows, grow, density="compact")
     v-tab(value="1", prepend-icon="mdi-format-list-bulleted") JavaScript File URLs
     v-tab(value="2", prepend-icon="mdi-text-box-outline") Function and Global Variable Declaration
-  v-window.fill-height(v-model="tab")
-    v-window-item.fill-height(value="1")
+  v-window.h-100(v-model="tab")
+    v-window-item.h-100(value="1")
       v-container(fluid)
         v-text-field(
           v-for="(url, i) in javascripts",
@@ -29,7 +29,7 @@
               :disabled="javascripts.length === i + 1",
               @click="javascripts.splice(i + 1, 0, ...javascripts.splice(i, 1))"
             )
-    v-window-item.fill-height(value="2")
+    v-window-item.h-100(value="2")
       v-source-code(v-model.trim="javascript", lang="javascript")
 </template>
 <script setup>
