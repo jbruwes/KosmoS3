@@ -1,5 +1,5 @@
 <template lang="pug">
-v-row.fill-height(align="center", justify="center")
+v-row.h-100(align="center", justify="center")
   v-card.pa-16.ma-16.text-white(
     v-animate-onscroll.repeat="animate",
     :href="href",
