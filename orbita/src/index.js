@@ -28,6 +28,7 @@ import "glightbox/dist/css/glightbox.css";
 import "animate.css/animate.css";
 
 import "@mdi/font/css/materialdesignicons.css";
+import "tailwindcss/dist/tailwind.css";
 import "vuetify/styles";
 import "./styles/index.css";
 
