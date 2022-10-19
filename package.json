@@ -61,7 +61,7 @@
     "@tinymce/tinymce-vue": "^5.0.0",
     "@vueuse/core": "^9.3.1",
     "@vueuse/head": "^0.9.8",
-    "ace-builds": "^1.12.1",
+    "ace-builds": "^1.12.3",
     "animate.css": "^4.1.1",
     "core-js": "^3.25.5",
     "dompurify": "^2.4.0",
@@ -87,7 +87,7 @@
     "vue3-animate-onscroll": "^1.0.6",
     "vue3-particles": "^2.3.3",
     "vue3-runtime-template": "^1.0.2",
-    "vuetify": "^3.0.0-beta.13"
+    "vuetify": "^3.0.0-beta.14"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
@@ -106,7 +106,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsdoc": "^39.3.13",
+    "eslint-plugin-jsdoc": "^39.3.14",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.6.0",
     "eslint-plugin-vue-pug": "^0.5.4",
