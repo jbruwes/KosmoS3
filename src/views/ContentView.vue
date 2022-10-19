@@ -13,7 +13,7 @@ v-navigation-drawer(
       v-container.h-100(fluid) tree
     v-window-item(value="2")
       v-container.h-100(fluid) attrs
-.tox-tinymce.h-100
+.rounded.border.d-flex.flex-column.overflow-hidden.h-100
   v-tabs(v-model="tab", show-arrows, grow, density="compact")
     v-tab(value="1", prepend-icon="mdi-eye") Visual
     v-tab(value="2", prepend-icon="mdi-code-tags") Source
