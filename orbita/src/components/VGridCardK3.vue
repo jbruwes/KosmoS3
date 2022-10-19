@@ -16,7 +16,7 @@ import VGridK3 from "./VGridK3.vue";
 import VSingleCardK3 from "./VSingleCardK3.vue";
 
 defineProps({
-  classes: { default: "fill-height ma-auto", type: String },
+  classes: { default: "h-100 ma-auto", type: String },
   animate: { default: undefined, type: String },
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
