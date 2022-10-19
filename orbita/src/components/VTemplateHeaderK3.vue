@@ -17,7 +17,8 @@ v-alert(
     variant="outlined",
     prepend-icon="mdi-calendar",
     :text="date"
-  ) {{ description }}
+  )
+  | {{ description }}
 </template>
 <script setup>
 defineProps({
