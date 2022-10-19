@@ -1,5 +1,5 @@
 <template lang="pug">
-.tox-tinymce.h-100
+.rounded.border.d-flex.flex-column.overflow-hidden.h-100
   v-tabs(v-model="tab", show-arrows, grow, density="compact")
     v-tab(value="1", prepend-icon="mdi-format-list-bulleted") JavaScript File URLs
     v-tab(value="2", prepend-icon="mdi-text-box-outline") Function and Global Variable Declaration
