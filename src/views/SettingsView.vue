@@ -1,5 +1,5 @@
 <template lang="pug">
-.tox-tinymce.fill-height
+.tox-tinymce.h-100
   .ma-4
     .text-subtitle-1.text-medium-emphasis.mb-1 YANDEX
       v-text-field(
