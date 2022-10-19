@@ -10,17 +10,17 @@ v-navigation-drawer(
     v-tab(value="2", prepend-icon="mdi-card-bulleted-settings-outline") Attributes
   v-window(v-model="drawer")
     v-window-item(value="1")
-      v-container.fill-height(fluid) tree
+      v-container.h-100(fluid) tree
     v-window-item(value="2")
-      v-container.fill-height(fluid) attrs
-.tox-tinymce.fill-height
+      v-container.h-100(fluid) attrs
+.tox-tinymce.h-100
   v-tabs(v-model="tab", show-arrows, grow, density="compact")
     v-tab(value="1", prepend-icon="mdi-eye") Visual
     v-tab(value="2", prepend-icon="mdi-code-tags") Source
-  v-window.fill-height(v-model="tab")
-    v-window-item.fill-height(value="1")
+  v-window.h-100(v-model="tab")
+    v-window-item.h-100(value="1")
       v-wysiwyg(v-model.trim="content")
-    v-window-item.fill-height(value="2")
+    v-window-item.h-100(value="2")
       v-source-code(v-model.trim="content")
 </template>
 
