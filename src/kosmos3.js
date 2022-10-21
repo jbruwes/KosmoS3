@@ -195,8 +195,10 @@ export default defineStore("kosmos3", () => {
          * @returns {object} результат трасформации
          */
         transform: (text) => {
-          const js = JSON.parse(text).filter((element) => element);
-          return js.length ? js : [""];
+          const js = JSON.parse(text).filter(
+            (element) => element.value && element.id
+          );
+          return js.length ? js : [{ value: "", id: new Date().valueOf() }];
         },
       },
       {
@@ -220,9 +222,20 @@ export default defineStore("kosmos3", () => {
           const css = [
             ...text.matchAll(/@import.*?["'(]([^"']+)["')].*?[;]?/gm),
           ]
-            .map((element) => decodeURI(element[1]).trim())
-            .filter((element) => element);
-          return css.length ? css : [""];
+            .map((element) => ({
+              value: decodeURI(element[1]).trim(),
+              id: new Date().valueOf(),
+            }))
+            .filter((element) => element.value && element.id);
+          return css.length
+            ? css
+            : [
+                {
+                  value:
+                    "https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css",
+                  id: new Date().valueOf(),
+                },
+              ];
         },
       },
       {
@@ -291,7 +304,7 @@ export default defineStore("kosmos3", () => {
         putObject(
           "javascripts.json",
           "application/json",
-          JSON.stringify(value.filter((element) => element))
+          JSON.stringify(value.filter((element) => element.value))
         );
     },
     { deep: true, ...debounce }
@@ -319,8 +332,8 @@ export default defineStore("kosmos3", () => {
           "stylesheets.css",
           "text/css",
           value
-            .filter((element) => element)
-            .map((element) => `@import url("${encodeURI(element)}");`)
+            .filter((element) => element.value)
+            .map((element) => `@import url("${encodeURI(element.value)}");`)
             .join("")
         );
     },
