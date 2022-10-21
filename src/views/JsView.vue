@@ -6,28 +6,16 @@
   v-window.h-100(v-model="tab")
     v-window-item.h-100(value="1")
       v-container(fluid)
-        v-text-field(
-          v-for="(url, i) in javascripts",
-          :key="i",
-          v-model="javascripts[i]",
-          variant="underlined",
-          append-inner-icon="mdi-plus",
-          prepend-inner-icon="mdi-minus",
-          @click:prepend-inner="javascripts.length - 1 && javascripts.splice(i, 1)",
-          @click:append-inner="javascripts.splice(i + 1, 0, '')"
-        )
-          template(#append)
-            v-btn.mr-1(
-              icon="mdi-arrow-up",
-              size="x-small",
-              :disabled="!i",
-              @click="javascripts.splice(i - 1, 0, ...javascripts.splice(i, 1))"
-            )
-            v-btn.ml-1(
-              icon="mdi-arrow-down",
-              size="x-small",
-              :disabled="javascripts.length === i + 1",
-              @click="javascripts.splice(i + 1, 0, ...javascripts.splice(i, 1))"
+        draggable(v-model="javascripts", item-key="id")
+          template(#item="{ element, index }")
+            v-text-field(
+              v-model="element.value",
+              variant="underlined",
+              append-inner-icon="mdi-plus",
+              prepend-inner-icon="mdi-minus",
+              append-icon="mdi-drag-vertical",
+              @click:prepend-inner="javascripts.length - 1 && javascripts.splice(index, 1)",
+              @click:append-inner="javascripts.splice(index + 1, 0, { value: '', id: new Date().valueOf() })"
             )
     v-window-item.h-100(value="2")
       v-source-code(v-model.trim="javascript", lang="javascript")
@@ -36,6 +24,7 @@
 import { ref } from "vue";
 import { set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
+import draggable from "vuedraggable";
 import kosmos3 from "@/kosmos3";
 import VSourceCode from "@/components/VSourceCode.vue";
 
