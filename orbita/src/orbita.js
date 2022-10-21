@@ -1,16 +1,16 @@
 import { ref, computed, watch } from "vue";
 import { defineStore } from "pinia";
-import { useFetch, get, computedWithControl } from "@vueuse/core";
+import { useFetch, get, set, computedWithControl } from "@vueuse/core";
 import jsel from "jsel";
 import DOMPurify from "dompurify";
 
 export default defineStore("orbita", () => {
   const { data: treeData, statusCode: treeStatusCode } =
     useFetch("index.json").json();
-  const tree = computedWithControl(
-    () => get(treeData),
-    () => (get(treeStatusCode) === 200 ? get(treeData, 0) : {})
-  );
+  const tree = ref({});
+  watch(treeData, (value) => {
+    if (get(treeStatusCode) === 200) set(tree, value[0]);
+  });
   const pageLen = ref(0);
   const routePath = ref(undefined);
   const routeParams = ref(undefined);
@@ -257,7 +257,6 @@ export default defineStore("orbita", () => {
   }
   return {
     ...{
-      treeData,
       value,
       page,
       template,
