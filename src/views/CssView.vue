@@ -15,7 +15,7 @@
               prepend-inner-icon="mdi-minus",
               append-icon="mdi-drag-vertical",
               @click:prepend-inner="stylesheets.length - 1 && stylesheets.splice(index, 1)",
-              @click:append-inner="stylesheets.splice(index + 1, 0, { value: '', id: new Date().valueOf() })"
+              @click:append-inner="stylesheets.splice(index + 1, 0, { value: '', id: uuid() })"
             )
     v-window-item.h-100(value="2")
       v-source-code(v-model.trim="stylesheet", lang="css")
@@ -32,4 +32,6 @@ const store = kosmos3();
 const { panel, stylesheets, stylesheet } = storeToRefs(store);
 set(panel, null);
 const tab = ref(1);
+/** @returns {string} uuid */
+const uuid = () => crypto.randomUUID();
 </script>
