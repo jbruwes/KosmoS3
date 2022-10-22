@@ -15,7 +15,7 @@
               prepend-inner-icon="mdi-minus",
               append-icon="mdi-drag-vertical",
               @click:prepend-inner="javascripts.length - 1 && javascripts.splice(index, 1)",
-              @click:append-inner="javascripts.splice(index + 1, 0, { value: '', id: new Date().valueOf() })"
+              @click:append-inner="javascripts.splice(index + 1, 0, { value: '', id: uuid() })"
             )
     v-window-item.h-100(value="2")
       v-source-code(v-model.trim="javascript", lang="javascript")
@@ -32,4 +32,6 @@ const store = kosmos3();
 const { panel, javascripts, javascript } = storeToRefs(store);
 set(panel, null);
 const tab = ref(1);
+/** @returns {string} uuid */
+const uuid = () => crypto.randomUUID();
 </script>
