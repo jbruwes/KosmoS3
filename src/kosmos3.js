@@ -185,9 +185,9 @@ export default defineStore("kosmos3", () => {
         transform: (text) => JSON.parse(text),
       },
       {
-        key: "javascripts.json",
-        contentType: "application/json",
-        value: "[]",
+        key: "index.js",
+        contentType: "application/javascript",
+        value: "",
         ref: javascripts,
         /**
          *
@@ -195,21 +195,38 @@ export default defineStore("kosmos3", () => {
          * @returns {object} результат трасформации
          */
         transform: (text) => {
-          const js = JSON.parse(text).filter(
-            (element) => element.value && element.id
-          );
-          return js.length ? js : [{ value: "", id: new Date().valueOf() }];
+          const value = [
+            ...text.matchAll(/document\.write.+?src=["']([^"']+)/g),
+          ]
+            .map((element) => ({
+              value: decodeURI(element[1]).trim(),
+              id: crypto.randomUUID(),
+            }))
+            .filter((element) => element.value && element.id);
+          return value.length
+            ? value
+            : [
+                {
+                  value: "",
+                  id: crypto.randomUUID(),
+                },
+              ];
         },
       },
       {
-        key: "index.js",
+        key: "default.js",
         contentType: "application/javascript",
         value: "",
         ref: javascript,
       },
-      { key: "index.css", contentType: "text/css", value: "", ref: stylesheet },
       {
-        key: "stylesheets.css",
+        key: "default.css",
+        contentType: "text/css",
+        value: "",
+        ref: stylesheet,
+      },
+      {
+        key: "index.css",
         contentType: "text/css",
         value: "",
         ref: stylesheets,
@@ -219,21 +236,19 @@ export default defineStore("kosmos3", () => {
          * @returns {object} результат трасформации
          */
         transform: (text) => {
-          const css = [
-            ...text.matchAll(/@import.*?["'(]([^"']+)["')].*?[;]?/gm),
-          ]
+          const value = [...text.matchAll(/@import.+?["'(]([^"')]+)/g)]
             .map((element) => ({
               value: decodeURI(element[1]).trim(),
-              id: new Date().valueOf(),
+              id: crypto.randomUUID(),
             }))
             .filter((element) => element.value && element.id);
-          return css.length
-            ? css
+          return value.length
+            ? value
             : [
                 {
                   value:
                     "https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css",
-                  id: new Date().valueOf(),
+                  id: crypto.randomUUID(),
                 },
               ];
         },
@@ -302,9 +317,17 @@ export default defineStore("kosmos3", () => {
     (value, oldValue) => {
       if (value && oldValue)
         putObject(
-          "javascripts.json",
-          "application/json",
-          JSON.stringify(value.filter((element) => element.value))
+          "index.js",
+          "application/javascript",
+          value
+            .filter((element) => element.value)
+            .map(
+              (element) =>
+                `document.write('<script defer src="${encodeURI(
+                  element.value
+                )}"></script>');`
+            )
+            .join("")
         );
     },
     { deep: true, ...debounce }
@@ -313,14 +336,14 @@ export default defineStore("kosmos3", () => {
     javascript,
     (value, oldValue) => {
       if (value && oldValue)
-        putObject("index.js", "application/javascript", value);
+        putObject("default.js", "application/javascript", value);
     },
     debounce
   );
   watchDebounced(
     stylesheet,
     (value, oldValue) => {
-      if (value && oldValue) putObject("index.css", "text/css", value);
+      if (value && oldValue) putObject("default.css", "text/css", value);
     },
     debounce
   );
@@ -329,7 +352,7 @@ export default defineStore("kosmos3", () => {
     (value, oldValue) => {
       if (value && oldValue)
         putObject(
-          "stylesheets.css",
+          "index.css",
           "text/css",
           value
             .filter((element) => element.value)
