@@ -73,25 +73,25 @@ export default defineStore("kosmos3", () => {
    *
    * @type {string}
    */
-  const stylesheet = ref(undefined);
+  const style = ref(undefined);
   /**
    * подключаемые стили сайта
    *
    * @type {string}
    */
-  const stylesheets = ref(undefined);
+  const styles = ref(undefined);
   /**
    * подключаемые скрипты сайта
    *
    * @type {object}
    */
-  const javascripts = ref(undefined);
+  const scripts = ref(undefined);
   /**
    * скрипт запускаемый на каждой странице
    *
    * @type {string}
    */
-  const javascript = ref(undefined);
+  const script = ref(undefined);
   const base = computed(() =>
     get(wendpoint)
       ? `${get(wendpoint)}/${get(bucket)}/`
@@ -185,69 +185,53 @@ export default defineStore("kosmos3", () => {
         transform: (text) => JSON.parse(text),
       },
       {
-        key: "index.js",
-        contentType: "application/javascript",
-        value: "",
-        ref: javascripts,
+        key: "scripts.json",
+        contentType: "application/json",
+        value: "[]",
+        ref: scripts,
         /**
          *
          * @param {string} text параметр трансформации
          * @returns {object} результат трасформации
          */
         transform: (text) => {
-          const value = [
-            ...text.matchAll(/document\.write.+?src=["']([^"']+)/g),
-          ]
-            .map((element) => ({
-              value: decodeURI(element[1]).trim(),
-              id: crypto.randomUUID(),
-            }))
-            .filter((element) => element.value && element.id);
-          return value.length
-            ? value
-            : [
-                {
-                  value: "",
-                  id: crypto.randomUUID(),
-                },
-              ];
+          const value = JSON.parse(text).filter(
+            (element) => element.url && element.id
+          );
+          return value.length ? value : [{ url: "", id: crypto.randomUUID() }];
         },
       },
       {
-        key: "default.js",
+        key: "index.js",
         contentType: "application/javascript",
         value: "",
-        ref: javascript,
-      },
-      {
-        key: "default.css",
-        contentType: "text/css",
-        value: "",
-        ref: stylesheet,
+        ref: script,
       },
       {
         key: "index.css",
         contentType: "text/css",
         value: "",
-        ref: stylesheets,
+        ref: style,
+      },
+      {
+        key: "styles.json",
+        contentType: "application/json",
+        value: "[]",
+        ref: styles,
         /**
          *
          * @param {string} text параметр трансформации
          * @returns {object} результат трасформации
          */
         transform: (text) => {
-          const value = [...text.matchAll(/@import.+?["'(]([^"')]+)/g)]
-            .map((element) => ({
-              value: decodeURI(element[1]).trim(),
-              id: crypto.randomUUID(),
-            }))
-            .filter((element) => element.value && element.id);
+          const value = JSON.parse(text).filter(
+            (element) => element.url && element.id
+          );
           return value.length
             ? value
             : [
                 {
-                  value:
-                    "https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css",
+                  url: "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css",
                   id: crypto.randomUUID(),
                 },
               ];
@@ -313,51 +297,40 @@ export default defineStore("kosmos3", () => {
     { deep: true, ...debounce }
   );
   watchDebounced(
-    javascripts,
+    scripts,
     (value, oldValue) => {
       if (value && oldValue)
         putObject(
-          "index.js",
-          "application/javascript",
-          value
-            .filter((element) => element.value)
-            .map(
-              (element) =>
-                `document.write('<script defer src="${encodeURI(
-                  element.value
-                )}"></script>');`
-            )
-            .join("")
+          "scripts.json",
+          "application/json",
+          JSON.stringify(value.filter((element) => element.url))
         );
     },
     { deep: true, ...debounce }
   );
   watchDebounced(
-    javascript,
+    script,
     (value, oldValue) => {
       if (value && oldValue)
-        putObject("default.js", "application/javascript", value);
+        putObject("index.js", "application/javascript", value);
     },
     debounce
   );
   watchDebounced(
-    stylesheet,
+    style,
     (value, oldValue) => {
-      if (value && oldValue) putObject("default.css", "text/css", value);
+      if (value && oldValue) putObject("index.css", "text/css", value);
     },
     debounce
   );
   watchDebounced(
-    stylesheets,
+    styles,
     (value, oldValue) => {
       if (value && oldValue)
         putObject(
-          "index.css",
-          "text/css",
-          value
-            .filter((element) => element.value)
-            .map((element) => `@import url("${encodeURI(element.value)}");`)
-            .join("")
+          "styles.json",
+          "application/json",
+          JSON.stringify(value.filter((element) => element.url))
         );
     },
     { deep: true, ...debounce }
@@ -385,10 +358,10 @@ export default defineStore("kosmos3", () => {
       content,
       semantics,
       template,
-      javascripts,
-      javascript,
-      stylesheets,
-      stylesheet,
+      scripts,
+      script,
+      styles,
+      style,
     },
     ...{ s3, putFile },
   };
