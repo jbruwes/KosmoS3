@@ -4,19 +4,19 @@ v-list-item(
   :height="height",
   :width="width",
   :class="classes",
-  :href="href",
-  :prepend-icon="icon",
-  :title="title",
-  :subtitle="description",
+  :href="params.href",
+  :prepend-icon="params.icon",
+  :title="params.title",
+  :subtitle="params.description",
   :variant="variant"
 )
   v-chip.mr-1(
-    v-if="date",
+    v-if="params.date",
     size="x-small",
     label,
     variant="outlined",
     prepend-icon="mdi-calendar",
-    :text="date"
+    :text="params.date"
   )
 </template>
 <script setup>
@@ -25,11 +25,7 @@ defineProps({
   classes: { default: undefined, type: String },
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
-  title: { default: undefined, type: String },
-  date: { default: undefined, type: String },
-  description: { default: undefined, type: String },
-  icon: { default: undefined, type: String },
-  href: { default: undefined, type: String },
   variant: { default: undefined, type: String },
+  params: { default: undefined, type: Object },
 });
 </script>
