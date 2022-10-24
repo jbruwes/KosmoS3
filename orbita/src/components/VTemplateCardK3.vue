@@ -49,5 +49,6 @@ defineProps({
   image: { default: undefined, type: String },
   href: { default: undefined, type: String },
   variant: { default: undefined, type: String },
+  item: { default: undefined, type: Object },
 });
 </script>
