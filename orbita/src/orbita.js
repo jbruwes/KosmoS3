@@ -22,36 +22,48 @@ export default defineStore("orbita", () => {
    */
   const getVector = (item) =>
     jsel(get(tree)).selectAll(`//*[@id="${item.id}"]/ancestor-or-self::*[@id]`);
-
-  const list = computed(() =>
-    jsel(get(tree))
-      .selectAll("//*[@id]")
-      .map((node) => {
-        const lNode = node;
-        lNode.path = getVector(lNode).map((e) =>
-          e.value.trim().replace(/\s/g, "_").replace(/\//g, "")
-        );
-        lNode.path.shift();
-        lNode.path = lNode.path.join("/");
-        lNode.path = lNode.path ? `/${lNode.path}/` : "/";
-        lNode.href = lNode.url
-          ? lNode.url
-              .trim()
-              .replace(/\s/g, "_")
-              .replace(/^\/+|\/+$/g, "")
-          : "";
-        lNode.href = lNode.href ? `/${lNode.href}/` : "";
-        lNode.route = lNode.route ? `/${lNode.route}/` : "";
-        return lNode;
-      })
-  );
+  const list = computed(() => jsel(get(tree)).selectAll("//*[@id]"));
+  /**
+   * Вычисленние роута
+   *
+   * @param {object} item Объект вычисления
+   * @returns {string} Путь
+   */
+  const getRoute = (item) =>
+    item.route
+      ? `/${item.route
+          .trim()
+          .replace(/\s/g, "_")
+          .replace(/^\/+|\/+$/g, "")}/`
+      : "";
   /**
    * Вычисленние пути
    *
    * @param {object} item Объект вычисления
    * @returns {string} Путь
    */
-  const getHref = (item) => (item.href ? item.href : item.path);
+  const getPath = (item) => {
+    let lPath = getVector(item).map((e) =>
+      e.value.trim().replace(/\s/g, "_").replace(/\//g, "")
+    );
+    lPath.shift();
+    lPath = lPath.join("/");
+    return lPath ? `/${lPath}/` : "/";
+  };
+  /**
+   * Вычисленние ссылки
+   *
+   * @param {object} item Объект вычисления
+   * @returns {string} Путь
+   */
+  const getHref = (item) =>
+    item.url
+      ? `/${item.url
+          .trim()
+          .replace(/\s/g, "_")
+          .replace(/^\/+|\/+$/g, "")}/`
+      : getPath(item);
+
   /**
    * Вычисление заголовка
    *
@@ -77,11 +89,10 @@ export default defineStore("orbita", () => {
     jsel(get(tree)).selectAll(
       `//*[@id="${item.id}"]/preceding-sibling::*[@id]|//*[@id="${item.id}"]|//*[@id="${item.id}"]/following-sibling::*[@id]`
     );
-
   const nextItem = computed(
     () =>
-      get(list).find(
-        (e) => e.path === get(routePath) || e.href === get(routePath)
+      get(list).find((element) =>
+        [getPath(element), getHref(element)].includes(get(routePath))
       ) || {}
   );
   const nextId = computed(() => get(nextItem).id);
@@ -155,9 +166,9 @@ export default defineStore("orbita", () => {
   const icon = computed(() => get(item).icon);
   const treeIcon = computed(() => get(tree).icon);
   const parentIcon = computed(() => get(parent).icon);
-  const path = computed(() => get(item).path);
-  const treePath = computed(() => get(tree).path);
-  const parentPath = computed(() => get(parent).path);
+  const path = computed(() => getPath(get(item)));
+  const treePath = computed(() => getPath(get(tree)));
+  const parentPath = computed(() => getPath(get(parent)));
   const href = computed(() => getHref(get(item)));
   const treeHref = computed(() => getHref(get(tree)));
   const parentHref = computed(() => getHref(get(parent)));
@@ -257,6 +268,7 @@ export default defineStore("orbita", () => {
   }
   return {
     ...{
+      treeData,
       value,
       page,
       template,
@@ -294,6 +306,8 @@ export default defineStore("orbita", () => {
       parentImage,
     },
     ...{
+      getRoute,
+      getPath,
       getHref,
       getTitle,
       getVector,
