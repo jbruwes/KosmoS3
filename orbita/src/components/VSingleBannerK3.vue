@@ -11,13 +11,8 @@ v-single-k3(#="slot")
       :color="color",
       :animate="animate",
       :classes="classes",
-      :title="slot.title",
-      :icon="slot.icon",
-      :href="slot.href",
-      :date="slot.date",
-      :description="slot.description",
       :variant="variant",
-      :item="slot.item"
+      :params="slot"
     )
 </template>
 <script setup>
