@@ -7,10 +7,10 @@ v-hover(v-slot="{ isHovering, props }")
     :width="width",
     :elevation="isHovering ? 6 : undefined",
     :class="classes",
-    :href="href",
+    :href="params.href",
     :variant="variant"
   )
-    v-img(:src="image", :aspect-ratio="4 / 3", cover)
+    v-img(:src="params.image", :aspect-ratio="4 / 3", cover)
       v-expand-transition
         .d-flex.transition-fast-in-slow-out.bg-white.align-center.justify-center.position-absolute.w-100(
           v-if="isHovering",
@@ -20,21 +20,21 @@ v-hover(v-slot="{ isHovering, props }")
             variant="outlined",
             size="x-large",
             color="grey",
-            :icon="icon",
-            :href="href"
+            :icon="params.icon",
+            :href="params.href"
           )
     v-card-item
       div
-        .mb-1(v-if="date")
+        .mb-1(v-if="params.date")
           v-chip(
             size="x-small",
             label,
             variant="outlined",
             prepend-icon="mdi-calendar",
-            :text="date"
+            :text="params.date"
           )
-        .text-subtitle-1(v-if="title") {{ title }}
-    v-card-text.text-caption(v-if="description") {{ description }}
+        .text-subtitle-1(v-if="params.title") {{ params.title }}
+    v-card-text.text-caption(v-if="params.description") {{ params.description }}
 </template>
 <script setup>
 defineProps({
@@ -42,13 +42,7 @@ defineProps({
   classes: { default: undefined, type: String },
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
-  title: { default: undefined, type: String },
-  date: { default: undefined, type: String },
-  description: { default: undefined, type: String },
-  icon: { default: undefined, type: String },
-  image: { default: undefined, type: String },
-  href: { default: undefined, type: String },
   variant: { default: undefined, type: String },
-  item: { default: undefined, type: Object },
+  params: { default: undefined, type: Object },
 });
 </script>
