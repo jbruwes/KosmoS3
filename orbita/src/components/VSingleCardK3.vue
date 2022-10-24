@@ -5,14 +5,8 @@ v-single-k3(#="slot")
     :classes="classes",
     :width="width",
     :height="height",
-    :title="slot.title",
-    :icon="slot.icon",
-    :image="slot.image",
-    :href="slot.href",
-    :date="slot.date",
-    :description="slot.description",
     :variant="variant",
-    :item="slot.item"
+    :params="slot"
   )
 </template>
 <script setup>
