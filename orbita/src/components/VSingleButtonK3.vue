@@ -9,7 +9,8 @@ v-single-k3(#="slot")
     :icon="slot.icon",
     :href="slot.href",
     :description="slot.description",
-    :variant="variant"
+    :variant="variant",
+    :item="slot.item"
   )
 </template>
 <script setup>
