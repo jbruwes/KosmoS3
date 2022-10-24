@@ -1,24 +1,24 @@
 <template lang="pug">
 v-alert(
   v-animate-onscroll.repeat="animate",
-  :icon="icon",
+  :icon="params.icon",
   :height="height",
   :width="width",
   :class="classes",
-  :href="href",
+  :href="params.href",
   :variant="variant",
-  :title="title",
+  :title="params.title",
   prominent
 )
   v-chip.mr-1(
-    v-if="date",
+    v-if="params.date",
     size="x-small",
     label,
     variant="outlined",
     prepend-icon="mdi-calendar",
-    :text="date"
+    :text="params.date"
   )
-  | {{ description }}
+  | {{ params.description }}
 </template>
 <script setup>
 defineProps({
@@ -26,11 +26,7 @@ defineProps({
   classes: { default: undefined, type: String },
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
-  title: { default: undefined, type: String },
-  date: { default: undefined, type: String },
-  description: { default: undefined, type: String },
-  icon: { default: undefined, type: String },
-  href: { default: undefined, type: String },
   variant: { default: "plain", type: String },
+  params: { default: undefined, type: Object },
 });
 </script>
