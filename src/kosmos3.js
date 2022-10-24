@@ -87,6 +87,12 @@ export default defineStore("kosmos3", () => {
    */
   const scripts = ref(undefined);
   /**
+   * настройки сайта
+   *
+   * @type {object}
+   */
+  const settings = ref(undefined);
+  /**
    * скрипт запускаемый на каждой странице
    *
    * @type {string}
@@ -182,7 +188,29 @@ export default defineStore("kosmos3", () => {
          * @param {string} text параметр трансформации
          * @returns {object} результат трасформации
          */
-        transform: (text) => JSON.parse(text),
+        transform: (text) => {
+          const value = JSON.parse(text);
+          return value.length
+            ? value
+            : `{"visible":true,"value":"${get(
+                bucket
+              )}","id":"${crypto.randomUUID()}"}`;
+        },
+      },
+      {
+        key: "settings.json",
+        contentType: "application/json",
+        value: "[]",
+        ref: settings,
+        /**
+         *
+         * @param {string} text параметр трансформации
+         * @returns {object} результат трасформации
+         */
+        transform: (text) => {
+          const value = JSON.parse(text);
+          return value.length ? value : [];
+        },
       },
       {
         key: "scripts.json",
@@ -195,9 +223,9 @@ export default defineStore("kosmos3", () => {
          * @returns {object} результат трасформации
          */
         transform: (text) => {
-          const value = JSON.parse(text).filter(
-            (element) => element.url && element.id
-          );
+          const value = JSON.parse(text)
+            .filter(Boolean)
+            .filter((element) => element.url && element.id);
           return value.length ? value : [{ url: "", id: crypto.randomUUID() }];
         },
       },
@@ -224,9 +252,9 @@ export default defineStore("kosmos3", () => {
          * @returns {object} результат трасформации
          */
         transform: (text) => {
-          const value = JSON.parse(text).filter(
-            (element) => element.url && element.id
-          );
+          const value = JSON.parse(text)
+            .filter(Boolean)
+            .filter((element) => element.url && element.id);
           return value.length
             ? value
             : [
@@ -293,6 +321,14 @@ export default defineStore("kosmos3", () => {
     () => {
       set(message, "semantics changed!");
       set(snackbar, true);
+    },
+    { deep: true, ...debounce }
+  );
+  watchDebounced(
+    settings,
+    (value, oldValue) => {
+      if (value && oldValue)
+        putObject("settings.json", "application/json", JSON.stringify(value));
     },
     { deep: true, ...debounce }
   );
