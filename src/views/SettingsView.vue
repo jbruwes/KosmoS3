@@ -3,26 +3,26 @@
   .ma-4
     .text-subtitle-1.text-medium-emphasis.mb-1 YANDEX
       v-text-field(
-        v-model.trim="semantics[0].yandex",
+        v-model.trim="settings.yandex",
         label="yandex verification id",
         prepend-inner-icon="mdi-alpha-y-circle-outline",
         variant="underlined"
       )
       v-text-field(
-        v-model.trim="semantics[0].metrika",
+        v-model.trim="settings.metrika",
         label="yandex metrika id",
         prepend-inner-icon="mdi-ruler",
         variant="underlined"
       )
       .text-subtitle-1.text-medium-emphasis.mb-1 GOOGLE
       v-text-field(
-        v-model.trim="semantics[0].google",
+        v-model.trim="settings.google",
         label="google verification id",
         prepend-inner-icon="mdi-google",
         variant="underlined"
       )
       v-text-field(
-        v-model.trim="semantics[0].analytics",
+        v-model.trim="settings.analytics",
         label="google analytics id",
         prepend-inner-icon="mdi-google-analytics",
         variant="underlined"
@@ -76,7 +76,7 @@ import { storeToRefs } from "pinia";
 import kosmos3 from "@/kosmos3";
 
 const store = kosmos3();
-const { panel, semantics } = storeToRefs(store);
+const { panel, settings } = storeToRefs(store);
 const { putFile } = store;
 const ico = ref([]);
 const svg = ref([]);
