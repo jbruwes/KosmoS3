@@ -1,5 +1,11 @@
 import { ref, computed, watch } from "vue";
-import { get, set, watchDebounced } from "@vueuse/core";
+import {
+  get,
+  set,
+  watchDebounced,
+  useFetch,
+  watchTriggerable,
+} from "@vueuse/core";
 import { defineStore } from "pinia";
 import {
   HeadObjectCommand,
@@ -98,11 +104,6 @@ export default defineStore("kosmos3", () => {
    * @type {string}
    */
   const script = ref(undefined);
-  const base = computed(() =>
-    get(wendpoint)
-      ? `${get(wendpoint)}/${get(bucket)}/`
-      : `https://${get(bucket)}/`
-  );
   /**
    * считывание заголовка файла
    *
@@ -174,107 +175,164 @@ export default defineStore("kosmos3", () => {
     });
     return ret;
   };
+
+  const { data: assetsData } = useFetch("orbita/assets-manifest.json").json();
+  const assets = computed(() =>
+    get(assetsData)
+      ? Object.values(get(assetsData)).filter(
+          (asset) => !["index.htm", "site.webmanifest"].includes(asset)
+        )
+      : undefined
+  );
+  const { trigger: assetsTrigger } = watchTriggerable(assets, (value) => {
+    if (get(s3))
+      value.forEach((asset) => {
+        (async () => {
+          try {
+            const head = await headObject(asset);
+            if (
+              ["robots.txt", "error.html", "browserconfig.xml"].includes(asset)
+            )
+              throw new Error(head.ContentLength);
+          } catch (e) {
+            const byteLength = +e.message;
+            let { data: body } = await useFetch(`orbita/${asset}`).blob();
+            if (!Number.isNaN(byteLength)) {
+              body = new Blob(
+                [(await body.text()).replace(/{{ domain }}/g, get(bucket))],
+                { type: body.type }
+              );
+              if (byteLength === (await body.arrayBuffer()).byteLength)
+                body = null;
+            }
+            if (body) putObject(asset, body.type, body);
+          }
+        })();
+      });
+  });
+
+  const base = computed(() =>
+    get(wendpoint)
+      ? `${get(wendpoint)}/${get(bucket)}/`
+      : `https://${get(bucket)}/`
+  );
+  const files = computed(() => [
+    {
+      key: "index.json",
+      contentType: "application/json",
+      value: `{"visible":true,"value":"${get(
+        bucket
+      )}","id":"${crypto.randomUUID()}"}`,
+      ref: semantics,
+      /**
+       *
+       * @param {string} text параметр трансформации
+       * @returns {object} результат трасформации
+       */
+      transform(text) {
+        let value;
+        try {
+          value = JSON.parse(text);
+        } catch (e) {
+          value = this.value;
+        }
+        return value;
+      },
+    },
+    {
+      key: "settings.json",
+      contentType: "application/json",
+      value: "{}",
+      ref: settings,
+      /**
+       *
+       * @param {string} text параметр трансформации
+       * @returns {object} результат трасформации
+       */
+      transform(text) {
+        let value;
+        try {
+          value = JSON.parse(text);
+        } catch (e) {
+          value = this.value;
+        }
+        return value;
+      },
+    },
+    {
+      key: "scripts.json",
+      contentType: "application/json",
+      value: "[]",
+      ref: scripts,
+      /**
+       *
+       * @param {string} text параметр трансформации
+       * @returns {object} результат трасформации
+       */
+      transform(text) {
+        let value;
+        try {
+          value = JSON.parse(text)
+            .filter(Boolean)
+            .filter((element) => element.url && element.id);
+        } catch (e) {
+          value = this.value;
+        }
+        return value.length ? value : [{ url: "", id: crypto.randomUUID() }];
+      },
+    },
+    {
+      key: "index.js",
+      contentType: "application/javascript",
+      value: "",
+      ref: script,
+    },
+    {
+      key: "index.css",
+      contentType: "text/css",
+      value: "",
+      ref: style,
+    },
+    {
+      key: "styles.json",
+      contentType: "application/json",
+      value: "[]",
+      ref: styles,
+      /**
+       *
+       * @param {string} text параметр трансформации
+       * @returns {object} результат трасформации
+       */
+      transform(text) {
+        let value;
+        try {
+          value = JSON.parse(text)
+            .filter(Boolean)
+            .filter((element) => element.url && element.id);
+        } catch (e) {
+          value = this.value;
+        }
+        return value.length
+          ? value
+          : [
+              {
+                url: "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css",
+                id: crypto.randomUUID(),
+              },
+            ];
+      },
+    },
+    {
+      key: "index.htm",
+      contentType: "text/html",
+      value:
+        '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else><v-runtime-template :parent="this" :template="template"></v-runtime-template></article></div></div>',
+      ref: template,
+    },
+  ]);
   watch(s3, async (newS3) => {
-    const files = [
-      {
-        key: "index.json",
-        contentType: "application/json",
-        value: `{"visible":true,"value":"${get(
-          bucket
-        )}","id":"${crypto.randomUUID()}"}`,
-        ref: semantics,
-        /**
-         *
-         * @param {string} text параметр трансформации
-         * @returns {object} результат трасформации
-         */
-        transform: (text) => {
-          const value = JSON.parse(text);
-          return value.length
-            ? value
-            : `{"visible":true,"value":"${get(
-                bucket
-              )}","id":"${crypto.randomUUID()}"}`;
-        },
-      },
-      {
-        key: "settings.json",
-        contentType: "application/json",
-        value: "[]",
-        ref: settings,
-        /**
-         *
-         * @param {string} text параметр трансформации
-         * @returns {object} результат трасформации
-         */
-        transform: (text) => {
-          const value = JSON.parse(text);
-          return value.length ? value : [];
-        },
-      },
-      {
-        key: "scripts.json",
-        contentType: "application/json",
-        value: "[]",
-        ref: scripts,
-        /**
-         *
-         * @param {string} text параметр трансформации
-         * @returns {object} результат трасформации
-         */
-        transform: (text) => {
-          const value = JSON.parse(text)
-            .filter(Boolean)
-            .filter((element) => element.url && element.id);
-          return value.length ? value : [{ url: "", id: crypto.randomUUID() }];
-        },
-      },
-      {
-        key: "index.js",
-        contentType: "application/javascript",
-        value: "",
-        ref: script,
-      },
-      {
-        key: "index.css",
-        contentType: "text/css",
-        value: "",
-        ref: style,
-      },
-      {
-        key: "styles.json",
-        contentType: "application/json",
-        value: "[]",
-        ref: styles,
-        /**
-         *
-         * @param {string} text параметр трансформации
-         * @returns {object} результат трасформации
-         */
-        transform: (text) => {
-          const value = JSON.parse(text)
-            .filter(Boolean)
-            .filter((element) => element.url && element.id);
-          return value.length
-            ? value
-            : [
-                {
-                  url: "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css",
-                  id: crypto.randomUUID(),
-                },
-              ];
-        },
-      },
-      {
-        key: "index.htm",
-        contentType: "text/html",
-        value:
-          '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else><v-runtime-template :parent="this" :template="template"></v-runtime-template></article></div></div>',
-        ref: template,
-      },
-    ];
     if (newS3) {
-      files.forEach((file) => {
+      get(files).forEach((file) => {
         (async () => {
           let { value } = file;
           try {
@@ -285,36 +343,11 @@ export default defineStore("kosmos3", () => {
           set(file.ref, file.transform ? file.transform(value) : value);
         })();
       });
-      const assets = Object.values(
-        await (await fetch("orbita/assets-manifest.json")).json()
-      ).filter((asset) => !["index.htm", "site.webmanifest"].includes(asset));
-      assets.forEach((asset) => {
-        (async () => {
-          let body = null;
-          try {
-            const head = await headObject(asset);
-            if (
-              ["robots.txt", "error.html", "browserconfig.xml"].includes(asset)
-            ) {
-              const text = (
-                await (await fetch(`orbita/${asset}`)).text()
-              ).replace(/{{ domain }}/g, get(bucket));
-              body =
-                head.ContentLength !== new TextEncoder().encode(text).length
-                  ? text
-                  : null;
-            }
-          } catch (err) {
-            body = await (await fetch(`orbita/${asset}`)).blob();
-          }
-          if (body) putObject(asset, body.type, body);
-        })();
-      });
-    } else {
-      files.forEach((file) => {
+      assetsTrigger();
+    } else
+      get(files).forEach((file) => {
         set(file.ref, null);
       });
-    }
   });
   watchDebounced(
     semantics,
@@ -391,6 +424,7 @@ export default defineStore("kosmos3", () => {
     ...{ bucket, wendpoint, base },
     ...{ panel, snackbar, message },
     ...{
+      settings,
       content,
       semantics,
       template,
