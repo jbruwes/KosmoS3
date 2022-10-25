@@ -1,5 +1,5 @@
 <template lang="pug">
-v-single-k3(#="slot")
+v-single-k3(#="slot", v-bind="params")
   v-template-item-k3(
     :animate="animate",
     :classes="classes",
@@ -19,5 +19,6 @@ defineProps({
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
   variant: { default: undefined, type: String },
+  params: { default: undefined, type: Object },
 });
 </script>
