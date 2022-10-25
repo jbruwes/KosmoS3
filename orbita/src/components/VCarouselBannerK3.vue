@@ -7,11 +7,10 @@ v-carousel-k3(
 )
   v-single-banner-k3(
     :classes="classes",
-    :item="slot.item",
     :color="color",
     :animate="animate",
-    :date="slot.date",
-    :variant="variant"
+    :variant="variant",
+    :params="slot"
   )
 </template>
 <script setup>
