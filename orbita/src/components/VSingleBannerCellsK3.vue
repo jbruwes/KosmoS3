@@ -1,5 +1,5 @@
 <template lang="pug">
-v-single-k3(#="slot")
+v-single-k3(#="slot", v-bind="params")
   v-vanta-cells-k3(:height="height", :width="width", :options="options")
     v-template-banner-k3(
       :color="color",
@@ -22,5 +22,6 @@ defineProps({
   height: { default: undefined, type: [String, Number] },
   variant: { default: undefined, type: String },
   options: { default: undefined, type: Object },
+  params: { default: undefined, type: Object },
 });
 </script>
