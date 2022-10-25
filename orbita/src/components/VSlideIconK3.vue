@@ -5,7 +5,7 @@ v-slide-k3(#="slot")
     :animate="animate",
     :variant="variant",
     :height="height",
-    :width="width"
+    :width="width",
     :params="slot"
   )
 </template>
