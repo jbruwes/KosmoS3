@@ -1,11 +1,11 @@
 <template lang="pug">
 slot(
-  :title="typeof title === 'string' ? title : title ? getTitle(theItem) : undefined",
-  :date="typeof date === 'string' ? date : date && !isNaN(new Date(theItem.date || theItem.lastmod)) ? new Date(theItem.date || theItem.lastmod).toLocaleDateString() : undefined",
-  :description="typeof description === 'string' ? description : description ? theItem.description : undefined",
-  :icon="typeof icon === 'string' ? `mdi-${icon}` : icon ? `mdi-${theItem.icon || 'open-in-new'}` : undefined",
-  :image="typeof image === 'string' ? image : image ? theItem.image : undefined",
-  :href="typeof href === 'string' ? href : href ? url : undefined",
+  :title="title",
+  :date="date",
+  :description="description",
+  :icon="icon",
+  :image="image",
+  :href="href",
   :item="theItem"
 )
 </template>
@@ -53,5 +53,32 @@ const theItem = computed(() => {
 const url = computed(() => {
   const href = getHref(get(theItem));
   return href === get(routePath) ? "" : href;
+});
+const title = computed(() => {
+  if (typeof props.title === "string") return props.title;
+  return props.title ? getTitle(get(theItem)) : undefined;
+});
+const date = computed(() => {
+  if (typeof props.date === "string") return props.date;
+  return props.date &&
+    !Number.isNaN(new Date(get(theItem).date || get(theItem).lastmod))
+    ? new Date(get(theItem).date || get(theItem).lastmod).toLocaleDateString()
+    : undefined;
+});
+const description = computed(() => {
+  if (typeof props.description === "string") return props.description;
+  return props.description ? get(theItem).description : undefined;
+});
+const icon = computed(() => {
+  if (typeof props.icon === "string") return `mdi-${props.icon}`;
+  return props.icon ? `mdi-${get(theItem).icon || "open-in-new"}` : undefined;
+});
+const image = computed(() => {
+  if (typeof props.image === "string") return props.image;
+  return props.image ? get(theItem).image : undefined;
+});
+const href = computed(() => {
+  if (typeof props.href === "string") return props.href;
+  return props.href ? get(url) : undefined;
 });
 </script>
