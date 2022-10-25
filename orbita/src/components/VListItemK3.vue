@@ -2,13 +2,11 @@
 v-list-k3(#="slot")
   v-single-item-k3(
     :classes="classes",
-    :item="slot.item",
     :animate="animate",
-    :date="slot.date",
-    :description="slot.description",
     :variant="variant",
     :height="height",
-    :width="width"
+    :width="width",
+    :params="slot"
   )
 </template>
 <script setup>
