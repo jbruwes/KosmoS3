@@ -2,13 +2,11 @@
 v-slide-k3(#="slot")
   v-single-icon-k3(
     :classes="classes",
-    :item="slot.item",
     :animate="animate",
-    :date="slot.date",
-    :description="slot.description",
     :variant="variant",
     :height="height",
     :width="width"
+    :params="slot"
   )
 </template>
 <script setup>
