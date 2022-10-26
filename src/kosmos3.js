@@ -1,11 +1,6 @@
 import { ref, computed, watch } from "vue";
-import {
-  get,
-  set,
-  watchDebounced,
-  useFetch,
-  watchTriggerable,
-} from "@vueuse/core";
+import { get, set, watchDebounced, useFetch, whenever } from "@vueuse/core";
+import { logicAnd, logicNot } from "@vueuse/math";
 import { defineStore } from "pinia";
 import {
   HeadObjectCommand,
@@ -67,7 +62,7 @@ export default defineStore("kosmos3", () => {
    *
    * @type {object}
    */
-  const semantics = ref(undefined);
+  const tree = ref(undefined);
   /**
    * дизайн-шаблон сайта
    *
@@ -104,6 +99,9 @@ export default defineStore("kosmos3", () => {
    * @type {string}
    */
   const script = ref(undefined);
+  const semantics = computed(() =>
+    Array.isArray(get(tree)) && get(tree).length ? get(tree)[0] : undefined
+  );
   /**
    * считывание заголовка файла
    *
@@ -175,7 +173,67 @@ export default defineStore("kosmos3", () => {
     });
     return ret;
   };
-
+  const { data: templateData } = useFetch("orbita/index.htm");
+  const templateHtml = computed(() => {
+    let value = get(templateData);
+    if (value) {
+      value = value.replace(/{{ base }}/g, "/");
+      const lSemantics = get(semantics);
+      if (lSemantics)
+        value = value
+          .replace(
+            /{{ title }}/g,
+            (lSemantics.title ? lSemantics.title : lSemantics.value).replace(
+              /"/g,
+              "&quot;"
+            )
+          )
+          .replace(
+            /{{ description }}/g,
+            lSemantics.description
+              ? lSemantics.description.replace(/"/g, "&quot;")
+              : ""
+          )
+          .replace(
+            /{{ keywords }}/g,
+            lSemantics.keywords
+              ? lSemantics.keywords.replace(/"/g, "&quot;")
+              : ""
+          )
+          .replace(
+            /{{ image }}/g,
+            lSemantics.image
+              ? `https://${get(bucket)}/${encodeURI(lSemantics.image)}`
+              : ""
+          );
+      if (lSemantics && lSemantics.metrika)
+        value = value.replace(/{{ metrika }}/g, lSemantics.metrika);
+      else
+        value = value.replace(
+          /<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi,
+          ""
+        );
+      if (lSemantics && lSemantics.analytics)
+        value = value.replace(/{{ analytics }}/g, lSemantics.analytics);
+      else
+        value = value.replace(
+          /<script id="google"[^>]*>([\s\S]*?)<\/script>/gi,
+          ""
+        );
+      const lSettings = get(settings);
+      if (lSettings)
+        value = value
+          .replace(
+            /{{ yandex }}/g,
+            lSettings.yandex ? lSettings.yandex.replace(/"/g, "&quot;") : ""
+          )
+          .replace(
+            /{{ google }}/g,
+            lSettings.google ? lSettings.google.replace(/"/g, "&quot;") : ""
+          );
+    }
+    return value;
+  });
   const { data: assetsData } = useFetch("orbita/assets-manifest.json").json();
   const assets = computed(() =>
     get(assetsData)
@@ -184,33 +242,6 @@ export default defineStore("kosmos3", () => {
         )
       : undefined
   );
-  const { trigger: assetsTrigger } = watchTriggerable(assets, (value) => {
-    if (get(s3))
-      value.forEach((asset) => {
-        (async () => {
-          try {
-            const head = await headObject(asset);
-            if (
-              ["robots.txt", "error.html", "browserconfig.xml"].includes(asset)
-            )
-              throw new Error(head.ContentLength);
-          } catch (e) {
-            const byteLength = +e.message;
-            let { data: body } = await useFetch(`orbita/${asset}`).blob();
-            if (!Number.isNaN(byteLength)) {
-              body = new Blob(
-                [(await body.text()).replace(/{{ domain }}/g, get(bucket))],
-                { type: body.type }
-              );
-              if (byteLength === (await body.arrayBuffer()).byteLength)
-                body = null;
-            }
-            if (body) putObject(asset, body.type, body);
-          }
-        })();
-      });
-  });
-
   const base = computed(() =>
     get(wendpoint)
       ? `${get(wendpoint)}/${get(bucket)}/`
@@ -223,7 +254,7 @@ export default defineStore("kosmos3", () => {
       value: `{"visible":true,"value":"${get(
         bucket
       )}","id":"${crypto.randomUUID()}"}`,
-      ref: semantics,
+      ref: tree,
       /**
        *
        * @param {string} text параметр трансформации
@@ -330,29 +361,53 @@ export default defineStore("kosmos3", () => {
       ref: template,
     },
   ]);
-  watch(s3, async (newS3) => {
-    if (newS3) {
-      get(files).forEach((file) => {
-        (async () => {
-          let { value } = file;
-          try {
-            value = await getObject(file.key);
-          } catch (err) {
-            putObject(file.key, file.contentType, value);
+  whenever(s3, async () => {
+    get(files).forEach((file) => {
+      (async () => {
+        let { value } = file;
+        try {
+          value = await getObject(file.key);
+        } catch (err) {
+          putObject(file.key, file.contentType, value);
+        }
+        set(file.ref, file.transform ? file.transform(value) : value);
+      })();
+    });
+  });
+  whenever(logicNot(s3), () => {
+    get(files).forEach((file) => {
+      set(file.ref, null);
+    });
+  });
+  whenever(logicAnd(s3, assets), () => {
+    get(assets).forEach((asset) => {
+      (async () => {
+        try {
+          const head = await headObject(asset);
+          if (["robots.txt", "error.html", "browserconfig.xml"].includes(asset))
+            throw new Error(head.ContentLength);
+        } catch (e) {
+          const byteLength = +e.message;
+          const { data: body } = await useFetch(`orbita/${asset}`).blob();
+          let lBody = null;
+          if (Number.isNaN(byteLength)) lBody = get(body);
+          else {
+            const blob = new Blob(
+              [(await get(body).text()).replace(/{{ domain }}/g, get(bucket))],
+              { type: get(body).type }
+            );
+            if (byteLength !== (await blob.arrayBuffer()).byteLength)
+              lBody = blob;
           }
-          set(file.ref, file.transform ? file.transform(value) : value);
-        })();
-      });
-      assetsTrigger();
-    } else
-      get(files).forEach((file) => {
-        set(file.ref, null);
-      });
+          if (lBody) putObject(asset, lBody.type, lBody);
+        }
+      })();
+    });
   });
   watchDebounced(
-    semantics,
+    tree,
     () => {
-      set(message, "semantics changed!");
+      set(message, "tree changed!");
       set(snackbar, true);
     },
     { deep: true, ...debounce }
@@ -420,12 +475,16 @@ export default defineStore("kosmos3", () => {
     },
     debounce
   );
+  watch(templateHtml, (value) => {
+    console.log(value);
+  });
   return {
     ...{ bucket, wendpoint, base },
     ...{ panel, snackbar, message },
     ...{
       settings,
       content,
+      tree,
       semantics,
       template,
       scripts,
