@@ -61,6 +61,7 @@
     "@tinymce/tinymce-vue": "^5.0.0",
     "@vueuse/core": "^9.4.0",
     "@vueuse/head": "^0.9.8",
+    "@vueuse/math": "^9.4.0",
     "ace-builds": "^1.12.3",
     "animate.css": "^4.1.1",
     "core-js": "^3.26.0",
