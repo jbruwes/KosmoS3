@@ -31,7 +31,7 @@
     "start": "electron ."
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.194.0",
+    "@aws-sdk/client-s3": "^3.196.0",
     "@fontsource/arsenal": "^4.5.9",
     "@fontsource/bad-script": "^4.5.8",
     "@fontsource/caveat": "^4.5.9",
@@ -88,7 +88,7 @@
     "vue3-particles": "^2.3.3",
     "vue3-runtime-template": "^1.0.2",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.0.0-beta.14"
+    "vuetify": "^3.0.0-beta.15"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
@@ -107,7 +107,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsdoc": "^39.3.24",
+    "eslint-plugin-jsdoc": "^39.3.25",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.6.0",
     "eslint-plugin-vue-pug": "^0.5.4",
