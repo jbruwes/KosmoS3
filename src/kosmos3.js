@@ -1,5 +1,12 @@
 import { ref, computed, watch } from "vue";
-import { get, set, watchDebounced, useFetch, whenever } from "@vueuse/core";
+import {
+  get,
+  set,
+  watchDebounced,
+  useFetch,
+  whenever,
+  isDefined,
+} from "@vueuse/core";
 import { logicAnd, logicNot } from "@vueuse/math";
 import { defineStore } from "pinia";
 import {
@@ -32,7 +39,7 @@ export default defineStore("kosmos3", () => {
    *
    * @type {boolean}
    */
-  const panel = ref(null);
+  const panel = ref();
   /**
    * корзина в сервисе s3
    *
@@ -50,55 +57,55 @@ export default defineStore("kosmos3", () => {
    *
    * @type {object}
    */
-  const s3 = ref(null);
+  const s3 = ref();
   /**
    * контент выбранной страницы сайта
    *
    * @type {string}
    */
-  const content = ref(undefined);
+  const content = ref();
   /**
    * семантическое ядро сайта
    *
    * @type {object}
    */
-  const tree = ref(undefined);
+  const tree = ref();
   /**
    * дизайн-шаблон сайта
    *
    * @type {string}
    */
-  const template = ref(undefined);
+  const template = ref();
   /**
    * инлайн стили сайта
    *
    * @type {string}
    */
-  const style = ref(undefined);
+  const style = ref();
   /**
    * подключаемые стили сайта
    *
    * @type {string}
    */
-  const styles = ref(undefined);
+  const styles = ref();
   /**
    * подключаемые скрипты сайта
    *
    * @type {object}
    */
-  const scripts = ref(undefined);
+  const scripts = ref();
   /**
    * настройки сайта
    *
    * @type {object}
    */
-  const settings = ref(undefined);
+  const settings = ref();
   /**
    * скрипт запускаемый на каждой странице
    *
    * @type {string}
    */
-  const script = ref(undefined);
+  const script = ref();
   const semantics = computed(() =>
     Array.isArray(get(tree)) && get(tree).length ? get(tree)[0] : undefined
   );
@@ -174,76 +181,133 @@ export default defineStore("kosmos3", () => {
     return ret;
   };
   const { data: templateData } = useFetch("orbita/index.htm");
+  const title = computed(() => {
+    try {
+      return (get(semantics).title || get(semantics).value).replace(
+        /"/g,
+        "&quot;"
+      );
+    } catch (e) {
+      return "";
+    }
+  });
+  const description = computed(() => {
+    try {
+      return get(semantics).description.replace(/"/g, "&quot;");
+    } catch (e) {
+      return "";
+    }
+  });
+  const keywords = computed(() => {
+    try {
+      return get(semantics).keywords.replace(/"/g, "&quot;");
+    } catch (e) {
+      return "";
+    }
+  });
+  const image = computed(() => {
+    try {
+      return get(semantics).image
+        ? `https://${get(bucket)}/${encodeURI(get(semantics).image)}`
+        : "";
+    } catch (e) {
+      return "";
+    }
+  });
+  const yandex = computed(() => {
+    try {
+      return get(settings).yandex.replace(/"/g, "&quot;");
+    } catch (e) {
+      return "";
+    }
+  });
+  const google = computed(() => {
+    try {
+      return get(settings).google.replace(/"/g, "&quot;");
+    } catch (e) {
+      return "";
+    }
+  });
+  const stylesheets = computed(() => {
+    try {
+      return get(styles)
+        .filter((element) => element.id && element.url)
+        .map(
+          (element) =>
+            `<link href="${encodeURI(element.url)}" rel="stylesheet">`
+        )
+        .join("");
+    } catch (e) {
+      return "";
+    }
+  });
+  const javascripts = computed(() => {
+    try {
+      return get(scripts)
+        .filter((element) => element.id && element.url)
+        .map(
+          (element) =>
+            `<script defer="defer" src="${encodeURI(element.url)}"></script>`
+        )
+        .join("");
+    } catch (e) {
+      return "";
+    }
+  });
+  const metrika = computed(() => {
+    try {
+      return get(settings).metrika.replace(/"/g, "&quot;");
+    } catch (e) {
+      return "";
+    }
+  });
+  const analytics = computed(() => {
+    try {
+      return get(settings).analytics.replace(/"/g, "&quot;");
+    } catch (e) {
+      return "";
+    }
+  });
+
   const templateHtml = computed(() => {
-    let value = get(templateData);
-    if (value) {
-      value = value.replace(/{{ base }}/g, "/");
-      const lSemantics = get(semantics);
-      if (lSemantics)
-        value = value
-          .replace(
-            /{{ title }}/g,
-            (lSemantics.title ? lSemantics.title : lSemantics.value).replace(
-              /"/g,
-              "&quot;"
-            )
-          )
-          .replace(
-            /{{ description }}/g,
-            lSemantics.description
-              ? lSemantics.description.replace(/"/g, "&quot;")
-              : ""
-          )
-          .replace(
-            /{{ keywords }}/g,
-            lSemantics.keywords
-              ? lSemantics.keywords.replace(/"/g, "&quot;")
-              : ""
-          )
-          .replace(
-            /{{ image }}/g,
-            lSemantics.image
-              ? `https://${get(bucket)}/${encodeURI(lSemantics.image)}`
-              : ""
-          );
-      if (lSemantics && lSemantics.metrika)
-        value = value.replace(/{{ metrika }}/g, lSemantics.metrika);
-      else
-        value = value.replace(
-          /<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi,
-          ""
-        );
-      if (lSemantics && lSemantics.analytics)
-        value = value.replace(/{{ analytics }}/g, lSemantics.analytics);
-      else
-        value = value.replace(
-          /<script id="google"[^>]*>([\s\S]*?)<\/script>/gi,
-          ""
-        );
-      const lSettings = get(settings);
-      if (lSettings)
-        value = value
-          .replace(
-            /{{ yandex }}/g,
-            lSettings.yandex ? lSettings.yandex.replace(/"/g, "&quot;") : ""
-          )
-          .replace(
-            /{{ google }}/g,
-            lSettings.google ? lSettings.google.replace(/"/g, "&quot;") : ""
-          );
+    let value;
+    if (
+      isDefined(templateData) &&
+      isDefined(semantics) &&
+      isDefined(settings) &&
+      isDefined(styles) &&
+      isDefined(scripts)
+    ) {
+      value = get(templateData);
+      value = value
+        .replace(/{{ base }}/g, "/")
+        .replace(/{{ title }}/g, get(title))
+        .replace(/{{ description }}/g, get(description))
+        .replace(/{{ keywords }}/g, get(keywords))
+        .replace(/{{ image }}/g, get(image))
+        .replace(/{{ yandex }}/g, get(yandex))
+        .replace(/{{ google }}/g, get(google))
+        .replace(/{{ styles }}/g, get(stylesheets))
+        .replace(/{{ scripts }}/g, get(javascripts));
+      value = get(metrika)
+        ? value.replace(/{{ metrika }}/g, get(metrika))
+        : value.replace(/<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi, "");
+      value = get(analytics)
+        ? value.replace(/{{ analytics }}/g, get(analytics))
+        : value.replace(/<script id="google"[^>]*>([\s\S]*?)<\/script>/gi, "");
     }
     return value;
   });
   const { data: assetsData } = useFetch("orbita/assets-manifest.json").json();
   const assets = computed(() =>
-    get(assetsData)
+    isDefined(assetsData)
       ? Object.values(get(assetsData)).filter(
           (asset) => !["index.htm", "site.webmanifest"].includes(asset)
         )
       : undefined
   );
   const base = computed(() =>
-    get(wendpoint)
+    isDefined(wendpoint)
       ? `${get(wendpoint)}/${get(bucket)}/`
       : `https://${get(bucket)}/`
   );
