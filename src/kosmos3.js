@@ -1,4 +1,4 @@
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import {
   get,
   set,
@@ -417,12 +417,65 @@ export default defineStore("kosmos3", () => {
             ];
       },
     },
+    /*
     {
       key: "index.htm",
       contentType: "text/html",
       value:
         '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else><v-runtime-template :parent="this" :template="template"></v-runtime-template></article></div></div>',
       ref: template,
+    },
+    */
+    {
+      key: "template.json",
+      contentType: "application/json",
+      value: "[]",
+      ref: template,
+      /**
+       *
+       * @param {string} text параметр трансформации
+       * @returns {object} результат трасформации
+       */
+      transform(text) {
+        let value;
+        try {
+          value = JSON.parse(text).filter(Boolean);
+          value.forEach((element) => {
+            const lElement = element;
+            if (lElement.draggable) lElement.draggable = true;
+          });
+        } catch (e) {
+          value = this.value;
+        }
+        return value.length
+          ? value
+          : [
+              {
+                rotation: 0,
+                x: 10,
+                y: 10,
+                width: 100,
+                height: 100,
+                scaleX: 1,
+                scaleY: 1,
+                fill: "red",
+                name: "rect1",
+                draggable: true,
+              },
+              {
+                rotation: 0,
+                x: 150,
+                y: 150,
+                width: 100,
+                height: 100,
+                scaleX: 1,
+                scaleY: 1,
+                fill: "green",
+                name: "rect2",
+                draggable: true,
+              },
+            ];
+      },
     },
   ]);
   whenever(s3, async () => {
@@ -525,11 +578,11 @@ export default defineStore("kosmos3", () => {
   );
   watchDebounced(
     template,
-    () => {
-      set(message, "template changed!");
-      set(snackbar, true);
+    (value, oldValue) => {
+      if (value && oldValue)
+        putObject("template.json", "application/json", JSON.stringify(value));
     },
-    debounce
+    { deep: true, ...debounce }
   );
   watchDebounced(
     content,
@@ -539,9 +592,14 @@ export default defineStore("kosmos3", () => {
     },
     debounce
   );
-  watch(templateHtml, (value) => {
-    console.log(value);
-  });
+  watchDebounced(
+    templateHtml,
+    () => {
+      set(message, "templateHtml changed!");
+      set(snackbar, true);
+    },
+    { deep: true, ...debounce }
+  );
   return {
     ...{ bucket, wendpoint, base },
     ...{ panel, snackbar, message },
