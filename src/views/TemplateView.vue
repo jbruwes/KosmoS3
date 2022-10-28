@@ -5,9 +5,19 @@ v-navigation-drawer(
   :width="320",
   :temporary="mobile"
 )
+  v-tabs(v-model="drawer", :grow="true", stacked)
+    v-tab(value="1")
+      v-icon mdi-format-list-bulleted-square
+    v-tab(value="2")
+      v-icon mdi-card-bulleted-settings-outline
+  v-window(v-model="drawer")
+    v-window-item(value="1")
+      v-container.h-100(fluid) tree
+    v-window-item(value="2")
+      v-container.h-100(fluid) attrs
 .rounded.border.d-flex.flex-column.overflow-hidden.h-100
-  v-tabs(v-model="tab", show-arrows, grow, density="compact")
-    v-tab(value="1", prepend-icon="mdi-eye") Visual
+  v-tabs(v-model="tab", show-arrows, grow)
+    v-tab(value="1", prepend-icon="mdi-ungroup") Layout
     v-tab(value="2", prepend-icon="mdi-eye") Visual
     v-tab(value="3", prepend-icon="mdi-code-tags") Source
   v-window.h-100(v-model="tab")
@@ -15,7 +25,7 @@ v-navigation-drawer(
       .h-100(ref="el")
         iframe.h-100.w-100.border-0
         // eslint-disable-next-line
-        v-overlay(:model-value="true", :scrim="false", :zIndex="0", contained)
+        v-overlay(:model-value="true", :scrim="false", :zIndex="1", contained, persistent, no-click-animation)
           v-stage(
             ref="stage",
             :config="{ width, height }",
@@ -24,10 +34,11 @@ v-navigation-drawer(
           )
             v-layer(ref="layer")
               v-rect(
-                v-for="item in rectangles",
+                v-for="item in template",
                 :key="item.id",
                 :config="item",
-                @transformend="handleTransformEnd"
+                @transformend="handleTransformAndDragEnd",
+                @dragend="handleTransformAndDragEnd"
               )
               v-transformer(
                 ref="transformer",
@@ -49,47 +60,23 @@ import VWysiwyg from "@/components/VWysiwyg.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = kosmos3();
-const { panel } = storeToRefs(store);
+const { panel, template } = storeToRefs(store);
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
 const tab = ref(1);
-const el = ref(null);
-const transformer = ref(null);
-const stage = ref(null);
+const drawer = ref(1);
+const el = ref();
+const transformer = ref();
+const stage = ref();
 const { width, height } = useElementSize(el);
-const rectangles = ref([
-  {
-    rotation: 0,
-    x: 10,
-    y: 10,
-    width: 100,
-    height: 100,
-    scaleX: 1,
-    scaleY: 1,
-    fill: "red",
-    name: "rect1",
-    draggable: true,
-  },
-  {
-    rotation: 0,
-    x: 150,
-    y: 150,
-    width: 100,
-    height: 100,
-    scaleX: 1,
-    scaleY: 1,
-    fill: "green",
-    name: "rect2",
-    draggable: true,
-  },
-]);
-const selectedShapeName = ref(null);
+const selectedShapeName = ref();
 /**
  *
  * @param {object} e событие
  */
-const handleTransformEnd = (e) => {
-  const rect = get(rectangles).find((r) => r.name === get(selectedShapeName));
+const handleTransformAndDragEnd = (e) => {
+  const name = e.target.name();
+  const rect = get(template).find((r) => r.name === name);
   rect.x = e.target.x();
   rect.y = e.target.y();
   rect.rotation = e.target.rotation();
@@ -103,8 +90,7 @@ const handleTransformEnd = (e) => {
  */
 const handleStageMouseDown = (e) => {
   const name = e.target.name();
-  if (get(rectangles).find((r) => r.name === name))
-    set(selectedShapeName, name);
+  if (get(template).find((r) => r.name === name)) set(selectedShapeName, name);
 };
 watch(selectedShapeName, (value) => {
   get(transformer)
@@ -114,7 +100,7 @@ watch(selectedShapeName, (value) => {
 
 onMounted(() => {
   setTimeout(() => {
-    set(selectedShapeName, "rect1");
+    set(selectedShapeName, get(template, 0).name);
   });
 });
 </script>
