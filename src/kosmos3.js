@@ -439,11 +439,28 @@ export default defineStore("kosmos3", () => {
       transform(text) {
         let value;
         try {
-          value = JSON.parse(text).filter(Boolean);
-          value.forEach((element) => {
-            const lElement = element;
-            if (lElement.draggable) lElement.draggable = true;
-          });
+          value = JSON.parse(text)
+            .filter(Boolean)
+            .map((element) => {
+              const lElement = { ...element };
+              if (!lElement.draggable) lElement.draggable = true;
+              if (!lElement.id) lElement.id = crypto.randomUUID();
+              return lElement;
+            });
+          if (!value.find((element) => element.name === "content"))
+            value.push({
+              id: crypto.randomUUID(),
+              rotation: 0,
+              x: 10,
+              y: 10,
+              width: 100,
+              height: 100,
+              scaleX: 1,
+              scaleY: 1,
+              fill: "red",
+              name: "content",
+              draggable: true,
+            });
         } catch (e) {
           value = this.value;
         }
@@ -451,6 +468,7 @@ export default defineStore("kosmos3", () => {
           ? value
           : [
               {
+                id: crypto.randomUUID(),
                 rotation: 0,
                 x: 10,
                 y: 10,
@@ -459,10 +477,11 @@ export default defineStore("kosmos3", () => {
                 scaleX: 1,
                 scaleY: 1,
                 fill: "red",
-                name: "rect1",
+                name: "content",
                 draggable: true,
               },
               {
+                id: crypto.randomUUID(),
                 rotation: 0,
                 x: 150,
                 y: 150,
