@@ -12,7 +12,30 @@ v-navigation-drawer(
       v-icon mdi-card-bulleted-settings-outline
   v-window(v-model="drawer")
     v-window-item(value="1")
-      v-container.h-100(fluid) tree
+      v-container.h-100(fluid)
+        v-list
+          draggable(v-model="template", item-key="id")
+            template(#item="{ element, index }")
+              v-list-item(
+                :value="element.id",
+                :active="element.id === id",
+                @click="id = element.id"
+              )
+                template(#prepend)
+                  v-list-item-action
+                    v-icon mdi-lock-outline
+                    v-checkbox-btn
+                    v-icon mdi-minus-circle-outline
+                v-text-field(
+                  v-model="element.name",
+                  variant="underlined",
+                  @click:prepend-inner="template.length - 1 && template.splice(index, 1)",
+                  @click:append-inner="template.splice(index + 1, 0, { name: '', id: uuid() })"
+                )
+                template(#append)
+                  v-list-item-action
+                    v-icon mdi-plus-circle-outline
+                    v-icon mdi-drag-vertical
     v-window-item(value="2")
       v-container.h-100(fluid) attrs
 .rounded.border.d-flex.flex-column.overflow-hidden.h-100
@@ -24,8 +47,14 @@ v-navigation-drawer(
     v-window-item.h-100(value="1", :eager="true")
       .h-100(ref="el")
         iframe.h-100.w-100.border-0
-        // eslint-disable-next-line
-        v-overlay(:model-value="true", :scrim="false", :zIndex="1", contained, persistent, no-click-animation)
+        v-overlay(
+          :model-value="true",
+          :scrim="false",
+          z-index="0",
+          contained,
+          persistent,
+          no-click-animation
+        )
           v-stage(
             ref="stage",
             :config="{ width, height }",
@@ -34,11 +63,11 @@ v-navigation-drawer(
           )
             v-layer(ref="layer")
               v-rect(
-                v-for="item in template",
+                v-for="item in [...template].reverse()",
                 :key="item.id",
                 :config="item",
-                @transformend="handleTransformAndDragEnd",
-                @dragend="handleTransformAndDragEnd"
+                @transformend="rect",
+                @dragend="rect"
               )
               v-transformer(
                 ref="transformer",
@@ -52,9 +81,10 @@ v-navigation-drawer(
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import { useDisplay } from "vuetify";
-import { get, set, useElementSize } from "@vueuse/core";
+import { get, set, useElementSize, watchTriggerable } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import Konva from "konva";
+import draggable from "vuedraggable";
 import kosmos3 from "@/kosmos3";
 import VWysiwyg from "@/components/VWysiwyg.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
@@ -69,38 +99,42 @@ const el = ref();
 const transformer = ref();
 const stage = ref();
 const { width, height } = useElementSize(el);
-const selectedShapeName = ref();
+const id = ref();
 /**
  *
  * @param {object} e событие
  */
-const handleTransformAndDragEnd = (e) => {
+const rect = (e) => {
   const name = e.target.name();
-  const rect = get(template).find((r) => r.name === name);
-  rect.x = e.target.x();
-  rect.y = e.target.y();
-  rect.rotation = e.target.rotation();
-  rect.scaleX = e.target.scaleX();
-  rect.scaleY = e.target.scaleY();
-  rect.fill = Konva.Util.getRandomColor();
+  const lRect = get(template).find((r) => r.name === name);
+  lRect.x = e.target.x();
+  lRect.y = e.target.y();
+  lRect.rotation = e.target.rotation();
+  lRect.scaleX = e.target.scaleX();
+  lRect.scaleY = e.target.scaleY();
+  lRect.fill = Konva.Util.getRandomColor();
 };
 /**
  *
  * @param {object} e событие
  */
 const handleStageMouseDown = (e) => {
-  const name = e.target.name();
-  if (get(template).find((r) => r.name === name)) set(selectedShapeName, name);
+  const lId = e.target.id();
+  if (get(template).find((r) => r.id === lId)) set(id, lId);
 };
-watch(selectedShapeName, (value) => {
+watch(id, (value) => {
   get(transformer)
     .getNode()
-    .nodes([get(stage).getStage().findOne(`.${value}`)]);
+    .nodes([get(stage).getStage().findOne(`#${value}`)]);
 });
-
+const { trigger } = watchTriggerable(template, (value, oldValue) => {
+  if (value && !oldValue) set(id, get(value, 0).id);
+});
 onMounted(() => {
   setTimeout(() => {
-    set(selectedShapeName, get(template, 0).name);
+    trigger();
   });
 });
+/** @returns {string} uuid */
+const uuid = () => crypto.randomUUID();
 </script>
