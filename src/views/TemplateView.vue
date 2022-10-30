@@ -18,23 +18,32 @@ v-navigation-drawer(
             template(#item="{ element, index }")
               v-list-item(
                 :value="element.id",
-                :active="element.id === id",
-                @click="id = element.id"
+                :active="element.id === curId",
+                @click="clickRect(index)",
+                @blur="delete element.editing"
               )
                 template(#prepend)
                   v-list-item-action
-                    v-icon mdi-lock-outline
                     v-checkbox-btn
-                    v-icon mdi-minus-circle-outline
+                    v-icon(
+                      v-if="element.name !== 'content' && template.length > 1",
+                      @click="remRect(index)"
+                    ) mdi-minus-circle-outline
+                    v-icon(
+                      v-if="element.name === 'content' || template.length === 1"
+                    ) mdi-checkbox-blank-circle-outline
                 v-text-field(
-                  v-model="element.name",
+                  v-model.trim="element.name",
+                  :readonly="element.id !== curId || !element.editing",
+                  :disabled="element.name === 'content'",
                   variant="underlined",
-                  @click:prepend-inner="template.length - 1 && template.splice(index, 1)",
-                  @click:append-inner="template.splice(index + 1, 0, { name: '', id: uuid() })"
+                  validate-on="blur",
+                  :rules="[(v) => !!v || 'Field is required']",
+                  @blur="delete element.editing"
                 )
                 template(#append)
                   v-list-item-action
-                    v-icon mdi-plus-circle-outline
+                    v-icon(@click="addRect(index)") mdi-plus-circle-outline
                     v-icon mdi-drag-vertical
     v-window-item(value="2")
       v-container.h-100(fluid) attrs
@@ -63,7 +72,7 @@ v-navigation-drawer(
           )
             v-layer(ref="layer")
               v-rect(
-                v-for="item in [...template].reverse()",
+                v-for="item in reverseTemplate",
                 :key="item.id",
                 :config="item",
                 @transformend="rect",
@@ -79,7 +88,7 @@ v-navigation-drawer(
       v-source-code
 </template>
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { useDisplay } from "vuetify";
 import { get, set, useElementSize, watchTriggerable } from "@vueuse/core";
 import { storeToRefs } from "pinia";
@@ -93,13 +102,16 @@ const store = kosmos3();
 const { panel, template } = storeToRefs(store);
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
+const reverseTemplate = computed(() =>
+  Array.isArray(get(template)) ? [...get(template)].reverse() : get(template)
+);
 const tab = ref(1);
 const drawer = ref(1);
 const el = ref();
 const transformer = ref();
 const stage = ref();
 const { width, height } = useElementSize(el);
-const id = ref();
+const curId = ref();
 /**
  *
  * @param {object} e событие
@@ -119,22 +131,49 @@ const rect = (e) => {
  * @param {object} e событие
  */
 const handleStageMouseDown = (e) => {
-  const lId = e.target.id();
-  if (get(template).find((r) => r.id === lId)) set(id, lId);
+  const id = e.target.id();
+  if (get(template).find((r) => r.id === id)) set(curId, id);
 };
-watch(id, (value) => {
-  get(transformer)
-    .getNode()
-    .nodes([get(stage).getStage().findOne(`#${value}`)]);
+watch(curId, (value) => {
+  setTimeout(() => {
+    const node = get(stage).getStage().findOne(`#${value}`);
+    if (node) get(transformer).getNode().nodes([node]);
+  });
 });
 const { trigger } = watchTriggerable(template, (value, oldValue) => {
-  if (value && !oldValue) set(id, get(value, 0).id);
+  if (value && !oldValue) set(curId, get(value, 0).id);
 });
 onMounted(() => {
   setTimeout(() => {
     trigger();
   });
 });
-/** @returns {string} uuid */
-const uuid = () => crypto.randomUUID();
+/** @param {number} index индекс */
+const addRect = (index) => {
+  const id = crypto.randomUUID();
+  get(template).splice(index + 1, 0, {
+    id,
+    rotation: 0,
+    x: 10,
+    y: 10,
+    width: 100,
+    height: 100,
+    scaleX: 1,
+    scaleY: 1,
+    fill: "red",
+    name: "",
+    draggable: true,
+  });
+};
+/** @param {number} index индекс */
+const remRect = (index) => {
+  if (get(template).length - 1) get(template).splice(index, 1);
+};
+/** @param {number} index индекс */
+const clickRect = (index) => {
+  const lastIndex = get(template).length - 1;
+  const element = get(template)[index < lastIndex ? index : lastIndex];
+  if (get(curId) !== element.id) set(curId, element.id);
+  else element.editing = true;
+};
 </script>
