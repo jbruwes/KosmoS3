@@ -13,38 +13,39 @@ v-navigation-drawer(
   v-window(v-model="drawer")
     v-window-item(value="1")
       v-container.h-100(fluid)
-        v-list
-          draggable(v-model="template", item-key="id")
-            template(#item="{ element, index }")
-              v-list-item(
-                :value="element.id",
-                :active="element.id === curId",
-                @click="clickRect(index)",
-                @blur="delete element.editing"
-              )
-                template(#prepend)
-                  v-list-item-action
-                    v-checkbox-btn
-                    v-icon(
-                      v-if="element.name !== 'content' && template.length > 1",
-                      @click="remRect(index)"
-                    ) mdi-minus-circle-outline
-                    v-icon(
-                      v-if="element.name === 'content' || template.length === 1"
-                    ) mdi-checkbox-blank-circle-outline
-                v-text-field(
-                  v-model.trim="element.name",
-                  :readonly="element.id !== curId || !element.editing",
-                  :disabled="element.name === 'content'",
-                  variant="underlined",
-                  validate-on="blur",
-                  :rules="[(v) => !!v || 'Field is required']",
+        v-form(ref="form")
+          v-list
+            draggable(v-model="template", item-key="id")
+              template(#item="{ element, index }")
+                v-list-item(
+                  :value="element.id",
+                  :active="element.id === curId",
+                  @click="clickRect(index)",
                   @blur="delete element.editing"
                 )
-                template(#append)
-                  v-list-item-action
-                    v-icon(@click="addRect(index)") mdi-plus-circle-outline
-                    v-icon mdi-drag-vertical
+                  template(#prepend)
+                    v-list-item-action
+                      v-checkbox-btn
+                      v-icon(
+                        v-if="element.name !== 'content' && template.length > 1",
+                        @click="remRect(index)"
+                      ) mdi-minus-circle-outline
+                      v-icon(
+                        v-if="element.name === 'content' || template.length === 1"
+                      ) mdi-checkbox-blank-circle-outline
+                  v-text-field(
+                    v-model.trim="element.name",
+                    :readonly="element.id !== curId || !element.editing",
+                    :disabled="element.name === 'content'",
+                    variant="underlined",
+                    validate-on="blur",
+                    :rules="[(v) => !!v || 'Field is required']",
+                    @blur="delete element.editing"
+                  )
+                  template(#append)
+                    v-list-item-action
+                      v-icon(@click="addRect(index)") mdi-plus-circle-outline
+                      v-icon mdi-drag-vertical
     v-window-item(value="2")
       v-container.h-100(fluid) attrs
 .rounded.border.d-flex.flex-column.overflow-hidden.h-100
@@ -108,6 +109,7 @@ const reverseTemplate = computed(() =>
 const tab = ref(1);
 const drawer = ref(1);
 const el = ref();
+const form = ref();
 const transformer = ref();
 const stage = ref();
 const { width, height } = useElementSize(el);
@@ -164,6 +166,7 @@ const addRect = (index) => {
     name: "",
     draggable: true,
   });
+  get(form).validate();
 };
 /** @param {number} index индекс */
 const remRect = (index) => {
