@@ -9,10 +9,10 @@
         draggable(v-model="styles", item-key="id")
           template(#item="{ element, index }")
             v-text-field(
-              v-model="element.url",
+              v-model.trim="element.url",
               variant="underlined",
-              append-inner-icon="mdi-plus",
-              prepend-inner-icon="mdi-minus",
+              append-inner-icon="mdi-plus-circle-outline",
+              prepend-inner-icon="mdi-minus-circle-outline",
               append-icon="mdi-drag-vertical",
               @click:prepend-inner="styles.length - 1 && styles.splice(index, 1)",
               @click:append-inner="styles.splice(index + 1, 0, { url: '', id: uuid() })"

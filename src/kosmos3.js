@@ -117,7 +117,9 @@ export default defineStore("kosmos3", () => {
    */
   const headObject = async (Key) => {
     const Bucket = get(bucket);
-    const head = await get(s3).send(new HeadObjectCommand({ Bucket, Key }));
+    let head;
+    if (isDefined(s3))
+      head = await get(s3).send(new HeadObjectCommand({ Bucket, Key }));
     return head;
   };
   /**
@@ -131,9 +133,10 @@ export default defineStore("kosmos3", () => {
     const Bucket = get(bucket);
     const Body =
       typeof body === "string" ? new TextEncoder().encode(body) : body;
-    await get(s3).send(
-      new PutObjectCommand({ Bucket, Key, ContentType, Body })
-    );
+    if (isDefined(s3))
+      await get(s3).send(
+        new PutObjectCommand({ Bucket, Key, ContentType, Body })
+      );
   };
   /**
    * Запись файла
@@ -163,21 +166,24 @@ export default defineStore("kosmos3", () => {
   const getObject = async (Key) => {
     const Bucket = get(bucket);
     const ResponseCacheControl = "no-store";
-    const { Body } = await get(s3).send(
-      new GetObjectCommand({ ResponseCacheControl, Bucket, Key })
-    );
-    const ret = await new Promise((resolve) => {
-      const reader = Body.getReader();
-      const textDecoder = new TextDecoder();
-      (async function read(chunks) {
-        const { done, value } = await reader.read();
-        if (done) resolve(chunks.join(""));
-        else {
-          chunks.push(textDecoder.decode(value));
-          read(chunks);
-        }
-      })([]);
-    });
+    let ret;
+    if (isDefined(s3)) {
+      const { Body } = await get(s3).send(
+        new GetObjectCommand({ ResponseCacheControl, Bucket, Key })
+      );
+      ret = await new Promise((resolve) => {
+        const reader = Body.getReader();
+        const textDecoder = new TextDecoder();
+        (async function read(chunks) {
+          const { done, value } = await reader.read();
+          if (done) resolve(chunks.join(""));
+          else {
+            chunks.push(textDecoder.decode(value));
+            read(chunks);
+          }
+        })([]);
+      });
+    }
     return ret;
   };
   const { data: templateData } = useFetch("orbita/index.htm");
@@ -439,11 +445,29 @@ export default defineStore("kosmos3", () => {
       transform(text) {
         let value;
         try {
-          value = JSON.parse(text).filter(Boolean);
-          value.forEach((element) => {
-            const lElement = element;
-            if (lElement.draggable) lElement.draggable = true;
-          });
+          value = JSON.parse(text)
+            .filter(Boolean)
+            .map((element) => {
+              const lElement = { ...element };
+              if (!lElement.draggable) lElement.draggable = true;
+              if (!lElement.id) lElement.id = crypto.randomUUID();
+              if (lElement.editing !== undefined) delete lElement.editing;
+              return lElement;
+            });
+          if (!value.find((element) => element.name === "content"))
+            value.push({
+              id: crypto.randomUUID(),
+              rotation: 0,
+              x: 10,
+              y: 10,
+              width: 100,
+              height: 100,
+              scaleX: 1,
+              scaleY: 1,
+              fill: "red",
+              name: "content",
+              draggable: true,
+            });
         } catch (e) {
           value = this.value;
         }
@@ -451,6 +475,7 @@ export default defineStore("kosmos3", () => {
           ? value
           : [
               {
+                id: crypto.randomUUID(),
                 rotation: 0,
                 x: 10,
                 y: 10,
@@ -459,10 +484,11 @@ export default defineStore("kosmos3", () => {
                 scaleX: 1,
                 scaleY: 1,
                 fill: "red",
-                name: "rect1",
+                name: "content",
                 draggable: true,
               },
               {
+                id: crypto.randomUUID(),
                 rotation: 0,
                 x: 150,
                 y: 150,
