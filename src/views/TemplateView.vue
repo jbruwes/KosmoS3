@@ -38,8 +38,7 @@ v-navigation-drawer(
                     :readonly="element.id !== curId || !element.editing",
                     :disabled="element.name === 'content'",
                     variant="underlined",
-                    validate-on="blur",
-                    :rules="[(v) => !!v || 'Field is required']",
+                    :rules="[(v) => !!v || 'Field is required', (v) => !(template.filter((element) => element.name === v).length - 1) || 'Must be unique']",
                     @blur="delete element.editing"
                   )
                   template(#append)
@@ -119,8 +118,8 @@ const curId = ref();
  * @param {object} e событие
  */
 const rect = (e) => {
-  const name = e.target.name();
-  const lRect = get(template).find((r) => r.name === name);
+  const id = e.target.id();
+  const lRect = get(template).find((r) => r.id === id);
   lRect.x = e.target.x();
   lRect.y = e.target.y();
   lRect.rotation = e.target.rotation();
@@ -142,9 +141,14 @@ watch(curId, (value) => {
     if (node) get(transformer).getNode().nodes([node]);
   });
 });
-const { trigger } = watchTriggerable(template, (value, oldValue) => {
-  if (value && !oldValue) set(curId, get(value, 0).id);
-});
+const { trigger } = watchTriggerable(
+  template,
+  (value, oldValue) => {
+    if (value && !oldValue) set(curId, get(value, 0).id);
+    get(form).validate();
+  },
+  { deep: true }
+);
 onMounted(() => {
   setTimeout(() => {
     trigger();
@@ -166,7 +170,6 @@ const addRect = (index) => {
     name: "",
     draggable: true,
   });
-  get(form).validate();
 };
 /** @param {number} index индекс */
 const remRect = (index) => {
