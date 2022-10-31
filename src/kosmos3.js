@@ -445,29 +445,32 @@ export default defineStore("kosmos3", () => {
       transform(text) {
         let value;
         try {
-          value = JSON.parse(text)
-            .filter(Boolean)
-            .map((element) => {
-              const lElement = { ...element };
-              if (!lElement.draggable) lElement.draggable = true;
-              if (!lElement.id) lElement.id = crypto.randomUUID();
-              if (lElement.editing !== undefined) delete lElement.editing;
-              return lElement;
-            });
+          value = JSON.parse(text).filter(Boolean);
           if (!value.find((element) => element.name === "content"))
             value.push({
-              id: crypto.randomUUID(),
-              rotation: 0,
               x: 10,
               y: 10,
               width: 100,
               height: 100,
-              scaleX: 1,
-              scaleY: 1,
               fill: "red",
               name: "content",
-              draggable: true,
             });
+          value = value.map((element) => {
+            const lElement = { ...element };
+            [
+              { key: "scaleX", value: 1 },
+              { key: "scaleY", value: 1 },
+              { key: "rotation", value: 0 },
+              { key: "name", value: "" },
+              { key: "draggable", value: true },
+              { key: "k3Position", value: "static" },
+              { key: "id", value: crypto.randomUUID() },
+            ].forEach((attr) => {
+              if (!lElement[attr.key]) lElement[attr.key] = attr.value;
+            });
+            if (lElement.editing !== undefined) delete lElement.editing;
+            return lElement;
+          });
         } catch (e) {
           value = this.value;
         }
