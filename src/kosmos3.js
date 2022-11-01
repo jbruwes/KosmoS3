@@ -450,25 +450,37 @@ export default defineStore("kosmos3", () => {
             value.push({
               x: 10,
               y: 10,
-              width: 100,
-              height: 100,
-              fill: "red",
               name: "content",
             });
           value = value.map((element) => {
             const lElement = { ...element };
             [
-              { key: "scaleX", value: 1 },
-              { key: "scaleY", value: 1 },
+              { key: "params", value: {} },
+              { key: "height", value: 100 },
+              { key: "width", value: 100 },
               { key: "rotation", value: 0 },
               { key: "name", value: "" },
+              {
+                key: "fill",
+                value: `#${Math.random()
+                  .toString(16)
+                  .slice(-6)
+                  .padStart(6, 0)}`,
+              },
+              { key: "opacity", value: 0.1 },
               { key: "draggable", value: true },
-              { key: "k3Position", value: "static" },
               { key: "id", value: crypto.randomUUID() },
             ].forEach((attr) => {
               if (!lElement[attr.key]) lElement[attr.key] = attr.value;
             });
-            if (lElement.editing !== undefined) delete lElement.editing;
+            if (lElement.edit !== undefined) delete lElement.edit;
+            [
+              { key: "position", value: "static" },
+              { key: "responsive", value: false },
+            ].forEach((attr) => {
+              if (!lElement.params[attr.key])
+                lElement.params[attr.key] = attr.value;
+            });
             return lElement;
           });
         } catch (e) {
@@ -484,8 +496,6 @@ export default defineStore("kosmos3", () => {
                 y: 10,
                 width: 100,
                 height: 100,
-                scaleX: 1,
-                scaleY: 1,
                 fill: "red",
                 name: "content",
                 draggable: true,
@@ -497,8 +507,6 @@ export default defineStore("kosmos3", () => {
                 y: 150,
                 width: 100,
                 height: 100,
-                scaleX: 1,
-                scaleY: 1,
                 fill: "green",
                 name: "rect2",
                 draggable: true,
