@@ -12,7 +12,7 @@ v-navigation-drawer(
       v-icon mdi-move-resize
   v-window(v-model="drawer")
     v-window-item(value="1")
-      v-container.h-100(fluid)
+      v-container.h-100.pa-0(fluid)
         v-form(ref="form")
           v-list
             draggable(v-model="template", item-key="id")
@@ -21,44 +21,64 @@ v-navigation-drawer(
                   :value="element.id",
                   :active="element.id === curId",
                   @click="clickRect(index)",
-                  @blur="delete element.editing"
+                  @blur="delete element.edit"
                 )
                   template(#prepend)
                     v-list-item-action
                       v-checkbox-btn
                       v-icon(
                         v-if="element.name !== 'content' && template.length > 1",
-                        @click="remRect(index)"
+                        @click="delRect(index)"
                       ) mdi-minus-circle-outline
                       v-icon(
                         v-if="element.name === 'content' || template.length === 1"
                       ) mdi-checkbox-blank-circle-outline
                   v-text-field(
                     v-model.trim="element.name",
-                    :readonly="element.id !== curId || !element.editing",
+                    :readonly="element.id !== curId || !element.edit",
                     :disabled="element.name === 'content'",
                     variant="underlined",
                     :rules="[(v) => !!v || 'Field is required', (v) => !(template.filter((element) => element.name === v).length - 1) || 'Must be unique']",
-                    @blur="delete element.editing"
+                    @blur="delete element.edit"
                   )
                   template(#append)
                     v-list-item-action
                       v-icon(@click="addRect(index)") mdi-plus-circle-outline
                       v-icon mdi-drag-vertical
     v-window-item(value="2")
-      v-container.h-100.d-flex(fluid)
-        v-btn-toggle.mx-auto(
-          v-model="template[curIndex].k3Position",
-          mandatory
-        )
-          v-btn(value="static")
-            v-icon mdi-format-wrap-inline
-          v-btn(value="relative")
-            v-icon mdi-format-wrap-square
-          v-btn(value="absolute")
-            v-icon mdi-format-wrap-tight
-          v-btn(value="fixed")
-            v-icon mdi-format-wrap-top-bottom
+      v-container.h-100(fluid)
+        v-row.ma-3
+          v-btn-toggle.flex-grow-1(
+            v-model="template[curIndex].params.position",
+            mandatory,
+            variant="outlined",
+            divided
+          )
+            v-btn.flex-grow-1(
+              value="static",
+              prepend-icon="mdi-format-wrap-top-bottom",
+              stacked,
+              size="small"
+            ) static
+            v-btn.flex-grow-1(
+              value="absolute",
+              prepend-icon="mdi-format-wrap-square",
+              stacked,
+              size="small"
+            ) absolute
+            v-btn.flex-grow-1(
+              value="fixed",
+              prepend-icon="mdi-format-wrap-tight",
+              stacked,
+              size="small"
+            ) fixed
+        v-row.ma-3
+          v-switch(
+            v-model="template[curIndex].params.responsive",
+            label="RESPONSIVE",
+            color="primary",
+            inset
+          )
 .rounded.border.d-flex.flex-column.overflow-hidden.h-100
   v-tabs(v-model="tab", show-arrows, grow)
     v-tab(value="1", prepend-icon="mdi-ungroup") Layout
@@ -133,14 +153,17 @@ const curIndex = computed(() =>
  * @param {object} e событие
  */
 const rect = (e) => {
-  const id = e.target.id();
-  const lRect = get(template).find((r) => r.id === id);
-  lRect.x = e.target.x();
-  lRect.y = e.target.y();
-  lRect.rotation = e.target.rotation();
-  lRect.scaleX = e.target.scaleX();
-  lRect.scaleY = e.target.scaleY();
-  lRect.fill = Konva.Util.getRandomColor();
+  const shape = get(template).find((r) => r.id === e.target.id());
+  e.target.width(e.target.width() * e.target.scaleX());
+  e.target.height(e.target.height() * e.target.scaleY());
+  e.target.scaleX(1);
+  e.target.scaleY(1);
+  shape.x = e.target.x();
+  shape.y = e.target.y();
+  shape.rotation = e.target.rotation();
+  shape.width = e.target.width();
+  shape.height = e.target.height();
+  shape.fill = Konva.Util.getRandomColor();
 };
 /**
  *
@@ -171,30 +194,31 @@ onMounted(() => {
 });
 /** @param {number} index индекс */
 const addRect = (index) => {
-  const id = crypto.randomUUID();
   get(template).splice(index + 1, 0, {
-    id,
+    id: crypto.randomUUID(),
     rotation: 0,
     x: 10,
     y: 10,
     width: 100,
     height: 100,
-    scaleX: 1,
-    scaleY: 1,
-    fill: "red",
+    fill: Konva.Util.getRandomColor(),
+    opacity: 0.1,
     name: "",
     draggable: true,
+    params: { position: "static", responsive: false },
   });
 };
 /** @param {number} index индекс */
-const remRect = (index) => {
-  if (get(template).length - 1) get(template).splice(index, 1);
+const delRect = (index) => {
+  if (get(template).length - 1) {
+    get(template).splice(index, 1);
+    set(curId, get(template)[index || 1].id);
+  }
 };
 /** @param {number} index индекс */
 const clickRect = (index) => {
-  const lastIndex = get(template).length - 1;
-  const element = get(template)[index < lastIndex ? index : lastIndex];
+  const element = get(template)[index];
   if (get(curId) !== element.id) set(curId, element.id);
-  else element.editing = true;
+  else element.edit = true;
 };
 </script>
