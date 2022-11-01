@@ -9,7 +9,7 @@ v-navigation-drawer(
     v-tab(value="1")
       v-icon mdi-format-list-bulleted-square
     v-tab(value="2")
-      v-icon mdi-card-bulleted-settings-outline
+      v-icon mdi-move-resize
   v-window(v-model="drawer")
     v-window-item(value="1")
       v-container.h-100(fluid)
@@ -46,7 +46,19 @@ v-navigation-drawer(
                       v-icon(@click="addRect(index)") mdi-plus-circle-outline
                       v-icon mdi-drag-vertical
     v-window-item(value="2")
-      v-container.h-100(fluid) attrs
+      v-container.h-100.d-flex(fluid)
+        v-btn-toggle.mx-auto(
+          v-model="template[curIndex].k3Position",
+          mandatory
+        )
+          v-btn(value="static")
+            v-icon mdi-format-wrap-inline
+          v-btn(value="relative")
+            v-icon mdi-format-wrap-square
+          v-btn(value="absolute")
+            v-icon mdi-format-wrap-tight
+          v-btn(value="fixed")
+            v-icon mdi-format-wrap-top-bottom
 .rounded.border.d-flex.flex-column.overflow-hidden.h-100
   v-tabs(v-model="tab", show-arrows, grow)
     v-tab(value="1", prepend-icon="mdi-ungroup") Layout
@@ -113,6 +125,9 @@ const transformer = ref();
 const stage = ref();
 const { width, height } = useElementSize(el);
 const curId = ref();
+const curIndex = computed(() =>
+  get(template).findIndex((element) => element.id === get(curId))
+);
 /**
  *
  * @param {object} e событие
