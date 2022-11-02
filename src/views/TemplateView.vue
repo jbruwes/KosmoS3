@@ -11,13 +11,13 @@ v-navigation-drawer(
     v-tab(value="2")
       v-icon mdi-move-resize
   v-window(v-model="drawer")
-    v-window-item(value="1")
+    v-window-item(value="1", :eager="true")
       v-container.h-100.pa-0(fluid)
         v-form(ref="form")
           v-list
             draggable(v-model="template", item-key="id")
               template(#item="{ element, index }")
-                v-list-item(
+                v-list-item.px-1.py-0(
                   :value="element.id",
                   :active="element.id === curId",
                   @click="clickRect(index)",
@@ -46,8 +46,8 @@ v-navigation-drawer(
                       v-icon(@click="addRect(index)") mdi-plus-circle-outline
                       v-icon mdi-drag-vertical
     v-window-item(value="2")
-      v-container.h-100(fluid)
-        v-row.ma-3
+      v-container.h-100(v-if="~curIndex", fluid)
+        v-row.mx-0.mt-1.mb-3
           v-btn-toggle.flex-grow-1(
             v-model="template[curIndex].params.position",
             mandatory,
@@ -72,13 +72,72 @@ v-navigation-drawer(
               stacked,
               size="small"
             ) fixed
-        v-row.ma-3
-          v-switch(
-            v-model="template[curIndex].params.responsive",
-            label="RESPONSIVE",
-            color="primary",
-            inset
-          )
+        v-switch(
+          v-model="template[curIndex].params.type",
+          :label="`Type: ${template[curIndex].params.type}`",
+          inset,
+          :hide-details="true",
+          true-value="responsive",
+          false-value="fluid"
+        )
+        v-text-field(
+          v-model.number="template[curIndex].params.width",
+          label="width",
+          variant="underlined",
+          prepend-icon="mdi-lock",
+          clearable,
+          type="number"
+        )
+          template(#append)
+            v-icon(icon="mdi-success")
+        v-text-field(
+          v-model.number="template[curIndex].params.height",
+          label="height",
+          variant="underlined",
+          prepend-icon="mdi-lock",
+          clearable,
+          type="number"
+        )
+        v-text-field(
+          v-model.number="template[curIndex].params.top",
+          label="top",
+          variant="underlined",
+          prepend-icon="mdi-lock",
+          clearable,
+          type="number"
+        )
+        v-text-field(
+          v-model.number="template[curIndex].params.bottom",
+          label="bottom",
+          variant="underlined",
+          prepend-icon="mdi-lock",
+          clearable,
+          type="number"
+        )
+        v-text-field(
+          v-model.number="template[curIndex].params.left",
+          label="left",
+          variant="underlined",
+          prepend-icon="mdi-lock",
+          clearable,
+          type="number"
+        )
+        v-text-field(
+          v-model.number="template[curIndex].params.right",
+          label="right",
+          variant="underlined",
+          prepend-icon="mdi-lock",
+          clearable,
+          type="number"
+        )
+        v-text-field(
+          v-model.number="template[curIndex].rotation",
+          label="rotation",
+          variant="underlined",
+          prepend-icon="mdi-lock",
+          clearable,
+          type="number"
+        )
 .rounded.border.d-flex.flex-column.overflow-hidden.h-100
   v-tabs(v-model="tab", show-arrows, grow)
     v-tab(value="1", prepend-icon="mdi-ungroup") Layout
@@ -122,7 +181,13 @@ v-navigation-drawer(
 <script setup>
 import { ref, watch, onMounted, computed } from "vue";
 import { useDisplay } from "vuetify";
-import { get, set, useElementSize, watchTriggerable } from "@vueuse/core";
+import {
+  get,
+  set,
+  useElementSize,
+  watchTriggerable,
+  isDefined,
+} from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import Konva from "konva";
 import draggable from "vuedraggable";
@@ -146,7 +211,9 @@ const stage = ref();
 const { width, height } = useElementSize(el);
 const curId = ref();
 const curIndex = computed(() =>
-  get(template).findIndex((element) => element.id === get(curId))
+  isDefined(template)
+    ? get(template).findIndex((element) => element.id === get(curId))
+    : -1
 );
 /**
  *
@@ -154,16 +221,16 @@ const curIndex = computed(() =>
  */
 const rect = (e) => {
   const shape = get(template).find((r) => r.id === e.target.id());
-  e.target.width(e.target.width() * e.target.scaleX());
-  e.target.height(e.target.height() * e.target.scaleY());
+  e.target.width(Math.round(e.target.width() * e.target.scaleX()));
+  e.target.height(Math.round(e.target.height() * e.target.scaleY()));
   e.target.scaleX(1);
   e.target.scaleY(1);
+  e.target.rotation(Math.round(e.target.rotation()));
   shape.x = e.target.x();
   shape.y = e.target.y();
   shape.rotation = e.target.rotation();
   shape.width = e.target.width();
   shape.height = e.target.height();
-  shape.fill = Konva.Util.getRandomColor();
 };
 /**
  *
@@ -205,7 +272,17 @@ const addRect = (index) => {
     opacity: 0.1,
     name: "",
     draggable: true,
-    params: { position: "static", responsive: false },
+    params: {
+      position: "static",
+      type: "fluid",
+      width: 100,
+      height: 100,
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      rotation: 0,
+    },
   });
 };
 /** @param {number} index индекс */
