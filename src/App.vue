@@ -5,7 +5,7 @@ v-app
       v-app-bar-nav-icon(@click.stop="drawer = !drawer")
     v-app-bar-title
       v-icon.mr-2(icon="mdi-rocket-launch")
-      | kosmoS3
+      | kosmos3
     template(v-if="panel !== null", #append)
       v-btn(icon, @click.stop="panel = !panel")
         v-icon mdi-dots-vertical
