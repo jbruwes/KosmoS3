@@ -335,7 +335,7 @@ export default defineStore("kosmos3", () => {
         try {
           value = JSON.parse(text);
         } catch (e) {
-          value = this.value;
+          value = JSON.parse(this.value);
         }
         return value;
       },
@@ -355,7 +355,7 @@ export default defineStore("kosmos3", () => {
         try {
           value = JSON.parse(text);
         } catch (e) {
-          value = this.value;
+          value = JSON.parse(this.value);
         }
         return value;
       },
@@ -377,7 +377,7 @@ export default defineStore("kosmos3", () => {
             .filter(Boolean)
             .filter((element) => element.url && element.id);
         } catch (e) {
-          value = this.value;
+          value = JSON.parse(this.value);
         }
         return value.length ? value : [{ url: "", id: crypto.randomUUID() }];
       },
@@ -411,7 +411,7 @@ export default defineStore("kosmos3", () => {
             .filter(Boolean)
             .filter((element) => element.url && element.id);
         } catch (e) {
-          value = this.value;
+          value = JSON.parse(this.value);
         }
         return value.length
           ? value
@@ -446,72 +446,40 @@ export default defineStore("kosmos3", () => {
         let value;
         try {
           value = JSON.parse(text).filter(Boolean);
-          if (!value.find((element) => element.name === "content"))
-            value.push({
-              x: 10,
-              y: 10,
-              name: "content",
-            });
-          value = value.map((element) => {
-            const lElement = { ...element };
-            [
-              { key: "params", value: {} },
-              { key: "height", value: 100 },
-              { key: "width", value: 100 },
-              { key: "rotation", value: 0 },
-              { key: "name", value: "" },
-              {
-                key: "fill",
-                value: `#${Math.random()
-                  .toString(16)
-                  .slice(-6)
-                  .padStart(6, 0)}`,
-              },
-              { key: "opacity", value: 0.1 },
-              { key: "draggable", value: true },
-              { key: "id", value: crypto.randomUUID() },
-            ].forEach((attr) => {
-              if (!lElement[attr.key]) lElement[attr.key] = attr.value;
-            });
-            if (lElement.edit !== undefined) delete lElement.edit;
-            [
-              { key: "position", value: "static" },
-              { key: "responsive", value: false },
-            ].forEach((attr) => {
-              if (!lElement.params[attr.key])
-                lElement.params[attr.key] = attr.value;
-            });
-            return lElement;
-          });
         } catch (e) {
-          value = this.value;
+          value = JSON.parse(this.value);
         }
-        return value.length
-          ? value
-          : [
-              {
-                id: crypto.randomUUID(),
-                rotation: 0,
-                x: 10,
-                y: 10,
-                width: 100,
-                height: 100,
-                fill: "red",
-                name: "content",
-                draggable: true,
-              },
-              {
-                id: crypto.randomUUID(),
-                rotation: 0,
-                x: 150,
-                y: 150,
-                width: 100,
-                height: 100,
-                fill: "green",
-                name: "rect2",
-                draggable: true,
-              },
-            ];
+        if (!value.find((element) => element.name === "content"))
+          value.push({
+            x: 10,
+            y: 10,
+            name: "content",
+          });
+        value = value.map((element) => {
+          const lElement = { ...element };
+          [
+            { key: "params", value: {} },
+            {
+              key: "fill",
+              value: `#${Math.random().toString(16).slice(-6).padStart(6, 0)}`,
+            },
+            { key: "opacity", value: 0.1 },
+            { key: "draggable", value: true },
+            { key: "id", value: crypto.randomUUID() },
+          ].forEach((attr) => {
+            if (!lElement[attr.key]) lElement[attr.key] = attr.value;
+          });
+          if (lElement.edit !== undefined) delete lElement.edit;
+          [
+            { key: "position", value: "static" },
+            { key: "type", value: "fluid" },
+          ].forEach((attr) => {
+            if (!lElement.params[attr.key])
+              lElement.params[attr.key] = attr.value;
+          });
+          return lElement;
+        });
+        return value;
       },
     },
   ]);
