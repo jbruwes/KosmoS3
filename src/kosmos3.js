@@ -321,9 +321,7 @@ export default defineStore("kosmos3", () => {
     {
       key: "index.json",
       contentType: "application/json",
-      value: `{"visible":true,"value":"${get(
-        bucket
-      )}","id":"${crypto.randomUUID()}"}`,
+      value: "[]",
       ref: tree,
       /**
        *
@@ -333,10 +331,17 @@ export default defineStore("kosmos3", () => {
       transform(text) {
         let value;
         try {
-          value = JSON.parse(text);
+          [value] = JSON.parse(text);
+          value = [value].filter(Boolean);
         } catch (e) {
           value = JSON.parse(this.value);
         }
+        if (!value.length)
+          value.push({
+            visible: true,
+            value: get(bucket),
+            id: crypto.randomUUID(),
+          });
         return value;
       },
     },
@@ -373,13 +378,20 @@ export default defineStore("kosmos3", () => {
       transform(text) {
         let value;
         try {
-          value = JSON.parse(text)
-            .filter(Boolean)
-            .filter((element) => element.url && element.id);
+          value = JSON.parse(text);
+          if (!Array.isArray(value)) value = [value];
+          value.filter(Boolean).filter((element) => element.url);
         } catch (e) {
           value = JSON.parse(this.value);
         }
-        return value.length ? value : [{ url: "", id: crypto.randomUUID() }];
+        if (!value.length) value.push({ url: "" });
+        value.forEach((element) => {
+          Object.defineProperty(element, "id", {
+            value: element.id || crypto.randomUUID(),
+            enumerable: true,
+          });
+        });
+        return value;
       },
     },
     {
@@ -407,20 +419,23 @@ export default defineStore("kosmos3", () => {
       transform(text) {
         let value;
         try {
-          value = JSON.parse(text)
-            .filter(Boolean)
-            .filter((element) => element.url && element.id);
+          value = JSON.parse(text);
+          if (!Array.isArray(value)) value = [value];
+          value.filter(Boolean).filter((element) => element.url);
         } catch (e) {
           value = JSON.parse(this.value);
         }
-        return value.length
-          ? value
-          : [
-              {
-                url: "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css",
-                id: crypto.randomUUID(),
-              },
-            ];
+        if (!value.length)
+          value.push({
+            url: "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css",
+          });
+        value.forEach((element) => {
+          Object.defineProperty(element, "id", {
+            value: element.id || crypto.randomUUID(),
+            enumerable: true,
+          });
+        });
+        return value;
       },
     },
     /*
@@ -450,34 +465,77 @@ export default defineStore("kosmos3", () => {
           value = JSON.parse(this.value);
         }
         if (!value.find((element) => element.name === "content"))
-          value.push({
-            x: 10,
-            y: 10,
-            name: "content",
-          });
-        value = value.map((element) => {
-          const lElement = { ...element };
-          [
-            { key: "params", value: {} },
-            {
-              key: "fill",
-              value: `#${Math.random().toString(16).slice(-6).padStart(6, 0)}`,
+          value.push({ name: "content" });
+        value.forEach((element) => {
+          Object.defineProperties(element, {
+            id: { value: element.id || crypto.randomUUID(), enumerable: true },
+            x: { value: element.x || 0, writable: true, enumerable: true },
+            y: { value: element.y || 0, writable: true, enumerable: true },
+            width: {
+              value: element.width || 100,
+              writable: true,
+              enumerable: true,
             },
-            { key: "opacity", value: 0.1 },
-            { key: "draggable", value: true },
-            { key: "id", value: crypto.randomUUID() },
-          ].forEach((attr) => {
-            if (!lElement[attr.key]) lElement[attr.key] = attr.value;
+            height: {
+              value: element.height || 100,
+              writable: true,
+              enumerable: true,
+            },
+            fill: {
+              value:
+                element.fill ||
+                `#${Math.random().toString(16).slice(-6).padStart(6, 0)}`,
+              enumerable: true,
+            },
+            opacity: { value: 0.1, enumerable: true },
+            name: {
+              value: element.name || "",
+              writable: true,
+              enumerable: true,
+            },
+            draggable: { value: true, enumerable: true },
+            offsetX: {
+              /** @returns {number} сдвиг по x */ get: () => element.width / 2,
+              enumerable: true,
+            },
+            offsetY: {
+              /** @returns {number} сдвиг по y */ get: () => element.height / 2,
+              enumerable: true,
+            },
+            params: {
+              value: element.params || {},
+              enumerable: true,
+            },
+            edit: {
+              value: false,
+              writable: true,
+            },
           });
-          if (lElement.edit !== undefined) delete lElement.edit;
-          [
-            { key: "position", value: "static" },
-            { key: "type", value: "fluid" },
-          ].forEach((attr) => {
-            if (!lElement.params[attr.key])
-              lElement.params[attr.key] = attr.value;
+          Object.defineProperties(element.params, {
+            position: {
+              value: element.params.position || "static",
+              writable: true,
+              enumerable: true,
+            },
+            type: {
+              value: element.params.type || "fluid",
+              writable: true,
+              enumerable: true,
+            },
+            rotation: {
+              /** @returns {number} сдвиг по x */
+              get: () => element.rotation || 0,
+              /** @param {number} pValue угол поворота */
+              set: (pValue) => {
+                Object.defineProperty(element, "rotation", {
+                  value: pValue || 0,
+                  writable: true,
+                  enumerable: true,
+                });
+              },
+              enumerable: true,
+            },
           });
-          return lElement;
         });
         return value;
       },
