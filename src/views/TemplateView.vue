@@ -21,7 +21,7 @@ v-navigation-drawer(
                   :value="element.id",
                   :active="element.id === curId",
                   @click="clickRect(index)",
-                  @blur="delete element.edit"
+                  @blur="element.edit = false"
                 )
                   template(#prepend)
                     v-list-item-action
@@ -39,7 +39,7 @@ v-navigation-drawer(
                     :disabled="element.name === 'content'",
                     variant="underlined",
                     :rules="[(v) => !!v || 'Field is required', (v) => !(template.filter((element) => element.name === v).length - 1) || 'Must be unique']",
-                    @blur="delete element.edit"
+                    @blur="element.edit = false"
                   )
                   template(#append)
                     v-list-item-action
@@ -131,10 +131,9 @@ v-navigation-drawer(
           type="number"
         )
         v-text-field(
-          v-model.number="template[curIndex].rotation",
+          v-model.number="template[curIndex].params.rotation",
           label="rotation",
           variant="underlined",
-          prepend-icon="mdi-lock",
           clearable,
           type="number"
         )
@@ -261,7 +260,7 @@ onMounted(() => {
 });
 /** @param {number} index индекс */
 const addRect = (index) => {
-  get(template).splice(index + 1, 0, {
+  const shape = {
     id: crypto.randomUUID(),
     rotation: 0,
     x: 10,
@@ -272,24 +271,35 @@ const addRect = (index) => {
     opacity: 0.1,
     name: "",
     draggable: true,
+    /** @returns {number} сдвиг по x */
+    get offsetX() {
+      return this.width / 2;
+    },
+    /** @returns {number} сдвиг по y */
+    get offsetY() {
+      return this.height / 2;
+    },
     params: {
       position: "static",
       type: "fluid",
-      width: 100,
-      height: 100,
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      rotation: 0,
+      /** @returns {number} сдвиг по x */
+      get rotation() {
+        return shape.rotation || 0;
+      },
+      /** @param {number} pValue угол поворота */
+      set rotation(pValue) {
+        shape.rotation = pValue || 0;
+      },
     },
-  });
+  };
+  get(template).splice(index + 1, 0, shape);
 };
 /** @param {number} index индекс */
 const delRect = (index) => {
-  if (get(template).length - 1) {
+  const last = get(template).length - 1;
+  if (last) {
     get(template).splice(index, 1);
-    set(curId, get(template)[index || 1].id);
+    set(curId, get(template)[index === last ? index - 1 : index].id);
   }
 };
 /** @param {number} index индекс */
