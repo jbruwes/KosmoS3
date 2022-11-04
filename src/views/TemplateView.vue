@@ -80,62 +80,24 @@ v-navigation-drawer(
           true-value="responsive",
           false-value="fluid"
         )
-        v-text-field(
-          v-model.number="template[curIndex].params.width",
-          label="width",
-          variant="underlined",
-          prepend-icon="mdi-lock",
-          clearable,
-          type="number"
+        v-range-slider.mt-8(
+          v-model="template[curIndex].params.x",
+          step="1",
+          strict,
+          thumb-label="always"
         )
-          template(#append)
-            v-icon(icon="mdi-success")
-        v-text-field(
-          v-model.number="template[curIndex].params.height",
-          label="height",
-          variant="underlined",
-          prepend-icon="mdi-lock",
-          clearable,
-          type="number"
+        v-range-slider.mt-8(
+          v-model="template[curIndex].params.y",
+          step="1",
+          strict,
+          thumb-label="always"
         )
-        v-text-field(
-          v-model.number="template[curIndex].params.top",
-          label="top",
-          variant="underlined",
-          prepend-icon="mdi-lock",
-          clearable,
-          type="number"
-        )
-        v-text-field(
-          v-model.number="template[curIndex].params.bottom",
-          label="bottom",
-          variant="underlined",
-          prepend-icon="mdi-lock",
-          clearable,
-          type="number"
-        )
-        v-text-field(
-          v-model.number="template[curIndex].params.left",
-          label="left",
-          variant="underlined",
-          prepend-icon="mdi-lock",
-          clearable,
-          type="number"
-        )
-        v-text-field(
-          v-model.number="template[curIndex].params.right",
-          label="right",
-          variant="underlined",
-          prepend-icon="mdi-lock",
-          clearable,
-          type="number"
-        )
-        v-text-field(
-          v-model.number="template[curIndex].params.rotation",
-          label="rotation",
-          variant="underlined",
-          clearable,
-          type="number"
+        v-slider.mt-8(
+          v-model="template[curIndex].rotation",
+          step="1",
+          min="-180",
+          max="180",
+          thumb-label="always"
         )
 .rounded.border.d-flex.flex-column.overflow-hidden.h-100
   v-tabs(v-model="tab", show-arrows, grow)
@@ -188,7 +150,6 @@ import {
   isDefined,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import Konva from "konva";
 import draggable from "vuedraggable";
 import kosmos3 from "@/kosmos3";
 import VWysiwyg from "@/components/VWysiwyg.vue";
@@ -196,6 +157,7 @@ import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = kosmos3();
 const { panel, template } = storeToRefs(store);
+const { calcLayer } = store;
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
 const reverseTemplate = computed(() =>
@@ -260,39 +222,7 @@ onMounted(() => {
 });
 /** @param {number} index индекс */
 const addRect = (index) => {
-  const shape = {
-    id: crypto.randomUUID(),
-    rotation: 0,
-    x: 10,
-    y: 10,
-    width: 100,
-    height: 100,
-    fill: Konva.Util.getRandomColor(),
-    opacity: 0.1,
-    name: "",
-    draggable: true,
-    /** @returns {number} сдвиг по x */
-    get offsetX() {
-      return this.width / 2;
-    },
-    /** @returns {number} сдвиг по y */
-    get offsetY() {
-      return this.height / 2;
-    },
-    params: {
-      position: "static",
-      type: "fluid",
-      /** @returns {number} сдвиг по x */
-      get rotation() {
-        return shape.rotation || 0;
-      },
-      /** @param {number} pValue угол поворота */
-      set rotation(pValue) {
-        shape.rotation = pValue || 0;
-      },
-    },
-  };
-  get(template).splice(index + 1, 0, shape);
+  get(template).splice(index + 1, 0, calcLayer());
 };
 /** @param {number} index индекс */
 const delRect = (index) => {
