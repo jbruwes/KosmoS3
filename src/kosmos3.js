@@ -14,6 +14,7 @@ import {
   PutObjectCommand,
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
+import Konva from "konva";
 
 export default defineStore("kosmos3", () => {
   /**
@@ -274,6 +275,46 @@ export default defineStore("kosmos3", () => {
       return "";
     }
   });
+  /**
+   *
+   *
+   * @param {object} value объект слоя
+   * @returns {object} нормализованный объект слоя
+   */
+  const calcLayer = (value) => {
+    let lValue = { ...value };
+    lValue = { ...lValue, params: lValue.params || {} };
+    lValue = {
+      ...lValue,
+      id: lValue.id || crypto.randomUUID(),
+      x: lValue.x || 0,
+      y: lValue.y || 0,
+      width: lValue.width || 1,
+      height: lValue.height || 1,
+      rotation: lValue.rotation || 0,
+      fill: lValue.fill || Konva.Util.getRandomColor(),
+      opacity: 0.1,
+      name: lValue.name || "",
+      draggable: true,
+      /** @returns {number} сдвиг по x */
+      get offsetX() {
+        return lValue.width / 2;
+      },
+      /** @returns {number} сдвиг по y */
+      get offsetY() {
+        return lValue.height / 2;
+      },
+      edit: false,
+      params: {
+        ...(lValue.params || {}),
+        position: lValue.params.position || "static",
+        type: lValue.params.type || "fluid",
+        x: lValue.params.x || [0, 100],
+        y: lValue.params.y || [0, 100],
+      },
+    };
+    return lValue;
+  };
 
   const templateHtml = computed(() => {
     let value;
@@ -466,78 +507,7 @@ export default defineStore("kosmos3", () => {
         }
         if (!value.find((element) => element.name === "content"))
           value.push({ name: "content" });
-        value.forEach((element) => {
-          Object.defineProperties(element, {
-            id: { value: element.id || crypto.randomUUID(), enumerable: true },
-            x: { value: element.x || 0, writable: true, enumerable: true },
-            y: { value: element.y || 0, writable: true, enumerable: true },
-            width: {
-              value: element.width || 100,
-              writable: true,
-              enumerable: true,
-            },
-            height: {
-              value: element.height || 100,
-              writable: true,
-              enumerable: true,
-            },
-            fill: {
-              value:
-                element.fill ||
-                `#${Math.random().toString(16).slice(-6).padStart(6, 0)}`,
-              enumerable: true,
-            },
-            opacity: { value: 0.1, enumerable: true },
-            name: {
-              value: element.name || "",
-              writable: true,
-              enumerable: true,
-            },
-            draggable: { value: true, enumerable: true },
-            offsetX: {
-              /** @returns {number} сдвиг по x */ get: () => element.width / 2,
-              enumerable: true,
-            },
-            offsetY: {
-              /** @returns {number} сдвиг по y */ get: () => element.height / 2,
-              enumerable: true,
-            },
-            params: {
-              value: element.params || {},
-              enumerable: true,
-            },
-            edit: {
-              value: false,
-              writable: true,
-            },
-          });
-          Object.defineProperties(element.params, {
-            position: {
-              value: element.params.position || "static",
-              writable: true,
-              enumerable: true,
-            },
-            type: {
-              value: element.params.type || "fluid",
-              writable: true,
-              enumerable: true,
-            },
-            rotation: {
-              /** @returns {number} сдвиг по x */
-              get: () => element.rotation || 0,
-              /** @param {number} pValue угол поворота */
-              set: (pValue) => {
-                Object.defineProperty(element, "rotation", {
-                  value: pValue || 0,
-                  writable: true,
-                  enumerable: true,
-                });
-              },
-              enumerable: true,
-            },
-          });
-        });
-        return value;
+        return value.map((element) => calcLayer(element));
       },
     },
   ]);
@@ -678,5 +648,6 @@ export default defineStore("kosmos3", () => {
       style,
     },
     ...{ s3, putFile },
+    ...{ calcLayer },
   };
 });
