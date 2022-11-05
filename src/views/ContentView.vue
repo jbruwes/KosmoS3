@@ -36,9 +36,10 @@ import VWysiwyg from "@/components/VWysiwyg.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = kosmos3();
-const { panel, content } = storeToRefs(store);
+const { panel } = storeToRefs(store);
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
+const content = ref("");
 const tab = ref(1);
 const drawer = ref(1);
 </script>
