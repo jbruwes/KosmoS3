@@ -182,16 +182,14 @@ const curIndex = computed(() =>
  */
 const rect = (e) => {
   const shape = get(template).find((r) => r.id === e.target.id());
-  e.target.width(Math.round(e.target.width() * e.target.scaleX()));
-  e.target.height(Math.round(e.target.height() * e.target.scaleY()));
-  e.target.scaleX(1);
-  e.target.scaleY(1);
   e.target.rotation(Math.round(e.target.rotation()));
   shape.x = e.target.x();
   shape.y = e.target.y();
   shape.rotation = e.target.rotation();
   shape.width = e.target.width();
   shape.height = e.target.height();
+  shape.scaleX = e.target.scaleX();
+  shape.scaleY = e.target.scaleY();
 };
 /**
  *
