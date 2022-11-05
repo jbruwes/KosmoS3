@@ -6,7 +6,7 @@
   v-window.h-100(v-model="tab")
     v-window-item.h-100(value="1")
       v-container(fluid)
-        draggable(v-model="styles", item-key="id")
+        draggable(v-model="css", item-key="id")
           template(#item="{ element, index }")
             v-text-field(
               v-model.trim="element.url",
@@ -14,8 +14,8 @@
               append-inner-icon="mdi-plus-circle-outline",
               prepend-inner-icon="mdi-minus-circle-outline",
               append-icon="mdi-drag-vertical",
-              @click:prepend-inner="styles.length - 1 && styles.splice(index, 1)",
-              @click:append-inner="styles.splice(index + 1, 0, { url: '', id: uuid() })"
+              @click:prepend-inner="css.length - 1 && css.splice(index, 1)",
+              @click:append-inner="css.splice(index + 1, 0, { url: '', id: uuid() })"
             )
     v-window-item.h-100(value="2")
       v-source-code(v-model.trim="style", lang="css")
@@ -29,7 +29,7 @@ import kosmos3 from "@/kosmos3";
 import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = kosmos3();
-const { panel, styles, style } = storeToRefs(store);
+const { panel, css, style } = storeToRefs(store);
 set(panel, null);
 const tab = ref(1);
 /** @returns {string} uuid */
