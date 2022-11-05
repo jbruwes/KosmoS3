@@ -18,12 +18,6 @@ import Konva from "konva";
 
 export default defineStore("kosmos3", () => {
   /**
-   * настройки фильтра
-   *
-   * @constant {object}
-   */
-  const debounce = { debounce: 1000, maxWait: 10000 };
-  /**
    * текст сообщения об ошибке
    *
    * @type {string}
@@ -60,56 +54,11 @@ export default defineStore("kosmos3", () => {
    */
   const s3 = ref();
   /**
-   * контент выбранной страницы сайта
-   *
-   * @type {string}
-   */
-  const content = ref();
-  /**
-   * семантическое ядро сайта
+   * индекс сайта
    *
    * @type {object}
    */
-  const tree = ref();
-  /**
-   * дизайн-шаблон сайта
-   *
-   * @type {string}
-   */
-  const template = ref();
-  /**
-   * инлайн стили сайта
-   *
-   * @type {string}
-   */
-  const style = ref();
-  /**
-   * подключаемые стили сайта
-   *
-   * @type {string}
-   */
-  const styles = ref();
-  /**
-   * подключаемые скрипты сайта
-   *
-   * @type {object}
-   */
-  const scripts = ref();
-  /**
-   * настройки сайта
-   *
-   * @type {object}
-   */
-  const settings = ref();
-  /**
-   * скрипт запускаемый на каждой странице
-   *
-   * @type {string}
-   */
-  const script = ref();
-  const semantics = computed(() =>
-    Array.isArray(get(tree)) && get(tree).length ? get(tree)[0] : undefined
-  );
+  const index = ref();
   /**
    * считывание заголовка файла
    *
@@ -187,164 +136,6 @@ export default defineStore("kosmos3", () => {
     }
     return ret;
   };
-  const { data: templateData } = useFetch("orbita/index.htm");
-  const title = computed(() => {
-    try {
-      return (get(semantics).title || get(semantics).value).replace(
-        /"/g,
-        "&quot;"
-      );
-    } catch (e) {
-      return "";
-    }
-  });
-  const description = computed(() => {
-    try {
-      return get(semantics).description.replace(/"/g, "&quot;");
-    } catch (e) {
-      return "";
-    }
-  });
-  const keywords = computed(() => {
-    try {
-      return get(semantics).keywords.replace(/"/g, "&quot;");
-    } catch (e) {
-      return "";
-    }
-  });
-  const image = computed(() => {
-    try {
-      return get(semantics).image
-        ? `https://${get(bucket)}/${encodeURI(get(semantics).image)}`
-        : "";
-    } catch (e) {
-      return "";
-    }
-  });
-  const yandex = computed(() => {
-    try {
-      return get(settings).yandex.replace(/"/g, "&quot;");
-    } catch (e) {
-      return "";
-    }
-  });
-  const google = computed(() => {
-    try {
-      return get(settings).google.replace(/"/g, "&quot;");
-    } catch (e) {
-      return "";
-    }
-  });
-  const stylesheets = computed(() => {
-    try {
-      return get(styles)
-        .filter((element) => element.id && element.url)
-        .map(
-          (element) =>
-            `<link href="${encodeURI(element.url)}" rel="stylesheet">`
-        )
-        .join("");
-    } catch (e) {
-      return "";
-    }
-  });
-  const javascripts = computed(() => {
-    try {
-      return get(scripts)
-        .filter((element) => element.id && element.url)
-        .map(
-          (element) =>
-            `<script defer="defer" src="${encodeURI(element.url)}"></script>`
-        )
-        .join("");
-    } catch (e) {
-      return "";
-    }
-  });
-  const metrika = computed(() => {
-    try {
-      return get(settings).metrika.replace(/"/g, "&quot;");
-    } catch (e) {
-      return "";
-    }
-  });
-  const analytics = computed(() => {
-    try {
-      return get(settings).analytics.replace(/"/g, "&quot;");
-    } catch (e) {
-      return "";
-    }
-  });
-  /**
-   *
-   *
-   * @param {object} value объект слоя
-   * @returns {object} нормализованный объект слоя
-   */
-  const calcLayer = (value) => {
-    let lValue = { ...value };
-    lValue = { ...lValue, params: lValue.params || {} };
-    lValue = {
-      ...lValue,
-      id: lValue.id || crypto.randomUUID(),
-      x: lValue.x || 0,
-      y: lValue.y || 0,
-      width: lValue.width || 1,
-      height: lValue.height || 1,
-      rotation: lValue.rotation || 0,
-      fill: lValue.fill || Konva.Util.getRandomColor(),
-      opacity: 0.1,
-      name: lValue.name || "",
-      draggable: true,
-      /** @returns {number} сдвиг по x */
-      get offsetX() {
-        return lValue.width / 2;
-      },
-      /** @returns {number} сдвиг по y */
-      get offsetY() {
-        return lValue.height / 2;
-      },
-      edit: false,
-      params: {
-        ...(lValue.params || {}),
-        position: lValue.params.position || "static",
-        type: lValue.params.type || "fluid",
-        x: lValue.params.x || [0, 100],
-        y: lValue.params.y || [0, 100],
-      },
-    };
-    return lValue;
-  };
-
-  const templateHtml = computed(() => {
-    let value;
-    if (
-      isDefined(templateData) &&
-      isDefined(semantics) &&
-      isDefined(settings) &&
-      isDefined(styles) &&
-      isDefined(scripts)
-    ) {
-      value = get(templateData);
-      value = value
-        .replace(/{{ base }}/g, "/")
-        .replace(/{{ title }}/g, get(title))
-        .replace(/{{ description }}/g, get(description))
-        .replace(/{{ keywords }}/g, get(keywords))
-        .replace(/{{ image }}/g, get(image))
-        .replace(/{{ yandex }}/g, get(yandex))
-        .replace(/{{ google }}/g, get(google))
-        .replace(/{{ styles }}/g, get(stylesheets))
-        .replace(/{{ scripts }}/g, get(javascripts));
-      value = get(metrika)
-        ? value.replace(/{{ metrika }}/g, get(metrika))
-        : value.replace(/<script id="yandex"[^>]*>([\s\S]*?)<\/script>/gi, "");
-      value = get(analytics)
-        ? value.replace(/{{ analytics }}/g, get(analytics))
-        : value.replace(/<script id="google"[^>]*>([\s\S]*?)<\/script>/gi, "");
-    }
-    return value;
-  });
   const { data: assetsData } = useFetch("orbita/assets-manifest.json").json();
   const assets = computed(() =>
     isDefined(assetsData)
@@ -358,176 +149,227 @@ export default defineStore("kosmos3", () => {
       ? `${get(wendpoint)}/${get(bucket)}/`
       : `https://${get(bucket)}/`
   );
-  const files = computed(() => [
+  /**
+   *
+   *
+   * @param {object} value объект слоя
+   * @returns {object} нормализованный объект слоя
+   */
+  const calcLayer = (value) => {
+    const opacity = 0.1;
+    const draggable = true;
+    const edit = false;
+    const offsetX = 0.5;
+    const offsetY = 0.5;
+    let { params } = value || {};
     {
-      key: "index.json",
-      contentType: "application/json",
-      value: "[]",
-      ref: tree,
-      /**
-       *
-       * @param {string} text параметр трансформации
-       * @returns {object} результат трасформации
-       */
-      transform(text) {
-        let value;
-        try {
-          [value] = JSON.parse(text);
-          value = [value].filter(Boolean);
-        } catch (e) {
-          value = JSON.parse(this.value);
-        }
-        if (!value.length)
-          value.push({
-            visible: true,
-            value: get(bucket),
-            id: crypto.randomUUID(),
-          });
-        return value;
+      let { position, type, x, y } = params || {};
+      position = position || "static";
+      type = type || "fluid";
+      x = Array.isArray(x) ? x : [0, 100];
+      y = Array.isArray(y) ? y : [0, 100];
+      params = { ...params, position, type, x, y };
+    }
+    let { id, x, y, scaleX, scaleY, width, height, rotation, fill, name } =
+      value || {};
+    id = id || crypto.randomUUID();
+    x = x || 0;
+    y = y || 0;
+    scaleX = scaleX || 100;
+    scaleY = scaleY || 100;
+    width = width || 1;
+    height = height || 1;
+    rotation = rotation || 0;
+    fill = fill || Konva.Util.getRandomColor();
+    name = name || "";
+    return {
+      ...{ opacity, draggable, edit, offsetX, offsetY },
+      ...{
+        id,
+        x,
+        y,
+        scaleX,
+        scaleY,
+        width,
+        height,
+        rotation,
+        fill,
+        name,
+        params,
       },
-    },
-    {
-      key: "settings.json",
-      contentType: "application/json",
-      value: "{}",
-      ref: settings,
-      /**
-       *
-       * @param {string} text параметр трансформации
-       * @returns {object} результат трасформации
-       */
-      transform(text) {
-        let value;
-        try {
-          value = JSON.parse(text);
-        } catch (e) {
-          value = JSON.parse(this.value);
-        }
-        return value;
-      },
-    },
-    {
-      key: "scripts.json",
-      contentType: "application/json",
-      value: "[]",
-      ref: scripts,
-      /**
-       *
-       * @param {string} text параметр трансформации
-       * @returns {object} результат трасформации
-       */
-      transform(text) {
-        let value;
-        try {
-          value = JSON.parse(text);
-          if (!Array.isArray(value)) value = [value];
-          value.filter(Boolean).filter((element) => element.url);
-        } catch (e) {
-          value = JSON.parse(this.value);
-        }
-        if (!value.length) value.push({ url: "" });
-        value.forEach((element) => {
-          Object.defineProperty(element, "id", {
-            value: element.id || crypto.randomUUID(),
-            enumerable: true,
-          });
-        });
-        return value;
-      },
-    },
-    {
-      key: "index.js",
-      contentType: "application/javascript",
-      value: "",
-      ref: script,
-    },
-    {
-      key: "index.css",
-      contentType: "text/css",
-      value: "",
-      ref: style,
-    },
-    {
-      key: "styles.json",
-      contentType: "application/json",
-      value: "[]",
-      ref: styles,
-      /**
-       *
-       * @param {string} text параметр трансформации
-       * @returns {object} результат трасформации
-       */
-      transform(text) {
-        let value;
-        try {
-          value = JSON.parse(text);
-          if (!Array.isArray(value)) value = [value];
-          value.filter(Boolean).filter((element) => element.url);
-        } catch (e) {
-          value = JSON.parse(this.value);
-        }
-        if (!value.length)
-          value.push({
-            url: "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css",
-          });
-        value.forEach((element) => {
-          Object.defineProperty(element, "id", {
-            value: element.id || crypto.randomUUID(),
-            enumerable: true,
-          });
-        });
-        return value;
-      },
-    },
-    /*
-    {
-      key: "index.htm",
-      contentType: "text/html",
-      value:
-        '<div class="v-container py-0 position-static" style="z-index:1"><div id="content" style="margin:0px;flex:1 1 auto"><article v-if="!template"></article><article v-else><v-runtime-template :parent="this" :template="template"></v-runtime-template></article></div></div>',
-      ref: template,
-    },
-    */
-    {
-      key: "template.json",
-      contentType: "application/json",
-      value: "[]",
-      ref: template,
-      /**
-       *
-       * @param {string} text параметр трансформации
-       * @returns {object} результат трасформации
-       */
-      transform(text) {
-        let value;
-        try {
-          value = JSON.parse(text).filter(Boolean);
-        } catch (e) {
-          value = JSON.parse(this.value);
-        }
-        if (!value.find((element) => element.name === "content"))
-          value.push({ name: "content" });
-        return value.map((element) => calcLayer(element));
-      },
-    },
-  ]);
+    };
+  };
   whenever(s3, async () => {
-    get(files).forEach((file) => {
-      (async () => {
-        let { value } = file;
-        try {
-          value = await getObject(file.key);
-        } catch (err) {
-          putObject(file.key, file.contentType, value);
-        }
-        set(file.ref, file.transform ? file.transform(value) : value);
-      })();
-    });
+    let content;
+    let template;
+    let css;
+    let style;
+    let js;
+    let script;
+    let settings;
+    try {
+      ({ content, template, css, style, js, script, settings } = JSON.parse(
+        await getObject("index.json")
+      ));
+    } finally {
+      content = {
+        ...content,
+        id: content.id || crypto.randomUUID(),
+        value: content.value || get(bucket),
+        visible: content.visible === undefined ? true : !!content.visible,
+      };
+      template = Array.isArray(template) ? template.filter(Boolean) : [];
+      if (!template.find((element) => element.name === "content"))
+        template.push({ name: "content" });
+      template = template.map((element) => calcLayer(element));
+      css = Array.isArray(css)
+        ? css
+            .map((element) => {
+              let { id, url } = element || {};
+              id = id || crypto.randomUUID();
+              url = url || "";
+              return { id, url };
+            })
+            .filter((element) => element.url)
+        : [];
+      if (!css.length)
+        css.push({
+          id: crypto.randomUUID(),
+          url: "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css",
+        });
+      js = Array.isArray(js) ? js.filter(Boolean) : [];
+      js = Array.isArray(js)
+        ? js
+            .map((element) => {
+              let { id, url } = element || {};
+              id = id || crypto.randomUUID();
+              url = url || "";
+              return { id, url };
+            })
+            .filter((element) => element.url)
+        : [];
+      if (!js.length) js.push({ id: crypto.randomUUID(), url: "" });
+      style = String(style) === style ? style : "";
+      script = String(script) === script ? script : "";
+      const { yandex, metrika, google, analytics } = settings || {};
+      settings = { yandex, metrika, google, analytics };
+      set(index, { content, template, css, style, js, script, settings });
+    }
+  });
+  const settings = computed({
+    /**
+     * чтение настроек
+     *
+     * @returns {object} настройки
+     */
+    get: () => (isDefined(index) ? get(index).settings : undefined),
+    /**
+     * запись настроек
+     *
+     * @param {object} value настройки
+     */
+    set(value) {
+      get(index).settings = value;
+    },
+  });
+  const script = computed({
+    /**
+     * чтение скрипта
+     *
+     * @returns {string} скрипт
+     */
+    get: () => (isDefined(index) ? get(index).script : undefined),
+    /**
+     * запись скрипта
+     *
+     * @param {string} value скрипт
+     */
+    set(value) {
+      get(index).script = value;
+    },
+  });
+  const style = computed({
+    /**
+     * чтение стилей
+     *
+     * @returns {string} стили
+     */
+    get: () => (isDefined(index) ? get(index).style : undefined),
+    /**
+     * запись стилей
+     *
+     * @param {string} value стили
+     */
+    set(value) {
+      get(index).style = value;
+    },
+  });
+  const js = computed({
+    /**
+     * чтение массива ссылок на скрипты
+     *
+     * @returns {Array} массив ссылок на скрипты
+     */
+    get: () => (isDefined(index) ? get(index).js : undefined),
+    /**
+     * запись массива ссылок на скрипты
+     *
+     * @param {Array} value массив ссылок на скрипты
+     */
+    set(value) {
+      get(index).js = value.filter((element) => element.url);
+    },
+  });
+  const css = computed({
+    /**
+     * чтение массива ссылок на стили
+     *
+     * @returns {Array} массив ссылок на стили
+     */
+    get: () => (isDefined(index) ? get(index).css : undefined),
+    /**
+     * запись массива ссылок на стили
+     *
+     * @param {Array} value массив ссылок на стили
+     */
+    set(value) {
+      get(index).css = value.filter((element) => element.url);
+    },
+  });
+  const template = computed({
+    /**
+     * чтение шаблона
+     *
+     * @returns {Array} шаблон
+     */
+    get: () => (isDefined(index) ? get(index).template : undefined),
+    /**
+     * запись шаблона
+     *
+     * @param {Array} value шаблон
+     */
+    set(value) {
+      get(index).template = value;
+    },
+  });
+  const content = computed({
+    /**
+     * чтение контента
+     *
+     * @returns {object} контент
+     */
+    get: () => (isDefined(index) ? get(index).content : undefined),
+    /**
+     * запись контента
+     *
+     * @param {object} value контент
+     */
+    set(value) {
+      get(index).content = value;
+    },
   });
   whenever(logicNot(s3), () => {
-    get(files).forEach((file) => {
-      set(file.ref, null);
-    });
+    set(index, undefined);
   });
   whenever(logicAnd(s3, assets), () => {
     get(assets).forEach((asset) => {
@@ -555,98 +397,17 @@ export default defineStore("kosmos3", () => {
     });
   });
   watchDebounced(
-    tree,
-    () => {
-      set(message, "tree changed!");
-      set(snackbar, true);
-    },
-    { deep: true, ...debounce }
-  );
-  watchDebounced(
-    settings,
+    index,
     (value, oldValue) => {
       if (value && oldValue)
-        putObject("settings.json", "application/json", JSON.stringify(value));
+        putObject("index.json", "application/json", JSON.stringify(value));
     },
-    { deep: true, ...debounce }
-  );
-  watchDebounced(
-    scripts,
-    (value, oldValue) => {
-      if (value && oldValue)
-        putObject(
-          "scripts.json",
-          "application/json",
-          JSON.stringify(value.filter((element) => element.url))
-        );
-    },
-    { deep: true, ...debounce }
-  );
-  watchDebounced(
-    script,
-    (value, oldValue) => {
-      if (value && oldValue)
-        putObject("index.js", "application/javascript", value);
-    },
-    debounce
-  );
-  watchDebounced(
-    style,
-    (value, oldValue) => {
-      if (value && oldValue) putObject("index.css", "text/css", value);
-    },
-    debounce
-  );
-  watchDebounced(
-    styles,
-    (value, oldValue) => {
-      if (value && oldValue)
-        putObject(
-          "styles.json",
-          "application/json",
-          JSON.stringify(value.filter((element) => element.url))
-        );
-    },
-    { deep: true, ...debounce }
-  );
-  watchDebounced(
-    template,
-    (value, oldValue) => {
-      if (value && oldValue)
-        putObject("template.json", "application/json", JSON.stringify(value));
-    },
-    { deep: true, ...debounce }
-  );
-  watchDebounced(
-    content,
-    () => {
-      set(message, "content changed!");
-      set(snackbar, true);
-    },
-    debounce
-  );
-  watchDebounced(
-    templateHtml,
-    () => {
-      set(message, "templateHtml changed!");
-      set(snackbar, true);
-    },
-    { deep: true, ...debounce }
+    { deep: true, debounce: 1000, maxWait: 10000 }
   );
   return {
     ...{ bucket, wendpoint, base },
     ...{ panel, snackbar, message },
-    ...{
-      settings,
-      content,
-      tree,
-      semantics,
-      template,
-      scripts,
-      script,
-      styles,
-      style,
-    },
+    ...{ content, template, js, script, css, style, settings },
     ...{ s3, putFile },
     ...{ calcLayer },
   };
