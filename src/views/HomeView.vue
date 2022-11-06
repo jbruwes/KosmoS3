@@ -180,7 +180,7 @@ watch(cred, (value) => {
     set(secretAccessKey, value.secretAccessKey);
     set(
       provider,
-      get(providers).find((pProvider) => pProvider.title === value.provider)
+      get(providers).find(({ title }) => title === value.provider)
     );
     set(region, value.region);
     set(endpoint, value.endpoint);
@@ -211,7 +211,7 @@ const login = async () => {
           secretAccessKey: get(secretAccessKey),
         },
       });
-      const lCreds = get(creds).filter((pCred) => pCred.title !== get(bucket));
+      const lCreds = get(creds).filter(({ title }) => title !== get(bucket));
       if (get(remember))
         lCreds.push({
           title: get(bucket),
