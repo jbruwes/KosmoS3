@@ -27,18 +27,18 @@ v-navigation-drawer(
                     v-list-item-action
                       v-checkbox-btn
                       v-icon(
-                        v-if="element.name !== 'content' && template.length > 1",
+                        v-if="!(element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1)",
                         @click="delRect(index)"
                       ) mdi-minus-circle-outline
                       v-icon(
-                        v-if="element.name === 'content' || template.length === 1"
+                        v-if="element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1"
                       ) mdi-checkbox-blank-circle-outline
                   v-text-field(
                     v-model.trim="element.name",
                     :readonly="element.id !== curId || !element.edit",
-                    :disabled="element.name === 'content'",
+                    :disabled="element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1",
                     variant="underlined",
-                    :rules="[(v) => !!v || 'Field is required', (v) => !(template.filter((element) => element.name === v).length - 1) || 'Must be unique']",
+                    :rules="[(v) => !!v || 'Field is required', (v) => !(template.filter(({ name }) => name === v).length - 1) || 'Must be unique']",
                     @blur="element.edit = false"
                   )
                   template(#append)
@@ -46,7 +46,7 @@ v-navigation-drawer(
                       v-icon(@click="addRect(index)") mdi-plus-circle-outline
                       v-icon mdi-drag-vertical
     v-window-item(value="2")
-      v-container.h-100(v-if="~curIndex", fluid)
+      v-container.h-100(fluid)
         v-row.mx-0.mt-1.mb-3
           v-btn-toggle.flex-grow-1(
             v-model="template[curIndex].params.position",
@@ -127,28 +127,22 @@ v-navigation-drawer(
                 v-for="item in reverseTemplate",
                 :key="item.id",
                 :config="item",
-                @transformend="rect",
-                @dragend="rect"
+                @transform="update",
+                @drag="update"
               )
               v-transformer(
                 ref="transformer",
                 :config="{ flipEnabled: false }"
               )
     v-window-item.h-100(value="2")
-      v-wysiwyg
+      v-wysiwyg(v-model="template[curIndex].params.value")
     v-window-item.h-100(value="3")
-      v-source-code
+      v-source-code(v-model="template[curIndex].params.value")
 </template>
 <script setup>
 import { ref, watch, onMounted, computed } from "vue";
 import { useDisplay } from "vuetify";
-import {
-  get,
-  set,
-  useElementSize,
-  watchTriggerable,
-  isDefined,
-} from "@vueuse/core";
+import { get, set, useElementSize, watchTriggerable } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
 import kosmos3 from "@/kosmos3";
@@ -160,9 +154,7 @@ const { panel, template } = storeToRefs(store);
 const { calcLayer } = store;
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
-const reverseTemplate = computed(() =>
-  Array.isArray(get(template)) ? [...get(template)].reverse() : get(template)
-);
+const reverseTemplate = computed(() => [...get(template)].reverse());
 const tab = ref(1);
 const drawer = ref(1);
 const el = ref();
@@ -172,22 +164,17 @@ const stage = ref();
 const { width, height } = useElementSize(el);
 const curId = ref();
 const curIndex = computed(() =>
-  isDefined(template)
-    ? get(template).findIndex((element) => element.id === get(curId))
-    : -1
+  get(template).findIndex(({ id }) => id === get(curId))
 );
 /**
  *
  * @param {object} e событие
  */
-const rect = (e) => {
-  const shape = get(template).find((r) => r.id === e.target.id());
-  e.target.rotation(Math.round(e.target.rotation()));
+const update = (e) => {
+  const shape = get(template).find(({ id }) => id === e.target.id());
   shape.x = e.target.x();
   shape.y = e.target.y();
   shape.rotation = e.target.rotation();
-  shape.width = e.target.width();
-  shape.height = e.target.height();
   shape.scaleX = e.target.scaleX();
   shape.scaleY = e.target.scaleY();
 };
@@ -208,8 +195,8 @@ watch(curId, (value) => {
 const { trigger } = watchTriggerable(
   template,
   (value, oldValue) => {
-    if (value && !oldValue) set(curId, get(value, 0).id);
-    get(form).validate();
+    if (value.length && !(oldValue || []).length) set(curId, value[0].id);
+    else get(form).validate();
   },
   { deep: true }
 );
