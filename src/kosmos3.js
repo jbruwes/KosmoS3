@@ -15,6 +15,7 @@ import {
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
 import Konva from "konva";
+import DOMPurify from "dompurify";
 
 export default defineStore("kosmos3", () => {
   /**
@@ -149,111 +150,150 @@ export default defineStore("kosmos3", () => {
       ? `${get(wendpoint)}/${get(bucket)}/`
       : `https://${get(bucket)}/`
   );
+  const configDOMPurify = {
+    SAFE_FOR_TEMPLATES: true,
+    ADD_TAGS: ["iframe"],
+    ADD_ATTR: [
+      "target",
+      "allow",
+      "allowfullscreen",
+      "frameborder",
+      "scrolling",
+    ],
+    CUSTOM_ELEMENT_HANDLING: {
+      tagNameCheck: /^v-/,
+      attributeNameCheck: /\w+/,
+      allowCustomizedBuiltInElements: true,
+    },
+  };
   /**
+   * проверка слоя
    *
-   *
-   * @param {object} value объект слоя
-   * @returns {object} нормализованный объект слоя
+   * @param {object} layer слой
+   * @param {string} layer.id уникальный идентификатор
+   * @param {number} layer.x координата по оси x
+   * @param {number} layer.y координата по оси y
+   * @param {number} layer.scaleX масштаб  по оси x
+   * @param {number} layer.scaleY масштаб  по оси y
+   * @param {number} layer.rotation угол поворота
+   * @param {string} layer.fill цвет заливки
+   * @param {string} layer.name имя
+   * @param {object} layer.params параметры
+   * @param {string} layer.params.position вид позиционирования
+   * @param {string} layer.params.type тип реагирования на изменение геометрии
+   * @param {Array} layer.params.x параметры по оси х
+   * @param {Array} layer.params.y параметры по оси y
+   * @param {string} layer.params.value html
+   * @returns {object} слой
    */
-  const calcLayer = (value) => {
-    const opacity = 0.1;
-    const draggable = true;
-    const edit = false;
-    const offsetX = 0.5;
-    const offsetY = 0.5;
-    let { params } = value || {};
+  const calcLayer = (
     {
-      let { position, type, x, y } = params || {};
-      position = position || "static";
-      type = type || "fluid";
-      x = Array.isArray(x) ? x : [0, 100];
-      y = Array.isArray(y) ? y : [0, 100];
-      params = { ...params, position, type, x, y };
-    }
-    let { id, x, y, scaleX, scaleY, width, height, rotation, fill, name } =
-      value || {};
-    id = id || crypto.randomUUID();
-    x = x || 0;
-    y = y || 0;
-    scaleX = scaleX || 100;
-    scaleY = scaleY || 100;
-    width = width || 1;
-    height = height || 1;
-    rotation = rotation || 0;
-    fill = fill || Konva.Util.getRandomColor();
-    name = name || "";
-    return {
-      ...{ opacity, draggable, edit, offsetX, offsetY },
-      ...{
-        id,
-        x,
-        y,
-        scaleX,
-        scaleY,
-        width,
-        height,
-        rotation,
-        fill,
-        name,
-        params,
-      },
+      id = crypto.randomUUID(),
+      x = 0,
+      y = 0,
+      scaleX = 100,
+      scaleY = 100,
+      rotation = 0,
+      fill = Konva.Util.getRandomColor(),
+      name = "",
+      params: { position = "static", type = "fluid", x: pX, y: pY, value = "" },
+    } = { params: {} }
+  ) => ({
+    opacity: 0.1,
+    draggable: true,
+    edit: false,
+    offsetX: 0.5,
+    offsetY: 0.5,
+    width: 1,
+    height: 1,
+    id,
+    x,
+    y,
+    scaleX,
+    scaleY,
+    rotation,
+    fill,
+    name,
+    params: {
+      position,
+      type,
+      x: Array.isArray(pX) ? pX : [0, 100],
+      y: Array.isArray(pY) ? pY : [0, 100],
+      value: DOMPurify.sanitize(value, configDOMPurify),
+    },
+  });
+  /**
+   * проверка структуры сайта
+   *
+   * @param {object} index структура сайта
+   * @param {object} index.content контент
+   * @param {array} index.template шаблон
+   * @param {array} index.css ссылки на стили
+   * @param {string} index.style стили
+   * @param {array} index.js ссылки на скрипты
+   * @param {string} index.script скрипт
+   * @param {object} index.settings настройки
+   * @returns {object} структура сайта
+   */
+  const calcIndex = ({
+    content: pContent = {},
+    template: pTemplate = [],
+    css: pCss = [],
+    style: pStyle = "",
+    js: pJs = [],
+    script: pScript = "",
+    settings: pSettings = {},
+  } = {}) => {
+    let content = { ...pContent };
+    let template = [...pTemplate];
+    let css = [...pCss];
+    let style = pStyle;
+    let js = [...pJs];
+    let script = pScript;
+    let settings = { ...pSettings };
+    template = Array.isArray(template) ? template.filter(Boolean) : [];
+    if (!template.find(({ name }) => name === "content"))
+      template.push({ name: "content" });
+    template = template.map((element) => calcLayer(element));
+    css = Array.isArray(css)
+      ? css
+          .map(({ id = crypto.randomUUID(), url = "" }) => ({ id, url }))
+          .filter(({ url }) => url)
+      : [];
+    if (!css.length)
+      css.push({
+        id: crypto.randomUUID(),
+        url: "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css",
+      });
+    js = Array.isArray(js)
+      ? js
+          .map(({ id = crypto.randomUUID(), url = "" }) => ({ id, url }))
+          .filter(({ url }) => url)
+      : [];
+    if (!js.length) js.push({ id: crypto.randomUUID(), url: "" });
+    const {
+      id = crypto.randomUUID(),
+      value = get(bucket),
+      visible = true,
+    } = content;
+    content = {
+      ...content,
+      id,
+      value,
+      visible,
     };
+    style = String(style) === style ? style : "";
+    script = String(script) === script ? script : "";
+    const { yandex, metrika, google, analytics } = settings;
+    settings = { yandex, metrika, google, analytics };
+    return { content, template, css, style, js, script, settings };
   };
   whenever(s3, async () => {
-    let content;
-    let template;
-    let css;
-    let style;
-    let js;
-    let script;
-    let settings;
+    let json = {};
     try {
-      ({ content, template, css, style, js, script, settings } = JSON.parse(
-        await getObject("index.json")
-      ));
+      json = JSON.parse(await getObject("index.json"));
     } finally {
-      content = {
-        ...content,
-        id: content.id || crypto.randomUUID(),
-        value: content.value || get(bucket),
-        visible: content.visible === undefined ? true : !!content.visible,
-      };
-      template = Array.isArray(template) ? template.filter(Boolean) : [];
-      if (!template.find((element) => element.name === "content"))
-        template.push({ name: "content" });
-      template = template.map((element) => calcLayer(element));
-      css = Array.isArray(css)
-        ? css
-            .map((element) => {
-              let { id, url } = element || {};
-              id = id || crypto.randomUUID();
-              url = url || "";
-              return { id, url };
-            })
-            .filter((element) => element.url)
-        : [];
-      if (!css.length)
-        css.push({
-          id: crypto.randomUUID(),
-          url: "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css",
-        });
-      js = Array.isArray(js) ? js.filter(Boolean) : [];
-      js = Array.isArray(js)
-        ? js
-            .map((element) => {
-              let { id, url } = element || {};
-              id = id || crypto.randomUUID();
-              url = url || "";
-              return { id, url };
-            })
-            .filter((element) => element.url)
-        : [];
-      if (!js.length) js.push({ id: crypto.randomUUID(), url: "" });
-      style = String(style) === style ? style : "";
-      script = String(script) === script ? script : "";
-      const { yandex, metrika, google, analytics } = settings || {};
-      settings = { yandex, metrika, google, analytics };
-      set(index, { content, template, css, style, js, script, settings });
+      set(index, calcIndex(json));
     }
   });
   const settings = computed({
@@ -262,7 +302,7 @@ export default defineStore("kosmos3", () => {
      *
      * @returns {object} настройки
      */
-    get: () => (isDefined(index) ? get(index).settings : undefined),
+    get: () => (isDefined(index) ? get(index).settings : {}),
     /**
      * запись настроек
      *
@@ -278,7 +318,7 @@ export default defineStore("kosmos3", () => {
      *
      * @returns {string} скрипт
      */
-    get: () => (isDefined(index) ? get(index).script : undefined),
+    get: () => (isDefined(index) ? get(index).script : ""),
     /**
      * запись скрипта
      *
@@ -294,7 +334,7 @@ export default defineStore("kosmos3", () => {
      *
      * @returns {string} стили
      */
-    get: () => (isDefined(index) ? get(index).style : undefined),
+    get: () => (isDefined(index) ? get(index).style : ""),
     /**
      * запись стилей
      *
@@ -310,14 +350,14 @@ export default defineStore("kosmos3", () => {
      *
      * @returns {Array} массив ссылок на скрипты
      */
-    get: () => (isDefined(index) ? get(index).js : undefined),
+    get: () => (isDefined(index) ? get(index).js : []),
     /**
      * запись массива ссылок на скрипты
      *
      * @param {Array} value массив ссылок на скрипты
      */
     set(value) {
-      get(index).js = value.filter((element) => element.url);
+      get(index).js = value.filter(({ url }) => url);
     },
   });
   const css = computed({
@@ -326,14 +366,14 @@ export default defineStore("kosmos3", () => {
      *
      * @returns {Array} массив ссылок на стили
      */
-    get: () => (isDefined(index) ? get(index).css : undefined),
+    get: () => (isDefined(index) ? get(index).css : []),
     /**
      * запись массива ссылок на стили
      *
      * @param {Array} value массив ссылок на стили
      */
     set(value) {
-      get(index).css = value.filter((element) => element.url);
+      get(index).css = value.filter(({ url }) => url);
     },
   });
   const template = computed({
@@ -342,7 +382,7 @@ export default defineStore("kosmos3", () => {
      *
      * @returns {Array} шаблон
      */
-    get: () => (isDefined(index) ? get(index).template : undefined),
+    get: () => (isDefined(index) ? get(index).template : []),
     /**
      * запись шаблона
      *
@@ -358,7 +398,7 @@ export default defineStore("kosmos3", () => {
      *
      * @returns {object} контент
      */
-    get: () => (isDefined(index) ? get(index).content : undefined),
+    get: () => (isDefined(index) ? get(index).content : {}),
     /**
      * запись контента
      *
@@ -400,7 +440,11 @@ export default defineStore("kosmos3", () => {
     index,
     (value, oldValue) => {
       if (value && oldValue)
-        putObject("index.json", "application/json", JSON.stringify(value));
+        putObject(
+          "index.json",
+          "application/json",
+          JSON.stringify(calcIndex(value))
+        );
     },
     { deep: true, debounce: 1000, maxWait: 10000 }
   );
