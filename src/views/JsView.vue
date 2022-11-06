@@ -18,7 +18,7 @@
               @click:append-inner="js.splice(index + 1, 0, { url: '', id: uuid() })"
             )
     v-window-item.h-100(value="2")
-      v-source-code(v-model.trim="script", lang="javascript")
+      v-source-code(v-model="script", lang="javascript")
 </template>
 <script setup>
 import { ref } from "vue";
