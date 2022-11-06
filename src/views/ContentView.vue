@@ -21,9 +21,9 @@ v-navigation-drawer(
     v-tab(value="2", prepend-icon="mdi-code-tags") Source
   v-window.h-100(v-model="tab")
     v-window-item.h-100(value="1")
-      v-wysiwyg(v-model.trim="content")
+      v-wysiwyg(v-model="content")
     v-window-item.h-100(value="2")
-      v-source-code(v-model.trim="content")
+      v-source-code(v-model="content")
 </template>
 
 <script setup>
