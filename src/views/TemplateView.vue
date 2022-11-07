@@ -107,7 +107,7 @@ v-navigation-drawer(
   v-window.h-100(v-model="tab")
     v-window-item.h-100(value="1", :eager="true")
       .h-100(ref="el")
-        iframe.h-100.w-100.border-0
+        v-container.h-100.bg-red-lighten-5
         v-overlay(
           :model-value="true",
           :scrim="false",
