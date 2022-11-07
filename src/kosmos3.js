@@ -171,35 +171,27 @@ export default defineStore("kosmos3", () => {
    *
    * @param {object} layer слой
    * @param {string} layer.id уникальный идентификатор
-   * @param {number} layer.x координата по оси x
-   * @param {number} layer.y координата по оси y
-   * @param {number} layer.scaleX масштаб  по оси x
-   * @param {number} layer.scaleY масштаб  по оси y
    * @param {number} layer.rotation угол поворота
    * @param {string} layer.fill цвет заливки
    * @param {string} layer.name имя
    * @param {object} layer.params параметры
    * @param {string} layer.params.position вид позиционирования
    * @param {string} layer.params.type тип реагирования на изменение геометрии
-   * @param {Array} layer.params.x параметры по оси х
-   * @param {Array} layer.params.y параметры по оси y
+   * @param {Array} layer.params.width параметры ширины
+   * @param {Array} layer.params.height параметры высоты
    * @param {string} layer.params.value html
    * @returns {object} слой
    */
   const calcLayer = ({
     id = crypto.randomUUID(),
-    x = 0,
-    y = 0,
-    scaleX = 100,
-    scaleY = 100,
     rotation = 0,
     fill = Konva.Util.getRandomColor(),
     name = "",
     params: {
       position = "static",
       type = "fluid",
-      x: pX,
-      y: pY,
+      width,
+      height,
       value = "",
     } = {},
   } = {}) => ({
@@ -211,18 +203,14 @@ export default defineStore("kosmos3", () => {
     width: 1,
     height: 1,
     id,
-    x,
-    y,
-    scaleX,
-    scaleY,
     rotation,
     fill,
     name,
     params: {
       position,
       type,
-      x: Array.isArray(pX) ? pX : [0, 100],
-      y: Array.isArray(pY) ? pY : [0, 100],
+      width: Array.isArray(width) ? width : [0, 100],
+      height: Array.isArray(height) ? height : [0, 100],
       value: DOMPurify.sanitize(value, configDOMPurify),
     },
   });
