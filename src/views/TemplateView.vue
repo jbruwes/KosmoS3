@@ -81,13 +81,13 @@ v-navigation-drawer(
           false-value="fluid"
         )
         v-range-slider.mt-8(
-          v-model="template[curIndex].params.x",
+          v-model="template[curIndex].params.width",
           step="1",
           strict,
           thumb-label="always"
         )
         v-range-slider.mt-8(
-          v-model="template[curIndex].params.y",
+          v-model="template[curIndex].params.height",
           step="1",
           strict,
           thumb-label="always"
@@ -106,8 +106,8 @@ v-navigation-drawer(
     v-tab(value="3", prepend-icon="mdi-code-tags") Source
   v-window.h-100(v-model="tab")
     v-window-item.h-100(value="1", :eager="true")
-      .h-100(ref="el")
-        v-container.h-100.bg-red-lighten-5
+      v-container.h-100.pa-0(ref="fluid", fluid)
+        v-container.h-100.pa-0.bg-red-lighten-5(ref="responsive")
         v-overlay(
           :model-value="true",
           :scrim="false",
@@ -128,7 +128,7 @@ v-navigation-drawer(
                 :key="item.id",
                 :config="item",
                 @transform="update",
-                @drag="update"
+                @dragmove="update"
               )
               v-transformer(
                 ref="transformer",
@@ -157,11 +157,11 @@ set(panel, !get(mobile));
 const reverseTemplate = computed(() => [...get(template)].reverse());
 const tab = ref(1);
 const drawer = ref(1);
-const el = ref();
+const fluid = ref();
 const form = ref();
 const transformer = ref();
 const stage = ref();
-const { width, height } = useElementSize(el);
+const { width, height } = useElementSize(fluid);
 const curId = ref();
 const curIndex = computed(() =>
   get(template).findIndex(({ id }) => id === get(curId))
@@ -195,8 +195,67 @@ watch(curId, (value) => {
 const { trigger } = watchTriggerable(
   template,
   (value, oldValue) => {
-    if (value.length && !(oldValue || []).length) set(curId, value[0].id);
-    else get(form).validate();
+    if (value.length && !(oldValue || []).length) {
+      set(curId, value[0].id);
+      set(
+        template,
+        value.map((element) => ({
+          ...element,
+          /** @returns {number} отступ слева */
+          get x() {
+            return (
+              (this.params.width[0] * get(width)) / 100 +
+              (this.width - this.offsetX) * this.scaleX
+            );
+          },
+          /** @param {number} val отступ слева */
+          set x(val) {
+            this.params.width[0] =
+              (100 * (val - (this.width - this.offsetX) * this.scaleX)) /
+              get(width);
+          },
+          /** @returns {number} отступ сверху */
+          get y() {
+            return (
+              (this.params.height[0] * get(height)) / 100 +
+              (this.height - this.offsetY) * this.scaleY
+            );
+          },
+          /** @param {number} val отступ сверху */
+          set y(val) {
+            this.params.height[0] =
+              (100 * (val - (this.height - this.offsetY) * this.scaleY)) /
+              get(height);
+          },
+
+          /** @returns {number} масштаб по х */
+          get scaleX() {
+            return (
+              ((this.params.width[1] - this.params.width[0]) * get(width)) / 100
+            );
+          },
+
+          /** @param {number} val масштаб по х */
+          set scaleX(val) {
+            this.params.width[1] =
+              this.params.width[0] + (100 * val) / get(width);
+          },
+          /** @returns {number} масштаб по y */
+          get scaleY() {
+            return (
+              ((this.params.height[1] - this.params.height[0]) * get(height)) /
+              100
+            );
+          },
+
+          /** @param {number} val масштаб по y */
+          set scaleY(val) {
+            this.params.height[1] =
+              this.params.height[0] + (100 * val) / get(height);
+          },
+        }))
+      );
+    } else get(form).validate();
   },
   { deep: true }
 );
