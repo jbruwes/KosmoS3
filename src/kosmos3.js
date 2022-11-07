@@ -186,19 +186,23 @@ export default defineStore("kosmos3", () => {
    * @param {string} layer.params.value html
    * @returns {object} слой
    */
-  const calcLayer = (
-    {
-      id = crypto.randomUUID(),
-      x = 0,
-      y = 0,
-      scaleX = 100,
-      scaleY = 100,
-      rotation = 0,
-      fill = Konva.Util.getRandomColor(),
-      name = "",
-      params: { position = "static", type = "fluid", x: pX, y: pY, value = "" },
-    } = { params: {} }
-  ) => ({
+  const calcLayer = ({
+    id = crypto.randomUUID(),
+    x = 0,
+    y = 0,
+    scaleX = 100,
+    scaleY = 100,
+    rotation = 0,
+    fill = Konva.Util.getRandomColor(),
+    name = "",
+    params: {
+      position = "static",
+      type = "fluid",
+      x: pX,
+      y: pY,
+      value = "",
+    } = {},
+  } = {}) => ({
     opacity: 0.1,
     draggable: true,
     edit: false,
@@ -227,10 +231,10 @@ export default defineStore("kosmos3", () => {
    *
    * @param {object} index структура сайта
    * @param {object} index.content контент
-   * @param {array} index.template шаблон
-   * @param {array} index.css ссылки на стили
+   * @param {Array} index.template шаблон
+   * @param {Array} index.css ссылки на стили
    * @param {string} index.style стили
-   * @param {array} index.js ссылки на скрипты
+   * @param {Array} index.js ссылки на скрипты
    * @param {string} index.script скрипт
    * @param {object} index.settings настройки
    * @returns {object} структура сайта
