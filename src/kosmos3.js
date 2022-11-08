@@ -206,8 +206,12 @@ export default defineStore("kosmos3", () => {
     params: {
       position,
       type,
-      width: Array.isArray(width) ? width : [0, 100],
-      height: Array.isArray(height) ? height : [0, 100],
+      width: Array.isArray(width)
+        ? width.map((element) => Math.round(element))
+        : [0, 100],
+      height: Array.isArray(height)
+        ? height.map((element) => Math.round(element))
+        : [0, 100],
       value: DOMPurify.sanitize(value, configDOMPurify),
     },
   });
