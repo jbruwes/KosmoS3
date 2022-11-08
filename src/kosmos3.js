@@ -171,7 +171,6 @@ export default defineStore("kosmos3", () => {
    *
    * @param {object} layer слой
    * @param {string} layer.id уникальный идентификатор
-   * @param {number} layer.rotation угол поворота
    * @param {string} layer.fill цвет заливки
    * @param {string} layer.name имя
    * @param {object} layer.params параметры
@@ -184,7 +183,6 @@ export default defineStore("kosmos3", () => {
    */
   const calcLayer = ({
     id = crypto.randomUUID(),
-    rotation = 0,
     fill = Konva.Util.getRandomColor(),
     name = "",
     params: {
@@ -198,12 +196,11 @@ export default defineStore("kosmos3", () => {
     opacity: 0.1,
     draggable: true,
     edit: false,
-    offsetX: 0.5,
-    offsetY: 0.5,
     width: 1,
     height: 1,
+    offsetX: 0.5,
+    offsetY: 0.5,
     id,
-    rotation,
     fill,
     name,
     params: {
