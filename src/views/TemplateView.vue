@@ -92,13 +92,6 @@ v-navigation-drawer(
           strict,
           thumb-label="always"
         )
-        v-slider.mt-8(
-          v-model="template[curIndex].rotation",
-          step="1",
-          min="-180",
-          max="180",
-          thumb-label="always"
-        )
 .rounded.border.d-flex.flex-column.overflow-hidden.h-100
   v-tabs(v-model="tab", show-arrows, grow)
     v-tab(value="1", prepend-icon="mdi-ungroup") Layout
@@ -107,7 +100,7 @@ v-navigation-drawer(
   v-window.h-100(v-model="tab")
     v-window-item.h-100(value="1", :eager="true")
       v-container.h-100.pa-0(ref="fluid", fluid)
-        v-container.h-100.pa-0.bg-red-lighten-5(ref="responsive")
+        v-container.h-100.pa-0.bg-grey-lighten-5(ref="responsive")
         v-overlay(
           :model-value="true",
           :scrim="false",
@@ -130,10 +123,7 @@ v-navigation-drawer(
                 @transform="update",
                 @dragmove="update"
               )
-              v-transformer(
-                ref="transformer",
-                :config="{ flipEnabled: false }"
-              )
+              v-transformer(ref="transformer", :config="configTransform")
     v-window-item.h-100(value="2")
       v-wysiwyg(v-model="template[curIndex].params.value")
     v-window-item.h-100(value="3")
@@ -161,7 +151,37 @@ const fluid = ref();
 const form = ref();
 const transformer = ref();
 const stage = ref();
+/**
+ *
+ * @param {object} e событие
+ */
+const update = (e) => {
+  const item = get(template).find(({ id }) => id === e.target.id());
+  const { x, y, width, height } = e.target.getClientRect();
+  item.x = x;
+  item.y = y;
+  item.scaleX = width;
+  item.scaleY = height;
+};
 const { width, height } = useElementSize(fluid);
+const configTransform = {
+  flipEnabled: false,
+  rotateEnabled: false,
+  /**
+   * проверка невыхода за габариты при изменении размеров
+   *
+   * @param {object} oldBox старые размеры
+   * @param {object} newBox новые размеры
+   * @returns {object} разрешенные размеры
+   */
+  boundBoxFunc: (oldBox, newBox) =>
+    Math.round(newBox.x) < 0 ||
+    Math.round(newBox.y) < 0 ||
+    Math.round(newBox.x + newBox.width) > Math.round(get(width)) ||
+    Math.round(newBox.y + newBox.height) > Math.round(get(height))
+      ? oldBox
+      : newBox,
+};
 const curId = ref();
 const curIndex = computed(() =>
   get(template).findIndex(({ id }) => id === get(curId))
@@ -170,27 +190,89 @@ const curIndex = computed(() =>
  *
  * @param {object} e событие
  */
-const update = (e) => {
-  const shape = get(template).find(({ id }) => id === e.target.id());
-  shape.x = e.target.x();
-  shape.y = e.target.y();
-  shape.rotation = e.target.rotation();
-  shape.scaleX = e.target.scaleX();
-  shape.scaleY = e.target.scaleY();
-};
-/**
- *
- * @param {object} e событие
- */
 const handleStageMouseDown = (e) => {
-  const id = e.target.id();
-  if (get(template).find((r) => r.id === id)) set(curId, id);
+  const targetId = e.target.id();
+  if (get(template).find(({ id }) => id === targetId)) set(curId, targetId);
 };
 watch(curId, (value) => {
   setTimeout(() => {
-    const node = get(stage).getStage().findOne(`#${value}`);
-    if (node) get(transformer).getNode().nodes([node]);
+    get(transformer)
+      .getNode()
+      .nodes([get(stage).getStage().findOne(`#${value}`)]);
   });
+});
+/**
+ *
+ * @param {object} value слой
+ * @returns {object} нормализованный слой
+ */
+const normLayer = (value) => ({
+  ...value,
+  /** @returns {number} отступ слева */
+  get x() {
+    return (
+      (this.params.width[0] * get(width)) / 100 +
+      (this.width - this.offsetX) * this.scaleX
+    );
+  },
+  /** @param {number} val отступ слева */
+  set x(val) {
+    this.params.width[0] = (100 * val) / get(width);
+  },
+  /** @returns {number} отступ сверху */
+  get y() {
+    return (
+      (this.params.height[0] * get(height)) / 100 +
+      (this.height - this.offsetY) * this.scaleY
+    );
+  },
+  /** @param {number} val отступ сверху */
+  set y(val) {
+    this.params.height[0] = (100 * val) / get(height);
+  },
+
+  /** @returns {number} масштаб по х */
+  get scaleX() {
+    return ((this.params.width[1] - this.params.width[0]) * get(width)) / 100;
+  },
+  /** @param {number} val масштаб по х */
+  set scaleX(val) {
+    this.params.width[1] = this.params.width[0] + (100 * val) / get(width);
+  },
+
+  /** @returns {number} масштаб по y */
+  get scaleY() {
+    return (
+      ((this.params.height[1] - this.params.height[0]) * get(height)) / 100
+    );
+  },
+  /** @param {number} val масштаб по y */
+  set scaleY(val) {
+    this.params.height[1] = this.params.height[0] + (100 * val) / get(height);
+  },
+  /**
+   * проверка невыхода за габариты при изменении положения
+   *
+   * @param {object} pos новые координаты
+   * @returns {object} разрешенные координаты
+   */
+  dragBoundFunc(pos) {
+    const { x: posX, y: posY } = pos;
+    const offsetX = (this.attrs.width - this.attrs.offsetX) * this.attrs.scaleX;
+    const offsetY =
+      (this.attrs.height - this.attrs.offsetY) * this.attrs.scaleY;
+    const lX = Math.round(posX - offsetX);
+    const lY = Math.round(posY - offsetY);
+    const right = get(width) - this.attrs.scaleX;
+    const bottom = get(height) - this.attrs.scaleY;
+    let x = posX;
+    if (lX < 0) x = offsetX;
+    if (lX > Math.round(right)) x = right + offsetX;
+    let y = posY;
+    if (lY < 0) y = offsetY;
+    if (lY > Math.round(bottom)) y = bottom + offsetY;
+    return { x, y };
+  },
 });
 const { trigger } = watchTriggerable(
   template,
@@ -199,61 +281,7 @@ const { trigger } = watchTriggerable(
       set(curId, value[0].id);
       set(
         template,
-        value.map((element) => ({
-          ...element,
-          /** @returns {number} отступ слева */
-          get x() {
-            return (
-              (this.params.width[0] * get(width)) / 100 +
-              (this.width - this.offsetX) * this.scaleX
-            );
-          },
-          /** @param {number} val отступ слева */
-          set x(val) {
-            this.params.width[0] =
-              (100 * (val - (this.width - this.offsetX) * this.scaleX)) /
-              get(width);
-          },
-          /** @returns {number} отступ сверху */
-          get y() {
-            return (
-              (this.params.height[0] * get(height)) / 100 +
-              (this.height - this.offsetY) * this.scaleY
-            );
-          },
-          /** @param {number} val отступ сверху */
-          set y(val) {
-            this.params.height[0] =
-              (100 * (val - (this.height - this.offsetY) * this.scaleY)) /
-              get(height);
-          },
-
-          /** @returns {number} масштаб по х */
-          get scaleX() {
-            return (
-              ((this.params.width[1] - this.params.width[0]) * get(width)) / 100
-            );
-          },
-
-          /** @param {number} val масштаб по х */
-          set scaleX(val) {
-            this.params.width[1] =
-              this.params.width[0] + (100 * val) / get(width);
-          },
-          /** @returns {number} масштаб по y */
-          get scaleY() {
-            return (
-              ((this.params.height[1] - this.params.height[0]) * get(height)) /
-              100
-            );
-          },
-
-          /** @param {number} val масштаб по y */
-          set scaleY(val) {
-            this.params.height[1] =
-              this.params.height[0] + (100 * val) / get(height);
-          },
-        }))
+        value.map((element) => normLayer(element))
       );
     } else get(form).validate();
   },
@@ -266,7 +294,7 @@ onMounted(() => {
 });
 /** @param {number} index индекс */
 const addRect = (index) => {
-  get(template).splice(index + 1, 0, calcLayer());
+  get(template).splice(index + 1, 0, normLayer(calcLayer()));
 };
 /** @param {number} index индекс */
 const delRect = (index) => {
