@@ -164,6 +164,26 @@ const update = (e) => {
   item.scaleY = height;
 };
 const { width, height } = useElementSize(fluid);
+/**
+ * @param {number} value ширина px
+ * @returns {number} ширина %
+ */
+const calcRelWidth = (value) => (100 * value) / get(width);
+/**
+ * @param {number} value высота px
+ * @returns {number} высота %
+ */
+const calcRelHeight = (value) => (100 * value) / get(height);
+/**
+ * @param {number} value ширина %
+ * @returns {number} ширина px
+ */
+const calcAbsWidth = (value) => (value * get(width)) / 100;
+/**
+ * @param {number} value высота %
+ * @returns {number} высота px
+ */
+const calcAbsHeight = (value) => (value * get(height)) / 100;
 const configTransform = {
   flipEnabled: false,
   rotateEnabled: false,
@@ -174,14 +194,91 @@ const configTransform = {
    * @param {object} newBox новые размеры
    * @returns {object} разрешенные размеры
    */
-  boundBoxFunc: (oldBox, newBox) =>
-    Math.round(newBox.x) < 0 ||
-    Math.round(newBox.y) < 0 ||
-    Math.round(newBox.x + newBox.width) > Math.round(get(width)) ||
-    Math.round(newBox.y + newBox.height) > Math.round(get(height))
+  boundBoxFunc(oldBox, newBox) {
+    const top = calcRelHeight(newBox.y);
+    const bottom = top + calcRelHeight(newBox.height);
+    const left = calcRelWidth(newBox.x);
+    const right = left + calcRelWidth(newBox.width);
+    return Math.round(left) < 0 ||
+      Math.round(top) < 0 ||
+      Math.round(right) > 100 ||
+      Math.round(bottom) > 100
       ? oldBox
-      : newBox,
+      : newBox;
+  },
 };
+/**
+ *
+ * @param {object} value слой
+ * @returns {object} нормализованный слой
+ */
+const normLayer = (value) => ({
+  ...value,
+  /** @returns {number} отступ слева */
+  get x() {
+    return (
+      calcAbsWidth(this.params.width[0]) +
+      (this.width - this.offsetX) * this.scaleX
+    );
+  },
+  /** @param {number} val отступ слева px */
+  set x(val) {
+    this.params.width[0] = calcRelWidth(val);
+  },
+  /** @returns {number} отступ сверху */
+  get y() {
+    return (
+      calcAbsHeight(this.params.height[0]) +
+      (this.height - this.offsetY) * this.scaleY
+    );
+  },
+  /** @param {number} val отступ сверху px */
+  set y(val) {
+    this.params.height[0] = calcRelHeight(val);
+  },
+
+  /** @returns {number} масштаб по х */
+  get scaleX() {
+    return calcAbsWidth(this.params.width[1] - this.params.width[0]);
+  },
+  /** @param {number} val масштаб по х */
+  set scaleX(val) {
+    this.params.width[1] = this.params.width[0] + calcRelWidth(val);
+  },
+
+  /** @returns {number} масштаб по y */
+  get scaleY() {
+    return calcAbsHeight(this.params.height[1] - this.params.height[0]);
+  },
+  /** @param {number} val масштаб по y */
+  set scaleY(val) {
+    this.params.height[1] = this.params.height[0] + calcRelHeight(val);
+  },
+  /**
+   * проверка невыхода за габариты при изменении положения
+   *
+   * @param {object} pos новые координаты
+   * @param {number} pos.x новые координаты x
+   * @param {number} pos.y новые координаты y
+   * @returns {object} разрешенные координаты
+   */
+  dragBoundFunc({ x: posX, y: posY }) {
+    const offsetX = (this.attrs.width - this.attrs.offsetX) * this.attrs.scaleX;
+    const offsetY =
+      (this.attrs.height - this.attrs.offsetY) * this.attrs.scaleY;
+    const top = calcRelHeight(posY - offsetY);
+    const bottom = top + calcRelHeight(this.attrs.scaleY);
+    const left = calcRelWidth(posX - offsetX);
+    const right = left + calcRelWidth(this.attrs.scaleX);
+    let x = posX;
+    if (Math.round(left) < 0) x = offsetX;
+    if (Math.round(right) > 100) x = get(width) - this.attrs.scaleX + offsetX;
+    let y = posY;
+    if (Math.round(top) < 0) y = offsetY;
+    if (Math.round(bottom) > 100) y = get(height) - this.attrs.scaleY + offsetY;
+    return { x, y };
+  },
+});
 const curId = ref();
 const curIndex = computed(() =>
   get(template).findIndex(({ id }) => id === get(curId))
@@ -200,79 +297,6 @@ watch(curId, (value) => {
       .getNode()
       .nodes([get(stage).getStage().findOne(`#${value}`)]);
   });
-});
-/**
- *
- * @param {object} value слой
- * @returns {object} нормализованный слой
- */
-const normLayer = (value) => ({
-  ...value,
-  /** @returns {number} отступ слева */
-  get x() {
-    return (
-      (this.params.width[0] * get(width)) / 100 +
-      (this.width - this.offsetX) * this.scaleX
-    );
-  },
-  /** @param {number} val отступ слева */
-  set x(val) {
-    this.params.width[0] = (100 * val) / get(width);
-  },
-  /** @returns {number} отступ сверху */
-  get y() {
-    return (
-      (this.params.height[0] * get(height)) / 100 +
-      (this.height - this.offsetY) * this.scaleY
-    );
-  },
-  /** @param {number} val отступ сверху */
-  set y(val) {
-    this.params.height[0] = (100 * val) / get(height);
-  },
-
-  /** @returns {number} масштаб по х */
-  get scaleX() {
-    return ((this.params.width[1] - this.params.width[0]) * get(width)) / 100;
-  },
-  /** @param {number} val масштаб по х */
-  set scaleX(val) {
-    this.params.width[1] = this.params.width[0] + (100 * val) / get(width);
-  },
-
-  /** @returns {number} масштаб по y */
-  get scaleY() {
-    return (
-      ((this.params.height[1] - this.params.height[0]) * get(height)) / 100
-    );
-  },
-  /** @param {number} val масштаб по y */
-  set scaleY(val) {
-    this.params.height[1] = this.params.height[0] + (100 * val) / get(height);
-  },
-  /**
-   * проверка невыхода за габариты при изменении положения
-   *
-   * @param {object} pos новые координаты
-   * @returns {object} разрешенные координаты
-   */
-  dragBoundFunc(pos) {
-    const { x: posX, y: posY } = pos;
-    const offsetX = (this.attrs.width - this.attrs.offsetX) * this.attrs.scaleX;
-    const offsetY =
-      (this.attrs.height - this.attrs.offsetY) * this.attrs.scaleY;
-    const lX = Math.round(posX - offsetX);
-    const lY = Math.round(posY - offsetY);
-    const right = get(width) - this.attrs.scaleX;
-    const bottom = get(height) - this.attrs.scaleY;
-    let x = posX;
-    if (lX < 0) x = offsetX;
-    if (lX > Math.round(right)) x = right + offsetX;
-    let y = posY;
-    if (lY < 0) y = offsetY;
-    if (lY > Math.round(bottom)) y = bottom + offsetY;
-    return { x, y };
-  },
 });
 const { trigger } = watchTriggerable(
   template,
