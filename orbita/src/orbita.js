@@ -147,6 +147,95 @@ export default defineStore("orbita", () => {
         ? get(templateData)
         : "<div></div>"
   );
+  /**
+   * Получение массива дочерних объектов
+   *
+   * @param {object} x аттрибуты xpath
+   * @param {(number | boolean)} x.deep Флаг использования рекурсии
+   *  по дочерним объектам
+   * @param {number} x.length Количество дочерних объектов для изъятия
+   * @param {(number | boolean)} x.reveal Флаг указывающий показывать ли
+   *  скрытые объекты
+   * @param {string} x.sort Флаг указывающий на необходимость
+   *  отсортировать результат
+   * @param {string} x.path CSV путей до дочерних объектов
+   * @param {(number | boolean)} x.children Выбирать папки или файлы?
+   * Если путое значение то всё
+   * @param {string} [x.attr=""] Путь xpath
+   * @param {string} x.axe Заведует включением параметра xpath axe
+   * @returns {object[]} Массив дочерних объектов
+   */
+  const getItems = ({
+    deep,
+    length,
+    reveal,
+    sort,
+    path,
+    children,
+    attr = "*[@id]",
+    axe,
+  }) => {
+    let lChildren = null;
+    let dataChildren = [];
+    const dataHashes = (
+      Array.isArray(path) ? path : [path || get(path) || ""]
+    ).map((pValue) =>
+      decodeURIComponent(pValue.trim())
+        .replace(/_/g, " ")
+        .replace(/\/+/g, "/")
+        .replace(/^\/+|\/+$/g, "")
+    );
+    if (children === undefined) lChildren = "";
+    else lChildren = children ? "[*]" : "[not(*)]";
+    dataHashes.forEach((dataHash) => {
+      try {
+        dataChildren = [
+          ...dataChildren,
+          ...jsel(get(tree)).selectAll(
+            `/*${
+              dataHash
+                ? `/data/*[@value="${dataHash
+                    .split("/")
+                    .join('"]/data/*[@value="')}"]`
+                : ""
+            }${attr && !axe ? "/data" : ""}${deep && attr && !axe ? "/" : ""}${
+              attr ? "/" : ""
+            }${axe ? `${axe}::` : ""}${attr}${
+              attr && !axe && !reveal ? "[@visible=1]" : ""
+            }${lChildren}`
+          ),
+        ];
+      } catch (e) {
+        // console.log(e.message);
+      }
+    });
+    // if (lAttr && !pAxe)
+    //  dataChildren = dataChildren.filter(
+    //    (element) => element.$href.replace(/^\/+|\/+$/g, "") !== hash
+    //  );
+    if (
+      length &&
+      !Number.isNaN(Number(length)) &&
+      length > 0 &&
+      length < dataChildren.length
+    ) {
+      dataChildren = dataChildren.slice(0, length);
+    }
+    switch (sort) {
+      case "random":
+        dataChildren.sort(() => 0.5 - Math.random());
+        break;
+      case "date":
+        dataChildren.sort((a, b) => {
+          if (a.date > b.date) return -1;
+          if (a.date < b.date) return 1;
+          return 0;
+        });
+        break;
+      default:
+    }
+    return dataChildren;
+  };
   const siblings = computed(() => getSiblings(get(item)));
   const children = computed(() => get(item).data);
   const treeChildren = computed(() => get(tree).data);
@@ -175,97 +264,6 @@ export default defineStore("orbita", () => {
   const image = computed(() => get(item).image);
   const treeImage = computed(() => get(item).tree);
   const parentImage = computed(() => get(parent).image);
-
-  /**
-   * Получение массива дочерних объектов
-   *
-   * @param {(number | boolean)} pDeep Флаг использования рекурсии
-   *  по дочерним объектам
-   * @param {number} pLength Количество дочерних объектов для изъятия
-   * @param {(number | boolean)} pReveal Флаг указывающий показывать ли
-   *  скрытые объекты
-   * @param {string} pSort Флаг указывающий на необходимость
-   *  отсортировать результат
-   * @param {string} pPath CSV путей до дочерних объектов
-   * @param {(number | boolean)} pChildren Выбирать папки или файлы?
-   * Если путое значение то всё
-   * @param {string} [pAttr=""] Путь xpath
-   * @param {string} pAxe Заведует включением параметра xpath pAxe
-   * @returns {object[]} Массив дочерних объектов
-   */
-  function getItems(
-    pDeep,
-    pLength,
-    pReveal,
-    pSort,
-    pPath,
-    pChildren,
-    pAttr,
-    pAxe
-  ) {
-    let lChildren = null;
-    const lAttr = pAttr || "";
-    let dataChildren = [];
-    const dataHashes = (
-      Array.isArray(pPath) ? pPath : [pPath || get(path) || ""]
-    ).map((pValue) =>
-      decodeURIComponent(pValue.trim())
-        .replace(/_/g, " ")
-        .replace(/\/+/g, "/")
-        .replace(/^\/+|\/+$/g, "")
-    );
-    dataHashes.forEach((dataHash) => {
-      try {
-        if (pChildren === undefined) lChildren = "";
-        else lChildren = pChildren ? "[*]" : "[not(*)]";
-        dataChildren = [
-          ...dataChildren,
-          ...jsel(get(tree)).selectAll(
-            `/*${
-              dataHash
-                ? `/data/*[@value="${dataHash
-                    .split("/")
-                    .join('"]/data/*[@value="')}"]`
-                : ""
-            }${lAttr && !pAxe ? "/data" : ""}${
-              pDeep && lAttr && !pAxe ? "/" : ""
-            }${lAttr ? "/" : ""}${pAxe ? `${pAxe}::` : ""}${lAttr}${
-              lAttr && !pAxe && !pReveal ? "[@visible=1]" : ""
-            }${lChildren}`
-          ),
-        ];
-      } catch (e) {
-        // console.log(e.message);
-      }
-    });
-    // if (lAttr && !pAxe) {
-    //  dataChildren = dataChildren.filter(
-    //    (element) => element.$href.replace(/^\/+|\/+$/g, "") !== hash
-    //  );
-    // }
-    if (
-      pLength &&
-      !Number.isNaN(Number(pLength)) &&
-      pLength > 0 &&
-      pLength < dataChildren.length
-    ) {
-      dataChildren = dataChildren.slice(0, pLength);
-    }
-    switch (pSort) {
-      case "random":
-        dataChildren.sort(() => 0.5 - Math.random());
-        break;
-      case "date":
-        dataChildren.sort((a, b) => {
-          if (a.date > b.date) return -1;
-          if (a.date < b.date) return 1;
-          return 0;
-        });
-        break;
-      default:
-    }
-    return dataChildren;
-  }
   return {
     ...{
       treeData,
