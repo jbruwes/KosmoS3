@@ -38,16 +38,16 @@ const { getTitle, getHref, getItems } = store;
 const theItem = computed(() => {
   if (typeof props.item === "object") return props.item;
   return props.item
-    ? getItems(
-        props.deep,
-        props.length,
-        props.reveal,
-        props.sort,
-        props.path,
-        props.children,
-        props.selector,
-        props.axe
-      )[0] || {}
+    ? getItems({
+        deep: props.deep,
+        length: props.length,
+        reveal: props.reveal,
+        sort: props.sort,
+        path: props.path,
+        children: props.children,
+        selector: props.selector,
+        axe: props.axe,
+      })[0] || {}
     : {};
 });
 const url = computed(() => {
