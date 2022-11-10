@@ -24,16 +24,16 @@ const { id } = storeToRefs(store);
 const { getItems, getHref } = store;
 const itemIndex = ref(0);
 const items = computed(() =>
-  getItems(
-    props.deep,
-    props.length,
-    props.reveal,
-    props.sort,
-    props.path,
-    props.children,
-    props.selector,
-    props.axe
-  )
+  getItems({
+    deep: props.deep,
+    length: props.length,
+    reveal: props.reveal,
+    sort: props.sort,
+    path: props.path,
+    children: props.children,
+    selector: props.selector,
+    axe: props.axe,
+  })
 );
 const itemsLength = computed(() => get(items).length);
 const { trigger } = watchTriggerable(items, (newItems) => {
