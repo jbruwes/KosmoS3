@@ -74,11 +74,9 @@ v-navigation-drawer(
             ) fixed
         v-switch(
           v-model="template[curIndex].params.type",
-          :label="`Type: ${template[curIndex].params.type}`",
+          :label="`Type: ${template[curIndex].params.type ? 'responsive' : 'fluid'}`",
           inset,
-          :hide-details="true",
-          true-value="responsive",
-          false-value="fluid"
+          :hide-details="true"
         )
         v-range-slider.mt-8(
           v-model="template[curIndex].params.width",
@@ -111,7 +109,7 @@ v-navigation-drawer(
         )
           v-stage(
             ref="stage",
-            :config="{ width, height }",
+            :config="{ width: fluidWidth, height }",
             @mousedown="handleStageMouseDown",
             @touchstart="handleStageMouseDown"
           )
@@ -148,6 +146,7 @@ const reverseTemplate = computed(() => [...get(template)].reverse());
 const tab = ref(1);
 const drawer = ref(1);
 const fluid = ref();
+const responsive = ref();
 const form = ref();
 const transformer = ref();
 const stage = ref();
@@ -163,27 +162,51 @@ const update = (e) => {
   item.scaleX = width;
   item.scaleY = height;
 };
-const { width, height } = useElementSize(fluid);
+const curId = ref();
+const curIndex = computed(() =>
+  get(template).findIndex(({ id }) => id === get(curId))
+);
+const { width: fluidWidth, height } = useElementSize(fluid);
+const { width: responsiveWidth } = useElementSize(responsive);
+/**
+ *
+ * @param {boolean} type адаптивность
+ * @returns {number} ширина контейнера
+ */
+const containerWidth = (type) =>
+  type ? get(responsiveWidth) : get(fluidWidth);
+/**
+ *
+ * @param {boolean} type адаптивность
+ * @returns {number} адаптивный сдвиг по горизонтали
+ */
+const offsetX = (type) =>
+  (type > 0) * ((get(fluidWidth) - get(responsiveWidth)) / 2);
+
 /**
  * @param {number} value ширина px
+ * @param {boolean} type адаптивность
  * @returns {number} ширина %
  */
-const calcRelWidth = (value) => (100 * value) / get(width);
+const calcXPct = (value, type) =>
+  (100 * (value - offsetX(type))) / containerWidth(type);
 /**
  * @param {number} value высота px
  * @returns {number} высота %
  */
-const calcRelHeight = (value) => (100 * value) / get(height);
+const calcYPct = (value) => (100 * value) / get(height);
 /**
  * @param {number} value ширина %
+ * @param {boolean} type адаптивность
  * @returns {number} ширина px
  */
-const calcAbsWidth = (value) => (value * get(width)) / 100;
+const calcXPx = (value, type) =>
+  offsetX(type) + (value * containerWidth(type)) / 100;
 /**
  * @param {number} value высота %
  * @returns {number} высота px
  */
-const calcAbsHeight = (value) => (value * get(height)) / 100;
+const calcYPx = (value) => (value * get(height)) / 100;
 const configTransform = {
   flipEnabled: false,
   rotateEnabled: false,
@@ -194,11 +217,15 @@ const configTransform = {
    * @param {object} newBox новые размеры
    * @returns {object} разрешенные размеры
    */
+  /*
   boundBoxFunc(oldBox, newBox) {
-    const top = calcRelHeight(newBox.y);
-    const bottom = top + calcRelHeight(newBox.height);
-    const left = calcRelWidth(newBox.x);
-    const right = left + calcRelWidth(newBox.width);
+    const [{ attrs: { params: { type } = {} } = {} } = {}] = get(transformer)
+      .getNode()
+      .nodes();
+    const top = calcYPct(newBox.y);
+    const bottom = top + calcYPct(newBox.height);
+    const left = calcXPct(newBox.x, type);
+    const right = left + calcXPct(newBox.width, type);
     return Math.round(left) < 0 ||
       Math.round(top) < 0 ||
       Math.round(right) > 100 ||
@@ -206,6 +233,7 @@ const configTransform = {
       ? oldBox
       : newBox;
   },
+  */
 };
 /**
  *
@@ -217,42 +245,46 @@ const normLayer = (value) => ({
   /** @returns {number} отступ слева */
   get x() {
     return (
-      calcAbsWidth(this.params.width[0]) +
+      calcXPx(this.params.width[0], this.params.type) +
       (this.width - this.offsetX) * this.scaleX
     );
   },
   /** @param {number} val отступ слева px */
   set x(val) {
-    this.params.width[0] = calcRelWidth(val);
+    this.params.width[0] = calcXPct(val, this.params.type);
   },
   /** @returns {number} отступ сверху */
   get y() {
     return (
-      calcAbsHeight(this.params.height[0]) +
+      calcYPx(this.params.height[0]) +
       (this.height - this.offsetY) * this.scaleY
     );
   },
   /** @param {number} val отступ сверху px */
   set y(val) {
-    this.params.height[0] = calcRelHeight(val);
+    this.params.height[0] = calcYPct(val);
   },
 
   /** @returns {number} масштаб по х */
   get scaleX() {
-    return calcAbsWidth(this.params.width[1] - this.params.width[0]);
+    return calcXPx(
+      this.params.width[1] - this.params.width[0],
+      -this.params.type
+    );
   },
   /** @param {number} val масштаб по х */
   set scaleX(val) {
-    this.params.width[1] = this.params.width[0] + calcRelWidth(val);
+    this.params.width[1] =
+      this.params.width[0] + calcXPct(val, -this.params.type);
   },
 
   /** @returns {number} масштаб по y */
   get scaleY() {
-    return calcAbsHeight(this.params.height[1] - this.params.height[0]);
+    return calcYPx(this.params.height[1] - this.params.height[0]);
   },
   /** @param {number} val масштаб по y */
   set scaleY(val) {
-    this.params.height[1] = this.params.height[0] + calcRelHeight(val);
+    this.params.height[1] = this.params.height[0] + calcYPct(val);
   },
   /**
    * проверка невыхода за габариты при изменении положения
@@ -262,27 +294,26 @@ const normLayer = (value) => ({
    * @param {number} pos.y новые координаты y
    * @returns {object} разрешенные координаты
    */
+  /*
   dragBoundFunc({ x: posX, y: posY }) {
     const offsetX = (this.attrs.width - this.attrs.offsetX) * this.attrs.scaleX;
     const offsetY =
       (this.attrs.height - this.attrs.offsetY) * this.attrs.scaleY;
-    const top = calcRelHeight(posY - offsetY);
-    const bottom = top + calcRelHeight(this.attrs.scaleY);
-    const left = calcRelWidth(posX - offsetX);
-    const right = left + calcRelWidth(this.attrs.scaleX);
+    const top = calcYPct(posY - offsetY);
+    const bottom = top + calcYPct(this.attrs.scaleY);
+    const left = calcXPct(posX - offsetX, this.attrs.params.type);
+    const right = left + calcXPct(this.attrs.scaleX, this.attrs.params.type);
     let x = posX;
     if (Math.round(left) < 0) x = offsetX;
-    if (Math.round(right) > 100) x = get(width) - this.attrs.scaleX + offsetX;
+    if (Math.round(right) > 100)
+      x = containerWidth(this.attrs.params.type) - this.attrs.scaleX + offsetX;
     let y = posY;
     if (Math.round(top) < 0) y = offsetY;
     if (Math.round(bottom) > 100) y = get(height) - this.attrs.scaleY + offsetY;
     return { x, y };
   },
+  */
 });
-const curId = ref();
-const curIndex = computed(() =>
-  get(template).findIndex(({ id }) => id === get(curId))
-);
 /**
  *
  * @param {object} e событие
