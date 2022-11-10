@@ -147,6 +147,33 @@ export default defineStore("orbita", () => {
         ? get(templateData)
         : "<div></div>"
   );
+  const siblings = computed(() => getSiblings(get(item)));
+  const treeChildren = computed(() => get(tree).data);
+  const parent = computed(() => getParent(get(item)));
+  const parentChildren = computed(() => get(parent).data);
+  const vector = computed(() => getVector(get(item)));
+  const id = computed(() => get(item).id);
+  const value = computed(() => get(item).value);
+  const page = computed(() => get(item).page);
+  const title = computed(() => getTitle(get(item)));
+  const treeTitle = computed(() => getTitle(get(tree)));
+  const parentTitle = computed(() => getTitle(get(parent)));
+  const description = computed(() => get(item).description);
+  const keywords = computed(() => get(item).keywords);
+  const treeDescription = computed(() => get(tree).description);
+  const parentDescription = computed(() => get(parent).description);
+  const icon = computed(() => get(item).icon);
+  const treeIcon = computed(() => get(tree).icon);
+  const parentIcon = computed(() => get(parent).icon);
+  const path = computed(() => getPath(get(item)));
+  const treePath = computed(() => getPath(get(tree)));
+  const parentPath = computed(() => getPath(get(parent)));
+  const href = computed(() => getHref(get(item)));
+  const treeHref = computed(() => getHref(get(tree)));
+  const parentHref = computed(() => getHref(get(parent)));
+  const image = computed(() => get(item).image);
+  const treeImage = computed(() => get(item).tree);
+  const parentImage = computed(() => get(parent).image);
   /**
    * Получение массива дочерних объектов
    *
@@ -170,7 +197,7 @@ export default defineStore("orbita", () => {
     length,
     reveal,
     sort,
-    path,
+    path: pPath,
     children,
     selector = "*[@id]",
     axe,
@@ -178,7 +205,7 @@ export default defineStore("orbita", () => {
     let lChildren = null;
     let dataChildren = [];
     const dataHashes = (
-      Array.isArray(path) ? path : [path || get(path) || ""]
+      Array.isArray(pPath) ? pPath : [pPath || get(path) || ""]
     ).map((pValue) =>
       decodeURIComponent(pValue.trim())
         .replace(/_/g, " ")
@@ -209,7 +236,7 @@ export default defineStore("orbita", () => {
         // console.log(e.message);
       }
     });
-    // if (lAttr && !pAxe)
+    // if (attr && !axe)
     //  dataChildren = dataChildren.filter(
     //    (element) => element.$href.replace(/^\/+|\/+$/g, "") !== hash
     //  );
@@ -236,34 +263,7 @@ export default defineStore("orbita", () => {
     }
     return dataChildren;
   };
-  const siblings = computed(() => getSiblings(get(item)));
   const children = computed(() => get(item).data);
-  const treeChildren = computed(() => get(tree).data);
-  const parent = computed(() => getParent(get(item)));
-  const parentChildren = computed(() => get(parent).data);
-  const vector = computed(() => getVector(get(item)));
-  const id = computed(() => get(item).id);
-  const value = computed(() => get(item).value);
-  const page = computed(() => get(item).page);
-  const title = computed(() => getTitle(get(item)));
-  const treeTitle = computed(() => getTitle(get(tree)));
-  const parentTitle = computed(() => getTitle(get(parent)));
-  const description = computed(() => get(item).description);
-  const keywords = computed(() => get(item).keywords);
-  const treeDescription = computed(() => get(tree).description);
-  const parentDescription = computed(() => get(parent).description);
-  const icon = computed(() => get(item).icon);
-  const treeIcon = computed(() => get(tree).icon);
-  const parentIcon = computed(() => get(parent).icon);
-  const path = computed(() => getPath(get(item)));
-  const treePath = computed(() => getPath(get(tree)));
-  const parentPath = computed(() => getPath(get(parent)));
-  const href = computed(() => getHref(get(item)));
-  const treeHref = computed(() => getHref(get(tree)));
-  const parentHref = computed(() => getHref(get(parent)));
-  const image = computed(() => get(item).image);
-  const treeImage = computed(() => get(item).tree);
-  const parentImage = computed(() => get(parent).image);
   return {
     ...{
       treeData,
