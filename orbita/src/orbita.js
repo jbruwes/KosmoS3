@@ -202,7 +202,7 @@ export default defineStore("orbita", () => {
     selector = "*[@id]",
     axe,
   }) => {
-    let lChildren = null;
+    let lChildren;
     let dataChildren = [];
     const dataHashes = (
       Array.isArray(pPath) ? pPath : [pPath || get(path) || ""]
@@ -236,7 +236,7 @@ export default defineStore("orbita", () => {
         // console.log(e.message);
       }
     });
-    // if (attr && !axe)
+    // if (selector && !axe)
     //  dataChildren = dataChildren.filter(
     //    (element) => element.$href.replace(/^\/+|\/+$/g, "") !== hash
     //  );
