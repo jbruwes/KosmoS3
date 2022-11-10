@@ -161,7 +161,7 @@ export default defineStore("orbita", () => {
    * @param {string} x.path CSV путей до дочерних объектов
    * @param {(number | boolean)} x.children Выбирать папки или файлы?
    * Если путое значение то всё
-   * @param {string} [x.attr=""] Путь xpath
+   * @param {string} [x.selector=""] Путь xpath
    * @param {string} x.axe Заведует включением параметра xpath axe
    * @returns {object[]} Массив дочерних объектов
    */
@@ -172,7 +172,7 @@ export default defineStore("orbita", () => {
     sort,
     path,
     children,
-    attr = "*[@id]",
+    selector = "*[@id]",
     axe,
   }) => {
     let lChildren = null;
@@ -198,10 +198,10 @@ export default defineStore("orbita", () => {
                     .split("/")
                     .join('"]/data/*[@value="')}"]`
                 : ""
-            }${attr && !axe ? "/data" : ""}${deep && attr && !axe ? "/" : ""}${
-              attr ? "/" : ""
-            }${axe ? `${axe}::` : ""}${attr}${
-              attr && !axe && !reveal ? "[@visible=1]" : ""
+            }${selector && !axe ? "/data" : ""}${
+              deep && selector && !axe ? "/" : ""
+            }${selector ? "/" : ""}${axe ? `${axe}::` : ""}${selector}${
+              selector && !axe && !reveal ? "[@visible=1]" : ""
             }${lChildren}`
           ),
         ];
