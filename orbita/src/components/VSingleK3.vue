@@ -29,7 +29,7 @@ const props = defineProps({
   sort: { default: undefined, type: String },
   path: { default: undefined, type: String },
   children: { default: undefined, type: Boolean },
-  selector: { default: undefined, type: String },
+  selector: { default: "", type: String },
   axe: { default: undefined, type: String },
 });
 const store = orbita();
