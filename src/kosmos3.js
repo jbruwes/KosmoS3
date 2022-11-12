@@ -175,7 +175,7 @@ export default defineStore("kosmos3", () => {
    * @param {string} layer.name имя
    * @param {object} layer.params параметры
    * @param {string} layer.params.position вид позиционирования
-   * @param {string} layer.params.type тип реагирования на изменение геометрии
+   * @param {string} layer.params.responsive адаптивность
    * @param {Array} layer.params.width параметры ширины
    * @param {Array} layer.params.height параметры высоты
    * @param {string} layer.params.value html
@@ -185,7 +185,7 @@ export default defineStore("kosmos3", () => {
     id = crypto.randomUUID(),
     fill = Konva.Util.getRandomColor(),
     name = "",
-    params: { position = "static", type, width, height, value = "" } = {},
+    params: { position = "static", responsive, width, height, value = "" } = {},
   } = {}) => ({
     opacity: 0.1,
     draggable: true,
@@ -199,7 +199,7 @@ export default defineStore("kosmos3", () => {
     name,
     params: {
       position,
-      type: !!type,
+      responsive: !!responsive,
       width: Array.isArray(width)
         ? width.map((element) => Math.round(element))
         : [0, 100],
