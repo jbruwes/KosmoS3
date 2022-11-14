@@ -96,32 +96,33 @@ v-navigation-drawer(
     v-tab(value="2", prepend-icon="mdi-eye") Visual
     v-tab(value="3", prepend-icon="mdi-code-tags") Source
   v-window.h-100(v-model="tab")
-    v-window-item.h-100(value="1", :eager="true")
-      v-container.h-100.pa-0(ref="fluidContainer", fluid)
-        v-container.h-100.pa-0.bg-grey-lighten-5(ref="responsiveContainer")
+    v-window-item.h-100.overflow-y-auto(ref="fluidContainer", value="1")
+      .position-relative
         v-overlay(
           :model-value="true",
           :scrim="false",
           z-index="0",
           contained,
           persistent,
-          no-click-animation
+          no-click-animation,
+          content-class="w-100 h-100"
         )
-          v-stage(
-            ref="stage",
-            :config="{ width: fluidWidth, height }",
-            @mousedown="handleStageMouseDown",
-            @touchstart="handleStageMouseDown"
-          )
-            v-layer(ref="layer")
-              v-rect(
-                v-for="item in reverseTemplate",
-                :key="item.id",
-                :config="item",
-                @transform="update",
-                @dragmove="update"
-              )
-              v-transformer(ref="transformer", :config="configTransform")
+          v-container.h-100.pa-0.bg-grey-lighten-5(ref="responsiveContainer")
+        v-stage(
+          ref="stage",
+          :config="{ width: fullWidth, height: fullHeight }",
+          @mousedown="handleStageMouseDown",
+          @touchstart="handleStageMouseDown"
+        )
+          v-layer(ref="layer")
+            v-rect(
+              v-for="item in reverseTemplate",
+              :key="item.id",
+              :config="item",
+              @transform="update",
+              @dragmove="update"
+            )
+            v-transformer(ref="transformer", :config="configTransform")
     v-window-item.h-100(value="2")
       v-wysiwyg(v-model="template[curIndex].params.value")
     v-window-item.h-100(value="3")
@@ -166,22 +167,28 @@ const curId = ref();
 const curIndex = computed(() =>
   get(template).findIndex(({ id }) => id === get(curId))
 );
-const { width: fluidWidth, height } = useElementSize(fluidContainer);
+const { width: fullWidth, height } = useElementSize(fluidContainer);
 const { width: responsiveWidth } = useElementSize(responsiveContainer);
+const fullHeight = computed(
+  () =>
+    (get(template).filter(
+      ({ params: { position } = {} } = {}) => position === "static"
+    ).length || 1) * get(height)
+);
 /**
  *
  * @param {boolean} responsive адаптивность
  * @returns {number} ширина контейнера
  */
 const containerWidth = (responsive) =>
-  responsive ? get(responsiveWidth) : get(fluidWidth);
+  responsive ? get(responsiveWidth) : get(fullWidth);
 /**
  *
  * @param {boolean} responsive адаптивность
  * @returns {number} адаптивный сдвиг по горизонтали
  */
 const offsetX = (responsive) =>
-  (responsive > 0) * ((get(fluidWidth) - get(responsiveWidth)) / 2);
+  (responsive > 0) * ((get(fullWidth) - get(responsiveWidth)) / 2);
 
 /**
  * @param {number} value ширина px
