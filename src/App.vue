@@ -1,5 +1,5 @@
 <template lang="pug">
-v-app
+v-app.h-100
   v-app-bar(app)
     template(#prepend)
       v-app-bar-nav-icon(@click.stop="drawer = !drawer")
@@ -9,7 +9,7 @@ v-app
     template(v-if="panel !== null", #append)
       v-btn(icon, @click.stop="panel = !panel")
         v-icon mdi-dots-vertical
-  v-main
+  v-main.h-100
     v-navigation-drawer(
       v-model="drawer",
       app,
@@ -103,8 +103,3 @@ watch(s3, (value) => {
   if (value) router.push("/content");
 });
 </script>
-<style>
-html {
-  overflow-y: auto !important;
-}
-</style>
