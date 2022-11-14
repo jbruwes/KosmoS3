@@ -4,7 +4,7 @@
     v-tab(value="1", prepend-icon="mdi-format-list-bulleted") JavaScript File URLs
     v-tab(value="2", prepend-icon="mdi-text-box-outline") Function and Global Variable Declaration
   v-window.h-100(v-model="tab")
-    v-window-item.h-100(value="1")
+    v-window-item.h-100.overflow-y-auto(value="1")
       v-container(fluid)
         draggable(v-model="js", item-key="id")
           template(#item="{ element, index }")
