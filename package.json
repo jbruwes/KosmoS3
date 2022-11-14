@@ -64,7 +64,7 @@
     "@vueuse/math": "^9.5.0",
     "ace-builds": "^1.13.0",
     "animate.css": "^4.1.1",
-    "core-js": "^3.26.0",
+    "core-js": "^3.26.1",
     "dompurify": "^2.4.1",
     "electron": "^21.2.3",
     "electron-serve": "^1.1.0",
