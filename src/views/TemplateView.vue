@@ -55,19 +55,16 @@ v-navigation-drawer(
             divided
           )
             v-btn.flex-grow-1(
-              value="static",
               prepend-icon="mdi-format-wrap-top-bottom",
               stacked,
               size="small"
             ) static
             v-btn.flex-grow-1(
-              value="absolute",
               prepend-icon="mdi-format-wrap-square",
               stacked,
               size="small"
             ) absolute
             v-btn.flex-grow-1(
-              value="fixed",
               prepend-icon="mdi-format-wrap-tight",
               stacked,
               size="small"
@@ -131,7 +128,13 @@ v-navigation-drawer(
 <script setup>
 import { ref, watch, onMounted, computed } from "vue";
 import { useDisplay } from "vuetify";
-import { get, set, useElementSize, watchTriggerable } from "@vueuse/core";
+import {
+  get,
+  set,
+  useElementSize,
+  watchTriggerable,
+  useArrayFindIndex,
+} from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
 import kosmos3 from "@/kosmos3";
@@ -164,16 +167,13 @@ const update = (e) => {
   item.scaleY = height;
 };
 const curId = ref();
-const curIndex = computed(() =>
-  get(template).findIndex(({ id }) => id === get(curId))
-);
+const curIndex = useArrayFindIndex(template, ({ id }) => id === get(curId));
 const { width: fullWidth, height } = useElementSize(fluidContainer);
 const { width: responsiveWidth } = useElementSize(responsiveContainer);
 const fullHeight = computed(
   () =>
-    (get(template).filter(
-      ({ params: { position } = {} } = {}) => position === "static"
-    ).length || 1) * get(height)
+    (get(template).filter(({ params: { position } = {} } = {}) => !position)
+      .length || 1) * get(height)
 );
 /**
  *
@@ -184,11 +184,46 @@ const containerWidth = (responsive) =>
   responsive ? get(responsiveWidth) : get(fullWidth);
 /**
  *
+ * @param {number} position тип позиционирования
+ * @returns {number} высота контейнера
+ */
+const containerHeight = (position) => {
+  let result;
+  switch (position) {
+    default:
+      result = get(height);
+  }
+  return result;
+};
+/**
+ *
  * @param {boolean} responsive адаптивность
  * @returns {number} адаптивный сдвиг по горизонтали
  */
 const offsetX = (responsive) =>
   (responsive > 0) * ((get(fullWidth) - get(responsiveWidth)) / 2);
+/**
+ *
+ * @param {number} pPosition тип позиционирования
+ * @param {number} pIndex порядковый номер в шаблоне
+ * @returns {number} адаптивный сдвиг по вертикали
+ */
+const offsetY = (pPosition, pIndex) => {
+  let result;
+  switch (pPosition) {
+    case 1:
+    case 2:
+      result = 0;
+      break;
+    default:
+      result =
+        get(template).filter(
+          ({ params: { position } = {} }, index) => index < pIndex && !position
+        ).length * get(height);
+      break;
+  }
+  return result;
+};
 
 /**
  * @param {number} value ширина px
@@ -199,9 +234,12 @@ const calcXPct = (value, responsive) =>
   (100 * (value - offsetX(responsive))) / containerWidth(responsive);
 /**
  * @param {number} value высота px
+ * @param {number} position тип позиционирования
+ * @param {number} index порядковый номер в шаблоне
  * @returns {number} высота %
  */
-const calcYPct = (value) => (100 * value) / get(height);
+const calcYPct = (value, position, index) =>
+  (100 * (value - offsetY(position, index))) / containerHeight(position);
 /**
  * @param {number} value ширина %
  * @param {boolean} responsive адаптивность
@@ -211,9 +249,12 @@ const calcXPx = (value, responsive) =>
   offsetX(responsive) + (value * containerWidth(responsive)) / 100;
 /**
  * @param {number} value высота %
+ * @param {number} position тип позиционирования
+ * @param {number} index порядковый номер в шаблоне
  * @returns {number} высота px
  */
-const calcYPx = (value) => (value * get(height)) / 100;
+const calcYPx = (value, position, index) =>
+  offsetY(position, index) + (value * containerHeight(position)) / 100;
 const configTransform = {
   flipEnabled: false,
   rotateEnabled: false,
@@ -225,13 +266,11 @@ const configTransform = {
    * @returns {object} разрешенные размеры
    */
   boundBoxFunc(oldBox, newBox) {
-    const [{ attrs: { params: { responsive } = {} } = {} } = {}] = get(
-      transformer
-    )
-      .getNode()
-      .nodes();
-    const top = calcYPct(newBox.y);
-    const bottom = top + calcYPct(newBox.height);
+    const [
+      { attrs: { params: { responsive, position, index } = {} } = {} } = {},
+    ] = get(transformer).getNode().nodes();
+    const top = calcYPct(newBox.y, position, index);
+    const bottom = top + calcYPct(newBox.height, position);
     const left = calcXPct(newBox.x, responsive);
     const right = left + calcXPct(newBox.width, -responsive);
     return left.toFixed(2) < 0 ||
@@ -260,6 +299,10 @@ const normLayer = (value) => {
       get offsetY() {
         return (layer.height - layer.offsetY) * layer.scaleY;
       },
+      /** @returns {number} позиция в массиве */
+      get index() {
+        return get(template).findIndex(({ id }) => id === layer.id);
+      },
     },
     /** @returns {number} отступ слева */
     get x() {
@@ -274,11 +317,21 @@ const normLayer = (value) => {
     },
     /** @returns {number} отступ сверху */
     get y() {
-      return calcYPx(layer.params.height[0]) + layer.params.offsetY;
+      return (
+        calcYPx(
+          layer.params.height[0],
+          layer.params.position,
+          layer.params.index
+        ) + layer.params.offsetY
+      );
     },
     /** @param {number} val отступ сверху px */
     set y(val) {
-      layer.params.height[0] = calcYPct(val);
+      layer.params.height[0] = calcYPct(
+        val,
+        layer.params.position,
+        layer.params.index
+      );
     },
 
     /** @returns {number} масштаб по х */
@@ -296,11 +349,15 @@ const normLayer = (value) => {
 
     /** @returns {number} масштаб по y */
     get scaleY() {
-      return calcYPx(layer.params.height[1] - layer.params.height[0]);
+      return calcYPx(
+        layer.params.height[1] - layer.params.height[0],
+        layer.params.position
+      );
     },
     /** @param {number} val масштаб по y */
     set scaleY(val) {
-      layer.params.height[1] = layer.params.height[0] + calcYPct(val);
+      layer.params.height[1] =
+        layer.params.height[0] + calcYPct(val, layer.params.position);
     },
     /**
      * проверка невыхода за габариты при изменении положения
@@ -311,8 +368,12 @@ const normLayer = (value) => {
      * @returns {object} разрешенные координаты
      */
     dragBoundFunc({ x: posX, y: posY }) {
-      const top = calcYPct(posY - layer.params.offsetY);
-      const bottom = top + calcYPct(layer.scaleY);
+      const top = calcYPct(
+        posY - layer.params.offsetY,
+        layer.params.position,
+        layer.params.index
+      );
+      const bottom = top + calcYPct(layer.scaleY, layer.params.position);
       const left = calcXPct(
         posX - layer.params.offsetX,
         layer.params.responsive
@@ -328,9 +389,16 @@ const normLayer = (value) => {
           layer.params.offsetX +
           offsetX(layer.params.responsive);
       let y = posY;
-      if (top.toFixed(2) < 0) y = layer.params.offsetY;
+      if (top.toFixed(2) < 0)
+        y =
+          layer.params.offsetY +
+          offsetY(layer.params.position, layer.params.index);
       if (bottom.toFixed(2) > 100)
-        y = get(height) - layer.scaleY + layer.params.offsetY;
+        y =
+          get(height) -
+          layer.scaleY +
+          layer.params.offsetY +
+          offsetY(layer.params.position, layer.params.index);
       return { x, y };
     },
   };
