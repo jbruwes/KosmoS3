@@ -185,7 +185,7 @@ export default defineStore("kosmos3", () => {
     id = crypto.randomUUID(),
     fill = Konva.Util.getRandomColor(),
     name = "",
-    params: { position = "static", responsive, width, height, value = "" } = {},
+    params: { position, responsive, width, height, value = "" } = {},
   } = {}) => ({
     opacity: 0.1,
     draggable: true,
@@ -198,7 +198,7 @@ export default defineStore("kosmos3", () => {
     fill,
     name,
     params: {
-      position,
+      position: +position || 0,
       responsive: !!responsive,
       width: Array.isArray(width)
         ? width.map((element) => Math.round(element))
