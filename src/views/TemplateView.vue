@@ -25,7 +25,7 @@ v-navigation-drawer(
                 )
                   template(#prepend)
                     v-list-item-action
-                      v-checkbox-btn
+                      v-checkbox-btn(v-model="element.params.visible")
                       v-icon(
                         v-if="!(element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1)",
                         @click="delRect(index)"
@@ -134,6 +134,7 @@ import {
   useElementSize,
   watchTriggerable,
   useArrayFindIndex,
+  useScroll,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
@@ -146,7 +147,12 @@ const { panel, template } = storeToRefs(store);
 const { calcLayer } = store;
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
-const reverseTemplate = computed(() => [...get(template)].reverse());
+const reverseTemplate = computed(() =>
+  [
+    ...get(template),
+    // .filter((element) => element.params.visible)
+  ].reverse()
+);
 const tab = ref(1);
 const drawer = ref(1);
 const fluidContainer = ref();
@@ -176,26 +182,21 @@ const fullHeight = computed(
     (get(template).filter(({ params: { position } = {} } = {}) => !position)
       .length || 1) * get(konvaHeight)
 );
+const { y: scrollY } = useScroll(fluidContainer);
 /**
  *
  * @param {boolean} responsive адаптивность
  * @returns {number} ширина контейнера
  */
 const containerWidth = (responsive) =>
-  responsive ? get(responsiveWidth) : get(konvaWidth);
+  get(responsive ? responsiveWidth : konvaWidth);
 /**
  *
  * @param {number} position тип позиционирования
  * @returns {number} высота контейнера
  */
-const containerHeight = (position) => {
-  let result;
-  switch (position) {
-    default:
-      result = get(konvaHeight);
-  }
-  return result;
-};
+const containerHeight = (position) =>
+  get(position === 1 ? fullHeight : konvaHeight);
 /**
  *
  * @param {boolean} responsive адаптивность
@@ -209,22 +210,14 @@ const calcOffsetX = (responsive) =>
  * @param {number} pIndex порядковый номер в шаблоне
  * @returns {number} адаптивный сдвиг по вертикали
  */
-const calcOffsetY = (pPosition, pIndex) => {
-  let result;
-  switch (pPosition) {
-    case 1:
-    case 2:
-      result = 0;
-      break;
-    default:
-      result =
-        get(template).filter(
-          ({ params: { position } = {} }, index) => index < pIndex && !position
-        ).length * get(konvaHeight);
-      break;
-  }
-  return result;
-};
+const calcOffsetY = (pPosition, pIndex) =>
+  [
+    get(template).filter(
+      ({ params: { position } = {} }, index) => index < pIndex && !position
+    ).length * get(konvaHeight),
+    0,
+    pIndex === undefined ? 0 : get(scrollY),
+  ][pPosition];
 
 /**
  * @param {number} value ширина px
