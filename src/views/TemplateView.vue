@@ -107,11 +107,11 @@ v-navigation-drawer(
           v-container.h-100.pa-0.bg-grey-lighten-5(ref="responsiveContainer")
         v-stage(
           ref="stage",
-          :config="{ width: fullWidth, height: fullHeight }",
+          :config="{ width: konvaWidth, height: fullHeight }",
           @mousedown="handleStageMouseDown",
           @touchstart="handleStageMouseDown"
         )
-          v-layer(ref="layer")
+          v-layer
             v-rect(
               v-for="item in reverseTemplate",
               :key="item.id",
@@ -168,12 +168,13 @@ const update = (e) => {
 };
 const curId = ref();
 const curIndex = useArrayFindIndex(template, ({ id }) => id === get(curId));
-const { width: fullWidth, height } = useElementSize(fluidContainer);
+const { width: konvaWidth, height: konvaHeight } =
+  useElementSize(fluidContainer);
 const { width: responsiveWidth } = useElementSize(responsiveContainer);
 const fullHeight = computed(
   () =>
     (get(template).filter(({ params: { position } = {} } = {}) => !position)
-      .length || 1) * get(height)
+      .length || 1) * get(konvaHeight)
 );
 /**
  *
@@ -181,7 +182,7 @@ const fullHeight = computed(
  * @returns {number} ширина контейнера
  */
 const containerWidth = (responsive) =>
-  responsive ? get(responsiveWidth) : get(fullWidth);
+  responsive ? get(responsiveWidth) : get(konvaWidth);
 /**
  *
  * @param {number} position тип позиционирования
@@ -191,7 +192,7 @@ const containerHeight = (position) => {
   let result;
   switch (position) {
     default:
-      result = get(height);
+      result = get(konvaHeight);
   }
   return result;
 };
@@ -200,15 +201,15 @@ const containerHeight = (position) => {
  * @param {boolean} responsive адаптивность
  * @returns {number} адаптивный сдвиг по горизонтали
  */
-const offsetX = (responsive) =>
-  (responsive > 0) * ((get(fullWidth) - get(responsiveWidth)) / 2);
+const calcOffsetX = (responsive) =>
+  (responsive > 0) * ((get(konvaWidth) - get(responsiveWidth)) / 2);
 /**
  *
  * @param {number} pPosition тип позиционирования
  * @param {number} pIndex порядковый номер в шаблоне
  * @returns {number} адаптивный сдвиг по вертикали
  */
-const offsetY = (pPosition, pIndex) => {
+const calcOffsetY = (pPosition, pIndex) => {
   let result;
   switch (pPosition) {
     case 1:
@@ -219,7 +220,7 @@ const offsetY = (pPosition, pIndex) => {
       result =
         get(template).filter(
           ({ params: { position } = {} }, index) => index < pIndex && !position
-        ).length * get(height);
+        ).length * get(konvaHeight);
       break;
   }
   return result;
@@ -231,7 +232,7 @@ const offsetY = (pPosition, pIndex) => {
  * @returns {number} ширина %
  */
 const calcXPct = (value, responsive) =>
-  (100 * (value - offsetX(responsive))) / containerWidth(responsive);
+  (100 * (value - calcOffsetX(responsive))) / containerWidth(responsive);
 /**
  * @param {number} value высота px
  * @param {number} position тип позиционирования
@@ -239,14 +240,14 @@ const calcXPct = (value, responsive) =>
  * @returns {number} высота %
  */
 const calcYPct = (value, position, index) =>
-  (100 * (value - offsetY(position, index))) / containerHeight(position);
+  (100 * (value - calcOffsetY(position, index))) / containerHeight(position);
 /**
  * @param {number} value ширина %
  * @param {boolean} responsive адаптивность
  * @returns {number} ширина px
  */
 const calcXPx = (value, responsive) =>
-  offsetX(responsive) + (value * containerWidth(responsive)) / 100;
+  calcOffsetX(responsive) + (value * containerWidth(responsive)) / 100;
 /**
  * @param {number} value высота %
  * @param {number} position тип позиционирования
@@ -254,7 +255,7 @@ const calcXPx = (value, responsive) =>
  * @returns {number} высота px
  */
 const calcYPx = (value, position, index) =>
-  offsetY(position, index) + (value * containerHeight(position)) / 100;
+  calcOffsetY(position, index) + (value * containerHeight(position)) / 100;
 const configTransform = {
   flipEnabled: false,
   rotateEnabled: false,
@@ -269,10 +270,11 @@ const configTransform = {
     const [
       { attrs: { params: { responsive, position, index } = {} } = {} } = {},
     ] = get(transformer).getNode().nodes();
-    const top = calcYPct(newBox.y, position, index);
-    const bottom = top + calcYPct(newBox.height, position);
-    const left = calcXPct(newBox.x, responsive);
-    const right = left + calcXPct(newBox.width, -responsive);
+    const { x, y, height, width } = newBox;
+    const top = calcYPct(y, position, index);
+    const bottom = top + calcYPct(height, position);
+    const left = calcXPct(x, responsive);
+    const right = left + calcXPct(width, -responsive);
     return left.toFixed(2) < 0 ||
       top.toFixed(2) < 0 ||
       right.toFixed(2) > 100 ||
@@ -293,71 +295,77 @@ const normLayer = (value) => {
       ...value.params,
       /** @returns {number} сдвиг x */
       get offsetX() {
-        return (layer.width - layer.offsetX) * layer.scaleX;
+        const { width, offsetX, scaleX } = layer;
+        return (width - offsetX) * scaleX;
       },
       /** @returns {number} сдвиг y */
       get offsetY() {
-        return (layer.height - layer.offsetY) * layer.scaleY;
+        const { height, offsetY, scaleY } = layer;
+        return (height - offsetY) * scaleY;
       },
       /** @returns {number} позиция в массиве */
       get index() {
-        return get(template).findIndex(({ id }) => id === layer.id);
+        const { id: layerId } = layer;
+        return get(template).findIndex(({ id }) => id === layerId);
       },
     },
     /** @returns {number} отступ слева */
     get x() {
-      return (
-        calcXPx(layer.params.width[0], layer.params.responsive) +
-        layer.params.offsetX
-      );
+      const {
+        params: { width, responsive, offsetX },
+      } = this;
+      return calcXPx(width[0], responsive) + offsetX;
     },
     /** @param {number} val отступ слева px */
     set x(val) {
-      layer.params.width[0] = calcXPct(val, layer.params.responsive);
+      const {
+        params: { width, responsive },
+      } = this;
+      width[0] = calcXPct(val, responsive);
     },
     /** @returns {number} отступ сверху */
     get y() {
-      return (
-        calcYPx(
-          layer.params.height[0],
-          layer.params.position,
-          layer.params.index
-        ) + layer.params.offsetY
-      );
+      const {
+        params: { height, position, index, offsetY },
+      } = this;
+      return calcYPx(height[0], position, index) + offsetY;
     },
     /** @param {number} val отступ сверху px */
     set y(val) {
-      layer.params.height[0] = calcYPct(
-        val,
-        layer.params.position,
-        layer.params.index
-      );
+      const {
+        params: { height, position, index },
+      } = this;
+      height[0] = calcYPct(val, position, index);
     },
 
     /** @returns {number} масштаб по х */
     get scaleX() {
-      return calcXPx(
-        layer.params.width[1] - layer.params.width[0],
-        -layer.params.responsive
-      );
+      const {
+        params: { width, responsive },
+      } = this;
+      return calcXPx(width[1] - width[0], -responsive);
     },
     /** @param {number} val масштаб по х */
     set scaleX(val) {
-      layer.params.width[1] =
-        layer.params.width[0] + calcXPct(val, -layer.params.responsive);
+      const {
+        params: { width, responsive },
+      } = this;
+      width[1] = width[0] + calcXPct(val, -responsive);
     },
 
     /** @returns {number} масштаб по y */
     get scaleY() {
-      return calcYPx(
-        layer.params.height[1] - layer.params.height[0],
-        layer.params.position
-      );
+      const {
+        params: { height, position },
+      } = this;
+      return calcYPx(height[1] - height[0], position);
     },
     /** @param {number} val масштаб по y */
     set scaleY(val) {
-      layer.params.height[1] =
-        layer.params.height[0] + calcYPct(val, layer.params.position);
+      const {
+        params: { height, position },
+      } = this;
+      height[1] = height[0] + calcYPct(val, position);
     },
     /**
      * проверка невыхода за габариты при изменении положения
@@ -368,37 +376,29 @@ const normLayer = (value) => {
      * @returns {object} разрешенные координаты
      */
     dragBoundFunc({ x: posX, y: posY }) {
-      const top = calcYPct(
-        posY - layer.params.offsetY,
-        layer.params.position,
-        layer.params.index
-      );
-      const bottom = top + calcYPct(layer.scaleY, layer.params.position);
-      const left = calcXPct(
-        posX - layer.params.offsetX,
-        layer.params.responsive
-      );
-      const right = left + calcXPct(layer.scaleX, -layer.params.responsive);
+      const {
+        attrs: {
+          scaleX,
+          scaleY,
+          params: { offsetX, offsetY, position, responsive, index },
+        },
+      } = this;
+      const top = calcYPct(posY - offsetY, position, index);
+      const bottom = top + calcYPct(scaleY, position);
+      const left = calcXPct(posX - offsetX, responsive);
+      const right = left + calcXPct(scaleX, -responsive);
       let x = posX;
-      if (left.toFixed(2) < 0)
-        x = layer.params.offsetX + offsetX(layer.params.responsive);
+      if (left.toFixed(2) < 0) x = offsetX + calcOffsetX(responsive);
       if (right.toFixed(2) > 100)
         x =
-          containerWidth(layer.params.responsive) -
-          layer.scaleX +
-          layer.params.offsetX +
-          offsetX(layer.params.responsive);
+          containerWidth(responsive) -
+          scaleX +
+          offsetX +
+          calcOffsetX(responsive);
       let y = posY;
-      if (top.toFixed(2) < 0)
-        y =
-          layer.params.offsetY +
-          offsetY(layer.params.position, layer.params.index);
+      if (top.toFixed(2) < 0) y = offsetY + calcOffsetY(position, index);
       if (bottom.toFixed(2) > 100)
-        y =
-          get(height) -
-          layer.scaleY +
-          layer.params.offsetY +
-          offsetY(layer.params.position, layer.params.index);
+        y = get(konvaHeight) - scaleY + offsetY + calcOffsetY(position, index);
       return { x, y };
     },
   };
