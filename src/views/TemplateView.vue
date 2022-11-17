@@ -94,7 +94,9 @@ v-navigation-drawer(
     v-tab(value="3", prepend-icon="mdi-code-tags") Source
   v-window.h-100(v-model="tab")
     v-window-item.h-100.overflow-y-auto(ref="fluidContainer", value="1")
-      .position-relative
+      .position-relative.solid-lines(
+        :style="{ 'background-size': `23px ${100 / cntStatic}%` }"
+      )
         v-overlay(
           :model-value="true",
           :scrim="false",
@@ -104,7 +106,9 @@ v-navigation-drawer(
           no-click-animation,
           content-class="w-100 h-100"
         )
-          v-container.h-100.pa-0.bg-grey-lighten-5(ref="responsiveContainer")
+          v-container.h-100.pa-0.border-s-xl.border-e-xl.border-dashed.border-t-0.border-b-0(
+            ref="responsiveContainer"
+          )
         v-stage(
           ref="stage",
           :config="{ width: konvaWidth, height: fullHeight }",
@@ -176,12 +180,15 @@ const curId = ref();
 const curIndex = useArrayFindIndex(template, ({ id }) => id === get(curId));
 const { width: konvaWidth, height: konvaHeight } =
   useElementSize(fluidContainer);
-const { width: responsiveWidth } = useElementSize(responsiveContainer);
-const fullHeight = computed(
+const { width: realResponsiveWidth } = useElementSize(responsiveContainer);
+/** @constant {number} responsiveWidth рассчетная ширина адаптивного контейнера плюс ширина бордюра */
+const responsiveWidth = computed(() => get(realResponsiveWidth) + 8);
+const cntStatic = computed(
   () =>
-    (get(template).filter(({ params: { position } = {} } = {}) => !position)
-      .length || 1) * get(konvaHeight)
+    get(template).filter(({ params: { position } = {} } = {}) => !position)
+      .length || 1
 );
+const fullHeight = computed(() => get(cntStatic) * get(konvaHeight));
 const { y: scrollY } = useScroll(fluidContainer);
 /**
  *
@@ -405,12 +412,15 @@ const handleStageMouseDown = (e) => {
   const targetId = e.target.id();
   if (get(template).find(({ id }) => id === targetId)) set(curId, targetId);
 };
-watch(curId, (value) => {
-  setTimeout(() => {
+watch(curId, (value, oldValue) => {
+  /** установка рамки трансформера */
+  const setTransformer = () => {
     get(transformer)
       .getNode()
       .nodes([get(stage).getStage().findOne(`#${value}`)]);
-  });
+  };
+  if (oldValue) setTransformer();
+  else setTimeout(setTransformer);
 });
 const { trigger } = watchTriggerable(
   template,
@@ -449,3 +459,14 @@ const clickRect = (index) => {
   else element.edit = true;
 };
 </script>
+<style scoped>
+.solid-lines {
+  background-image: linear-gradient(to right, white 8px, transparent 1px),
+    linear-gradient(
+      rgba(var(--v-border-color), var(--v-border-opacity)) 8px,
+      transparent 1px
+    );
+  background-repeat: repeat;
+  background-position: center -4px;
+}
+</style>
