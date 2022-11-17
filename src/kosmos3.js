@@ -195,7 +195,7 @@ export default defineStore("kosmos3", () => {
       value = "",
     } = {},
   } = {}) => ({
-    opacity: 0.1,
+    opacity: 0.5,
     draggable: true,
     edit: false,
     width: 1,
@@ -215,7 +215,8 @@ export default defineStore("kosmos3", () => {
       height: Array.isArray(height)
         ? height.map((element) => Math.round(element))
         : [0, 100],
-      value: DOMPurify.sanitize(value, configDOMPurify),
+      value:
+        name === "content" ? "" : DOMPurify.sanitize(value, configDOMPurify),
     },
   });
   /**
