@@ -173,8 +173,8 @@ export default defineStore("kosmos3", () => {
    * @param {string} layer.id уникальный идентификатор
    * @param {string} layer.fill цвет заливки
    * @param {string} layer.name имя
+   * @param {boolean} layer.visible видимость слоя
    * @param {object} layer.params параметры
-   * @param {string} layer.params.visible видимость слоя
    * @param {string} layer.params.position вид позиционирования
    * @param {string} layer.params.responsive адаптивность
    * @param {Array} layer.params.width параметры ширины
@@ -186,18 +186,11 @@ export default defineStore("kosmos3", () => {
     id = crypto.randomUUID(),
     fill = Konva.Util.getRandomColor(),
     name = "",
-    params: {
-      visible = true,
-      position,
-      responsive,
-      width,
-      height,
-      value = "",
-    } = {},
+    visible = true,
+    params: { position, responsive, width, height, value = "" } = {},
   } = {}) => ({
     opacity: 0.5,
     draggable: true,
-    edit: false,
     width: 1,
     height: 1,
     offsetX: 0.5,
@@ -205,8 +198,9 @@ export default defineStore("kosmos3", () => {
     id,
     fill,
     name,
+    visible: !!visible,
     params: {
-      visible: !!visible,
+      edit: false,
       position: +position || 0,
       responsive: !!responsive,
       width: Array.isArray(width)
