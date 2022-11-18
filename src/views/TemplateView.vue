@@ -21,7 +21,7 @@ v-navigation-drawer(
                   :value="element.id",
                   :active="element.id === curId",
                   @click="clickRect(index)",
-                  @blur="element.edit = false"
+                  @blur="element.params.edit = false"
                 )
                   template(#prepend)
                     v-list-item-action
@@ -35,11 +35,11 @@ v-navigation-drawer(
                       ) mdi-checkbox-blank-circle-outline
                   v-text-field(
                     v-model.trim="element.name",
-                    :readonly="element.id !== curId || !element.edit",
+                    :readonly="element.id !== curId || !element.params.edit",
                     :disabled="element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1",
                     variant="underlined",
                     :rules="[(v) => !!v || 'Field is required', (v) => !(template.filter(({ name }) => name === v).length - 1) || 'Must be unique']",
-                    @blur="element.edit = false"
+                    @blur="element.params.edit = false"
                   )
                   template(#append)
                     v-list-item-action
@@ -130,7 +130,7 @@ v-navigation-drawer(
       v-source-code(v-model="template[curIndex].params.value")
 </template>
 <script setup>
-import { ref, watch, onMounted, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useDisplay } from "vuetify";
 import {
   get,
@@ -148,15 +148,13 @@ import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = kosmos3();
 const { panel, template } = storeToRefs(store);
+const visibleTemplate = computed(() =>
+  get(template).filter((element) => element.params.visible)
+);
 const { calcLayer } = store;
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
-const reverseTemplate = computed(() =>
-  [
-    ...get(template),
-    // .filter((element) => element.params.visible)
-  ].reverse()
-);
+const reverseTemplate = computed(() => [...get(visibleTemplate)].reverse());
 const tab = ref(1);
 const drawer = ref(1);
 const fluidContainer = ref();
@@ -185,8 +183,9 @@ const { width: realResponsiveWidth } = useElementSize(responsiveContainer);
 const responsiveWidth = computed(() => get(realResponsiveWidth) + 8);
 const cntStatic = computed(
   () =>
-    get(template).filter(({ params: { position } = {} } = {}) => !position)
-      .length || 1
+    get(visibleTemplate).filter(
+      ({ params: { position } = {} } = {}) => !position
+    ).length || 1
 );
 const fullHeight = computed(() => get(cntStatic) * get(konvaHeight));
 const { y: scrollY } = useScroll(fluidContainer);
@@ -219,7 +218,7 @@ const calcOffsetX = (responsive) =>
  */
 const calcOffsetY = (pPosition, pIndex) =>
   [
-    get(template).filter(
+    get(visibleTemplate).filter(
       ({ params: { position } = {} }, index) => index < pIndex && !position
     ).length * get(konvaHeight),
     0,
@@ -283,6 +282,16 @@ const configTransform = {
       : newBox;
   },
 };
+const { trigger: triggerCurId } = watchTriggerable(curId, (value, oldValue) => {
+  /** установка рамки трансформера */
+  const setTransformer = () => {
+    get(transformer)
+      .getNode()
+      .nodes([get(stage).getStage().findOne(`#${value}`)].filter(Boolean));
+  };
+  if (oldValue) setTransformer();
+  else setTimeout(setTransformer);
+});
 /**
  *
  * @param {object} value слой
@@ -293,6 +302,16 @@ const normLayer = (value) => {
     ...value,
     params: {
       ...value.params,
+      /** @returns {boolean} видимость x */
+      get visible() {
+        const { visible } = layer;
+        return visible;
+      },
+      /** @param {boolean} val видимость */
+      set visible(val) {
+        layer.visible = val;
+        triggerCurId();
+      },
       /** @returns {number} сдвиг x */
       get offsetX() {
         const { width, offsetX, scaleX } = layer;
@@ -306,7 +325,7 @@ const normLayer = (value) => {
       /** @returns {number} позиция в массиве */
       get index() {
         const { id: layerId } = layer;
-        return get(template).findIndex(({ id }) => id === layerId);
+        return get(visibleTemplate).findIndex(({ id }) => id === layerId);
       },
     },
     /** @returns {number} отступ слева */
@@ -412,17 +431,7 @@ const handleStageMouseDown = (e) => {
   const targetId = e.target.id();
   if (get(template).find(({ id }) => id === targetId)) set(curId, targetId);
 };
-watch(curId, (value, oldValue) => {
-  /** установка рамки трансформера */
-  const setTransformer = () => {
-    get(transformer)
-      .getNode()
-      .nodes([get(stage).getStage().findOne(`#${value}`)]);
-  };
-  if (oldValue) setTransformer();
-  else setTimeout(setTransformer);
-});
-const { trigger } = watchTriggerable(
+const { trigger: triggerTemplate } = watchTriggerable(
   template,
   (value, oldValue) => {
     if (value.length && !(oldValue || []).length) {
@@ -437,7 +446,7 @@ const { trigger } = watchTriggerable(
 );
 onMounted(() => {
   setTimeout(() => {
-    trigger();
+    triggerTemplate();
   });
 });
 /** @param {number} index индекс */
@@ -456,7 +465,7 @@ const delRect = (index) => {
 const clickRect = (index) => {
   const element = get(template)[index];
   if (get(curId) !== element.id) set(curId, element.id);
-  else element.edit = true;
+  else element.params.edit = true;
 };
 </script>
 <style scoped>
