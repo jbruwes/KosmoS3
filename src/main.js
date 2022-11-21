@@ -1,7 +1,6 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { createRouter, createMemoryHistory } from "vue-router";
-import VueKonva from "vue-konva";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import HomeView from "./views/HomeView.vue";
@@ -28,6 +27,5 @@ createApp(App)
       ],
     })
   )
-  .use(VueKonva)
   .use(createPinia())
   .mount("#app");
