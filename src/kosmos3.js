@@ -14,7 +14,6 @@ import {
   PutObjectCommand,
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
-import Konva from "konva";
 import DOMPurify from "dompurify";
 
 export default defineStore("kosmos3", () => {
@@ -171,47 +170,29 @@ export default defineStore("kosmos3", () => {
    *
    * @param {object} layer слой
    * @param {string} layer.id уникальный идентификатор
-   * @param {string} layer.fill цвет заливки
    * @param {string} layer.name имя
    * @param {boolean} layer.visible видимость слоя
-   * @param {object} layer.params параметры
-   * @param {string} layer.params.position вид позиционирования
-   * @param {string} layer.params.responsive адаптивность
-   * @param {Array} layer.params.width параметры ширины
-   * @param {Array} layer.params.height параметры высоты
-   * @param {string} layer.params.value html
+   * @param {string} layer.fluid адаптивность
+   * @param {string} layer.value html
+   * @param {Array} layer.classes классы
    * @returns {object} слой
    */
   const calcLayer = ({
     id = crypto.randomUUID(),
-    fill = Konva.Util.getRandomColor(),
     name = "",
     visible = true,
-    params: { position, responsive, width, height, value = "" } = {},
+    fluid = true,
+    value = "",
+    classes = [],
   } = {}) => ({
-    opacity: 0.5,
-    draggable: true,
-    width: 1,
-    height: 1,
-    offsetX: 0.5,
-    offsetY: 0.5,
     id,
-    fill,
     name,
     visible: !!visible,
-    params: {
-      edit: false,
-      position: +position || 0,
-      responsive: !!responsive,
-      width: Array.isArray(width)
-        ? width.map((element) => Math.round(element))
-        : [0, 100],
-      height: Array.isArray(height)
-        ? height.map((element) => Math.round(element))
-        : [0, 100],
-      value:
-        name === "content" ? "" : DOMPurify.sanitize(value, configDOMPurify),
-    },
+    fluid: !!fluid,
+    value:
+      name === "content" ? false : DOMPurify.sanitize(value, configDOMPurify),
+    classes: Array.isArray(classes) ? classes.filter(Boolean) : [],
+    edit: false,
   });
   /**
    * проверка структуры сайта
