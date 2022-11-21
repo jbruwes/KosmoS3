@@ -81,7 +81,6 @@
     "tsparticles-engine": "^2.5.2",
     "vanta": "^0.5.24",
     "vue": "^3.2.45",
-    "vue-konva": "^3.0.2",
     "vue-router": "^4.1.6",
     "vue3-ace-editor": "^2.2.2",
     "vue3-animate-onscroll": "^1.0.6",
