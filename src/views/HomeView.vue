@@ -10,24 +10,21 @@ v-card.h-100(:image="require('@/assets/bg.jpg')")
               v-model="cred",
               label="select saved credential",
               prepend-inner-icon="mdi-content-save",
-              variant="underlined",
               return-object,
               :items="creds",
-              :clearable="true"
+              clearable
             )
             v-text-field(
               v-model.trim="bucket",
               label="domain",
               placeholder="example.com",
               prepend-inner-icon="mdi-web",
-              variant="underlined",
               :rules="[(v) => !!v || 'Item is required']"
             )
             v-text-field(
               v-model.trim="accessKeyId",
               label="access key id",
               prepend-inner-icon="mdi-key",
-              variant="underlined",
               :rules="[(v) => !!v || 'Item is required']"
             )
             v-text-field(
@@ -36,7 +33,6 @@ v-card.h-100(:image="require('@/assets/bg.jpg')")
               :type="visible ? 'text' : 'password'",
               label="secret access key",
               prepend-inner-icon="mdi-lock",
-              variant="underlined",
               :rules="[(v) => !!v || 'Item is required']",
               @click:append-inner="visible = !visible"
             )
@@ -46,17 +42,15 @@ v-card.h-100(:image="require('@/assets/bg.jpg')")
               v-model="provider",
               label="cloud provider",
               prepend-inner-icon="mdi-cloud",
-              variant="underlined",
               return-object,
               :items="providers",
-              :clearable="true"
+              clearable
             )
             v-combobox(
               v-model.trim="region",
               :items="regions",
               label="region",
               prepend-inner-icon="mdi-flag",
-              variant="underlined",
               :disabled="provider && provider.title === 'yandex'",
               :hide-no-data="true",
               :rules="[(v) => !!v || 'Item is required']"
@@ -65,14 +59,12 @@ v-card.h-100(:image="require('@/assets/bg.jpg')")
               v-model.trim="endpoint",
               label="endpoint url",
               prepend-inner-icon="mdi-database",
-              variant="underlined",
               :disabled="!!provider"
             )
             v-text-field(
               v-model.trim="wendpoint",
               label="website endpoint url",
               prepend-inner-icon="mdi-server-network",
-              variant="underlined",
               :disabled="!!provider"
             )
         v-row
