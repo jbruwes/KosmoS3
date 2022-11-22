@@ -10,8 +10,10 @@ v-navigation-drawer(
       v-icon mdi-format-list-bulleted-square
     v-tab(value="2")
       v-icon mdi-move-resize
+    v-tab(value="3")
+      v-icon mdi-card-bulleted-settings-outline
   v-window(v-model="drawer")
-    v-window-item(value="1", :eager="true")
+    v-window-item(value="1")
       v-container.h-100.pa-0(fluid)
         v-form(ref="form")
           v-list
@@ -37,6 +39,7 @@ v-navigation-drawer(
                     v-model.trim="element.name",
                     :readonly="element.id !== curId || !element.edit",
                     :disabled="element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1",
+                    prefix="#",
                     variant="underlined",
                     :rules="[(v) => !!v || 'Field is required', (v) => !(template.filter(({ name }) => name === v).length - 1) || 'Must be unique']",
                     @blur="element.edit = false"
@@ -47,56 +50,74 @@ v-navigation-drawer(
                       v-icon mdi-drag-vertical
     v-window-item(value="2")
       v-container.h-100(fluid)
+        v-text-field(
+          v-model="slider",
+          label="margin all",
+          type="number",
+          min="-16",
+          max="16",
+          step="1",
+          clearable,
+          hide-details
+        )
+          template(#append)
+            v-switch(
+              label="auto",
+              hide-details,
+              density="compact",
+              :style="{ height: '32px' }"
+            )
+    v-window-item(value="3")
+      v-container.h-100(fluid)
         v-switch(
           v-model="template[curIndex].fluid",
           :label="`Type: ${template[curIndex].fluid ? 'fluid' : 'responsive'}`",
           inset,
-          :hide-details="true"
+          hide-details
+        )
+        v-combobox(
+          v-model="template[curIndex].classes",
+          label="classes",
+          chips,
+          closable-chips,
+          multiple,
+          persistent-hint,
+          hint="case-sensitive classes of the layer",
+          :delimiters="[',', ' ']",
+          :open-on-clear="false"
         )
 .rounded.border.d-flex.flex-column.overflow-hidden.h-100
   v-tabs(v-model="tab", show-arrows, grow)
-    v-tab(value="1", prepend-icon="mdi-ungroup") Layout
-    v-tab(value="2", prepend-icon="mdi-eye") Visual
-    v-tab(value="3", prepend-icon="mdi-code-tags") Source
+    v-tab(value="1", prepend-icon="mdi-eye") Visual
+    v-tab(value="2", prepend-icon="mdi-code-tags") Source
   v-window.h-100(v-model="tab")
-    v-window-item.h-100.overflow-y-auto(ref="window", value="1")
-      .position-relative.solid-lines(
-        :style="{ backgroundSize: `23px ${100 / (visibleTemplate.length || 1)}%` }"
+    v-window-item.h-100(value="1")
+      v-overlay(
+        v-if="curIndex >= 0 && template[curIndex].name === 'content'",
+        :model-value="true",
+        z-index="2",
+        contained,
+        persistent,
+        no-click-animation,
+        content-class="w-100 h-100"
       )
-        v-overlay(
-          :model-value="true",
-          :scrim="false",
-          z-index="0",
-          contained,
-          persistent,
-          no-click-animation,
-          content-class="w-100 h-100"
-        )
-          v-container.h-100.border-s-xl.border-e-xl.border-dashed.border-t-0.border-b-0
-        v-container.bg-grey-lighten-2.border-xl(
-          v-for="item in visibleTemplate",
-          :key="item.id",
-          :fluid="item.fluid",
-          :style="{ height: `${height}px`, opacity: 0.5 }",
-          :class="[item.id === curId ? 'border-opacity-1' : 'border-opacity-0']",
-          @click="curId = item.id"
-        ) {{ `#${item.name}` }}
+      v-wysiwyg(v-if="curIndex >= 0", v-model="template[curIndex].value")
     v-window-item.h-100(value="2")
-      v-wysiwyg(v-model="template[curIndex].value")
-    v-window-item.h-100(value="3")
-      v-source-code(v-model="template[curIndex].value")
+      v-overlay(
+        v-if="curIndex >= 0 && template[curIndex].name === 'content'",
+        :model-value="true",
+        z-index="2",
+        contained,
+        persistent,
+        no-click-animation,
+        content-class="w-100 h-100"
+      )
+      v-source-code(v-if="curIndex >= 0", v-model="template[curIndex].value")
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
 import { useDisplay } from "vuetify";
-import {
-  get,
-  set,
-  watchTriggerable,
-  useArrayFindIndex,
-  useArrayFilter,
-  useElementSize,
-} from "@vueuse/core";
+import { get, set, watchTriggerable, useArrayFindIndex } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
 import kosmos3 from "@/kosmos3";
@@ -105,16 +126,14 @@ import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = kosmos3();
 const { panel, template } = storeToRefs(store);
-const visibleTemplate = useArrayFilter(template, (element) => element.visible);
 const { calcLayer } = store;
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
+const slider = ref();
 const tab = ref(1);
 const drawer = ref(1);
 const form = ref();
 const curId = ref();
-const window = ref();
-const { height } = useElementSize(window);
 const curIndex = useArrayFindIndex(template, ({ id }) => id === get(curId));
 const { trigger: triggerTemplate } = watchTriggerable(
   template,
