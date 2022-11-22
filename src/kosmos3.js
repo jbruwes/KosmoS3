@@ -189,8 +189,7 @@ export default defineStore("kosmos3", () => {
     name,
     visible: !!visible,
     fluid: !!fluid,
-    value:
-      name === "content" ? false : DOMPurify.sanitize(value, configDOMPurify),
+    value: name === "content" ? "" : DOMPurify.sanitize(value, configDOMPurify),
     classes: Array.isArray(classes) ? classes.filter(Boolean) : [],
     edit: false,
   });
