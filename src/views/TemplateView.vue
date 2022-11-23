@@ -21,7 +21,7 @@ v-navigation-drawer(
               template(#item="{ element, index }")
                 v-list-item.px-1.py-0(
                   :value="element.id",
-                  :active="element.id === curId",
+                  :active="element.id === id",
                   @click="clickRect(index)",
                   @blur="element.edit = false"
                 )
@@ -37,7 +37,7 @@ v-navigation-drawer(
                       ) mdi-checkbox-blank-circle-outline
                   v-text-field(
                     v-model.trim="element.name",
-                    :readonly="element.id !== curId || !element.edit",
+                    :readonly="element.id !== id || !element.edit",
                     :disabled="element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1",
                     prefix="#",
                     variant="underlined",
@@ -50,33 +50,36 @@ v-navigation-drawer(
                       v-icon mdi-drag-vertical
     v-window-item(value="2")
       v-container.h-100(fluid)
-        v-text-field(
-          v-model="slider",
-          label="margin all",
-          type="number",
-          min="-16",
-          max="16",
-          step="1",
-          clearable,
-          hide-details
+        v-selection-control-group.align-center(
+          v-for="(value, name, index) in m",
+          :key="index",
+          v-model="value.key",
+          inline,
+          mandatory
         )
-          template(#append)
-            v-switch(
-              label="auto",
-              hide-details,
-              density="compact",
-              :style="{ height: '32px' }"
-            )
+          v-sheet(:width="30") {{ `${name}-` }}
+          v-radio(label="none", :value="0")
+          v-radio(label="auto", :value="1")
+          v-radio.flex-fill(:value="2")
+            template(#label)
+              v-text-field(
+                v-model="value.value",
+                min="-16",
+                max="16",
+                step="1",
+                type="number",
+                @input="(event) => { value.value = event.target.value !== '' ? event.target.value : 0; }"
+              )
     v-window-item(value="3")
       v-container.h-100(fluid)
         v-switch(
-          v-model="template[curIndex].fluid",
-          :label="`Type: ${template[curIndex].fluid ? 'fluid' : 'responsive'}`",
+          v-model="item.fluid",
+          :label="`Type: ${item.fluid ? 'fluid' : 'responsive'}`",
           inset,
           hide-details
         )
         v-combobox(
-          v-model="template[curIndex].classes",
+          v-model="item.classes",
           label="classes",
           chips,
           closable-chips,
@@ -93,7 +96,7 @@ v-navigation-drawer(
   v-window.h-100(v-model="tab")
     v-window-item.h-100(value="1")
       v-overlay(
-        v-if="curIndex >= 0 && template[curIndex].name === 'content'",
+        v-if="item && item.name === 'content'",
         :model-value="true",
         z-index="2",
         contained,
@@ -101,10 +104,10 @@ v-navigation-drawer(
         no-click-animation,
         content-class="w-100 h-100"
       )
-      v-wysiwyg(v-if="curIndex >= 0", v-model="template[curIndex].value")
+      v-wysiwyg(v-if="item", v-model="item.value")
     v-window-item.h-100(value="2")
       v-overlay(
-        v-if="curIndex >= 0 && template[curIndex].name === 'content'",
+        v-if="item && item.name === 'content'",
         :model-value="true",
         z-index="2",
         contained,
@@ -112,12 +115,12 @@ v-navigation-drawer(
         no-click-animation,
         content-class="w-100 h-100"
       )
-      v-source-code(v-if="curIndex >= 0", v-model="template[curIndex].value")
+      v-source-code(v-if="item", v-model="item.value")
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive, computed } from "vue";
 import { useDisplay } from "vuetify";
-import { get, set, watchTriggerable, useArrayFindIndex } from "@vueuse/core";
+import { get, set, watchTriggerable, useArrayFind } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
 import kosmos3 from "@/kosmos3";
@@ -129,17 +132,105 @@ const { panel, template } = storeToRefs(store);
 const { calcLayer } = store;
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
-const slider = ref();
 const tab = ref(1);
 const drawer = ref(1);
 const form = ref();
-const curId = ref();
-const curIndex = useArrayFindIndex(template, ({ id }) => id === get(curId));
+const item = useArrayFind(template, ({ id }) => id === get(id));
+const id = ref();
+/** */
+const getMKey = (prefix) => {
+  const regexp = new RegExp(`^${prefix}-`);
+  const { classes } = get(item) || {};
+  const result = classes.find((element) => regexp.test(element));
+  return result === `${prefix}-auto` ? 1 : 2 * !!result;
+};
+/** */
+const setM = (prefix, value, m) => {
+  const regexp = new RegExp(`^${prefix}-`);
+  get(item).classes = get(item).classes.filter(
+    (element) => !regexp.test(element)
+  );
+  if (value) {
+    get(item).classes.push(
+      value - 1
+        ? `${prefix}-${(m[prefix].value || 0).toString().replace(/^-/, "n")}`
+        : `${prefix}-auto`
+    );
+  }
+};
+const m = reactive({
+  mt: {
+    key: computed({
+      /** @returns {number} позиция радиокнопки */
+      get() {
+        return getMKey("mt");
+      },
+      /** @param value */
+      set(value) {
+        setM("mt", value, m);
+      },
+    }),
+    value: computed({
+      /** @returns {number} позиция радиокнопки */
+      get() {
+        const prefix = "mt";
+        const regexp = new RegExp(`^${prefix}-`);
+        const { classes } = get(item) || {};
+        return (
+          Number(
+            (classes.find((element) => regexp.test(element)) || "").replace(
+              regexp,
+              ""
+            )
+          ) || 0
+        );
+      },
+      /** @param value */
+      set(value) {
+        console.log(value);
+        // setM("mt", value, m);
+      },
+    }),
+  },
+  mb: {
+    key: ref(0),
+    value: ref(0),
+  },
+  ml: {
+    key: ref(0),
+    value: ref(0),
+  },
+  mr: {
+    key: ref(0),
+    value: ref(0),
+  },
+  ms: {
+    key: ref(0),
+    value: ref(0),
+  },
+  me: {
+    key: ref(0),
+    value: ref(0),
+  },
+  mx: {
+    key: ref(0),
+    value: ref(0),
+  },
+  my: {
+    key: ref(0),
+    value: ref(0),
+  },
+  ma: {
+    key: ref(0),
+    value: ref(0),
+  },
+});
 const { trigger: triggerTemplate } = watchTriggerable(
   template,
   (value, oldValue) => {
+    console.log(value);
     if (value.length && !(oldValue || []).length) {
-      set(curId, value[0].id);
+      set(id, value[0].id);
       set(template, value);
     } else get(form).validate();
   },
@@ -159,24 +250,13 @@ const delRect = (index) => {
   const last = get(template).length - 1;
   if (last) {
     get(template).splice(index, 1);
-    set(curId, get(template)[index === last ? index - 1 : index].id);
+    set(id, get(template)[index === last ? index - 1 : index].id);
   }
 };
 /** @param {number} index индекс */
 const clickRect = (index) => {
   const element = get(template)[index];
-  if (get(curId) !== element.id) set(curId, element.id);
+  if (get(id) !== element.id) set(id, element.id);
   else element.edit = true;
 };
 </script>
-<style scoped>
-.solid-lines {
-  background-image: linear-gradient(to right, white 8px, transparent 1px),
-    linear-gradient(
-      rgba(var(--v-border-color), var(--v-border-opacity)) 8px,
-      transparent 1px
-    );
-  background-repeat: repeat;
-  background-position: center -4px;
-}
-</style>
