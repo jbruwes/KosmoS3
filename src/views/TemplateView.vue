@@ -50,26 +50,43 @@ v-navigation-drawer(
                       v-icon mdi-drag-vertical
     v-window-item(value="2")
       v-container.h-100(fluid)
-        v-selection-control-group.align-center(
-          v-for="(value, name, index) in m",
-          :key="index",
-          v-model="value.key",
-          inline,
-          mandatory
-        )
-          v-sheet(:width="30") {{ `${name}-` }}
-          v-radio(label="none", :value="0")
-          v-radio(label="auto", :value="1")
-          v-radio.flex-fill(:value="2")
-            template(#label)
-              v-text-field(
-                v-model="value.value",
-                min="-16",
-                max="16",
-                step="1",
-                type="number",
-                @input="(event) => { value.value = event.target.value !== '' ? event.target.value : 0; }"
+        | margin
+        .d-flex
+          div(v-for="(value, name, index) in m", :key="index")
+            v-radio-group(
+              v-model="value.type",
+              density="compact",
+              hide-details
+            )
+              v-radio.align-end(
+                density="compact",
+                :true-icon="value.icon",
+                :value="2"
               )
+                template(#label)
+                  v-text-field(
+                    v-model="value.size",
+                    min="-16",
+                    max="16",
+                    step="1",
+                    type="number",
+                    density="compact",
+                    hide-details,
+                    @input="(event) => { value.size = event.target.value !== '' ? event.target.value : 0; }"
+                  )
+              v-radio(
+                label="auto",
+                density="compact",
+                :true-icon="value.icon",
+                :value="1"
+              )
+              v-radio(
+                label="none",
+                density="compact",
+                :true-icon="value.icon",
+                :value="0"
+              )
+        v-divider.mt-2
     v-window-item(value="3")
       v-container.h-100(fluid)
         v-switch(
@@ -118,7 +135,7 @@ v-navigation-drawer(
       v-source-code(v-if="item", v-model="item.value")
 </template>
 <script setup>
-import { ref, onMounted, reactive, computed } from "vue";
+import { ref, onMounted, reactive, computed, nextTick } from "vue";
 import { useDisplay } from "vuetify";
 import { get, set, watchTriggerable, useArrayFind } from "@vueuse/core";
 import { storeToRefs } from "pinia";
@@ -135,100 +152,103 @@ set(panel, !get(mobile));
 const tab = ref(1);
 const drawer = ref(1);
 const form = ref();
-const item = useArrayFind(template, ({ id }) => id === get(id));
 const id = ref();
+const item = useArrayFind(template, ({ id: lId }) => lId === get(id));
 /** */
-const getMKey = (prefix) => {
-  const regexp = new RegExp(`^${prefix}-`);
-  const { classes } = get(item) || {};
-  const result = classes.find((element) => regexp.test(element));
-  return result === `${prefix}-auto` ? 1 : 2 * !!result;
-};
-/** */
-const setM = (prefix, value, m) => {
-  const regexp = new RegExp(`^${prefix}-`);
-  get(item).classes = get(item).classes.filter(
-    (element) => !regexp.test(element)
-  );
-  if (value) {
-    get(item).classes.push(
-      value - 1
-        ? `${prefix}-${(m[prefix].value || 0).toString().replace(/^-/, "n")}`
-        : `${prefix}-auto`
-    );
+const margins = computed(() => {
+  /**
+   * @param {string} value направление
+   * @returns {string} класс
+   */
+  const margin = (value) =>
+    (
+      get(item).classes.find((element) =>
+        new RegExp(`${value}(auto|\\bn?([0-9]|1[0-6])\\b)$`).test(element)
+      ) || ""
+    ).replace(new RegExp(value), "");
+  const result = { mt: "", mb: "", ml: "", mr: "" };
+  const ma = margin("^ma-");
+  if (ma) {
+    result.mt = ma;
+    result.mb = ma;
+    result.ml = ma;
+    result.mr = ma;
   }
+  const mx = margin("^mx-");
+  if (mx) {
+    result.ml = mx;
+    result.mr = mx;
+  }
+  const my = margin("^my-");
+  if (my) {
+    result.mt = my;
+    result.mb = my;
+  }
+  result.mt = margin("^mt-") || result.mt;
+  result.mb = margin("^mb-") || result.mb;
+  result.ml = margin("^ml-") || result.ml;
+  result.mr = margin("^mr-") || result.mr;
+  return result;
+});
+/**
+ *
+ * @param {string} prefix префикс класса
+ * @returns {number} тип
+ */
+const getMType = (prefix) =>
+  get(margins, prefix) === "auto" ? 1 : 2 * !!get(margins, prefix);
+/** @param {object} value новые значения марждин */
+const setM = (value) => {
+  get(item).classes = get(item).classes.filter(
+    (element) =>
+      !/^(ma|mx|my|mt|mb|ml|mr)-(auto|\bn?([0-9]|1[0-6])\b)$/.test(element)
+  );
+  Object.keys(value).forEach((element) => {
+    const margin = value[element];
+    if (margin) get(item).classes.push(`${element}-${margin}`);
+  });
 };
 const m = reactive({
   mt: {
-    key: computed({
+    type: computed({
       /** @returns {number} позиция радиокнопки */
       get() {
-        return getMKey("mt");
+        return getMType("mt");
       },
-      /** @param value */
+      /** @param {number} value позиция радиокнопки */
       set(value) {
-        setM("mt", value, m);
+        setM({
+          ...get(margins),
+          mt: {
+            0: "",
+            1: "auto",
+            2: m.mt.size.toString().replace(/^-/, "n"),
+          }[value],
+        });
       },
     }),
-    value: computed({
-      /** @returns {number} позиция радиокнопки */
-      get() {
-        const prefix = "mt";
-        const regexp = new RegExp(`^${prefix}-`);
-        const { classes } = get(item) || {};
-        return (
-          Number(
-            (classes.find((element) => regexp.test(element)) || "").replace(
-              regexp,
-              ""
-            )
-          ) || 0
-        );
-      },
-      /** @param value */
-      set(value) {
-        console.log(value);
-        // setM("mt", value, m);
-      },
-    }),
+    size: ref(0),
+    icon: "mdi-arrow-up-circle-outline",
   },
   mb: {
-    key: ref(0),
-    value: ref(0),
+    type: ref(0),
+    size: ref(0),
+    icon: "mdi-arrow-down-circle-outline",
   },
   ml: {
-    key: ref(0),
-    value: ref(0),
+    type: ref(0),
+    size: ref(0),
+    icon: "mdi-arrow-left-circle-outline",
   },
   mr: {
-    key: ref(0),
-    value: ref(0),
-  },
-  ms: {
-    key: ref(0),
-    value: ref(0),
-  },
-  me: {
-    key: ref(0),
-    value: ref(0),
-  },
-  mx: {
-    key: ref(0),
-    value: ref(0),
-  },
-  my: {
-    key: ref(0),
-    value: ref(0),
-  },
-  ma: {
-    key: ref(0),
-    value: ref(0),
+    type: ref(0),
+    size: ref(0),
+    icon: "mdi-arrow-right-circle-outline",
   },
 });
 const { trigger: triggerTemplate } = watchTriggerable(
   template,
   (value, oldValue) => {
-    console.log(value);
     if (value.length && !(oldValue || []).length) {
       set(id, value[0].id);
       set(template, value);
@@ -236,10 +256,9 @@ const { trigger: triggerTemplate } = watchTriggerable(
   },
   { deep: true }
 );
-onMounted(() => {
-  setTimeout(() => {
-    triggerTemplate();
-  });
+onMounted(async () => {
+  await nextTick();
+  triggerTemplate();
 });
 /** @param {number} index индекс */
 const addRect = (index) => {
@@ -250,7 +269,7 @@ const delRect = (index) => {
   const last = get(template).length - 1;
   if (last) {
     get(template).splice(index, 1);
-    set(id, get(template)[index === last ? index - 1 : index].id);
+    set(id, get(template, index === last ? index - 1 : index).id);
   }
 };
 /** @param {number} index индекс */
