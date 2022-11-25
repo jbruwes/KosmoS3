@@ -52,7 +52,7 @@ v-navigation-drawer(
       v-container.h-100(fluid)
         | margin
         .d-flex
-          div(v-for="(value, name, index) in m", :key="index")
+          div(v-for="(value, name, index) in margins", :key="index")
             v-radio-group(
               v-model="value.type",
               density="compact",
@@ -135,9 +135,15 @@ v-navigation-drawer(
       v-source-code(v-if="item", v-model="item.value")
 </template>
 <script setup>
-import { ref, onMounted, reactive, computed, nextTick } from "vue";
+import { ref, onMounted, computed, nextTick } from "vue";
 import { useDisplay } from "vuetify";
-import { get, set, watchTriggerable, useArrayFind } from "@vueuse/core";
+import {
+  get,
+  set,
+  watchTriggerable,
+  useArrayFind,
+  isDefined,
+} from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
 import kosmos3 from "@/kosmos3";
@@ -154,19 +160,41 @@ const drawer = ref(1);
 const form = ref();
 const id = ref();
 const item = useArrayFind(template, ({ id: lId }) => lId === get(id));
-/** */
-const margins = computed(() => {
+/** @param {object} value новые значения марждин */
+const setM = (value) => {
+  get(item).classes = get(item).classes.filter(
+    (element) =>
+      !/^(ma|mx|my|mt|mb|ml|mr)-(auto|\bn?([0-9]|1[0-6])\b)$/.test(element)
+  );
+  const { mt, mb, ml, mr } = value || {};
+  if (mt && [mb, ml, mr].every((element) => element === mt))
+    get(item).classes.push(`ma-${mt}`);
+  else {
+    if (mt && mt === mb) get(item).classes.push(`my-${mt}`);
+    else {
+      if (mt) get(item).classes.push(`mt-${mt}`);
+      if (mb) get(item).classes.push(`mb-${mb}`);
+    }
+    if (ml && ml === mr) get(item).classes.push(`mx-${ml}`);
+    else {
+      if (ml) get(item).classes.push(`ml-${ml}`);
+      if (mr) get(item).classes.push(`mr-${mr}`);
+    }
+  }
+};
+const fromClasses = computed(() => {
+  const result = { mt: "", mb: "", ml: "", mr: "" };
   /**
    * @param {string} value направление
    * @returns {string} класс
    */
   const margin = (value) =>
-    (
-      get(item).classes.find((element) =>
-        new RegExp(`${value}(auto|\\bn?([0-9]|1[0-6])\\b)$`).test(element)
-      ) || ""
+    (isDefined(item)
+      ? get(item).classes.find((element) =>
+          new RegExp(`${value}(auto|\\bn?([0-9]|1[0-6])\\b)$`).test(element)
+        ) || ""
+      : ""
     ).replace(new RegExp(value), "");
-  const result = { mt: "", mb: "", ml: "", mr: "" };
   const ma = margin("^ma-");
   if (ma) {
     result.mt = ma;
@@ -190,62 +218,68 @@ const margins = computed(() => {
   result.mr = margin("^mr-") || result.mr;
   return result;
 });
-/**
- *
- * @param {string} prefix префикс класса
- * @returns {number} тип
- */
-const getMType = (prefix) =>
-  get(margins, prefix) === "auto" ? 1 : 2 * !!get(margins, prefix);
-/** @param {object} value новые значения марждин */
-const setM = (value) => {
-  get(item).classes = get(item).classes.filter(
-    (element) =>
-      !/^(ma|mx|my|mt|mb|ml|mr)-(auto|\bn?([0-9]|1[0-6])\b)$/.test(element)
-  );
-  Object.keys(value).forEach((element) => {
-    const margin = value[element];
-    if (margin) get(item).classes.push(`${element}-${margin}`);
-  });
-};
-const m = reactive({
-  mt: {
-    type: computed({
-      /** @returns {number} позиция радиокнопки */
-      get() {
-        return getMType("mt");
+const cmpFromClasses = computed(() =>
+  Object.fromEntries(
+    Object.entries(get(fromClasses)).map(([k, v]) => [
+      k,
+      {
+        size: Number((v === "auto" ? "0" : v || "0").replace(/^n/, "-")),
+        type: v === "auto" ? 1 : 2 * !!v,
       },
-      /** @param {number} value позиция радиокнопки */
-      set(value) {
-        setM({
-          ...get(margins),
-          mt: {
+    ])
+  )
+);
+const margins = computed(() =>
+  Object.fromEntries(
+    Object.entries({
+      mt: {
+        icon: "mdi-arrow-up-circle-outline",
+      },
+      mb: {
+        icon: "mdi-arrow-down-circle-outline",
+      },
+      ml: {
+        icon: "mdi-arrow-left-circle-outline",
+      },
+      mr: {
+        icon: "mdi-arrow-right-circle-outline",
+      },
+    }).map(([k, v]) => [
+      k,
+      {
+        ...v,
+        /** */
+        get size() {
+          return get(cmpFromClasses)[k].size;
+        },
+        /** */
+        set size(value) {
+          const result = get(fromClasses);
+          result[k] = {
             0: "",
             1: "auto",
-            2: m.mt.size.toString().replace(/^-/, "n"),
-          }[value],
-        });
+            2: value.toString().replace(/^-/, "n"),
+          }[this.type];
+          setM(result);
+        },
+        /** */
+        get type() {
+          return get(cmpFromClasses)[k].type;
+        },
+        /** */
+        set type(value) {
+          const result = get(fromClasses);
+          result[k] = {
+            0: "",
+            1: "auto",
+            2: this.size.toString().replace(/^-/, "n"),
+          }[value];
+          setM(result);
+        },
       },
-    }),
-    size: ref(0),
-    icon: "mdi-arrow-up-circle-outline",
-  },
-  mb: {
-    type: ref(0),
-    size: ref(0),
-    icon: "mdi-arrow-down-circle-outline",
-  },
-  ml: {
-    type: ref(0),
-    size: ref(0),
-    icon: "mdi-arrow-left-circle-outline",
-  },
-  mr: {
-    type: ref(0),
-    size: ref(0),
-    icon: "mdi-arrow-right-circle-outline",
-  },
-});
+    ])
+  )
+);
 const { trigger: triggerTemplate } = watchTriggerable(
   template,
   (value, oldValue) => {
