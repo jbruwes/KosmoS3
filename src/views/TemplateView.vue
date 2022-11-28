@@ -39,7 +39,7 @@ v-navigation-drawer(
                     v-model.trim="element.name",
                     :readonly="element.id !== id || !element.edit",
                     :disabled="element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1",
-                    prefix="#",
+                    cur-prefix="#",
                     variant="underlined",
                     :rules="[(v) => !!v || 'Field is required', (v) => !(template.filter(({ name }) => name === v).length - 1) || 'Must be unique']",
                     @blur="element.edit = false"
@@ -160,75 +160,126 @@ const drawer = ref(1);
 const form = ref();
 const id = ref();
 const item = useArrayFind(template, ({ id: lId }) => lId === get(id));
-/** @param {object} value новые значения марждин */
-const setM = (value) => {
+/**
+ * @param {object} pattern новые значения марждин
+ * @param map
+ * @param mask
+ */
+const toClasses = (pattern, map, mask) => {
+  const dynaMap = structuredClone(map);
+  const prefixes = Object.keys(map);
+  let buffer = [];
   get(item).classes = get(item).classes.filter(
-    (element) =>
-      !/^(ma|mx|my|mt|mb|ml|mr)-(auto|\bn?([0-9]|1[0-6])\b)$/.test(element)
+    (aclass) => !new RegExp(`^(${prefixes.join("|")})-${mask}$`).test(aclass)
   );
-  const { mt, mb, ml, mr } = value || {};
-  if (mt && [mb, ml, mr].every((element) => element === mt))
-    get(item).classes.push(`ma-${mt}`);
-  else {
-    if (mt && mt === mb) get(item).classes.push(`my-${mt}`);
-    else {
-      if (mt) get(item).classes.push(`mt-${mt}`);
-      if (mb) get(item).classes.push(`mb-${mb}`);
+  prefixes.reverse().forEach((curPrefix) => {
+    const [candidate] = map[curPrefix];
+    if (
+      pattern[candidate].value &&
+      map[curPrefix].every(
+        (element) => pattern[candidate].value === pattern[element].value
+      )
+    ) {
+      dynaMap[curPrefix].forEach((checker) => {
+        prefixes.forEach((prefix) => {
+          if (curPrefix !== prefix) {
+            const curCheckers = dynaMap[prefix];
+            const i = curCheckers.indexOf(checker);
+            if (i !== -1) {
+              curCheckers.splice(i, 1);
+              if (curCheckers.indexOf(curPrefix) === -1)
+                curCheckers.push(curPrefix);
+            }
+          }
+        });
+      });
+      buffer = buffer.filter(
+        (tmpPrefix) =>
+          !dynaMap[curPrefix].find((checker) => tmpPrefix[0] === checker)
+      );
+      buffer.push([curPrefix, pattern[candidate].value]);
     }
-    if (ml && ml === mr) get(item).classes.push(`mx-${ml}`);
-    else {
-      if (ml) get(item).classes.push(`ml-${ml}`);
-      if (mr) get(item).classes.push(`mr-${mr}`);
-    }
-  }
+  });
+  buffer.forEach(([key, value]) => {
+    get(item).classes.push(`${key}-${value}`);
+  });
 };
-const fromClasses = computed(() => {
-  const result = { mt: "", mb: "", ml: "", mr: "" };
-  /**
-   * @param {string} value направление
-   * @returns {string} класс
-   */
-  const margin = (value) =>
-    (isDefined(item)
-      ? get(item).classes.find((element) =>
-          new RegExp(`${value}(auto|\\bn?([0-9]|1[0-6])\\b)$`).test(element)
-        ) || ""
-      : ""
-    ).replace(new RegExp(value), "");
-  const ma = margin("^ma-");
-  if (ma) {
-    result.mt = ma;
-    result.mb = ma;
-    result.ml = ma;
-    result.mr = ma;
-  }
-  const mx = margin("^mx-");
-  if (mx) {
-    result.ml = mx;
-    result.mr = mx;
-  }
-  const my = margin("^my-");
-  if (my) {
-    result.mt = my;
-    result.mb = my;
-  }
-  result.mt = margin("^mt-") || result.mt;
-  result.mb = margin("^mb-") || result.mb;
-  result.ml = margin("^ml-") || result.ml;
-  result.mr = margin("^mr-") || result.mr;
+/**
+ *
+ * @param pattern
+ * @param map
+ * @param mask
+ */
+const fromClasses = (map, mask) => {
+  const keys = Object.keys(map);
+  const [first] = keys;
+  const result = Object.fromEntries(
+    map[first].map((element) => [element, { value: "" }])
+  );
+  keys.forEach((key) => {
+    const value = (
+      isDefined(item)
+        ? get(item).classes.find((element) =>
+            new RegExp(`^${key}-${mask}$`).test(element)
+          ) || ""
+        : ""
+    ).replace(new RegExp(`^${key}-`), "");
+    if (value)
+      map[key].forEach((element) => {
+        result[element].value = value;
+      });
+  });
+  Object.keys(result).forEach((element) => {
+    result[element].size = Number(
+      (result[element].value === "auto"
+        ? "0"
+        : result[element].value || "0"
+      ).replace(/^n/, "-")
+    );
+    result[element].type =
+      result[element].value === "auto" ? 1 : 2 * !!result[element].value;
+  });
   return result;
+};
+/**
+ *
+ * @param k
+ * @param v
+ * @param pattern
+ * @param mapMargin
+ * @param mask
+ */
+const cmpSizeType = (k, v, mapMargin, mask) => ({
+  ...v,
+  /** */
+  get size() {
+    return fromClasses(mapMargin, mask)[k].size;
+  },
+  /** */
+  set size(value) {
+    const result = fromClasses(mapMargin, mask);
+    result[k].value = {
+      0: "",
+      1: "auto",
+      2: value.toString().replace(/^-/, "n"),
+    }[this.type];
+    toClasses(result, mapMargin, mask);
+  },
+  /** */
+  get type() {
+    return fromClasses(mapMargin, mask)[k].type;
+  },
+  /** */
+  set type(value) {
+    const result = fromClasses(mapMargin, mask);
+    result[k].value = {
+      0: "",
+      1: "auto",
+      2: this.size.toString().replace(/^-/, "n"),
+    }[value];
+    toClasses(result, mapMargin, mask);
+  },
 });
-const cmpFromClasses = computed(() =>
-  Object.fromEntries(
-    Object.entries(get(fromClasses)).map(([k, v]) => [
-      k,
-      {
-        size: Number((v === "auto" ? "0" : v || "0").replace(/^n/, "-")),
-        type: v === "auto" ? 1 : 2 * !!v,
-      },
-    ])
-  )
-);
 const margins = computed(() =>
   Object.fromEntries(
     Object.entries({
@@ -246,37 +297,20 @@ const margins = computed(() =>
       },
     }).map(([k, v]) => [
       k,
-      {
-        ...v,
-        /** */
-        get size() {
-          return get(cmpFromClasses)[k].size;
+      cmpSizeType(
+        k,
+        v,
+        {
+          ma: ["mt", "mb", "ml", "mr"],
+          mx: ["ml", "mr"],
+          my: ["mt", "mb"],
+          mt: ["mt"],
+          mb: ["mb"],
+          ml: ["ml"],
+          mr: ["mr"],
         },
-        /** */
-        set size(value) {
-          const result = get(fromClasses);
-          result[k] = {
-            0: "",
-            1: "auto",
-            2: value.toString().replace(/^-/, "n"),
-          }[this.type];
-          setM(result);
-        },
-        /** */
-        get type() {
-          return get(cmpFromClasses)[k].type;
-        },
-        /** */
-        set type(value) {
-          const result = get(fromClasses);
-          result[k] = {
-            0: "",
-            1: "auto",
-            2: this.size.toString().replace(/^-/, "n"),
-          }[value];
-          setM(result);
-        },
-      },
+        "(auto|\\bn?([0-9]|1[0-6])\\b)"
+      ),
     ])
   )
 );
