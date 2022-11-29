@@ -90,7 +90,7 @@
     "vuetify": "^3.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
+    "@babel/core": "^7.20.5",
     "@babel/eslint-parser": "^7.19.1",
     "@prettier/plugin-pug": "^2.3.0",
     "@volar/vue-language-plugin-pug": "^1.0.9",
@@ -109,7 +109,7 @@
     "eslint-plugin-jsdoc": "^39.6.4",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.8.0",
-    "eslint-plugin-vue-pug": "^0.5.4",
+    "eslint-plugin-vue-pug": "^0.5.5",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.7.0",
     "raw-loader": "^4.0.2",
