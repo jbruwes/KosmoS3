@@ -86,7 +86,38 @@ v-navigation-drawer(
                 :true-icon="value.icon",
                 :value="0"
               )
-        v-divider.mt-2
+        v-divider.my-4
+        | padding
+        .d-flex
+          div(v-for="(value, name, index) in paddings", :key="index")
+            v-radio-group(
+              v-model="value.type",
+              density="compact",
+              hide-details
+            )
+              v-radio.align-end(
+                density="compact",
+                :true-icon="value.icon",
+                :value="2"
+              )
+                template(#label)
+                  v-text-field(
+                    v-model="value.size",
+                    min="0",
+                    max="16",
+                    step="1",
+                    type="number",
+                    density="compact",
+                    hide-details,
+                    @input="(event) => { value.size = event.target.value !== '' ? event.target.value : 0; }"
+                  )
+              v-radio(
+                label="none",
+                density="compact",
+                :true-icon="value.icon",
+                :value="0"
+              )
+        v-divider.my-4
     v-window-item(value="3")
       v-container.h-100(fluid)
         v-switch(
@@ -161,44 +192,69 @@ const form = ref();
 const id = ref();
 const item = useArrayFind(template, ({ id: lId }) => lId === get(id));
 /**
- * @param {object} pattern новые значения марждин
- * @param map
- * @param mask
+ * @param {object} pattern новые значения
+ * @param {object} map карта префиксов
+ * @param {string} mask маска
  */
 const toClasses = (pattern, map, mask) => {
   const dynaMap = structuredClone(map);
   const prefixes = Object.keys(map);
   let buffer = [];
+  /**
+   *
+   * @param {Array} vector текущий проверочный вектор
+   * @param {string} vector."0" кандидат для проверки
+   * @param {string} curPrefix текущий префикс
+   */
+  const mutateMap = ([candidate], curPrefix) => {
+    /**
+     *
+     * @param {object} candidate объект кандидата
+     * @param {string} candidate.value значение кандидата
+     */
+    const mutateCandidate = ({ value }) => {
+      /**
+       *
+       * @param {string} pValue1 значение кандидата
+       * @param {object} checker объект для сравнения
+       * @param {string} checker.value значение для сравнения
+       * @returns {boolean} равенство
+       */
+      const compareValues = (pValue1, { value: pValue2 }) =>
+        pValue1 === pValue2;
+      if (
+        value &&
+        map[curPrefix].every((element) =>
+          compareValues(value, pattern[element])
+        )
+      ) {
+        dynaMap[curPrefix].forEach((checker) => {
+          prefixes.forEach((prefix) => {
+            if (curPrefix !== prefix) {
+              const curCheckers = dynaMap[prefix];
+              const i = curCheckers.indexOf(checker);
+              if (i !== -1) {
+                curCheckers.splice(i, 1);
+                if (curCheckers.indexOf(curPrefix) === -1)
+                  curCheckers.push(curPrefix);
+              }
+            }
+          });
+        });
+        buffer = buffer.filter(
+          ([prefix]) =>
+            !dynaMap[curPrefix].find((checker) => prefix === checker)
+        );
+        buffer.push([curPrefix, value]);
+      }
+    };
+    mutateCandidate(pattern[candidate]);
+  };
   get(item).classes = get(item).classes.filter(
     (aclass) => !new RegExp(`^(${prefixes.join("|")})-${mask}$`).test(aclass)
   );
   prefixes.reverse().forEach((curPrefix) => {
-    const [candidate] = map[curPrefix];
-    if (
-      pattern[candidate].value &&
-      map[curPrefix].every(
-        (element) => pattern[candidate].value === pattern[element].value
-      )
-    ) {
-      dynaMap[curPrefix].forEach((checker) => {
-        prefixes.forEach((prefix) => {
-          if (curPrefix !== prefix) {
-            const curCheckers = dynaMap[prefix];
-            const i = curCheckers.indexOf(checker);
-            if (i !== -1) {
-              curCheckers.splice(i, 1);
-              if (curCheckers.indexOf(curPrefix) === -1)
-                curCheckers.push(curPrefix);
-            }
-          }
-        });
-      });
-      buffer = buffer.filter(
-        (tmpPrefix) =>
-          !dynaMap[curPrefix].find((checker) => tmpPrefix[0] === checker)
-      );
-      buffer.push([curPrefix, pattern[candidate].value]);
-    }
+    mutateMap(map[curPrefix], curPrefix);
   });
   buffer.forEach(([key, value]) => {
     get(item).classes.push(`${key}-${value}`);
@@ -206,16 +262,13 @@ const toClasses = (pattern, map, mask) => {
 };
 /**
  *
- * @param pattern
- * @param map
- * @param mask
+ * @param {object} map карта префиксов
+ * @param {string} mask маска
+ * @returns {object} объект значений
  */
 const fromClasses = (map, mask) => {
   const keys = Object.keys(map);
-  const [first] = keys;
-  const result = Object.fromEntries(
-    map[first].map((element) => [element, { value: "" }])
-  );
+  const result = {};
   keys.forEach((key) => {
     const value = (
       isDefined(item)
@@ -226,58 +279,71 @@ const fromClasses = (map, mask) => {
     ).replace(new RegExp(`^${key}-`), "");
     if (value)
       map[key].forEach((element) => {
-        result[element].value = value;
+        result[element] = { value };
       });
   });
-  Object.keys(result).forEach((element) => {
-    result[element].size = Number(
-      (result[element].value === "auto"
-        ? "0"
-        : result[element].value || "0"
-      ).replace(/^n/, "-")
-    );
-    result[element].type =
-      result[element].value === "auto" ? 1 : 2 * !!result[element].value;
+  /**
+   *
+   * @param {object} element объект для рассчета
+   * @param {string} element.value значение
+   * @returns {object} рассчетный объект
+   */
+  const setSizeType = ({ value = "" }) => ({
+    value,
+    type: value === "auto" ? 1 : 2 * !!value,
+    size: Number((value === "auto" ? "0" : value || "0").replace(/^n/, "-")),
   });
-  return result;
+  /**
+   *
+   * @param {Array} keys ключи
+   * @param {string} keys."0" первый ключ
+   * @returns {object} общий результат
+   */
+  const calcResult = ([first]) =>
+    Object.fromEntries(
+      map[first].map((element) => [element, setSizeType(result[element] || {})])
+    );
+  return calcResult(keys);
 };
 /**
  *
- * @param k
- * @param v
- * @param pattern
- * @param mapMargin
- * @param mask
+ * @param {string} k ключ
+ * @param {object} v значение
+ * @param {object} map карта префиксов
+ * @param {string} mask маска
+ * @returns {object} рассчетный объект
  */
-const cmpSizeType = (k, v, mapMargin, mask) => ({
+const cmpSizeType = (k, v, map, mask) => ({
   ...v,
-  /** */
+  /** @returns {string} размер */
   get size() {
-    return fromClasses(mapMargin, mask)[k].size;
+    const { size } = fromClasses(map, mask)[k] || {};
+    return size;
   },
-  /** */
+  /** @param {number} value размер */
   set size(value) {
-    const result = fromClasses(mapMargin, mask);
+    const result = fromClasses(map, mask);
     result[k].value = {
       0: "",
       1: "auto",
       2: value.toString().replace(/^-/, "n"),
     }[this.type];
-    toClasses(result, mapMargin, mask);
+    toClasses(result, map, mask);
   },
-  /** */
+  /** @returns {number} тип */
   get type() {
-    return fromClasses(mapMargin, mask)[k].type;
+    const { type } = fromClasses(map, mask)[k] || {};
+    return type;
   },
-  /** */
+  /** @param {number} value тип */
   set type(value) {
-    const result = fromClasses(mapMargin, mask);
+    const result = fromClasses(map, mask);
     result[k].value = {
       0: "",
       1: "auto",
       2: this.size.toString().replace(/^-/, "n"),
     }[value];
-    toClasses(result, mapMargin, mask);
+    toClasses(result, map, mask);
   },
 });
 const margins = computed(() =>
@@ -310,6 +376,40 @@ const margins = computed(() =>
           mr: ["mr"],
         },
         "(auto|\\bn?([0-9]|1[0-6])\\b)"
+      ),
+    ])
+  )
+);
+const paddings = computed(() =>
+  Object.fromEntries(
+    Object.entries({
+      pt: {
+        icon: "mdi-arrow-up-circle-outline",
+      },
+      pb: {
+        icon: "mdi-arrow-down-circle-outline",
+      },
+      pl: {
+        icon: "mdi-arrow-left-circle-outline",
+      },
+      pr: {
+        icon: "mdi-arrow-right-circle-outline",
+      },
+    }).map(([k, v]) => [
+      k,
+      cmpSizeType(
+        k,
+        v,
+        {
+          pa: ["pt", "pb", "pl", "pr"],
+          px: ["pl", "pr"],
+          py: ["pt", "pb"],
+          pt: ["pt"],
+          pb: ["pb"],
+          pl: ["pl"],
+          pr: ["pr"],
+        },
+        "\\b([0-9]|1[0-6])\\b"
       ),
     ])
   )
