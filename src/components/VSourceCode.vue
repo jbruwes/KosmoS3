@@ -2,7 +2,6 @@
 v-ace-editor.h-100(
   :value="modelValue",
   :lang="lang",
-  :options="{ useWorker: true }",
   theme="chrome",
   @update:value="$emit('update:modelValue', $event)"
 )
