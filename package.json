@@ -87,13 +87,13 @@
     "vue3-particles": "^2.5.3",
     "vue3-runtime-template": "^1.0.2",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.0.2"
+    "vuetify": "^3.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
     "@babel/eslint-parser": "^7.19.1",
     "@prettier/plugin-pug": "^2.3.0",
-    "@volar/vue-language-plugin-pug": "^1.0.9",
+    "@volar/vue-language-plugin-pug": "^1.0.10",
     "@vue/cli-plugin-babel": "^5.0.8",
     "@vue/cli-plugin-eslint": "^5.0.8",
     "@vue/cli-service": "^5.0.8",
@@ -111,7 +111,7 @@
     "eslint-plugin-vue": "^9.8.0",
     "eslint-plugin-vue-pug": "^0.5.5",
     "html-webpack-plugin": "^5.5.0",
-    "mini-css-extract-plugin": "^2.7.0",
+    "mini-css-extract-plugin": "^2.7.1",
     "raw-loader": "^4.0.2",
     "svg2png": "^4.1.1",
     "terser-webpack-plugin": "^5.3.6",
