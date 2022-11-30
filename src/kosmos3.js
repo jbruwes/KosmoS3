@@ -419,11 +419,130 @@ export default defineStore("kosmos3", () => {
     },
     { deep: true, debounce: 1000, maxWait: 10000 }
   );
+  /**
+   * @param {object} pattern новые значения
+   * @param {object} map карта префиксов
+   * @param {string} mask маска
+   * @param {object} item выбранный слой
+   */
+  const toClasses = (pattern, map, mask, item) => {
+    const dynaMap = structuredClone(map);
+    const prefixes = Object.keys(map);
+    let buffer = [];
+    /**
+     *
+     * @param {Array} vector текущий проверочный вектор
+     * @param {string} vector."0" кандидат для проверки
+     * @param {string} curPrefix текущий префикс
+     */
+    const mutateMap = ([candidate], curPrefix) => {
+      /**
+       *
+       * @param {object} candidate объект кандидата
+       * @param {string} candidate.value значение кандидата
+       */
+      const mutateCandidate = ({ value }) => {
+        /**
+         *
+         * @param {string} pValue1 значение кандидата
+         * @param {object} checker объект для сравнения
+         * @param {string} checker.value значение для сравнения
+         * @returns {boolean} равенство
+         */
+        const compareValues = (pValue1, { value: pValue2 }) =>
+          pValue1 === pValue2;
+        if (
+          value &&
+          map[curPrefix].every((element) =>
+            compareValues(value, pattern[element])
+          )
+        ) {
+          dynaMap[curPrefix].forEach((checker) => {
+            prefixes.forEach((prefix) => {
+              if (curPrefix !== prefix) {
+                const curCheckers = dynaMap[prefix];
+                const i = curCheckers.indexOf(checker);
+                if (i !== -1) {
+                  curCheckers.splice(i, 1);
+                  if (curCheckers.indexOf(curPrefix) === -1)
+                    curCheckers.push(curPrefix);
+                }
+              }
+            });
+          });
+          buffer = buffer.filter(
+            ([prefix]) =>
+              !dynaMap[curPrefix].find((checker) => prefix === checker)
+          );
+          buffer.push([curPrefix, value]);
+        }
+      };
+      mutateCandidate(pattern[candidate]);
+    };
+    get(item).classes = get(item).classes.filter(
+      (aclass) => !new RegExp(`^(${prefixes.join("|")})-${mask}$`).test(aclass)
+    );
+    prefixes.reverse().forEach((curPrefix) => {
+      mutateMap(map[curPrefix], curPrefix);
+    });
+    buffer.forEach(([key, value]) => {
+      get(item).classes.push(`${key}-${value}`);
+    });
+  };
+  /**
+   *
+   * @param {object} map карта префиксов
+   * @param {string} mask маска
+   * @param {object} item выбранный слой
+   * @returns {object} объект значений
+   */
+  const fromClasses = (map, mask, item) => {
+    const keys = Object.keys(map);
+    const result = {};
+    keys.forEach((key) => {
+      const value = (
+        isDefined(item)
+          ? get(item).classes.find((element) =>
+              new RegExp(`^${key}-${mask}$`).test(element)
+            ) || ""
+          : ""
+      ).replace(new RegExp(`^${key}-`), "");
+      if (value)
+        map[key].forEach((element) => {
+          result[element] = { value };
+        });
+    });
+    /**
+     *
+     * @param {object} element объект для рассчета
+     * @param {string} element.value значение
+     * @returns {object} рассчетный объект
+     */
+    const setSizeType = ({ value = "" }) => ({
+      value,
+      type: value === "auto" ? 1 : 2 * !!value,
+      size: Number((value === "auto" ? "0" : value || "0").replace(/^n/, "-")),
+    });
+    /**
+     *
+     * @param {Array} keys ключи
+     * @param {string} keys."0" первый ключ
+     * @returns {object} общий результат
+     */
+    const calcResult = ([first]) =>
+      Object.fromEntries(
+        map[first].map((element) => [
+          element,
+          setSizeType(result[element] || {}),
+        ])
+      );
+    return calcResult(keys);
+  };
   return {
     ...{ bucket, wendpoint, base },
     ...{ panel, snackbar, message },
     ...{ content, template, js, script, css, style, settings },
     ...{ s3, putFile },
-    ...{ calcLayer },
+    ...{ calcLayer, fromClasses, toClasses },
   };
 });
