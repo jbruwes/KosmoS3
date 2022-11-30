@@ -288,5 +288,6 @@ const init = ref({
 <style scoped>
 :deep(.tox.tox-tinymce) {
   border: 0px !important;
+  height: 100% !important;
 }
 </style>
