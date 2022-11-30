@@ -12,9 +12,9 @@ v-navigation-drawer(
       v-icon mdi-card-bulleted-settings-outline
   v-window(v-model="drawer")
     v-window-item(value="1")
-      v-container.h-100(fluid) tree
+      v-container(fluid) tree
     v-window-item(value="2")
-      v-container.h-100(fluid) attrs
+      v-container(fluid) attrs
 .rounded.border.d-flex.flex-column.overflow-hidden.h-100
   v-tabs(v-model="tab", show-arrows, grow)
     v-tab(value="1", prepend-icon="mdi-eye") Visual
