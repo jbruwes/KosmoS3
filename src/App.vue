@@ -29,7 +29,7 @@ import { useDisplay } from "vuetify";
 import { get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
-import kosmos3 from "./kosmos3";
+import kosmos3 from "./stores/kosmos3";
 
 const router = useRouter();
 const store = kosmos3();
