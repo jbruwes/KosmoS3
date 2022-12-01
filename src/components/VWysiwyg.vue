@@ -45,7 +45,7 @@ import "tinymce/skins/ui/oxide/skin.css";
 import { watch, ref } from "vue";
 import { useFileDialog, set, get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import kosmos3 from "@/kosmos3";
+import kosmos3 from "@/stores/kosmos3";
 import contentUiSkinCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css"; // eslint-disable-line
 import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css"; // eslint-disable-line
 
