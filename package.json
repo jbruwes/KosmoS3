@@ -60,7 +60,7 @@
     "@mdi/font": "^7.0.96",
     "@tinymce/tinymce-vue": "^5.0.0",
     "@vueuse/core": "^9.6.0",
-    "@vueuse/head": "^1.0.18",
+    "@vueuse/head": "^1.0.19",
     "@vueuse/math": "^9.6.0",
     "ace-builds": "^1.13.1",
     "animate.css": "^4.1.1",
