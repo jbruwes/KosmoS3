@@ -25,7 +25,7 @@ import { ref } from "vue";
 import { set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
-import kosmos3 from "@/kosmos3";
+import kosmos3 from "@/stores/kosmos3";
 import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = kosmos3();
