@@ -12,13 +12,14 @@ import kosmos3 from "./kosmos3";
 export default defineStore("template3", () => {
   const store = kosmos3();
   const { template } = storeToRefs(store);
-  const tplId = ref();
-  const tplItem = useArrayFind(template, ({ id }) => id === get(tplId));
+  const id = ref();
+  const item = useArrayFind(template, ({ id: pId }) => pId === get(id));
+  const breakpoint = ref();
   const { trigger } = watchTriggerable(
     () => !!get(template).length,
     () => {
-      const { id } = get(template, 0) || {};
-      set(tplId, id);
+      const { id: lId } = get(template, 0) || {};
+      set(id, lId);
     }
   );
   if (get(template).length) trigger();
@@ -81,14 +82,14 @@ export default defineStore("template3", () => {
       };
       mutateCandidate(pattern[candidate]);
     };
-    get(tplItem).classes = get(tplItem).classes.filter(
+    get(item).classes = get(item).classes.filter(
       (aclass) => !new RegExp(`^(${prefixes.join("|")})-${mask}$`).test(aclass)
     );
     prefixes.reverse().forEach((curPrefix) => {
       mutateMap(map[curPrefix], curPrefix);
     });
     buffer.forEach(([key, value]) => {
-      get(tplItem).classes.push(`${key}-${value}`);
+      get(item).classes.push(`${key}-${value}`);
     });
   };
   /**
@@ -102,8 +103,8 @@ export default defineStore("template3", () => {
     const result = {};
     keys.forEach((key) => {
       const value = (
-        isDefined(tplItem)
-          ? get(tplItem).classes.find((element) =>
+        isDefined(item)
+          ? get(item).classes.find((element) =>
               new RegExp(`^${key}-${mask}$`).test(element)
             ) || ""
           : ""
@@ -141,44 +142,56 @@ export default defineStore("template3", () => {
   };
   /**
    *
-   * @param {string} k ключ
+   * @param {string} pK ключ
    * @param {object} v значение
-   * @param {object} map карта префиксов
+   * @param {object} pMap карта префиксов
    * @param {string} mask маска
    * @returns {object} рассчетный объект
    */
-  const cmpSizeType = (k, v, map, mask) => ({
-    ...v,
-    /** @returns {string} размер */
-    get size() {
-      const { size } = fromClasses(map, mask)[k] || {};
-      return size;
-    },
-    /** @param {number} value размер */
-    set size(value) {
-      const result = fromClasses(map, mask);
-      result[k].value = {
-        0: "",
-        1: "auto",
-        2: value.toString().replace(/^-/, "n"),
-      }[this.type];
-      toClasses(result, map, mask);
-    },
-    /** @returns {number} тип */
-    get type() {
-      const { type } = fromClasses(map, mask)[k] || {};
-      return type;
-    },
-    /** @param {number} value тип */
-    set type(value) {
-      const result = fromClasses(map, mask);
-      result[k].value = {
-        0: "",
-        1: "auto",
-        2: this.size.toString().replace(/^-/, "n"),
-      }[value];
-      toClasses(result, map, mask);
-    },
-  });
-  return { ...{ tplId, tplItem }, ...{ fromClasses, toClasses, cmpSizeType } };
+  const cmpSizeType = (pK, v, pMap, mask) => {
+    const k = `${pK}-${get(breakpoint) || ""}`.replace(/-$/, "");
+    const map = Object.fromEntries(
+      Object.entries(pMap).map(([key, value]) => [
+        `${key}-${get(breakpoint) || ""}`.replace(/-$/, ""),
+        value.map((e) => `${e}-${get(breakpoint) || ""}`.replace(/-$/, "")),
+      ])
+    );
+    return {
+      ...v,
+      /** @returns {string} размер */
+      get size() {
+        const { size } = fromClasses(map, mask)[k] || {};
+        return size;
+      },
+      /** @param {number} value размер */
+      set size(value) {
+        const result = fromClasses(map, mask);
+        result[k].value = {
+          0: "",
+          1: "auto",
+          2: value.toString().replace(/^-/, "n"),
+        }[this.type];
+        toClasses(result, map, mask);
+      },
+      /** @returns {number} тип */
+      get type() {
+        const { type } = fromClasses(map, mask)[k] || {};
+        return type;
+      },
+      /** @param {number} value тип */
+      set type(value) {
+        const result = fromClasses(map, mask);
+        result[k].value = {
+          0: "",
+          1: "auto",
+          2: this.size.toString().replace(/^-/, "n"),
+        }[value];
+        toClasses(result, map, mask);
+      },
+    };
+  };
+  return {
+    ...{ id, item, breakpoint },
+    ...{ fromClasses, toClasses, cmpSizeType },
+  };
 });
