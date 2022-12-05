@@ -82,7 +82,6 @@ const localStore = template3();
 const { panel } = storeToRefs(store);
 const { item } = storeToRefs(localStore);
 const { mobile } = useDisplay();
-
 set(panel, !get(mobile));
 const tab = ref(1);
 const drawer = ref(1);
