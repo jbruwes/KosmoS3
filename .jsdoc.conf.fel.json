@@ -1,0 +1,21 @@
+{
+  "plugins": ["node_modules/jsdoc-vuejs"],
+  "recurseDepth": 10,
+  "opts": {
+    "recurse": true,
+    "destination": "./docs_fel/"
+  },
+  "source": {
+    "include": ["fel"],
+    "includePattern": "\\.(vue|js)$"
+  },
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  }
+}
