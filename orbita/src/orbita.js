@@ -16,7 +16,6 @@ export default defineStore("orbita", () => {
   const routeParams = ref(undefined);
   /**
    * Вычисление вектора
-   *
    * @param {object} item Объект вычисления
    * @returns {object[]} Вектор
    */
@@ -25,7 +24,6 @@ export default defineStore("orbita", () => {
   const list = computed(() => jsel(get(tree)).selectAll("//*[@id]"));
   /**
    * Вычисленние роута
-   *
    * @param {object} item Объект вычисления
    * @returns {string} Путь
    */
@@ -38,7 +36,6 @@ export default defineStore("orbita", () => {
       : "";
   /**
    * Вычисленние пути
-   *
    * @param {object} item Объект вычисления
    * @returns {string} Путь
    */
@@ -52,7 +49,6 @@ export default defineStore("orbita", () => {
   };
   /**
    * Вычисленние ссылки
-   *
    * @param {object} item Объект вычисления
    * @returns {string} Путь
    */
@@ -66,14 +62,12 @@ export default defineStore("orbita", () => {
 
   /**
    * Вычисление заголовка
-   *
    * @param {object} item Объект вычисления
    * @returns {string} Заголовок
    */
   const getTitle = (item) => (item.title ? item.title : item.value);
   /**
    * Вычисление родителя
-   *
    * @param {object} item Объект вычисления
    * @returns {object} Родитель
    */
@@ -81,7 +75,6 @@ export default defineStore("orbita", () => {
     jsel(get(tree)).select(`//*[@id="${item.id}"]/../parent::*[@id]`);
   /**
    * Вычисление объектов одного уровня
-   *
    * @param {object} item Объект вычисления
    * @returns {object[]} Объекты одного уровня
    */
@@ -176,7 +169,6 @@ export default defineStore("orbita", () => {
   const parentImage = computed(() => get(parent).image);
   /**
    * Получение массива дочерних объектов
-   *
    * @param {object} x аттрибуты xpath
    * @param {(number | boolean)} x.deep Флаг использования рекурсии
    *  по дочерним объектам
