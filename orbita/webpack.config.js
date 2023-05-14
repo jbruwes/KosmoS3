@@ -8,7 +8,7 @@ const WebpackAssetsManifest = require("webpack-assets-manifest");
 const { VueLoaderPlugin } = require("vue-loader");
 
 const babelSettings = {
-  extends: path.join(__dirname, "../babel.config.js"),
+  extends: path.join(__dirname, "./.babelrc.json"),
 };
 module.exports = {
   mode: "production",
@@ -51,7 +51,6 @@ module.exports = {
           test: /[\\/]node_modules[\\/]/,
           /**
            * Возвращает название модуля для чанка
-           *
            * @param {object} module Модуль
            * @returns {string} Название модуля
            */
@@ -108,7 +107,6 @@ module.exports = {
     new WebpackAssetsManifest({
       /**
        * Сортировка строк в манифесте по расширениям файлов
-       *
        * @param {string} a Первый файл
        * @param {string} b Второй файл
        * @returns {number} Возвращает -1, 0, или 1
