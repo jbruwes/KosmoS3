@@ -1,8 +1,13 @@
 // Utilities
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const useAppStore = defineStore('app', {
+const useAppStore = defineStore("app", {
+  /**
+   * @returns {object} - объект состояния
+   */
   state: () => ({
     //
   }),
-})
+});
+
+export default useAppStore;
