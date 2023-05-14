@@ -1,57 +1,28 @@
-# essentials
+# KosmoS3
 
-## Project setup
+### Быстрые ссылки
 
-```
-# yarn
-yarn
+Скачать космос3 можно на официальном сайте - [kosmos3.ru](https://kosmos3.ru)
 
-# npm
-npm install
+Развернутый экземпляр космос3 - [start.kosmos3.ru](https://start.kosmos3.ru)
 
-# pnpm
-pnpm install
-```
+Инструкции по настройке хранилища S3 - [kosmos3.ru/инструкции](https://kosmos3.ru/инструкции)
 
-### Compiles and hot-reloads for development
+Страница космос3 вконтакте - [vk.com/kosmos3_ru](https://vk.com/kosmos3_ru)
 
-```
-# yarn
-yarn dev
+### Описание
 
-# npm
-npm run dev
+Космос3 это система управления контентом для создания и визуального редактирования статического сайта. Как средство хранения используется хранилище типа S3, причем возможно использовать как облачного провайдера, так и локально установленное хранилище.
 
-# pnpm
-pnpm dev
-```
+Сам космос3 может запускаться как с любого хостинга для статических сайтов, включая то же хранилище S3, так и в качестве программы под windows, linux или mac.
 
-### Compiles and minifies for production
+### Ключевые особенности
 
-```
-# yarn
-yarn build
+1. Кроме S3 не требуется никаких серверных средств;
+2. Визуальное редактирование статического сайта;
+3. Работает напрямую с хранилищем S3, а значит не требует этапа сборки и загрузки статического сайта;
+4. Чрезвычайно низкая совокупная стоимость владения сайтом.
 
-# npm
-npm run build
+### Лицензия
 
-# pnpm
-pnpm build
-```
-
-### Lints and fixes files
-
-```
-# yarn
-yarn lint
-
-# npm
-npm run lint
-
-# pnpm
-pnpm lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://vitejs.dev/config/).
+AGPL-3.0 License
