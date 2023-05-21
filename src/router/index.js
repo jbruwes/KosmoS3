@@ -1,5 +1,5 @@
 // Composables
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createMemoryHistory } from "vue-router";
 
 const routes = [
   {
@@ -7,26 +7,77 @@ const routes = [
     /**
      * @returns {object} - модуль шаблона по умолчанию
      */
-    component: () => import("@/layouts/default/Default.vue"),
+    component: () => import("@/layouts/default/DefaultLayout.vue"),
     children: [
       {
         path: "",
         name: "Home",
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         /**
          * @returns {object} - модуль домашней страницы
          */
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/Home.vue"),
+          import(/* webpackChunkName: "home" */ "@/views/HomeView.vue"),
+      },
+      {
+        path: "/about",
+        name: "About",
+        /**
+         * @returns {object} - модуль домашней страницы
+         */
+        component: () =>
+          import(/* webpackChunkName: "about" */ "@/views/AboutView.vue"),
+      },
+      {
+        path: "Content",
+        name: "/content",
+        /**
+         * @returns {object} - модуль домашней страницы
+         */
+        component: () =>
+          import(/* webpackChunkName: "content" */ "@/views/ContentView.vue"),
+      },
+      {
+        path: "/template",
+        name: "Template",
+        /**
+         * @returns {object} - модуль домашней страницы
+         */
+        component: () =>
+          import(/* webpackChunkName: "template" */ "@/views/TemplateView.vue"),
+      },
+      {
+        path: "/css",
+        name: "Css",
+        /**
+         * @returns {object} - модуль домашней страницы
+         */
+        component: () =>
+          import(/* webpackChunkName: "css" */ "@/views/CssView.vue"),
+      },
+      {
+        path: "/js",
+        name: "Js",
+        /**
+         * @returns {object} - модуль домашней страницы
+         */
+        component: () =>
+          import(/* webpackChunkName: "js" */ "@/views/JsView.vue"),
+      },
+      {
+        path: "/settings",
+        name: "Settings",
+        /**
+         * @returns {object} - модуль домашней страницы
+         */
+        component: () =>
+          import(/* webpackChunkName: "settings" */ "@/views/SettingsView.vue"),
       },
     ],
   },
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createMemoryHistory(),
   routes,
 });
 
