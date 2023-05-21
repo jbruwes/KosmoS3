@@ -18,56 +18,113 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/HomeView.vue"),
       },
+    ],
+  },
+
+  {
+    path: "/about",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/default/DefaultLayout.vue"),
+    children: [
       {
-        path: "/about",
+        path: "",
         name: "About",
         /**
-         * @returns {object} - модуль домашней страницы
+         * @returns {object} - модуль страницы о программе
          */
         component: () =>
           import(/* webpackChunkName: "about" */ "@/views/AboutView.vue"),
       },
+    ],
+  },
+
+  {
+    path: "/content",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/default/DefaultLayout.vue"),
+    children: [
       {
         path: "Content",
-        name: "/content",
+        name: "",
         /**
-         * @returns {object} - модуль домашней страницы
+         * @returns {object} - модуль страницы контент
          */
         component: () =>
           import(/* webpackChunkName: "content" */ "@/views/ContentView.vue"),
       },
+    ],
+  },
+  {
+    path: "/template",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/default/DefaultLayout.vue"),
+    children: [
       {
-        path: "/template",
+        path: "",
         name: "Template",
         /**
-         * @returns {object} - модуль домашней страницы
+         * @returns {object} - модуль страницы шаблон
          */
         component: () =>
           import(/* webpackChunkName: "template" */ "@/views/TemplateView.vue"),
       },
+    ],
+  },
+  {
+    path: "/css",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/default/DefaultLayout.vue"),
+    children: [
       {
-        path: "/css",
+        path: "",
         name: "Css",
         /**
-         * @returns {object} - модуль домашней страницы
+         * @returns {object} - модуль страницы каскадных стилей
          */
         component: () =>
           import(/* webpackChunkName: "css" */ "@/views/CssView.vue"),
       },
+    ],
+  },
+  {
+    path: "/js",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/default/DefaultLayout.vue"),
+    children: [
       {
-        path: "/js",
+        path: "",
         name: "Js",
         /**
-         * @returns {object} - модуль домашней страницы
+         * @returns {object} - модуль страницы джава скипта
          */
         component: () =>
           import(/* webpackChunkName: "js" */ "@/views/JsView.vue"),
       },
+    ],
+  },
+
+  {
+    path: "/settings",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/default/DefaultLayout.vue"),
+    children: [
       {
-        path: "/settings",
+        path: "",
         name: "Settings",
         /**
-         * @returns {object} - модуль домашней страницы
+         * @returns {object} - модуль страницы настроек
          */
         component: () =>
           import(/* webpackChunkName: "settings" */ "@/views/SettingsView.vue"),
