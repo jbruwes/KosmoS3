@@ -31,17 +31,17 @@ import { ref } from "vue";
 import { useDisplay } from "vuetify";
 import { get, set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import kosmos3 from "@/stores/kosmos3";
+import app from "@/store/app";
 import VWysiwyg from "@/components/VWysiwyg.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 
-const store = kosmos3();
+const store = app();
 const { panel } = storeToRefs(store);
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
 const content = ref("");
-const tab = ref(1);
-const drawer = ref(1);
+const tab = ref("1");
+const drawer = ref("1");
 </script>
 
 <style scoped>
