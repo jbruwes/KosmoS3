@@ -26,10 +26,10 @@ import { ref } from "vue";
 import { set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
-import kosmos3 from "@/stores/kosmos3";
+import app from "@/store/app";
 import VSourceCode from "@/components/VSourceCode.vue";
 
-const store = kosmos3();
+const store = app();
 const { panel, css, style } = storeToRefs(store);
 set(panel, null);
 const tab = ref(1);
