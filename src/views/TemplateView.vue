@@ -66,15 +66,15 @@ import { ref } from "vue";
 import { useDisplay } from "vuetify";
 import { get, set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import kosmos3 from "@/stores/kosmos3";
-import template3 from "@/stores/template3";
+import app from "@/store/app";
+import template3 from "@/store/template3";
 import VWysiwyg from "@/components/VWysiwyg.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 import VResponsiveClasses from "@/components/VResponsiveClasses.vue";
 import VLookClasses from "@/components/VLookClasses.vue";
 import VTemplateList from "@/components/VTemplateList.vue";
 
-const store = kosmos3();
+const store = app();
 const localStore = template3();
 const { panel } = storeToRefs(store);
 const { item } = storeToRefs(localStore);
