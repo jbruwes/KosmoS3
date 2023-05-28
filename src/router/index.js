@@ -48,8 +48,8 @@ const routes = [
     component: () => import("@/layouts/default/DefaultLayout.vue"),
     children: [
       {
-        path: "Content",
-        name: "",
+        path: "",
+        name: "Content",
         /**
          * @returns {object} - модуль страницы контент
          */
