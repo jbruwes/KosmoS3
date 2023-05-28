@@ -77,9 +77,9 @@
 import { ref, watch } from "vue";
 import { set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import kosmos3 from "@/stores/kosmos3";
+import app from "@/store/app";
 
-const store = kosmos3();
+const store = app();
 const { panel, settings } = storeToRefs(store);
 const { putFile } = store;
 const ico = ref([]);
