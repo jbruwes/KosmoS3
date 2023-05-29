@@ -1,7 +1,12 @@
 .DS_Store
 node_modules
 /dist
+/out
+/icons
+/docs
 /public/orbita
+icon.png
+
 
 # local env files
 .env.local
