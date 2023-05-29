@@ -65,7 +65,7 @@
     "vite": "^4.3.9",
     "vite-plugin-vuetify": "^1.0.2",
     "vue": "^3.3.2",
-    "vue-router": "^4.2.1",
+    "vue-router": "^4.2.2",
     "vue3-ace-editor": "^2.2.2",
     "vue3-animate-onscroll": "^1.0.6",
     "vue3-particles": "^2.9.3",
@@ -91,7 +91,7 @@
     "mini-css-extract-plugin": "^2.7.6",
     "pug": "^3.0.2",
     "sass": "^1.62.1",
-    "vue-loader": "^17.1.1",
+    "vue-loader": "^17.1.2",
     "webpack-assets-manifest": "^5.1.0",
     "webpack-cli": "^5.1.1"
   },
