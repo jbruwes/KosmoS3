@@ -46,8 +46,8 @@ import { watch, ref } from "vue";
 import { useFileDialog, set, get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import app from "@/store/app";
-//import contentUiSkinCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css"; // eslint-disable-line
-//import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css"; // eslint-disable-line
+import contentUiSkinCss from "tinymce/skins/ui/oxide/content.min.css?inline";
+import contentCss from "tinymce/skins/content/default/content.min.css?inline";
 
 defineProps({
   modelValue: { default: "", type: String },
@@ -81,7 +81,7 @@ const init = ref({
     "preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount charmap quickbars emoticons",
   toolbar:
     "undo redo | rlink | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview print | insertfile image media template link anchor codesample | ltr rtl",
-//  content_style: `${contentUiSkinCss.toString()}\n${contentCss.toString()}`,
+  content_style: `${contentUiSkinCss.toString()}\n${contentCss.toString()}`,
   document_base_url: base,
   quickbars_insert_toolbar: "template",
   body_class: "pa-2 ma-0",
