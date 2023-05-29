@@ -47,7 +47,6 @@ export default defineStore("template3", () => {
   };
   /**
    * поиск заданного класса в списке назначенных
-   *
    * @param {string} prefix префикс
    * @param {string} mask маска
    * @param {boolean} [isBreakpoint = true] флаг сигнализирующий есть ли шаг сетки
