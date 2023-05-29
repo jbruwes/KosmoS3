@@ -43,7 +43,6 @@ const singleVariants = [
 ];
 /**
  * заполение массива вариантами цвета
- *
  * @param {string} color название цвета
  * @param {string} variant название варианта
  * @param {number} count количество вариантов
