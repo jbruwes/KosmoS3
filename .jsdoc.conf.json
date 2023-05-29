@@ -1,0 +1,22 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": [
+      "./src"
+    ],
+    "includePattern": "\\.(vue|js)$"
+  },
+  "plugins": [
+    "node_modules/jsdoc-vuejs",
+    "plugins/markdown"
+  ],
+  "opts": {
+    "encoding": "utf8",
+    "destination": "docs",
+    "recurse": true,
+    "verbose": true,
+    "readme": "README.md"
+  }
+}
