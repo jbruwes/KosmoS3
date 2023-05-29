@@ -84,14 +84,12 @@ import template3 from "@/store/template3";
 
 /**
  * глобальное хранилище для приложения
- *
  * @constant store
  * @type {app}
  */
 const store = app();
 /**
  * референсы глобального хранилища для приложений
- *
  * @constant storeRefs
  * @type {refsKosmos3}
  */
@@ -100,14 +98,12 @@ const { template } = storeRefs;
 const { calcLayer } = store;
 /**
  * хранилище для раздела типа шаблон
- *
  * @constant localStore
  * @type {object}
  */
 const localStore = template3();
 /**
  * референсы хранилища раздела шаблон
- *
  * @constant slocalStoreResfs
  * @type {refsTemplate3}
  */
@@ -115,7 +111,6 @@ const slocalStoreResfs = storeToRefs(localStore);
 const { id, item } = slocalStoreResfs;
 /**
  * проверка наличия названия слоя
- *
  * @function ruleRequired
  * @param {string} pValue - название слоя
  * @returns {boolean|string} - истина при наличии названия слоя, ошибка при отсутствии
@@ -123,21 +118,18 @@ const { id, item } = slocalStoreResfs;
 const ruleRequired = (pValue) => {
   /**
    * инвертированное значение названия слоя
-   *
    * @constant lInvertedValue
    * @type {boolean}
    */
   const lInvertedValue = !pValue;
   /**
    * флаг ниличия названия слоя
-   *
    * @constant lValue
    * @type {boolean}
    */
   const lValue = !lInvertedValue;
   /**
    * результат проверки наличия названия слоя содержит истину или ошибку
-   *
    * @constant lResult
    * @type {boolean|string}
    */
@@ -146,7 +138,6 @@ const ruleRequired = (pValue) => {
 };
 /**
  * подсчет количества вхождений слоя с определенным названием в список слоев шаблона
- *
  * @function cntLayerNames
  * @param {string} pCheckedName - название слоя для проверки
  * @returns {number} количество слоев с опреденным именем в списке слоев шаблона
@@ -154,14 +145,12 @@ const ruleRequired = (pValue) => {
 const cntLayerNames = (pCheckedName) => {
   /**
    * объект со всей информацией о шаблоне
-   *
    * @constant lTemplate
    * @type {object}
    */
   const lTemplate = get(template);
   /**
    * фильтр слоев шаблона по имени
-   *
    * @function lNameFilter
    * @param {object} layer - слой шаблона
    * @param {string} layer.name - название слоя шаблона
@@ -170,7 +159,6 @@ const cntLayerNames = (pCheckedName) => {
   const lNameFilter = ({ name: pName }) => {
     /**
      * флаг совпадения названий слоев
-     *
      * @constant lIsEqualNames
      * @type {boolean}
      */
@@ -179,14 +167,12 @@ const cntLayerNames = (pCheckedName) => {
   };
   /**
    * массив слоев с заданным именем
-   *
    * @constant lFilteredNames
    * @type {Array}
    */
   const lFilteredNames = lTemplate.filter(lNameFilter);
   /**
    * количество слоев с заданным именем
-   *
    * @constant lFilteredNamesLength
    * @type {number}
    */
@@ -195,7 +181,6 @@ const cntLayerNames = (pCheckedName) => {
 };
 /**
  * проверка уникальности названия слоя
- *
  * @function ruleUnique
  * @param {string} pName - название слоя
  * @returns {boolean|string} истина при уникальности названия слоя, ошибка при повторении
@@ -203,21 +188,18 @@ const cntLayerNames = (pCheckedName) => {
 const ruleUnique = (pName) => {
   /**
    * количество слоев с переданным именем
-   *
    * @constant lLayersCount
    * @type {number}
    */
   const lLayersCount = cntLayerNames(pName);
   /**
    * флаг уникальности слоя с переданным именем
-   *
    * @constant lIsLayersUnique
    * @type {boolean}
    */
   const lIsLayersUnique = lLayersCount === 1;
   /**
    * результат рассчета уникальности слоя содержит истину или ошибку
-   *
    * @constant lResult
    * @type {boolean|string}
    */
@@ -226,7 +208,6 @@ const ruleUnique = (pName) => {
 };
 /**
  * объект экранной формы
- *
  * @constant form
  * @type {object}
  * @property {object} value - значение
@@ -234,7 +215,6 @@ const ruleUnique = (pName) => {
 const form = ref();
 /**
  * состояние панели аккордеона - открыта/закрыта
- *
  * @constant panel
  * @type {object}
  * @property {Array} value - значение
@@ -242,13 +222,11 @@ const form = ref();
 const panel = ref([0]);
 /**
  * запуск валидации экранной формы
- *
  * @function formValidate
  */
 const formValidate = () => {
   /**
    * объект экранной формы
-   *
    * @constant lForm
    * @type {object}
    */
@@ -257,7 +235,6 @@ const formValidate = () => {
 };
 /**
  * объект с параметров для наблюдателя
- *
  * @constant optionsDeep
  * @type {object}
  * @property {boolean} deep - глубокое отслеживание
@@ -265,7 +242,6 @@ const formValidate = () => {
 const optionsDeep = { deep: true };
 /**
  * запуск валидации формы после перерисовки
- *
  * @function nextTickFormValidate
  * @async
  */
@@ -275,28 +251,24 @@ const nextTickFormValidate = async () => {
 };
 /**
  * добавление слоя шаблона
- *
  * @function addLayer
  * @param {number} pIndex - порядковый номер выбранного слоя шаблона
  */
 const addLayer = (pIndex) => {
   /**
    * объект со всей информацией о шаблоне
-   *
    * @constant lTemplate
    * @type {object}
    */
   const lTemplate = get(template);
   /**
    * начальная структура слоя шаблона
-   *
    * @constant lLayer
    * @type {object}
    */
   const lLayer = calcLayer();
   /**
    * порядковый номер нового слоя
-   *
    * @constant lIndex
    * @type {number}
    */
@@ -305,35 +277,30 @@ const addLayer = (pIndex) => {
 };
 /**
  * удаление слоя шаблона
- *
  * @function delLayer
  * @param {number} pIndex - порядковый номер удаляемого слоя
  */
 const delLayer = (pIndex) => {
   /**
    * объект со всей информацией о шаблоне
-   *
    * @constant lTemplate
    * @type {object}
    */
   const lTemplate = get(template);
   /**
    * порядковый номер предыдущего слоя от выбранного
-   *
    * @constant lIndex
    * @type {number}
    */
   const lIndex = pIndex - 1;
   /**
    * количество слоев
-   *
    * @constant lTemplateLength
    * @type {number}
    */
   const lTemplateLength = lTemplate.length;
   /**
    * порядковый номер последнего слоя
-   *
    * @constant lLast
    * @type {number}
    */
@@ -342,14 +309,12 @@ const delLayer = (pIndex) => {
     lTemplate.splice(pIndex, 1);
     /**
      * порядковый номер для выбора слоя после удаления
-     *
      * @constant lNewIndex
      * @type {number}
      */
     const lNewIndex = pIndex === lLast ? lIndex : pIndex;
     /**
      * объект с информацией о выбираемом слое после удаления
-     *
      * @constant element
      * @type {layer}
      */
@@ -357,7 +322,6 @@ const delLayer = (pIndex) => {
     const {
       /**
        * идентификатор выбираемого слоя после удаления
-       *
        * @constant lId
        * @type {string}
        */
@@ -368,14 +332,12 @@ const delLayer = (pIndex) => {
 };
 /**
  * выбор слоя
- *
  * @function clickLayer
  * @param {number} pIndex - порядковый номер выбираемого слоя
  */
 const clickLayer = (pIndex) => {
   /**
    * объект с информацией о выбираемом слое
-   *
    * @constant element
    * @type {layer}
    */
@@ -383,7 +345,6 @@ const clickLayer = (pIndex) => {
   const {
     /**
      * идентификатор выбираемого слоя
-     *
      * @constant lId
      * @type {string}
      */
@@ -391,7 +352,6 @@ const clickLayer = (pIndex) => {
   } = element;
   /**
    * идентификатор предыдущего выбранного слоя
-   *
    * @constant lCurId
    * @type {string}
    */
