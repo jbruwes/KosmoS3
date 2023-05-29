@@ -16,7 +16,7 @@ const routes = [
          * @returns {object} - модуль домашней страницы
          */
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/HomeView.vue"),
+          import("@/views/HomeView.vue"),
       },
     ],
   },
@@ -35,7 +35,7 @@ const routes = [
          * @returns {object} - модуль страницы о программе
          */
         component: () =>
-          import(/* webpackChunkName: "about" */ "@/views/AboutView.vue"),
+          import("@/views/AboutView.vue"),
       },
     ],
   },
@@ -54,7 +54,7 @@ const routes = [
          * @returns {object} - модуль страницы контент
          */
         component: () =>
-          import(/* webpackChunkName: "content" */ "@/views/ContentView.vue"),
+          import("@/views/ContentView.vue"),
       },
     ],
   },
@@ -72,7 +72,7 @@ const routes = [
          * @returns {object} - модуль страницы шаблон
          */
         component: () =>
-          import(/* webpackChunkName: "template" */ "@/views/TemplateView.vue"),
+          import("@/views/TemplateView.vue"),
       },
     ],
   },
@@ -90,7 +90,7 @@ const routes = [
          * @returns {object} - модуль страницы каскадных стилей
          */
         component: () =>
-          import(/* webpackChunkName: "css" */ "@/views/CssView.vue"),
+          import("@/views/CssView.vue"),
       },
     ],
   },
@@ -108,7 +108,7 @@ const routes = [
          * @returns {object} - модуль страницы джава скипта
          */
         component: () =>
-          import(/* webpackChunkName: "js" */ "@/views/JsView.vue"),
+          import("@/views/JsView.vue"),
       },
     ],
   },
@@ -127,7 +127,7 @@ const routes = [
          * @returns {object} - модуль страницы настроек
          */
         component: () =>
-          import(/* webpackChunkName: "settings" */ "@/views/SettingsView.vue"),
+          import("@/views/SettingsView.vue"),
       },
     ],
   },
