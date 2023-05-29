@@ -9,7 +9,7 @@ v-ace-editor.h-100(
 
 <script setup>
 import { VAceEditor } from "vue3-ace-editor";
-import "ace-builds/webpack-resolver";
+import "ace-builds/esm-resolver";
 
 defineProps({
   lang: { default: "html", type: String },
