@@ -106,7 +106,6 @@ const routes = [
       },
     ],
   },
-
   {
     path: "/settings",
     /**
