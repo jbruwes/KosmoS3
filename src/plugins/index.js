@@ -5,6 +5,7 @@
  */
 
 // Plugins
+import VueKonva from "vue-konva";
 import vuetify from "./vuetify";
 import pinia from "../store";
 import router from "../router";
@@ -14,5 +15,5 @@ import router from "../router";
  * @param {object} app - объект приложения
  */
 export default function registerPlugins(app) {
-  app.use(vuetify).use(router).use(pinia);
+  app.use(vuetify).use(router).use(pinia).use(VueKonva);
 }
