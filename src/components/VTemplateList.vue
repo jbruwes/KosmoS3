@@ -1,364 +1,320 @@
 <template lang="pug">
-v-sheet
-  v-form(ref="form")
-    v-list
-      draggable(v-model="template", item-key="id")
-        template(#item="{ element, index }")
-          v-list-item.px-1.py-0(
-            :value="element.id",
-            :active="element.id === id",
-            @click="clickLayer(index)",
-            @blur="element.edit = false"
-          )
-            template(#prepend)
-              v-list-item-action
-                v-checkbox-btn(v-if="element", v-model="element.visible")
-                v-icon(
-                  v-if="element.name !== 'content' || cntLayerNames('content') > 1",
-                  @click="delLayer(index)"
-                ) mdi-minus-circle-outline
-                v-icon(
-                  v-if="!(element.name !== 'content' || cntLayerNames('content') > 1)"
-                ) mdi-checkbox-blank-circle-outline
-            v-text-field(
-              v-if="element",
-              v-model.trim="element.name",
-              :readonly="element.id !== id || !element.edit",
-              :disabled="!(element.name !== 'content' || cntLayerNames('content') > 1)",
-              cur-prefix="#",
-              variant="underlined",
-              :rules="[ruleRequired, ruleUnique]",
-              @blur="element.edit = false"
-            )
-            template(#append)
-              v-list-item-action
-                v-icon(@click="addLayer(index)") mdi-plus-circle-outline
-                v-icon mdi-drag-vertical
-  v-expansion-panels(v-model="panel")
-    v-expansion-panel(title="classes")
-      v-expansion-panel-text
-        v-combobox(
-          v-if="item",
-          v-model="item.classes",
-          label="classes",
-          chips,
-          closable-chips,
-          multiple,
-          persistent-hint,
-          hint="case-sensitive classes of the layer",
-          :delimiters="[',', ' ']",
-          :open-on-clear="false"
+v-form(ref="form")
+  v-list
+    draggable(v-model="template", item-key="id")
+      template(#item="{ element, index }")
+        v-list-item.px-1.py-0(
+          :value="element.id",
+          :active="element.id === curId",
+          @click="clickRect(index)",
+          @blur="element.params.edit = false"
         )
+          template(#prepend)
+            v-list-item-action
+              v-checkbox-btn(v-model="element.params.visible")
+              v-icon(
+                v-if="!(element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1)",
+                @click="delRect(index)"
+              ) mdi-minus-circle-outline
+              v-icon(
+                v-if="element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1"
+              ) mdi-checkbox-blank-circle-outline
+          v-text-field(
+            v-model.trim="element.name",
+            :readonly="element.id !== curId || !element.params.edit",
+            :disabled="element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1",
+            variant="underlined",
+            :rules="[(v) => !!v || 'Field is required', (v) => !(template.filter(({ name }) => name === v).length - 1) || 'Must be unique']",
+            @blur="element.params.edit = false"
+          )
+          template(#append)
+            v-list-item-action
+              v-icon(@click="addRect(index)") mdi-plus-circle-outline
+              v-icon mdi-drag-vertical
 </template>
 <script setup>
-import { ref, onMounted, watch, nextTick } from "vue";
-import { get, set } from "@vueuse/core";
+import { ref, onBeforeMount, computed } from "vue";
+import { useDisplay } from "vuetify";
+import {
+  get,
+  set,
+  useElementSize,
+  watchTriggerable,
+  useScroll,
+  isDefined,
+} from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
 import app from "@/store/app";
-import template3 from "@/store/template";
+import TemplateStore from "@/store/TemplateStore";
 
-/**
- * @typedef {object} kosmos3
- * @property {Function} calcLayer - вычисление начальной структуры слоя шаблона
- */
-
-/**
- * @typedef {object} refsKosmos3
- * @property {object} template - объект со всей информацией о шаблоне
- * @property {object} template.value - значение объекта со всей информацией о шаблоне
- */
-
-/**
- * @typedef {object} refsTemplate3
- * @property {object} id - идентификатор выбранного слоя
- * @property {string} id.value - значение идентификатора выбранного слоя
- * @property {object} item - объект с информацией по выбранному слою
- * @property {object} item.value - значение объекта с информацией по выбранному слою
- */
-
-/**
- * @typedef {object} layer
- * @property {string} id - идентификатор слоя
- */
-
-/**
- * глобальное хранилище для приложения
- * @constant store
- * @type {app}
- */
 const store = app();
-/**
- * референсы глобального хранилища для приложений
- * @constant storeRefs
- * @type {refsKosmos3}
- */
-const storeRefs = storeToRefs(store);
-const { template } = storeRefs;
+const templateStore = TemplateStore();
+const { panel, template } = storeToRefs(store);
+const { layerId: curId } = storeToRefs(templateStore);
+const visibleTemplate = computed(() =>
+  get(template).filter((element) => element.params.visible)
+);
 const { calcLayer } = store;
-/**
- * хранилище для раздела типа шаблон
- * @constant localStore
- * @type {object}
- */
-const localStore = template3();
-/**
- * референсы хранилища раздела шаблон
- * @constant slocalStoreResfs
- * @type {refsTemplate3}
- */
-const slocalStoreResfs = storeToRefs(localStore);
-const { id, item } = slocalStoreResfs;
-/**
- * проверка наличия названия слоя
- * @function ruleRequired
- * @param {string} pValue - название слоя
- * @returns {boolean|string} - истина при наличии названия слоя, ошибка при отсутствии
- */
-const ruleRequired = (pValue) => {
-  /**
-   * инвертированное значение названия слоя
-   * @constant lInvertedValue
-   * @type {boolean}
-   */
-  const lInvertedValue = !pValue;
-  /**
-   * флаг ниличия названия слоя
-   * @constant lValue
-   * @type {boolean}
-   */
-  const lValue = !lInvertedValue;
-  /**
-   * результат проверки наличия названия слоя содержит истину или ошибку
-   * @constant lResult
-   * @type {boolean|string}
-   */
-  const lResult = lValue || "Field is required";
-  return lResult;
-};
-/**
- * подсчет количества вхождений слоя с определенным названием в список слоев шаблона
- * @function cntLayerNames
- * @param {string} pCheckedName - название слоя для проверки
- * @returns {number} количество слоев с опреденным именем в списке слоев шаблона
- */
-const cntLayerNames = (pCheckedName) => {
-  /**
-   * объект со всей информацией о шаблоне
-   * @constant lTemplate
-   * @type {object}
-   */
-  const lTemplate = get(template);
-  /**
-   * фильтр слоев шаблона по имени
-   * @function lNameFilter
-   * @param {object} layer - слой шаблона
-   * @param {string} layer.name - название слоя шаблона
-   * @returns {boolean} истина при совпадении названий иначе ложь
-   */
-  const lNameFilter = ({ name: pName }) => {
-    /**
-     * флаг совпадения названий слоев
-     * @constant lIsEqualNames
-     * @type {boolean}
-     */
-    const lIsEqualNames = pName === pCheckedName;
-    return lIsEqualNames;
-  };
-  /**
-   * массив слоев с заданным именем
-   * @constant lFilteredNames
-   * @type {Array}
-   */
-  const lFilteredNames = lTemplate.filter(lNameFilter);
-  /**
-   * количество слоев с заданным именем
-   * @constant lFilteredNamesLength
-   * @type {number}
-   */
-  const lFilteredNamesLength = lFilteredNames.length;
-  return lFilteredNamesLength;
-};
-/**
- * проверка уникальности названия слоя
- * @function ruleUnique
- * @param {string} pName - название слоя
- * @returns {boolean|string} истина при уникальности названия слоя, ошибка при повторении
- */
-const ruleUnique = (pName) => {
-  /**
-   * количество слоев с переданным именем
-   * @constant lLayersCount
-   * @type {number}
-   */
-  const lLayersCount = cntLayerNames(pName);
-  /**
-   * флаг уникальности слоя с переданным именем
-   * @constant lIsLayersUnique
-   * @type {boolean}
-   */
-  const lIsLayersUnique = lLayersCount === 1;
-  /**
-   * результат рассчета уникальности слоя содержит истину или ошибку
-   * @constant lResult
-   * @type {boolean|string}
-   */
-  const lResult = lIsLayersUnique || "Must be unique";
-  return lResult;
-};
-/**
- * объект экранной формы
- * @constant form
- * @type {object}
- * @property {object} value - значение
- */
+const { mobile } = useDisplay();
+set(panel, !get(mobile));
+const fluidContainer = ref();
+const responsiveContainer = ref();
 const form = ref();
+const transformer = ref();
+const stage = ref();
+const { width: konvaWidth, height: konvaHeight } =
+  useElementSize(fluidContainer);
+const { width: realResponsiveWidth } = useElementSize(responsiveContainer);
+/** @constant {number} responsiveWidth рассчетная ширина адаптивного контейнера плюс ширина бордюра */
+const responsiveWidth = computed(() => get(realResponsiveWidth) + 8);
+const cntStatic = computed(
+  () =>
+    get(visibleTemplate).filter(
+      ({ params: { position } = {} } = {}) => !position
+    ).length || 1
+);
+const fullHeight = computed(() => get(cntStatic) * get(konvaHeight));
+const { y: scrollY } = useScroll(fluidContainer);
 /**
- * состояние панели аккордеона - открыта/закрыта
- * @constant panel
- * @type {object}
- * @property {Array} value - значение
+ *
+ * @param {boolean} responsive адаптивность
+ * @returns {number} ширина контейнера
  */
-const panel = ref([0]);
+const containerWidth = (responsive) =>
+  get(responsive ? responsiveWidth : konvaWidth);
 /**
- * запуск валидации экранной формы
- * @function formValidate
+ *
+ * @param {number} position тип позиционирования
+ * @returns {number} высота контейнера
  */
-const formValidate = () => {
-  /**
-   * объект экранной формы
-   * @constant lForm
-   * @type {object}
-   */
-  const lForm = get(form);
-  lForm.validate();
-};
+const containerHeight = (position) =>
+  get(position === 1 ? fullHeight : konvaHeight);
 /**
- * объект с параметров для наблюдателя
- * @constant optionsDeep
- * @type {object}
- * @property {boolean} deep - глубокое отслеживание
+ *
+ * @param {boolean} responsive адаптивность
+ * @returns {number} адаптивный сдвиг по горизонтали
  */
-const optionsDeep = { deep: true };
+const calcOffsetX = (responsive) =>
+  (responsive > 0) * ((get(konvaWidth) - get(responsiveWidth)) / 2);
 /**
- * запуск валидации формы после перерисовки
- * @function nextTickFormValidate
- * @async
+ *
+ * @param {number} pPosition тип позиционирования
+ * @param {number} pIndex порядковый номер в шаблоне
+ * @returns {number} адаптивный сдвиг по вертикали
  */
-const nextTickFormValidate = async () => {
-  await nextTick();
-  formValidate();
-};
+const calcOffsetY = (pPosition, pIndex) =>
+  [
+    get(visibleTemplate).filter(
+      ({ params: { position } = {} }, index) => index < pIndex && !position
+    ).length * get(konvaHeight),
+    0,
+    pIndex === undefined ? 0 : get(scrollY),
+  ][pPosition];
+
 /**
- * добавление слоя шаблона
- * @function addLayer
- * @param {number} pIndex - порядковый номер выбранного слоя шаблона
+ * @param {number} value ширина px
+ * @param {boolean} responsive адаптивность
+ * @returns {number} ширина %
  */
-const addLayer = (pIndex) => {
-  /**
-   * объект со всей информацией о шаблоне
-   * @constant lTemplate
-   * @type {object}
-   */
-  const lTemplate = get(template);
-  /**
-   * начальная структура слоя шаблона
-   * @constant lLayer
-   * @type {object}
-   */
-  const lLayer = calcLayer();
-  /**
-   * порядковый номер нового слоя
-   * @constant lIndex
-   * @type {number}
-   */
-  const lIndex = pIndex + 1;
-  lTemplate.splice(lIndex, 0, lLayer);
-};
+const calcXPct = (value, responsive) =>
+  (100 * (value - calcOffsetX(responsive))) / containerWidth(responsive);
 /**
- * удаление слоя шаблона
- * @function delLayer
- * @param {number} pIndex - порядковый номер удаляемого слоя
+ * @param {number} value высота px
+ * @param {number} position тип позиционирования
+ * @param {number} index порядковый номер в шаблоне
+ * @returns {number} высота %
  */
-const delLayer = (pIndex) => {
-  /**
-   * объект со всей информацией о шаблоне
-   * @constant lTemplate
-   * @type {object}
-   */
-  const lTemplate = get(template);
-  /**
-   * порядковый номер предыдущего слоя от выбранного
-   * @constant lIndex
-   * @type {number}
-   */
-  const lIndex = pIndex - 1;
-  /**
-   * количество слоев
-   * @constant lTemplateLength
-   * @type {number}
-   */
-  const lTemplateLength = lTemplate.length;
-  /**
-   * порядковый номер последнего слоя
-   * @constant lLast
-   * @type {number}
-   */
-  const lLast = lTemplateLength - 1;
-  if (lLast) {
-    lTemplate.splice(pIndex, 1);
+const calcYPct = (value, position, index) =>
+  (100 * (value - calcOffsetY(position, index))) / containerHeight(position);
+/**
+ * @param {number} value ширина %
+ * @param {boolean} responsive адаптивность
+ * @returns {number} ширина px
+ */
+const calcXPx = (value, responsive) =>
+  calcOffsetX(responsive) + (value * containerWidth(responsive)) / 100;
+/**
+ * @param {number} value высота %
+ * @param {number} position тип позиционирования
+ * @param {number} index порядковый номер в шаблоне
+ * @returns {number} высота px
+ */
+const calcYPx = (value, position, index) =>
+  calcOffsetY(position, index) + (value * containerHeight(position)) / 100;
+const { trigger: triggerCurId } = watchTriggerable(curId, (value, oldValue) => {
+  /** установка рамки трансформера */
+  const setTransformer = () => {
+    get(transformer)
+      .getNode()
+      .nodes([get(stage).getStage().findOne(`#${value}`)].filter(Boolean));
+  };
+  if (oldValue) setTransformer();
+  else setTimeout(setTransformer);
+});
+if (isDefined(curId)) triggerCurId();
+/**
+ *
+ * @param {object} value слой
+ * @returns {object} нормализованный слой
+ */
+const normLayer = (value) => {
+  const layer = {
+    ...value,
+    params: {
+      ...value.params,
+      /** @returns {boolean} видимость x */
+      get visible() {
+        const { visible } = layer;
+        return visible;
+      },
+      /** @param {boolean} val видимость */
+      set visible(val) {
+        layer.visible = val;
+        triggerCurId();
+      },
+      /** @returns {number} сдвиг x */
+      get offsetX() {
+        const { width, offsetX, scaleX } = layer;
+        return (width - offsetX) * scaleX;
+      },
+      /** @returns {number} сдвиг y */
+      get offsetY() {
+        const { height, offsetY, scaleY } = layer;
+        return (height - offsetY) * scaleY;
+      },
+      /** @returns {number} позиция в массиве */
+      get index() {
+        const { id: layerId } = layer;
+        return get(visibleTemplate).findIndex(({ id }) => id === layerId);
+      },
+    },
+    /** @returns {number} отступ слева */
+    get x() {
+      const {
+        params: { width, responsive, offsetX },
+      } = this;
+      return calcXPx(width[0], responsive) + offsetX;
+    },
+    /** @param {number} val отступ слева px */
+    set x(val) {
+      const {
+        params: { width, responsive },
+      } = this;
+      width[0] = calcXPct(val, responsive);
+    },
+    /** @returns {number} отступ сверху */
+    get y() {
+      const {
+        params: { height, position, index, offsetY },
+      } = this;
+      return calcYPx(height[0], position, index) + offsetY;
+    },
+    /** @param {number} val отступ сверху px */
+    set y(val) {
+      const {
+        params: { height, position, index },
+      } = this;
+      height[0] = calcYPct(val, position, index);
+    },
+
+    /** @returns {number} масштаб по х */
+    get scaleX() {
+      const {
+        params: { width, responsive },
+      } = this;
+      return calcXPx(width[1] - width[0], -responsive);
+    },
+    /** @param {number} val масштаб по х */
+    set scaleX(val) {
+      const {
+        params: { width, responsive },
+      } = this;
+      width[1] = width[0] + calcXPct(val, -responsive);
+    },
+
+    /** @returns {number} масштаб по y */
+    get scaleY() {
+      const {
+        params: { height, position },
+      } = this;
+      return calcYPx(height[1] - height[0], position);
+    },
+    /** @param {number} val масштаб по y */
+    set scaleY(val) {
+      const {
+        params: { height, position },
+      } = this;
+      height[1] = height[0] + calcYPct(val, position);
+    },
     /**
-     * порядковый номер для выбора слоя после удаления
-     * @constant lNewIndex
-     * @type {number}
+     * проверка невыхода за габариты при изменении положения
+     * @param {object} pos новые координаты
+     * @param {number} pos.x новые координаты x
+     * @param {number} pos.y новые координаты y
+     * @returns {object} разрешенные координаты
      */
-    const lNewIndex = pIndex === lLast ? lIndex : pIndex;
-    /**
-     * объект с информацией о выбираемом слое после удаления
-     * @constant element
-     * @type {layer}
-     */
-    const element = get(template, lNewIndex);
-    const {
-      /**
-       * идентификатор выбираемого слоя после удаления
-       * @constant lId
-       * @type {string}
-       */
-      id: lId,
-    } = element;
-    set(id, lId);
+    dragBoundFunc({ x: posX, y: posY }) {
+      const {
+        attrs: {
+          scaleX,
+          scaleY,
+          params: { offsetX, offsetY, position, responsive, index },
+        },
+      } = this;
+      const top = calcYPct(posY - offsetY, position, index);
+      const bottom = top + calcYPct(scaleY, position);
+      const left = calcXPct(posX - offsetX, responsive);
+      const right = left + calcXPct(scaleX, -responsive);
+      let x = posX;
+      if (left.toFixed(2) < 0) x = offsetX + calcOffsetX(responsive);
+      if (right.toFixed(2) > 100)
+        x =
+          containerWidth(responsive) -
+          scaleX +
+          offsetX +
+          calcOffsetX(responsive);
+      let y = posY;
+      if (top.toFixed(2) < 0) y = offsetY + calcOffsetY(position, index);
+      if (bottom.toFixed(2) > 100)
+        y = get(konvaHeight) - scaleY + offsetY + calcOffsetY(position, index);
+      return { x, y };
+    },
+  };
+  return layer;
+};
+const { trigger: triggerTemplate } = watchTriggerable(
+  template,
+  (value, oldValue) => {
+    if (value.length && !(oldValue || []).length) {
+      set(curId, value[0].id);
+      set(
+        template,
+        value.map((element) => normLayer(element))
+      );
+    } else get(form).validate();
+  },
+  { deep: true }
+);
+onBeforeMount(() => {
+  triggerTemplate();
+});
+/** @param {number} index индекс */
+const addRect = (index) => {
+  get(template).splice(index + 1, 0, normLayer(calcLayer()));
+};
+/** @param {number} index индекс */
+const delRect = (index) => {
+  const last = get(template).length - 1;
+  if (last) {
+    get(template).splice(index, 1);
+    set(curId, get(template)[index === last ? index - 1 : index].id);
   }
 };
-/**
- * выбор слоя
- * @function clickLayer
- * @param {number} pIndex - порядковый номер выбираемого слоя
- */
-const clickLayer = (pIndex) => {
-  /**
-   * объект с информацией о выбираемом слое
-   * @constant element
-   * @type {layer}
-   */
-  const element = get(template, pIndex);
-  const {
-    /**
-     * идентификатор выбираемого слоя
-     * @constant lId
-     * @type {string}
-     */
-    id: lId,
-  } = element;
-  /**
-   * идентификатор предыдущего выбранного слоя
-   * @constant lCurId
-   * @type {string}
-   */
-  const lCurId = get(id);
-  if (lCurId !== lId) set(id, lId);
-  else element.edit = true;
+/** @param {number} index индекс */
+const clickRect = (index) => {
+  const element = get(template)[index];
+  if (get(curId) !== element.id) set(curId, element.id);
+  else element.params.edit = true;
 };
-watch(template, formValidate, optionsDeep);
-onMounted(nextTickFormValidate);
 </script>
