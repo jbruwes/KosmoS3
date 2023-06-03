@@ -19,7 +19,6 @@ const routes = [
       },
     ],
   },
-
   {
     path: "/about",
     /**
@@ -37,7 +36,6 @@ const routes = [
       },
     ],
   },
-
   {
     path: "/content",
     /**
