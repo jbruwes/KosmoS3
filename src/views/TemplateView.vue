@@ -89,9 +89,9 @@ v-navigation-drawer(
         )
 .rounded.border.d-flex.flex-column.flex-fill.overflow-hidden
   v-tabs.flex-grow-0(v-model="tab", show-arrows, grow)
-    v-tab(value="1", prepend-icon="mdi-ungroup") Layout
-    v-tab(value="2", prepend-icon="mdi-eye") Visual
-    v-tab(value="3", prepend-icon="mdi-code-tags") Source
+    v-tab.h-100(value="1", prepend-icon="mdi-ungroup") Layout
+    v-tab.h-100(value="2", prepend-icon="mdi-eye") Visual
+    v-tab.h-100(value="3", prepend-icon="mdi-code-tags") Source
   v-window.d-flex.align-stretch.flex-fill.h-100(v-model="tab")
     v-window-item.flex-fill.h-100.overflow-y-auto(ref="fluidContainer", value="1")
       .position-relative.solid-lines(
@@ -137,8 +137,8 @@ import {
   set,
   useElementSize,
   watchTriggerable,
-  useArrayFindIndex,
   useScroll,
+  isDefined,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
@@ -147,7 +147,12 @@ import VWysiwyg from "@/components/VWysiwyg.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = app();
-const { panel, template } = storeToRefs(store);
+const {
+  panel,
+  template,
+  layerId: curId,
+  layerIndex: curIndex,
+} = storeToRefs(store);
 const visibleTemplate = computed(() =>
   get(template).filter((element) => element.params.visible)
 );
@@ -174,8 +179,6 @@ const update = (e) => {
   item.scaleX = width;
   item.scaleY = height;
 };
-const curId = ref();
-const curIndex = useArrayFindIndex(template, ({ id }) => id === get(curId));
 const { width: konvaWidth, height: konvaHeight } =
   useElementSize(fluidContainer);
 const { width: realResponsiveWidth } = useElementSize(responsiveContainer);
@@ -291,6 +294,7 @@ const { trigger: triggerCurId } = watchTriggerable(curId, (value, oldValue) => {
   if (oldValue) setTransformer();
   else setTimeout(setTransformer);
 });
+if (isDefined(curId)) triggerCurId();
 /**
  *
  * @param {object} value слой
