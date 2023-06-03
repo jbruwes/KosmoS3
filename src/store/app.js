@@ -6,6 +6,9 @@ import {
   useFetch,
   whenever,
   isDefined,
+  watchTriggerable,
+  useArrayFind,
+  useArrayFindIndex,
 } from "@vueuse/core";
 import { logicAnd, logicNot } from "@vueuse/math";
 import { defineStore } from "pinia";
@@ -358,6 +361,20 @@ export default defineStore("app", () => {
       get(index).template = value;
     },
   });
+  const layerId = ref();
+  const layer = useArrayFind(template, ({ id }) => id === get(layerId));
+  const layerIndex = useArrayFindIndex(
+    template,
+    ({ id }) => id === get(layerId)
+  );
+  const { trigger } = watchTriggerable(
+    () => !!get(template).length,
+    () => {
+      const { id: lId } = get(template, 0) ?? {};
+      set(layerId, lId);
+    }
+  );
+  if (get(template).length) trigger();
   const content = computed({
     /**
      * чтение контента
@@ -418,5 +435,6 @@ export default defineStore("app", () => {
     ...{ content, template, js, script, css, style, settings },
     ...{ s3, putFile },
     ...{ calcLayer },
+    ...{ layer, layerId, layerIndex },
   };
 });
