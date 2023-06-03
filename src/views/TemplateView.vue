@@ -143,16 +143,14 @@ import {
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
 import app from "@/store/app";
+import TemplateStore from "@/store/TemplateStore";
 import VWysiwyg from "@/components/VWysiwyg.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 
 const store = app();
-const {
-  panel,
-  template,
-  layerId: curId,
-  layerIndex: curIndex,
-} = storeToRefs(store);
+const templateStore = TemplateStore();
+const { panel, template } = storeToRefs(store);
+const { layerId: curId, layerIndex: curIndex } = storeToRefs(templateStore);
 const visibleTemplate = computed(() =>
   get(template).filter((element) => element.params.visible)
 );
