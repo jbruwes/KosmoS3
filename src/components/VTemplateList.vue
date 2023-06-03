@@ -56,7 +56,7 @@ import { get, set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
 import app from "@/store/app";
-import template3 from "@/store/template3";
+import template3 from "@/store/template";
 
 /**
  * @typedef {object} kosmos3
