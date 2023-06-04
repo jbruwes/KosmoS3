@@ -138,7 +138,7 @@ import {
   useElementSize,
   watchTriggerable,
   useScroll,
-  isDefined,
+  syncRefs,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
@@ -150,10 +150,26 @@ import VSourceCode from "@/components/VSourceCode.vue";
 const store = app();
 const templateStore = TemplateStore();
 const { panel, template } = storeToRefs(store);
-const { layerId: curId, layerIndex: curIndex } = storeToRefs(templateStore);
-const visibleTemplate = computed(() =>
-  get(template).filter((element) => element.params.visible)
-);
+const {
+  layerId: curId,
+  layerIndex: curIndex,
+  konvaWidth,
+  konvaHeight,
+  realResponsiveWidth,
+  scrollY,
+  visibleTemplate,
+  cntStatic,
+  fullHeight,
+} = storeToRefs(templateStore);
+const {
+  containerWidth,
+  calcOffsetX,
+  calcOffsetY,
+  calcXPct,
+  calcYPct,
+  calcXPx,
+  calcYPx,
+} = templateStore;
 const { calcLayer } = store;
 const { mobile } = useDisplay();
 set(panel, !get(mobile));
@@ -177,85 +193,15 @@ const update = (e) => {
   item.scaleX = width;
   item.scaleY = height;
 };
-const { width: konvaWidth, height: konvaHeight } =
+const { width: fluidContainerWidth, height: fluidContainerHeight } =
   useElementSize(fluidContainer);
-const { width: realResponsiveWidth } = useElementSize(responsiveContainer);
-/** @constant {number} responsiveWidth рассчетная ширина адаптивного контейнера плюс ширина бордюра */
-const responsiveWidth = computed(() => get(realResponsiveWidth) + 8);
-const cntStatic = computed(
-  () =>
-    get(visibleTemplate).filter(
-      ({ params: { position } = {} } = {}) => !position
-    ).length || 1
-);
-const fullHeight = computed(() => get(cntStatic) * get(konvaHeight));
-const { y: scrollY } = useScroll(fluidContainer);
-/**
- *
- * @param {boolean} responsive адаптивность
- * @returns {number} ширина контейнера
- */
-const containerWidth = (responsive) =>
-  get(responsive ? responsiveWidth : konvaWidth);
-/**
- *
- * @param {number} position тип позиционирования
- * @returns {number} высота контейнера
- */
-const containerHeight = (position) =>
-  get(position === 1 ? fullHeight : konvaHeight);
-/**
- *
- * @param {boolean} responsive адаптивность
- * @returns {number} адаптивный сдвиг по горизонтали
- */
-const calcOffsetX = (responsive) =>
-  (responsive > 0) * ((get(konvaWidth) - get(responsiveWidth)) / 2);
-/**
- *
- * @param {number} pPosition тип позиционирования
- * @param {number} pIndex порядковый номер в шаблоне
- * @returns {number} адаптивный сдвиг по вертикали
- */
-const calcOffsetY = (pPosition, pIndex) =>
-  [
-    get(visibleTemplate).filter(
-      ({ params: { position } = {} }, index) => index < pIndex && !position
-    ).length * get(konvaHeight),
-    0,
-    pIndex === undefined ? 0 : get(scrollY),
-  ][pPosition];
+const { width: responsiveContainerWidth } = useElementSize(responsiveContainer);
+const { y: fluidContainerScrollY } = useScroll(fluidContainer);
+syncRefs(fluidContainerWidth, konvaWidth);
+syncRefs(fluidContainerHeight, konvaHeight);
+syncRefs(responsiveContainerWidth, realResponsiveWidth);
+syncRefs(fluidContainerScrollY, scrollY);
 
-/**
- * @param {number} value ширина px
- * @param {boolean} responsive адаптивность
- * @returns {number} ширина %
- */
-const calcXPct = (value, responsive) =>
-  (100 * (value - calcOffsetX(responsive))) / containerWidth(responsive);
-/**
- * @param {number} value высота px
- * @param {number} position тип позиционирования
- * @param {number} index порядковый номер в шаблоне
- * @returns {number} высота %
- */
-const calcYPct = (value, position, index) =>
-  (100 * (value - calcOffsetY(position, index))) / containerHeight(position);
-/**
- * @param {number} value ширина %
- * @param {boolean} responsive адаптивность
- * @returns {number} ширина px
- */
-const calcXPx = (value, responsive) =>
-  calcOffsetX(responsive) + (value * containerWidth(responsive)) / 100;
-/**
- * @param {number} value высота %
- * @param {number} position тип позиционирования
- * @param {number} index порядковый номер в шаблоне
- * @returns {number} высота px
- */
-const calcYPx = (value, position, index) =>
-  calcOffsetY(position, index) + (value * containerHeight(position)) / 100;
 const configTransform = {
   flipEnabled: false,
   rotateEnabled: false,
@@ -292,7 +238,7 @@ const { trigger: triggerCurId } = watchTriggerable(curId, (value, oldValue) => {
   if (oldValue) setTransformer();
   else setTimeout(setTransformer);
 });
-if (isDefined(curId)) triggerCurId();
+triggerCurId();
 /**
  *
  * @param {object} value слой
@@ -469,6 +415,7 @@ const clickRect = (index) => {
 <style scoped>
 :deep(.v-window__container) {
   flex: 1 1 auto !important;
+  width: 100%;
 }
 .solid-lines {
   background-image: linear-gradient(to right, white 8px, transparent 1px),
