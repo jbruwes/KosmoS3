@@ -126,18 +126,21 @@ export default defineStore("app", () => {
     }
     return ret;
   };
-  const { data: assetsData } = useFetch("orbita/assets-manifest.json").json();
-  const assets = computed(() =>
-    isDefined(assetsData)
-      ? Object.values(get(assetsData)).filter(
-          (asset) => !["index.htm", "site.webmanifest"].includes(asset)
-        )
-      : undefined
-  );
-  const base = computed(() =>
-    isDefined(wendpoint)
-      ? `${get(wendpoint)}/${get(bucket)}/`
-      : `https://${get(bucket)}/`
+  const { isFetching, data } = useFetch("orbita/assets-manifest.json", {
+    /**
+     * Преводим в массив
+     * @param { object } ctx - возвращаемый объект
+     * @returns { object } - трансформируемый возвращаемый объект
+     */
+    afterFetch(ctx) {
+      ctx.data = Object.values(ctx.data).filter(
+        (asset) => !["index.htm", "site.webmanifest"].includes(asset)
+      );
+      return ctx;
+    },
+  }).json();
+  const base = computed(
+    () => `${isDefined(wendpoint) ? get(wendpoint) : "htpps:/"}/${get(bucket)}/`
   );
   const configDOMPurify = {
     SAFE_FOR_TEMPLATES: true,
@@ -238,11 +241,7 @@ export default defineStore("app", () => {
           .map(({ id = crypto.randomUUID(), url = "" }) => ({ id, url }))
           .filter(({ url }) => url)
       : [];
-    if (!css.length)
-      css.push({
-        id: crypto.randomUUID(),
-        url: "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css",
-      });
+    if (!css.length) css.push({ id: crypto.randomUUID(), url: "" });
     js = Array.isArray(js)
       ? js
           .map(({ id = crypto.randomUUID(), url = "" }) => ({ id, url }))
@@ -279,13 +278,13 @@ export default defineStore("app", () => {
      * чтение настроек
      * @returns {object} настройки
      */
-    get: () => (isDefined(index) ? get(index).settings : {}),
+    get: () => get(index)?.settings,
     /**
      * запись настроек
      * @param {object} value настройки
      */
     set(value) {
-      get(index).settings = value;
+      if (isDefined(index)) get(index).settings = value;
     },
   });
   const script = computed({
@@ -293,13 +292,13 @@ export default defineStore("app", () => {
      * чтение скрипта
      * @returns {string} скрипт
      */
-    get: () => (isDefined(index) ? get(index).script : ""),
+    get: () => get(index)?.script,
     /**
      * запись скрипта
      * @param {string} value скрипт
      */
     set(value) {
-      get(index).script = value;
+      if (isDefined(index)) get(index).script = value;
     },
   });
   const style = computed({
@@ -307,13 +306,13 @@ export default defineStore("app", () => {
      * чтение стилей
      * @returns {string} стили
      */
-    get: () => (isDefined(index) ? get(index).style : ""),
+    get: () => get(index)?.style,
     /**
      * запись стилей
      * @param {string} value стили
      */
     set(value) {
-      get(index).style = value;
+      if (isDefined(index)) get(index).style = value;
     },
   });
   const js = computed({
@@ -321,13 +320,13 @@ export default defineStore("app", () => {
      * чтение массива ссылок на скрипты
      * @returns {Array} массив ссылок на скрипты
      */
-    get: () => (isDefined(index) ? get(index).js : []),
+    get: () => get(index)?.js,
     /**
      * запись массива ссылок на скрипты
      * @param {Array} value массив ссылок на скрипты
      */
     set(value) {
-      get(index).js = value.filter(({ url }) => url);
+      if (isDefined(index)) get(index).js = value.filter(({ url }) => url);
     },
   });
   const css = computed({
@@ -335,13 +334,13 @@ export default defineStore("app", () => {
      * чтение массива ссылок на стили
      * @returns {Array} массив ссылок на стили
      */
-    get: () => (isDefined(index) ? get(index).css : []),
+    get: () => get(index)?.css,
     /**
      * запись массива ссылок на стили
      * @param {Array} value массив ссылок на стили
      */
     set(value) {
-      get(index).css = value.filter(({ url }) => url);
+      if (isDefined(index)) get(index).css = value.filter(({ url }) => url);
     },
   });
   const template = computed({
@@ -349,13 +348,13 @@ export default defineStore("app", () => {
      * чтение шаблона
      * @returns {Array} шаблон
      */
-    get: () => (isDefined(index) ? get(index).template : []),
+    get: () => get(index)?.template,
     /**
      * запись шаблона
      * @param {Array} value шаблон
      */
     set(value) {
-      get(index).template = value;
+      if (isDefined(index)) get(index).template = value;
     },
   });
   const content = computed({
@@ -363,20 +362,20 @@ export default defineStore("app", () => {
      * чтение контента
      * @returns {object} контент
      */
-    get: () => (isDefined(index) ? get(index).content : {}),
+    get: () => get(index)?.content,
     /**
      * запись контента
      * @param {object} value контент
      */
     set(value) {
-      get(index).content = value;
+      if (isDefined(index)) get(index).content = value;
     },
   });
   whenever(logicNot(s3), () => {
     set(index, undefined);
   });
-  whenever(logicAnd(s3, assets), () => {
-    get(assets).forEach((asset) => {
+  whenever(logicAnd(s3, isFetching), () => {
+    get(data).forEach((asset) => {
       (async () => {
         try {
           const head = await headObject(asset);
