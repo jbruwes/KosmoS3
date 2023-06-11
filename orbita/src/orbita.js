@@ -180,7 +180,7 @@ export default defineStore("orbita", () => {
    * @param {string} x.path CSV путей до дочерних объектов
    * @param {(number | boolean)} x.children Выбирать папки или файлы?
    * Если путое значение то всё
-   * @param {string} [x.selector=""] Путь xpath
+   * @param {string} [x.selector] Путь xpath
    * @param {string} x.axe Заведует включением параметра xpath axe
    * @returns {object[]} Массив дочерних объектов
    */
