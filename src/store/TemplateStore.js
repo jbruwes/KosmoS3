@@ -1,48 +1,29 @@
 import { ref, computed } from "vue";
-import {
-  get,
-  set,
-  watchTriggerable,
-  useArrayFind,
-  useArrayFindIndex,
-} from "@vueuse/core";
+import { get, useArrayFindIndex, useArrayFilter } from "@vueuse/core";
 import { defineStore, storeToRefs } from "pinia";
 import app from "./app";
 
 export default defineStore("template3", () => {
   const store = app();
   const { template } = storeToRefs(store);
-  const visibleTemplate = computed(() =>
-    get(template).filter((element) => element.params.visible)
+  const visibleTemplate = useArrayFilter(
+    template,
+    ({ params: { visible } = {} } = {}) => visible
   );
-
+  const visibleTemplateStatic = useArrayFilter(
+    visibleTemplate,
+    ({ params: { position } = {} } = {}) => !position
+  );
   const konvaWidth = ref();
   const konvaHeight = ref();
   const realResponsiveWidth = ref();
   const scrollY = ref();
-  const layerId = ref();
-  const layerIndex = useArrayFindIndex(
-    template,
-    ({ id: pId }) => pId === get(layerId)
-  );
-  const layer = useArrayFind(template, ({ id: pId }) => pId === get(layerId));
-  const { trigger } = watchTriggerable(
-    () => !!get(template).length,
-    () => {
-      const { id: lId } = get(template, 0) ?? {};
-      set(layerId, lId);
-    }
-  );
-  if (get(template).length) trigger();
+  const itemId = ref();
+  const itemIndex = useArrayFindIndex(template, ({ id }) => id === get(itemId));
 
   /** @constant {number} responsiveWidth рассчетная ширина адаптивного контейнера плюс ширина бордюра */
   const responsiveWidth = computed(() => get(realResponsiveWidth) + 8);
-  const cntStatic = computed(
-    () =>
-      get(visibleTemplate).filter(
-        ({ params: { position } = {} } = {}) => !position
-      ).length || 1
-  );
+  const cntStatic = computed(() => get(visibleTemplateStatic).length || 1);
   const fullHeight = computed(() => get(cntStatic) * get(konvaHeight));
   /**
    *
@@ -110,8 +91,139 @@ export default defineStore("template3", () => {
   const calcYPx = (value, position, index) =>
     calcOffsetY(position, index) + (value * containerHeight(position)) / 100;
 
+  /**
+   *
+   * @param {object} value слой
+   * @returns {object} нормализованный слой
+   */
+  const normLayer = (value) => {
+    const layer = {
+      ...value,
+      params: {
+        ...value.params,
+        /** @returns {boolean} видимость x */
+        get visible() {
+          const { visible } = layer;
+          return visible;
+        },
+        /** @param {boolean} val видимость */
+        set visible(val) {
+          layer.visible = val;
+        },
+        /** @returns {number} сдвиг x */
+        get offsetX() {
+          const { width, offsetX, scaleX } = layer;
+          return (width - offsetX) * scaleX;
+        },
+        /** @returns {number} сдвиг y */
+        get offsetY() {
+          const { height, offsetY, scaleY } = layer;
+          return (height - offsetY) * scaleY;
+        },
+        /** @returns {number} позиция в массиве */
+        get index() {
+          const { id: layerId } = layer;
+          return get(visibleTemplate).findIndex(({ id }) => id === layerId);
+        },
+      },
+      /** @returns {number} отступ слева */
+      get x() {
+        const {
+          params: { width, responsive, offsetX },
+        } = this;
+        return calcXPx(width[0], responsive) + offsetX;
+      },
+      /** @param {number} val отступ слева px */
+      set x(val) {
+        const {
+          params: { width, responsive },
+        } = this;
+        width[0] = calcXPct(val, responsive);
+      },
+      /** @returns {number} отступ сверху */
+      get y() {
+        const {
+          params: { height, position, index, offsetY },
+        } = this;
+        return calcYPx(height[0], position, index) + offsetY;
+      },
+      /** @param {number} val отступ сверху px */
+      set y(val) {
+        const {
+          params: { height, position, index },
+        } = this;
+        height[0] = calcYPct(val, position, index);
+      },
+
+      /** @returns {number} масштаб по х */
+      get scaleX() {
+        const {
+          params: { width, responsive },
+        } = this;
+        return calcXPx(width[1] - width[0], -responsive);
+      },
+      /** @param {number} val масштаб по х */
+      set scaleX(val) {
+        const {
+          params: { width, responsive },
+        } = this;
+        width[1] = width[0] + calcXPct(val, -responsive);
+      },
+
+      /** @returns {number} масштаб по y */
+      get scaleY() {
+        const {
+          params: { height, position },
+        } = this;
+        return calcYPx(height[1] - height[0], position);
+      },
+      /** @param {number} val масштаб по y */
+      set scaleY(val) {
+        const {
+          params: { height, position },
+        } = this;
+        height[1] = height[0] + calcYPct(val, position);
+      },
+      /**
+       * проверка невыхода за габариты при изменении положения
+       * @param {object} pos новые координаты
+       * @param {number} pos.x новые координаты x
+       * @param {number} pos.y новые координаты y
+       * @returns {object} разрешенные координаты
+       */
+      dragBoundFunc({ x: posX, y: posY }) {
+        const {
+          attrs: {
+            scaleX,
+            scaleY,
+            params: { offsetX, offsetY, position, responsive, index },
+          },
+        } = this;
+        const top = calcYPct(posY - offsetY, position, index);
+        const bottom = top + calcYPct(scaleY, position);
+        const left = calcXPct(posX - offsetX, responsive);
+        const right = left + calcXPct(scaleX, -responsive);
+        let x = posX;
+        if (left.toFixed(2) < 0) x = offsetX + calcOffsetX(responsive);
+        if (right.toFixed(2) > 100)
+          x =
+            containerWidth(responsive) -
+            scaleX +
+            offsetX +
+            calcOffsetX(responsive);
+        let y = posY;
+        if (top.toFixed(2) < 0) y = offsetY + calcOffsetY(position, index);
+        if (bottom.toFixed(2) > 100)
+          y =
+            get(konvaHeight) - scaleY + offsetY + calcOffsetY(position, index);
+        return { x, y };
+      },
+    };
+    return layer;
+  };
+
   return {
-    ...{ layerId, layerIndex, layer },
+    ...{ itemId, itemIndex },
     ...{
       konvaWidth,
       konvaHeight,
@@ -121,14 +233,6 @@ export default defineStore("template3", () => {
       cntStatic,
       fullHeight,
     },
-    ...{
-      containerWidth,
-      calcOffsetX,
-      calcOffsetY,
-      calcXPct,
-      calcYPct,
-      calcXPx,
-      calcYPx,
-    },
+    ...{ calcXPct, calcYPct, normLayer },
   };
 });
