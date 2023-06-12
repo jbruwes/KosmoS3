@@ -25,7 +25,7 @@ v-form(ref="form")
             :disabled="element.name === 'content' && template.filter(({ name }) => name === 'content').length === 1",
             variant="underlined",
             :rules="[(v) => !!v || 'Field is required', (v) => !(template.filter(({ name }) => name === v).length - 1) || 'Must be unique']",
-            @blur="element.params.edit = false"
+            @blur="element.params.edit = false",
           )
           template(#append)
             v-list-item-action
@@ -38,7 +38,7 @@ import { get, set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
 import app from "@/store/app";
-import TemplateStore from "@/store/TemplateStore";
+import TemplateStore from "@/store/templateStore";
 
 const store = app();
 const templateStore = TemplateStore();
