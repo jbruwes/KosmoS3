@@ -6,7 +6,7 @@ import DOMPurify from "dompurify";
 
 export default defineStore("orbita", () => {
   const { data: treeData, statusCode: treeStatusCode } =
-    useFetch("index.json").json();
+    useFetch("data.json").json();
   const tree = ref({});
   watch(treeData, (value) => {
     if (get(treeStatusCode) === 200) set(tree, value[0]);
