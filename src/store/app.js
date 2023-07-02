@@ -268,7 +268,7 @@ export default defineStore("app", () => {
   whenever(s3, async () => {
     let json = {};
     try {
-      json = JSON.parse(await getObject("index.json"));
+      json = JSON.parse(await getObject("data.json"));
     } finally {
       set(index, calcIndex(json));
     }
@@ -404,7 +404,7 @@ export default defineStore("app", () => {
     (value, oldValue) => {
       if (value && oldValue)
         putObject(
-          "index.json",
+          "data.json",
           "application/json",
           JSON.stringify(calcIndex(value))
         );
