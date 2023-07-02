@@ -32,7 +32,7 @@ import VSourceCode from "@/components/VSourceCode.vue";
 const store = app();
 const { panel, js, script } = storeToRefs(store);
 set(panel, null);
-const tab = ref(1);
+const tab = ref("1");
 /** @returns {string} uuid */
 const uuid = () => crypto.randomUUID();
 </script>
