@@ -118,13 +118,13 @@ const handleStageMouseDown = (e) => {
  * установка рамки трансформера
  * @param {string} value текущий идентификатор слоя
  */
-const setTransformer = (value) => {
+const setTransformer = async (value) => {
+  await nextTick();
   get(transformer)
     .getNode()
     .nodes([get(stage).getStage().findOne(`#${value}`)].filter(Boolean));
 };
-watch(curId, async (value) => {
-  await nextTick();
+watch(curId, (value) => {
   setTransformer(value);
 });
 const curVisible = computed(() => get(template, get(curIndex)).params.visible);
@@ -136,8 +136,7 @@ onMounted(async () => {
     template,
     get(template).map((element) => normLayer(element))
   );
-  watch(curVisible, async () => {
-    await nextTick();
+  watch(curVisible, () => {
     setTransformer(get(curId));
   });
 });
