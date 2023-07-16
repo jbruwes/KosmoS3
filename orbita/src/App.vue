@@ -164,7 +164,7 @@ export default {
             () =>
               `${get(location).origin}${
                 get(path) === "/" ? "" : encodeURI(get(path))
-              }`
+              }`,
           ),
         },
         { name: "description", content: description },
@@ -173,7 +173,7 @@ export default {
         {
           property: "og:image",
           content: computed(() =>
-            get(image) ? `${get(location).origin}/${get(image)}` : ""
+            get(image) ? `${get(location).origin}/${get(image)}` : "",
           ),
         },
       ],
@@ -202,7 +202,7 @@ export default {
             'a[href^="https://www.youtu.be/watch?v="],' +
             'a[href^="https://www.youtube-nocookie.com/embed/"],' +
             'a[href^="https://www.youtube-nocookie.com/watch?v="],' +
-            'a[href^="https://vimeo.com/"]'
+            'a[href^="https://vimeo.com/"]',
         )
         .forEach((e) => {
           e.setAttribute("rel", "external");
@@ -251,8 +251,8 @@ export default {
         ]
           .filter((script) => script.url)
           .map((script) =>
-            useScriptTag(script.url, undefined, { manual: true }).load()
-          )
+            useScriptTag(script.url, undefined, { manual: true }).load(),
+          ),
       );
       set(template, "");
     });
