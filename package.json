@@ -11,6 +11,7 @@
     "clean": "rimraf dist out",
     "all": "npm run clean && npm run build && npm run icons && npm run build:proton",
     "icons": "npm run clean:icons && .\"/node_modules/.bin/svg2png\" .\"/rocket.svg\" --output=.\"/icon.png\" && .\"/node_modules/.bin/electron-icon-builder\" --flatten --input=.\"/icon.png\" --output=.",
+    "build:monolit": "vite build monolit --base=./",
     "build:proton": "webpack --config ./proton/webpack.config.js",
     "build:orbita": "webpack --config ./orbita/webpack.config.js",
     "build:kosmos3": "vite build",
@@ -115,7 +116,6 @@
     "mini-css-extract-plugin": "^2.7.6",
     "pug": "^3.0.2",
     "rimraf": "^5.0.1",
-    "sass": "^1.63.6",
     "vue-loader": "^17.2.2",
     "webpack-assets-manifest": "^5.1.0",
     "webpack-cli": "^5.1.4"
