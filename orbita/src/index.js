@@ -55,7 +55,7 @@ createApp(App)
     createVuetify({
       components,
       directives,
-    })
+    }),
   )
   .use(createHead())
   .use(Particles)
