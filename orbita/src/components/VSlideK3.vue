@@ -31,6 +31,6 @@ const items = computed(() =>
     children: props.children,
     selector: props.selector,
     axe: props.axe,
-  })
+  }),
 );
 </script>
