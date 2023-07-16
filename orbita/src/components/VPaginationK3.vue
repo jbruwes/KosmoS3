@@ -33,7 +33,7 @@ const items = computed(() =>
     children: props.children,
     selector: props.selector,
     axe: props.axe,
-  })
+  }),
 );
 const itemsLength = computed(() => get(items).length);
 const { trigger } = watchTriggerable(items, (newItems) => {
