@@ -20,6 +20,6 @@ const store = orbita();
 const { treeChildren, siblings, routePath } = storeToRefs(store);
 const { getTitle } = store;
 const items = computed(() =>
-  !get(routePath) || get(routePath) === "/" ? get(treeChildren) : get(siblings)
+  !get(routePath) || get(routePath) === "/" ? get(treeChildren) : get(siblings),
 );
 </script>
