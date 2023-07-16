@@ -41,7 +41,7 @@ export default defineStore("orbita", () => {
    */
   const getPath = (item) => {
     let lPath = getVector(item).map((e) =>
-      e.value.trim().replace(/\s/g, "_").replace(/\//g, "")
+      e.value.trim().replace(/\s/g, "_").replace(/\//g, ""),
     );
     lPath.shift();
     lPath = lPath.join("/");
@@ -80,13 +80,13 @@ export default defineStore("orbita", () => {
    */
   const getSiblings = (item) =>
     jsel(get(tree)).selectAll(
-      `//*[@id="${item.id}"]/preceding-sibling::*[@id]|//*[@id="${item.id}"]|//*[@id="${item.id}"]/following-sibling::*[@id]`
+      `//*[@id="${item.id}"]/preceding-sibling::*[@id]|//*[@id="${item.id}"]|//*[@id="${item.id}"]/following-sibling::*[@id]`,
     );
   const nextItem = computed(
     () =>
       get(list).find((element) =>
-        [getPath(element), getHref(element)].includes(get(routePath))
-      ) || {}
+        [getPath(element), getHref(element)].includes(get(routePath)),
+      ) || {},
   );
   const nextId = computed(() => get(nextItem).id);
   const { data: templateData, statusCode: templateStatusCode } = useFetch(
@@ -124,11 +124,11 @@ export default defineStore("orbita", () => {
         return ctx;
       },
       refetch: true,
-    }
+    },
   );
   const item = computedWithControl(
     () => get(templateData),
-    () => get(nextItem)
+    () => get(nextItem),
   );
   watch(nextId, (newNextId) => {
     if (newNextId && (!get(pageLen) || get(nextItem).page)) item.trigger();
@@ -138,7 +138,7 @@ export default defineStore("orbita", () => {
     () =>
       !get(templateStatusCode) || get(templateStatusCode) === 200
         ? get(templateData)
-        : "<div></div>"
+        : "<div></div>",
   );
   const siblings = computed(() => getSiblings(get(item)));
   const treeChildren = computed(() => get(tree).data);
@@ -202,7 +202,7 @@ export default defineStore("orbita", () => {
       decodeURIComponent(pValue.trim())
         .replace(/_/g, " ")
         .replace(/\/+/g, "/")
-        .replace(/^\/+|\/+$/g, "")
+        .replace(/^\/+|\/+$/g, ""),
     );
     if (children === undefined) lChildren = "";
     else lChildren = children ? "[*]" : "[not(*)]";
@@ -221,7 +221,7 @@ export default defineStore("orbita", () => {
               deep && selector && !axe ? "/" : ""
             }${selector ? "/" : ""}${axe ? `${axe}::` : ""}${selector}${
               selector && !axe && !reveal ? "[@visible=1]" : ""
-            }${lChildren}`
+            }${lChildren}`,
           ),
         ];
       } catch (e) {
