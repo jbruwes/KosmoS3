@@ -175,7 +175,7 @@ watch(cred, (value) => {
     set(secretAccessKey, value.secretAccessKey);
     set(
       provider,
-      get(providers).find(({ title }) => title === value.provider)
+      get(providers).find(({ title }) => title === value.provider),
     );
     set(region, value.region);
     set(endpoint, value.endpoint);
@@ -221,7 +221,7 @@ const login = async () => {
       await s3Client.send(
         new HeadBucketCommand({
           Bucket: get(bucket),
-        })
+        }),
       );
       set(s3, s3Client);
     } catch (err) {
