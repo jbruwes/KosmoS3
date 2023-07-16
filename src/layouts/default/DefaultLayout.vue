@@ -97,7 +97,7 @@ const items = computed(() =>
             to: "/about",
           },
         },
-      ]
+      ],
 );
 watch(s3, (value) => {
   if (value) router.push("/content");
