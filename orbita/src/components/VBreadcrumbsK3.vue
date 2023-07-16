@@ -35,6 +35,6 @@ const items = computed(() =>
     disabled:
       (index === array.length - 1 && props.disabled) ||
       (!item.visible && !props.reveal),
-  }))
+  })),
 );
 </script>
