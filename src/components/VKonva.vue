@@ -134,7 +134,7 @@ onMounted(async () => {
   else set(curId, get(template, 0).id);
   set(
     template,
-    get(template).map((element) => normLayer(element))
+    get(template).map((element) => normLayer(element)),
   );
   watch(curVisible, () => {
     setTransformer(get(curId));
