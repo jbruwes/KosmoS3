@@ -9,9 +9,9 @@ const loadURL = serve({ directory: "." });
   Menu.setApplicationMenu(
     Menu.buildFromTemplate(
       Menu.getApplicationMenu().items.filter(
-        (item) => !["viewmenu", "help"].includes(item.role)
-      )
-    )
+        (item) => !["viewmenu", "help"].includes(item.role),
+      ),
+    ),
   );
   loadURL(
     new BrowserWindow({
@@ -20,6 +20,6 @@ const loadURL = serve({ directory: "." });
       webPreferences: {
         devTools: false,
       },
-    })
+    }),
   );
 })();
