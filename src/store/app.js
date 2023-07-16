@@ -77,7 +77,7 @@ export default defineStore("app", () => {
       typeof body === "string" ? new TextEncoder().encode(body) : body;
     if (isDefined(s3))
       await get(s3).send(
-        new PutObjectCommand({ Bucket, Key, ContentType, Body })
+        new PutObjectCommand({ Bucket, Key, ContentType, Body }),
       );
   };
   /**
@@ -95,7 +95,7 @@ export default defineStore("app", () => {
         /** @returns {Buffer} загруженный файл */
         reader.onloadend = () => resolve(reader.result);
         reader.readAsArrayBuffer(file);
-      })
+      }),
     );
   };
   /**
@@ -109,7 +109,7 @@ export default defineStore("app", () => {
     let ret;
     if (isDefined(s3)) {
       const { Body } = await get(s3).send(
-        new GetObjectCommand({ ResponseCacheControl, Bucket, Key })
+        new GetObjectCommand({ ResponseCacheControl, Bucket, Key }),
       );
       ret = await new Promise((resolve) => {
         const reader = Body.getReader();
@@ -134,13 +134,14 @@ export default defineStore("app", () => {
      */
     afterFetch(ctx) {
       ctx.data = Object.values(ctx.data).filter(
-        (asset) => !["index.htm", "site.webmanifest"].includes(asset)
+        (asset) => !["index.htm", "site.webmanifest"].includes(asset),
       );
       return ctx;
     },
   }).json();
   const base = computed(
-    () => `${isDefined(wendpoint) ? get(wendpoint) : "htpps:/"}/${get(bucket)}/`
+    () =>
+      `${isDefined(wendpoint) ? get(wendpoint) : "htpps:/"}/${get(bucket)}/`,
   );
   const configDOMPurify = {
     SAFE_FOR_TEMPLATES: true,
@@ -389,7 +390,7 @@ export default defineStore("app", () => {
           else {
             const blob = new Blob(
               [(await get(body).text()).replace(/{{ domain }}/g, get(bucket))],
-              { type: get(body).type }
+              { type: get(body).type },
             );
             if (byteLength !== (await blob.arrayBuffer()).byteLength)
               lBody = blob;
@@ -406,10 +407,10 @@ export default defineStore("app", () => {
         putObject(
           "data.json",
           "application/json",
-          JSON.stringify(calcIndex(value))
+          JSON.stringify(calcIndex(value)),
         );
     },
-    { deep: true, debounce: 1000, maxWait: 10000 }
+    { deep: true, debounce: 1000, maxWait: 10000 },
   );
   return {
     ...{ bucket, wendpoint, base },
