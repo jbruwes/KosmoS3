@@ -8,11 +8,11 @@ export default defineStore("template3", () => {
   const { template } = storeToRefs(store);
   const visibleTemplate = useArrayFilter(
     template,
-    ({ params: { visible } = {} } = {}) => visible
+    ({ params: { visible } = {} } = {}) => visible,
   );
   const visibleTemplateStatic = useArrayFilter(
     visibleTemplate,
-    ({ params: { position } = {} } = {}) => !position
+    ({ params: { position } = {} } = {}) => !position,
   );
   const konvaWidth = ref();
   const konvaHeight = ref();
@@ -55,7 +55,7 @@ export default defineStore("template3", () => {
   const calcOffsetY = (pPosition, pIndex) =>
     [
       get(visibleTemplate).filter(
-        ({ params: { position } = {} }, index) => index < pIndex && !position
+        ({ params: { position } = {} }, index) => index < pIndex && !position,
       ).length * get(konvaHeight),
       0,
       pIndex === undefined ? 0 : get(scrollY),
