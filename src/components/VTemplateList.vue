@@ -54,7 +54,7 @@ watch(
   () => get(template, get(itemIndex))?.name,
   () => {
     get(form).validate();
-  }
+  },
 );
 /** @param {number} index индекс */
 const addRect = (index) => {
