@@ -34,7 +34,7 @@
     "start": "electron ."
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.370.0",
+    "@aws-sdk/client-s3": "^3.374.0",
     "@fontsource/arsenal": "^5.0.5",
     "@fontsource/bad-script": "^5.0.5",
     "@fontsource/caveat": "^5.0.5",
@@ -70,7 +70,7 @@
     "animate.css": "^4.1.1",
     "core-js": "^3.31.1",
     "dompurify": "^3.0.5",
-    "electron": "^25.3.0",
+    "electron": "^25.3.1",
     "electron-serve": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "glightbox": "^3.2.0",
@@ -82,11 +82,11 @@
     "terser-webpack-plugin": "^5.3.9",
     "three": "^0.154.0",
     "tinymce": "^6.6.0",
-    "tsparticles": "^2.11.0",
-    "tsparticles-demo-configs": "^2.11.0",
-    "tsparticles-engine": "^2.11.0",
+    "tsparticles": "^2.11.1",
+    "tsparticles-demo-configs": "^2.11.1",
+    "tsparticles-engine": "^2.11.1",
     "vanta": "^0.5.24",
-    "vite": "^4.4.4",
+    "vite": "^4.4.7",
     "vite-plugin-vuetify": "^1.0.2",
     "vue": "^3.3.4",
     "vue-konva": "^3.0.2",
@@ -96,7 +96,7 @@
     "vue3-particles": "^2.11.0",
     "vue3-runtime-template": "^1.0.2",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.3.8"
+    "vuetify": "^3.3.9"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
