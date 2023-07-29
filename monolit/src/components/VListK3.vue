@@ -5,7 +5,7 @@ v-list
 </template>
 <script setup>
 import { computed } from "vue";
-import orbita from "@/orbita";
+import app from "@/store/app";
 
 const props = defineProps({
   date: { default: false, type: [Boolean, String] },
@@ -19,7 +19,7 @@ const props = defineProps({
   selector: { default: undefined, type: String },
   axe: { default: undefined, type: String },
 });
-const store = orbita();
+const store = app();
 const { getItems } = store;
 const items = computed(() =>
   getItems({
