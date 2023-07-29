@@ -45,11 +45,11 @@ import "tinymce/skins/ui/oxide/skin.css";
 import { watch, ref } from "vue";
 import { useFileDialog, set, get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import app from "@/store/app";
 // eslint-disable-next-line import/no-unresolved
 import contentUiSkinCss from "tinymce/skins/ui/oxide/content.min.css?inline";
 // eslint-disable-next-line import/no-unresolved
 import contentCss from "tinymce/skins/content/default/content.min.css?inline";
+import app from "@/store/app";
 
 defineProps({
   modelValue: { default: "", type: String },
