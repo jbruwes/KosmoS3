@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { ref, computed, watch } from "vue";
 import { get, set, watchTriggerable } from "@vueuse/core";
 import page from "page";
-import orbita from "@/orbita";
+import app from "@/store/app";
 
 const props = defineProps({
   variant: { default: undefined, type: String },
@@ -19,7 +19,7 @@ const props = defineProps({
   selector: { default: "*/*[@id]", type: String },
   axe: { default: "parent", type: String },
 });
-const store = orbita();
+const store = app();
 const { id } = storeToRefs(store);
 const { getItems, getHref } = store;
 const itemIndex = ref(0);
