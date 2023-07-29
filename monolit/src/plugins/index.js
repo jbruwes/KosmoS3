@@ -11,6 +11,12 @@ import vuetify from "./vuetify";
 import pinia from "../store";
 import head from "../store/head";
 
-export function registerPlugins(app) {
+/**
+ *
+ * @param {object} app - Объект приложения
+ */
+function registerPlugins(app) {
   app.use(vuetify).use(pinia).use(head).use(Particles).use(VueAnimateOnScroll);
 }
+
+export default registerPlugins;
