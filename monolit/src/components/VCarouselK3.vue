@@ -5,7 +5,7 @@ v-carousel(cycle, show-arrows="hover", :height="height", :width="width")
 </template>
 <script setup>
 import { computed } from "vue";
-import orbita from "@/orbita";
+import app from "@/store/app";
 
 const props = defineProps({
   date: { default: false, type: [Boolean, String] },
@@ -21,7 +21,7 @@ const props = defineProps({
   width: { default: undefined, type: [String, Number] },
   height: { default: undefined, type: [String, Number] },
 });
-const store = orbita();
+const store = app();
 const { getItems } = store;
 const items = computed(() =>
   getItems({
