@@ -1,10 +1,10 @@
 // Plugins
+import { fileURLToPath, URL } from "node:url";
 import vue from "@vitejs/plugin-vue";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
 // Utilities
 import { defineConfig } from "vite";
-import { fileURLToPath, URL } from "node:url";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -21,6 +21,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      vue: "vue/dist/vue.esm-bundler.js",
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },
@@ -30,5 +31,18 @@ export default defineConfig({
   build: {
     manifest: true,
     outDir: "../dist/monolit",
+    rollupOptions: {
+      output: {
+        /**
+         * Разборка по вендорам
+         * @param {string} id - путь до модуля
+         * @returns {string} - вендор
+         */
+        manualChunks: (id) =>
+          id.includes("node_modules")
+            ? id.split("node_modules/")[1].split("/")[0]
+            : "",
+      },
+    },
   },
 });
