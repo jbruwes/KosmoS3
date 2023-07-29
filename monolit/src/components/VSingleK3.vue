@@ -13,7 +13,7 @@ slot(
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { get } from "@vueuse/core";
-import orbita from "@/orbita";
+import app from "@/store/app";
 
 const props = defineProps({
   title: { default: true, type: [Boolean, String] },
@@ -32,7 +32,7 @@ const props = defineProps({
   selector: { default: "", type: String },
   axe: { default: undefined, type: String },
 });
-const store = orbita();
+const store = app();
 const { routePath } = storeToRefs(store);
 const { getTitle, getHref, getItems } = store;
 const theItem = computed(() => {
