@@ -22,9 +22,9 @@ v-navigation-drawer(app, temporary)
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
-import orbita from "@/orbita";
+import app from "@/store/app";
 
-const store = orbita();
+const store = app();
 const { tree, treeChildren, treeIcon, treeDescription, routePath } =
   storeToRefs(store);
 const { getHref, getTitle } = store;
