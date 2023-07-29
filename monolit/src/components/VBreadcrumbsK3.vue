@@ -3,7 +3,7 @@ v-breadcrumbs(:items="items")
 </template>
 <script setup>
 import { computed } from "vue";
-import orbita from "@/orbita";
+import app from "@/store/app";
 
 const props = defineProps({
   variant: { default: undefined, type: String },
@@ -17,7 +17,7 @@ const props = defineProps({
   axe: { default: "ancestor-or-self", type: String },
   disabled: { default: true, type: Boolean },
 });
-const store = orbita();
+const store = app();
 const { getItems, getTitle, getHref } = store;
 const items = computed(() =>
   getItems({
