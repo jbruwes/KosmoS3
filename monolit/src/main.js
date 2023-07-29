@@ -36,13 +36,13 @@ import "animate.css/animate.css";
 import "./styles/index.css";
 
 // Components
-import App from "./App.vue";
 
 // Composables
 import { createApp } from "vue";
 
 // Plugins
-import { registerPlugins } from "@/plugins";
+import registerPlugins from "@/plugins";
+import App from "./App.vue";
 
 document.addEventListener("click", (event) => {
   const element = event.target;
