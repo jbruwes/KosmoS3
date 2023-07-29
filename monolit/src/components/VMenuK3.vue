@@ -14,9 +14,9 @@ v-menu(close-on-click, location="start")
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { get } from "@vueuse/core";
-import orbita from "@/orbita";
+import app from "@/store/app";
 
-const store = orbita();
+const store = app();
 const { treeChildren, siblings, routePath } = storeToRefs(store);
 const { getTitle } = store;
 const items = computed(() =>
