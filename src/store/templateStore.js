@@ -3,7 +3,7 @@ import { get, useArrayFindIndex, useArrayFilter } from "@vueuse/core";
 import { defineStore, storeToRefs } from "pinia";
 import app from "./app";
 
-export default defineStore("template3", () => {
+export default defineStore("templateStore", () => {
   const store = app();
   const { template } = storeToRefs(store);
   const visibleTemplate = useArrayFilter(

@@ -75,11 +75,11 @@ import { useDisplay } from "vuetify";
 import { get, set, useElementSize, useScroll, syncRefs } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import app from "@/store/app";
-import TemplateStore from "@/store/templateStore";
 import VWysiwyg from "@/components/VWysiwyg.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 import VKonva from "@/components/VKonva.vue";
 import VTemplateList from "@/components/VTemplateList.vue";
+import TemplateStore from "@/store/templateStore";
 
 const store = app();
 const templateStore = TemplateStore();
