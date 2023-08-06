@@ -30,7 +30,7 @@ export default defineConfig({
   },
   build: {
     manifest: true,
-    outDir: "../dist/monolit",
+    outDir: "../public/monolit",
     rollupOptions: {
       output: {
         /**

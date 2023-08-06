@@ -126,16 +126,18 @@ export default defineStore("app", () => {
     }
     return ret;
   };
-  const { isFetching, data } = useFetch("orbita/assets-manifest.json", {
+  const requiredFiles = ["index.html", "favicon.ico"];
+  const { data } = useFetch("monolit/manifest.json", {
     /**
      * Преводим в массив
      * @param { object } ctx - возвращаемый объект
      * @returns { object } - трансформируемый возвращаемый объект
      */
     afterFetch(ctx) {
-      ctx.data = Object.values(ctx.data).filter(
-        (asset) => !["index.htm", "site.webmanifest"].includes(asset),
-      );
+      ctx.data = [
+        ...requiredFiles,
+        ...Object.values(ctx.data).map(({ file }) => file),
+      ];
       return ctx;
     },
   }).json();
@@ -375,16 +377,16 @@ export default defineStore("app", () => {
   whenever(logicNot(s3), () => {
     set(index, undefined);
   });
-  whenever(logicAnd(s3, isFetching), () => {
+  whenever(logicAnd(s3, data), () => {
     get(data).forEach((asset) => {
       (async () => {
         try {
           const head = await headObject(asset);
-          if (["robots.txt", "error.html", "browserconfig.xml"].includes(asset))
+          if (requiredFiles.includes(asset))
             throw new Error(head.ContentLength);
         } catch (e) {
           const byteLength = +e.message;
-          const { data: body } = await useFetch(`orbita/${asset}`).blob();
+          const { data: body } = await useFetch(`monolit/${asset}`).blob();
           let lBody = null;
           if (Number.isNaN(byteLength)) lBody = get(body);
           else {
