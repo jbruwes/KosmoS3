@@ -214,6 +214,7 @@ export default {
         autoplayVideos: true,
         zoomable: false,
       });
+      // eslint-disable-next-line no-undef
       if (typeof init === "function") init.call({ ...get(tree) });
       window.scrollTo(0, 0);
     });

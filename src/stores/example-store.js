@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 
-export const useCounterStore = defineStore("counter", {
+const useCounterStore = defineStore("counter", {
   /**
-   *
+   * @returns {object} - объект состояния
    */
   state: () => ({
     counter: 0,
@@ -10,7 +10,8 @@ export const useCounterStore = defineStore("counter", {
   getters: {
     /**
      *
-     * @param state
+     * @param {object} state - объект состояния
+     * @returns {number} - двойной счетчик
      */
     doubleCount: (state) => state.counter * 2,
   },
@@ -19,7 +20,9 @@ export const useCounterStore = defineStore("counter", {
      *
      */
     increment() {
-      this.counter++;
+      this.counter += 1;
     },
   },
 });
+
+export default useCounterStore;

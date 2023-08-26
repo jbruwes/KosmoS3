@@ -16,16 +16,16 @@ import routes from "./routes";
  * with the Router instance.
  */
 
-export default route(function (/* { store, ssrContext } */) {
-  const createHistory = process.env.SERVER
-    ? createMemoryHistory
-    : process.env.VUE_ROUTER_MODE === "history"
-    ? createWebHistory
-    : createWebHashHistory;
+export default route((/* { store, ssrContext } */) => {
+  let createHistory;
+  if (process.env.SERVER) createHistory = createMemoryHistory;
+  else if (process.env.VUE_ROUTER_MODE === "history")
+    createHistory = createWebHistory;
+  else createHistory = createWebHashHistory;
 
   const Router = createRouter({
     /**
-     *
+     * @returns {object} - объект с позиционированием
      */
     scrollBehavior: () => ({ left: 0, top: 0 }),
     routes,
