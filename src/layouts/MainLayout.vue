@@ -1,8 +1,8 @@
 <template lang="pug">
-q-layout(view="lHh Lpr lFf")
+q-layout(view="hHh Lpr lff")
   q-header(elevated)
     q-toolbar
-      q-btn(flat dense round icon="menu" aria-label="Menu" @click="drawer = !drawer")
+      q-btn(flat dense round icon="menu" aria-label="Menu" @click="leftDrawer = !leftDrawer")
       q-toolbar-title kosmos3
       div Quasar v
         | {{ $q.version }}
