@@ -2,16 +2,119 @@ const routes = [
   {
     path: "/",
     /**
-     * @returns {object} - основной лейаут
+     * @returns {object} - модуль шаблона по умолчанию
      */
     component: () => import("@/layouts/MainLayout.vue"),
     children: [
       {
         path: "",
+        name: "Home",
         /**
-         * @returns {object} - главная страница
+         * @returns {object} - модуль домашней страницы
          */
-        component: () => import("@/pages/IndexPage.vue"),
+        component: () => import("@/pages/HomePage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/about",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "About",
+        /**
+         * @returns {object} - модуль страницы о программе
+         */
+        component: () => import("@/pages/AboutPage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/content",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Content",
+        /**
+         * @returns {object} - модуль страницы контент
+         */
+        component: () => import("@/pages/ContentPage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/template",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Template",
+        /**
+         * @returns {object} - модуль страницы шаблон
+         */
+        component: () => import("@/pages/TemplatePage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/css",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Css",
+        /**
+         * @returns {object} - модуль страницы каскадных стилей
+         */
+        component: () => import("@/pages/CssPage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/js",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Js",
+        /**
+         * @returns {object} - модуль страницы джава скипта
+         */
+        component: () => import("@/pages/JsPage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/settings",
+    /**
+     * @returns {object} - модуль шаблона по умолчанию
+     */
+    component: () => import("@/layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Settings",
+        /**
+         * @returns {object} - модуль страницы настроек
+         */
+        component: () => import("@/pages/SettingsPage.vue"),
       },
     ],
   },

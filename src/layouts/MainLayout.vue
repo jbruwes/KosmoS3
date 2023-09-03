@@ -8,60 +8,77 @@ q-layout(view="lHh Lpr lFf")
         | {{ $q.version }}
   q-drawer(v-model="leftDrawerOpen" show-if-above bordered)
     q-list
-      q-item-label(header) Essential Links
-      EssentialLink(v-for="link in essentialLinks" :key="link.title" v-bind="link")
+      q-item(v-for="item in items" :key="item.title" v-bind="item" clickable :to="item.to")
+        q-item-section(v-if="item.icon" avatar)
+          q-icon(:name="item.icon")
+        q-item-section
+          q-item-label {{ item.title }}
   q-page-container
     router-view
 </template>
 
 <script setup>
-import { ref } from "vue";
-import EssentialLink from "@/components/EssentialLink.vue";
+import { ref, computed, watch } from "vue";
+import { get } from "@vueuse/core";
+import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+import app from "@/stores/app";
 
-const essentialLinks = ref([
-  {
-    title: "Docs",
-    caption: "quasar.dev",
-    icon: "school",
-    link: "https://quasar.dev",
-  },
-  {
-    title: "Github",
-    caption: "github.com/quasarframework",
-    icon: "code",
-    link: "https://github.com/quasarframework",
-  },
-  {
-    title: "Discord Chat Channel",
-    caption: "chat.quasar.dev",
-    icon: "chat",
-    link: "https://chat.quasar.dev",
-  },
-  {
-    title: "Forum",
-    caption: "forum.quasar.dev",
-    icon: "record_voice_over",
-    link: "https://forum.quasar.dev",
-  },
-  {
-    title: "Twitter",
-    caption: "@quasarframework",
-    icon: "rss_feed",
-    link: "https://twitter.quasar.dev",
-  },
-  {
-    title: "Facebook",
-    caption: "@QuasarFramework",
-    icon: "public",
-    link: "https://facebook.quasar.dev",
-  },
-  {
-    title: "Quasar Awesome",
-    caption: "Community Quasar projects",
-    icon: "favorite",
-    link: "https://awesome.quasar.dev",
-  },
-]);
+const router = useRouter();
+const store = app();
+const { s3 } = storeToRefs(store);
+
+const items = computed(() =>
+  get(s3)
+    ? [
+        {
+          title: "Content",
+          icon: "mdi-book-open-page-variant",
+          to: "/content",
+        },
+        {
+          title: "Template",
+          icon: "mdi-language-html5",
+          to: "/template",
+        },
+        {
+          title: "CSS",
+          icon: "mdi-language-css3",
+          to: "/css",
+        },
+        {
+          title: "JavaScript",
+          icon: "mdi-language-javascript",
+          to: "/js",
+        },
+        {
+          title: "Settings",
+          icon: "mdi-cog",
+          to: "/settings",
+        },
+        {
+          title: "Logout",
+          icon: "mdi-logout-variant",
+          to: "/",
+        },
+      ]
+    : [
+        {
+          title: "Login",
+          icon: "login",
+          to: "/",
+        },
+        {
+          title: "About",
+          icon: "info",
+          to: "/about",
+        },
+      ],
+);
+watch(s3, (value) => {
+  if (value) router.push("/content");
+});
+
 const leftDrawerOpen = ref(false);
 /**
  *
