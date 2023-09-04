@@ -3,9 +3,8 @@ q-layout(view="hHh Lpr lff")
   q-header(elevated)
     q-toolbar
       q-btn(flat dense round icon="menu" aria-label="Menu" @click="leftDrawer = !leftDrawer")
+      q-icon(name="rocket_launch" size="lg" right=true )
       q-toolbar-title kosmos3
-      div Quasar v
-        | {{ $q.version }}
   q-drawer(v-model="leftDrawer" show-if-above bordered :mini="miniState" @mouseover="miniState = false" @mouseout="miniState = true")
     q-list
       q-item(v-for="item in items" :key="item.title" v-bind="item" clickable :to="item.to")
