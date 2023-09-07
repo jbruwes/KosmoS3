@@ -29,6 +29,8 @@ module.exports = {
 
     "airbnb-base",
     "plugin:jsdoc/recommended",
+    "plugin:sonarjs/recommended",
+    "plugin:optimize-regex/recommended",
 
     // https://github.com/prettier/eslint-config-prettier#installation
     // usage with Prettier, provided by 'eslint-config-prettier'.

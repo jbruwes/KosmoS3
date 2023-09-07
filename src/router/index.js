@@ -23,7 +23,7 @@ export default route((/* { store, ssrContext } */) => {
     createHistory = createWebHistory;
   else createHistory = createWebHashHistory;
 
-  const Router = createRouter({
+  return createRouter({
     /**
      * @returns {object} - объект с позиционированием
      */
@@ -35,6 +35,4 @@ export default route((/* { store, ssrContext } */) => {
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
-
-  return Router;
 });
