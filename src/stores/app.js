@@ -378,28 +378,32 @@ export default defineStore("app", () => {
     set(index, undefined);
   });
   whenever(logicAnd(s3, data), () => {
-    get(data).forEach((asset) => {
-      (async () => {
-        try {
-          const head = await headObject(asset);
-          if (requiredFiles.includes(asset))
-            throw new Error(head.ContentLength);
-        } catch (e) {
-          const byteLength = +e.message;
-          const { data: body } = await useFetch(`monolit/${asset}`).blob();
-          let lBody = null;
-          if (Number.isNaN(byteLength)) lBody = get(body);
-          else {
-            const blob = new Blob(
-              [(await get(body).text()).replace(/{{ domain }}/g, get(bucket))],
-              { type: get(body).type },
-            );
-            if (byteLength !== (await blob.arrayBuffer()).byteLength)
-              lBody = blob;
-          }
-          if (lBody) putObject(asset, lBody.type, lBody);
+    /**
+     *
+     * @param {string} pAsset - путь до файла ресурса
+     */
+    const headPutObject = async (pAsset) => {
+      try {
+        const head = await headObject(pAsset);
+        if (requiredFiles.includes(pAsset)) throw new Error(head.ContentLength);
+      } catch (e) {
+        const byteLength = +e.message;
+        const { data: body } = await useFetch(`monolit/${pAsset}`).blob();
+        let lBody = null;
+        if (Number.isNaN(byteLength)) lBody = get(body);
+        else {
+          const blob = new Blob(
+            [(await get(body).text()).replace(/{{ domain }}/g, get(bucket))],
+            { type: get(body).type },
+          );
+          if (byteLength !== (await blob.arrayBuffer()).byteLength)
+            lBody = blob;
         }
-      })();
+        if (lBody) putObject(pAsset, lBody.type, lBody);
+      }
+    };
+    get(data).forEach((asset) => {
+      headPutObject(asset);
     });
   });
   watchDebounced(
