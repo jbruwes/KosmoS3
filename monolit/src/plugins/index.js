@@ -5,11 +5,12 @@
  */
 
 // Plugins
-import Particles from "vue3-particles";
 import VueAnimateOnScroll from "vue3-animate-onscroll";
-import vuetify from "./vuetify";
+import Particles from "vue3-particles";
+
 import pinia from "../store";
 import head from "../store/head";
+import vuetify from "./vuetify";
 
 /**
  *

@@ -10,8 +10,8 @@ v-slide-k3(#="slot")
   )
 </template>
 <script setup>
-import VSlideK3 from "./VSlideK3.vue";
 import VSingleIconK3 from "./VSingleIconK3.vue";
+import VSlideK3 from "./VSlideK3.vue";
 
 defineProps({
   classes: { default: "ma-4", type: String },

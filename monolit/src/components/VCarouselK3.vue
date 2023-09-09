@@ -5,6 +5,7 @@ v-carousel(cycle, show-arrows="hover", :height="height", :width="width")
 </template>
 <script setup>
 import { computed } from "vue";
+
 import app from "@/store/app";
 
 const props = defineProps({

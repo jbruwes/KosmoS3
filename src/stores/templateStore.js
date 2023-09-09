@@ -1,6 +1,7 @@
-import { ref, computed } from "vue";
-import { get, useArrayFindIndex, useArrayFilter } from "@vueuse/core";
+import { get, useArrayFilter, useArrayFindIndex } from "@vueuse/core";
 import { defineStore, storeToRefs } from "pinia";
+import { computed, ref } from "vue";
+
 import app from "./app";
 
 export default defineStore("templateStore", () => {

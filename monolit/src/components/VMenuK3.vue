@@ -11,9 +11,10 @@ v-menu(close-on-click, location="start")
       )
 </template>
 <script setup>
-import { computed } from "vue";
-import { storeToRefs } from "pinia";
 import { get } from "@vueuse/core";
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
+
 import app from "@/store/app";
 
 const store = app();

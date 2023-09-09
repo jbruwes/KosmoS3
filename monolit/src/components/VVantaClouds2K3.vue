@@ -3,11 +3,11 @@ v-sheet(ref="vantaRef")
   slot
 </template>
 <script setup>
-import * as THREE from "three";
-import p5 from "p5";
-import CLOUDS2 from "vanta/dist/vanta.clouds2.min";
-import { ref, onMounted, onBeforeUnmount } from "vue";
 import { get, useResizeObserver } from "@vueuse/core";
+import p5 from "p5";
+import * as THREE from "three";
+import CLOUDS2 from "vanta/dist/vanta.clouds2.min";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const props = defineProps({
   options: {

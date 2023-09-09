@@ -29,19 +29,17 @@ import "@fontsource/roboto";
 import "@fontsource/rubik-mono-one";
 import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
-
 import "glightbox/dist/css/glightbox.css";
 import "animate.css/animate.css";
-
 import "./styles/index.css";
 
 // Components
-
 // Composables
 import { createApp } from "vue";
 
 // Plugins
 import registerPlugins from "@/plugins";
+
 import App from "./App.vue";
 
 document.addEventListener("click", (event) => {

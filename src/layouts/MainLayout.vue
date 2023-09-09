@@ -17,10 +17,11 @@ q-layout(view="hHh Lpr lff")
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
 import { get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
+import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+
 import app from "@/stores/app";
 
 const router = useRouter();

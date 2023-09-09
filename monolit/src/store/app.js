@@ -1,8 +1,8 @@
-import { ref, computed, watch } from "vue";
-import { defineStore } from "pinia";
-import { useFetch, get, set, computedWithControl } from "@vueuse/core";
-import jsel from "jsel";
+import { computedWithControl, get, set, useFetch } from "@vueuse/core";
 import DOMPurify from "dompurify";
+import jsel from "jsel";
+import { defineStore } from "pinia";
+import { computed, ref, watch } from "vue";
 
 export default defineStore("app", () => {
   const { data: treeData, statusCode: treeStatusCode } =

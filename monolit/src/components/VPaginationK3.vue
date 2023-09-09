@@ -2,10 +2,11 @@
 v-pagination(v-model="itemIndex", :length="itemsLength", :total-visible="7")
 </template>
 <script setup>
-import { storeToRefs } from "pinia";
-import { ref, computed, watch } from "vue";
 import { get, set, watchTriggerable } from "@vueuse/core";
 import page from "page";
+import { storeToRefs } from "pinia";
+import { computed, ref, watch } from "vue";
+
 import app from "@/store/app";
 
 const props = defineProps({

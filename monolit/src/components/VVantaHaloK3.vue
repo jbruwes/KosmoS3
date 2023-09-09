@@ -3,11 +3,11 @@ v-sheet(ref="vantaRef")
   slot
 </template>
 <script setup>
-import * as THREE from "three";
-import p5 from "p5";
-import HALO from "vanta/dist/vanta.halo.min";
-import { ref, onMounted, onBeforeUnmount } from "vue";
 import { get, useResizeObserver } from "@vueuse/core";
+import p5 from "p5";
+import * as THREE from "three";
+import HALO from "vanta/dist/vanta.halo.min";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const props = defineProps({
   options: {

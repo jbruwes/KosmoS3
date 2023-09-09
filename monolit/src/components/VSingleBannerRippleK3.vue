@@ -11,8 +11,8 @@ v-single-k3(#="slot", v-bind="params")
 </template>
 <script setup>
 import VSingleK3 from "./VSingleK3.vue";
-import VVantaRippleK3 from "./VVantaRippleK3.vue";
 import VTemplateBannerK3 from "./VTemplateBannerK3.vue";
+import VVantaRippleK3 from "./VVantaRippleK3.vue";
 
 defineProps({
   classes: { default: undefined, type: String },
