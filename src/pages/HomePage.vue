@@ -3,30 +3,30 @@ q-page.column.justify-start
   .col.column.q-ma-md
     q-img.col.rounded-borders(src="~assets/bg.jpg")
       q-card.absolute-center
-        q-form(ref="form" v-model="valid")
+        q-form(ref="form" v-model="valid" @submit="login")
           .row.q-col-gutter-x-md
             .col-12.col-md.min-w-300
               .text-overline WEBSITE
               q-select(v-model="cred" dark filled clearable label="saved credentials" :options="creds" hint="")
                 template(#prepend)
                   q-icon(name="save")
-              q-input(v-model.trim="bucket" :rules="[(v) => !!v || 'Item is required']" dark filled label="domain" placeholder="example.com")
+              q-input(v-model.trim="bucket" :rules="[(v) => !!v || 'Item is required']" lazy-rules dark filled label="domain" placeholder="example.com")
                 template(#prepend)
                   q-icon(name="language")
-              q-input(v-model.trim="accessKeyId" :rules="[(v) => !!v || 'Item is required']" dark filled label="access key id")
+              q-input(v-model.trim="accessKeyId" :rules="[(v) => !!v || 'Item is required']" lazy-rules dark filled label="access key id")
                 template(#prepend)
                   q-icon(name="key")
-              q-input(v-model.trim="secretAccessKey" :rules="[(v) => !!v || 'Item is required']" dark label="secret access key" filled :type="visible ? 'password' : 'text'")
+              q-input(v-model.trim="secretAccessKey" :rules="[(v) => !!v || 'Item is required']" lazy-rules dark label="secret access key" filled :type="isPwd ? 'password' : 'text'")
                 template(#prepend)
                   q-icon(name="lock")
                 template(#append)
-                  q-icon.cursor-pointer(:name="visible ? 'visibility_off' : 'visibility'" @click="visible = !visible")
+                  q-icon.cursor-pointer(:name="isPwd ? 'visibility_off' : 'visibility'" @click="isPwd = !isPwd")
             .col-12.col-md.min-w-300
               .text-overline CLOUD
               q-select(v-model="provider" clearable :options="providers" dark filled label="cloud provider" hint="")
                 template(#prepend)
                   q-icon(name="cloud")
-              q-select(v-model.trim="region" use-input filled hide-selected fill-input input-debounce="0" :options="regions" label="region" :rules="[(v) => !!v || 'Item is required']" dark :disable="provider && provider.label === 'yandex'" @input-value="(val) => {region=val}")
+              q-select(v-model.trim="region" use-input filled hide-selected fill-input input-debounce="0" :options="regions" label="region" lazy-rules :rules="[(v) => !!v || 'Item is required']" dark :disable="provider && provider.label === 'yandex'" @input-value="(val) => {region=val}")
                 template(#prepend)
                   q-icon(name="flag")
               q-input(v-model.trim="endpoint" dark filled label="endpoint url" :disable="!!provider" hint="")
@@ -37,18 +37,20 @@ q-page.column.justify-start
                   q-icon(name="web")
           q-toggle.q-mb-md(v-model="remember" label="remember credentials")
           div
-            q-btn.full-width(label="LogIn" type="submit" color="primary" @click="login")
+            q-btn.full-width(label="LogIn" type="submit" color="primary")
 </template>
 <script setup>
 import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
 import { get, set, useStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
+import { useQuasar } from "quasar";
 import { computed, ref, watch } from "vue";
 
 import app from "@/stores/app";
 
+const $q = useQuasar();
 const store = app();
-const { s3, bucket, wendpoint, snackbar, message } = storeToRefs(store);
+const { s3, bucket, wendpoint } = storeToRefs(store);
 set(s3, null);
 set(bucket, "");
 set(wendpoint, "");
@@ -56,7 +58,7 @@ const accessKeyId = ref("");
 const secretAccessKey = ref("");
 const region = ref("");
 const endpoint = ref("");
-const visible = ref(false);
+const isPwd = ref(true);
 const remember = ref(true);
 const providers = ref([
   {
@@ -122,12 +124,12 @@ watch(region, () => {
 });
 watch(cred, (value) => {
   if (value) {
-    set(bucket, value.title);
+    set(bucket, value.label);
     set(accessKeyId, value.accessKeyId);
     set(secretAccessKey, value.secretAccessKey);
     set(
       provider,
-      get(providers).find(({ title }) => title === value.provider),
+      get(providers).find(({ label }) => label === value.provider),
     );
     set(region, value.region);
     set(endpoint, value.endpoint);
@@ -158,18 +160,22 @@ const login = async () => {
           secretAccessKey: get(secretAccessKey),
         },
       });
-      const lCreds = get(creds).filter(({ title }) => title !== get(bucket));
-      if (get(remember))
-        lCreds.push({
-          title: get(bucket),
-          accessKeyId: get(accessKeyId),
-          secretAccessKey: get(secretAccessKey),
-          region: get(region),
-          endpoint: get(endpoint),
-          wendpoint: get(wendpoint),
-          provider: get(provider).title,
-        });
-      set(creds, lCreds);
+      set(creds, [
+        ...get(creds).filter(({ label }) => label !== get(bucket)),
+        ...(get(remember)
+          ? [
+              {
+                label: get(bucket),
+                accessKeyId: get(accessKeyId),
+                secretAccessKey: get(secretAccessKey),
+                region: get(region),
+                endpoint: get(endpoint),
+                wendpoint: get(wendpoint),
+                provider: get(provider).label,
+              },
+            ]
+          : []),
+      ]);
       await s3Client.send(
         new HeadBucketCommand({
           Bucket: get(bucket),
@@ -178,8 +184,8 @@ const login = async () => {
       set(s3, s3Client);
     } catch (err) {
       s3Client = null;
-      set(message, err.message);
-      set(snackbar, true);
+      const { message } = err;
+      $q.notify({ message });
     }
 };
 </script>
