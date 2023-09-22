@@ -19,16 +19,6 @@ import { computed, ref } from "vue";
 
 export default defineStore("app", () => {
   /**
-   * текст сообщения об ошибке
-   * @type {string}
-   */
-  const message = ref("");
-  /**
-   * переключатель видимости сообщения об ошибке
-   * @type {boolean}
-   */
-  const snackbar = ref(false);
-  /**
    * переключатель видимости правой панели
    * @type {boolean}
    */
@@ -420,7 +410,7 @@ export default defineStore("app", () => {
   );
   return {
     ...{ bucket, wendpoint, base },
-    ...{ panel, snackbar, message },
+    ...{ panel },
     ...{ content, template, js, script, css, style, settings },
     ...{ s3, putFile },
     ...{ calcLayer },
