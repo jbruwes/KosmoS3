@@ -3,7 +3,7 @@ q-page.column.justify-start
   .col.column.q-ma-md
     q-img.col.rounded-borders(src="~assets/bg.jpg")
       q-card.absolute-center
-        q-form(ref="form" v-model="valid" @submit="login")
+        q-form(@submit="login")
           .row.q-col-gutter-x-md
             .col-12.col-md.min-w-300
               .text-overline WEBSITE
@@ -103,8 +103,6 @@ const providers = ref([
 ]);
 const provider = ref(null);
 const regions = ref([]);
-const valid = ref(true);
-const form = ref(null);
 const creds = useStorage("kosmos3", []);
 const cred = ref(null);
 watch(provider, (value) => {
@@ -149,8 +147,7 @@ let s3Client = null;
  *
  */
 const login = async () => {
-  get(form).validate();
-  if (!s3Client && get(valid))
+  if (!s3Client)
     try {
       s3Client = new S3Client({
         region: get(region),
