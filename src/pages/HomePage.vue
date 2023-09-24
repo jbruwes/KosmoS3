@@ -45,9 +45,11 @@ import { get, set, useStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { computed, ref, watch } from "vue";
+import { useRouter } from "vue-router";
 
 import app from "@/stores/app";
 
+const router = useRouter();
 const $q = useQuasar();
 const store = app();
 const { s3, bucket, wendpoint } = storeToRefs(store);
@@ -179,6 +181,7 @@ const login = async () => {
         }),
       );
       set(s3, s3Client);
+      router.push("/content");
     } catch (err) {
       s3Client = null;
       const { message } = err;
