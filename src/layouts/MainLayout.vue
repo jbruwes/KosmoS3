@@ -78,9 +78,9 @@ const privateTo = privateItems
   .filter((val) => val !== "/");
 const items = computed(() => (get(s3) ? privateItems : publicItems));
 /**
- *
- * @param root0
- * @param root0.path
+ * Процедура перенаправляет на страницу аутентификации если пользователь не аутентифицирован и пытается зайти на приватную страницу
+ * @param {object} root0 - route
+ * @param {string} root0.path - путь
  */
 const routeToRoot = ({ path }) => {
   if (!get(s3) && privateTo.includes(path)) router.push("/");
