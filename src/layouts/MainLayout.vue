@@ -44,32 +44,32 @@ const publicItems = [
 const privateItems = [
   {
     title: "Content",
-    icon: "mdi-book-open-page-variant",
+    icon: "wysiwyg",
     to: "/content",
   },
   {
     title: "Template",
-    icon: "mdi-language-html5",
+    icon: "format_paint",
     to: "/template",
   },
   {
     title: "CSS",
-    icon: "mdi-language-css3",
+    icon: "css",
     to: "/css",
   },
   {
     title: "JavaScript",
-    icon: "mdi-language-javascript",
+    icon: "javascript",
     to: "/js",
   },
   {
     title: "Settings",
-    icon: "mdi-cog",
+    icon: "settings",
     to: "/settings",
   },
   {
     title: "Logout",
-    icon: "mdi-logout-variant",
+    icon: "logout",
     to: "/",
   },
 ];
@@ -87,6 +87,6 @@ const routeToRoot = ({ path }) => {
 };
 routeToRoot(useRoute());
 onBeforeRouteLeave((to) => {
-  routeToRoot(useRoute(to));
+  routeToRoot(to);
 });
 </script>
