@@ -1,11 +1,13 @@
 <template lang="pug">
 q-layout(view="hHh Lpr lff")
-  q-header(elevated)
+  q-header
     q-toolbar
-      q-btn(flat dense round icon="menu" aria-label="Menu" @click="leftDrawer = !leftDrawer")
-      q-icon(name="rocket_launch" size="lg" right=true )
-      q-toolbar-title kosmos3
-  q-drawer(v-model="leftDrawer" show-if-above mini-to-overlay bordered :mini="miniState" @mouseover="miniState = false" @mouseout="miniState = true")
+      q-btn(flat dense round icon="menu" @click="leftDrawer = !leftDrawer")
+      q-toolbar-title
+        q-avatar(icon="rocket_launch" size="xl")
+        | kosmos3
+      q-btn(v-if="rightDrawer !== null" flat dense round icon="more_vert" @click="rightDrawer = !rightDrawer")
+  q-drawer(v-model="leftDrawer" show-if-above mini-to-overlay bordered :mini="miniState" side="left" @mouseover="miniState = false" @mouseout="miniState = true")
     q-list
       q-item(v-for="item in items" :key="item.title" v-bind="item" clickable :to="item.to")
         q-item-section(v-if="item.icon" avatar)
@@ -26,7 +28,7 @@ import app from "@/stores/app";
 
 const router = useRouter();
 const store = app();
-const { s3 } = storeToRefs(store);
+const { s3, rightDrawer } = storeToRefs(store);
 const leftDrawer = ref(false);
 const miniState = ref(true);
 const publicItems = [

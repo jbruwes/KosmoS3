@@ -22,7 +22,7 @@ export default defineStore("app", () => {
    * переключатель видимости правой панели
    * @type {boolean}
    */
-  const panel = ref();
+  const rightDrawer = ref(null);
   /**
    * корзина в сервисе s3
    * @type {string}
@@ -410,7 +410,7 @@ export default defineStore("app", () => {
   );
   return {
     ...{ bucket, wendpoint, base },
-    ...{ panel },
+    ...{ rightDrawer },
     ...{ content, template, js, script, css, style, settings },
     ...{ s3, putFile },
     ...{ calcLayer },
