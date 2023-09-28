@@ -1,7 +1,7 @@
 <template lang="pug">
 q-drawer(v-if="s3" v-model="rightDrawer" bordered side="right")
-q-page.column.justify-start
-  q-editor.col.q-ma-md(v-model="qeditor")
+q-page.column.full-height
+  q-editor.col.column.q-ma-md(v-model="qeditor" content-class="col")
 </template>
 <script setup>
 import { set } from "@vueuse/core";

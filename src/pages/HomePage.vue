@@ -1,5 +1,5 @@
 <template lang="pug">
-q-page.column.justify-start
+q-page.column
   .col.column.q-ma-md
     q-img.col.rounded-borders(src="~assets/bg.jpg")
       q-card.absolute-center

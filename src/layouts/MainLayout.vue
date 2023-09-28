@@ -14,7 +14,7 @@ q-layout(view="hHh Lpr lff")
           q-icon(:name="item.icon")
         q-item-section
           q-item-label {{ item.title }}
-  q-page-container
+  q-page-container.window-height
     router-view
 </template>
 
