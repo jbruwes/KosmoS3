@@ -50,6 +50,7 @@
     "daisyui": "^3.8.1",
     "dompurify": "^3.0.6",
     "glightbox": "^3.2.0",
+    "js-beautify": "^1.14.9",
     "jsel": "^1.1.6",
     "konva": "^9.2.1",
     "p5": "^1.7.0",
