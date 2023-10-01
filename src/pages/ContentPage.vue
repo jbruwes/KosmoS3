@@ -1,14 +1,12 @@
 <template lang="pug">
 q-drawer(v-if="s3" v-model="rightDrawer" bordered side="right")
   q-list
-    q-expansion-item(group="somegroup" icon="explore" label="First" default-opened header-class="text-primary")
-      q-card
-        q-card-section
-          q-tree(v-model:selected="selected" v-model:ticked="ticked" v-model:expanded="expanded" :nodes="simple" node-key="label" tick-strategy="leaf")
+    q-expansion-item(group="group" icon="account_tree" label="Дерево рубрик" default-opened header-class="text-primary")
+      q-tree(v-model:selected="selected" v-model:ticked="ticked" v-model:expanded="expanded" :nodes="simple" node-key="id" tick-strategy="leaf")
     q-separator
-    q-expansion-item(group="somegroup" icon="perm_identity" label="Second" header-class="text-teal")
+    q-expansion-item(group="group" icon="travel_explore" label="Настройки SEO" header-class="text-teal")
       q-card
-        q-card-section jfkdsjfkdlsjfkl
+        q-card-section Настройки SEO
 q-page.column.full-height
   q-tabs(v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator)
     q-tab(name="wysiwyg" label="wysiwyg")
@@ -62,26 +60,38 @@ const expanded = ref([
 ]);
 const simple = ref([
   {
+    id: 1,
     label: "Satisfied customers",
     children: [
       {
+        id: 2,
         label: "Good food",
-        children: [{ label: "Quality ingredients" }, { label: "Good recipe" }],
-      },
-      {
-        label: "Good service (disabled node)",
-        disabled: true,
         children: [
-          { label: "Prompt attention" },
-          { label: "Professional waiter" },
+          {
+            id: 3,
+            label: "Quality ingredients",
+          },
+          {
+            id: 4,
+            label: "Good recipe",
+          },
         ],
       },
       {
+        id: 5,
+        label: "Good service",
+        children: [
+          { id: 6, label: "Prompt attention" },
+          { id: 7, label: "Professional waiter" },
+        ],
+      },
+      {
+        id: 8,
         label: "Pleasant surroundings",
         children: [
-          { label: "Happy atmosphere" },
-          { label: "Good table presentation" },
-          { label: "Pleasing decor" },
+          { id: 9, label: "Happy atmosphere" },
+          { id: 10, label: "Good table presentation" },
+          { id: 11, label: "Pleasing decor" },
         ],
       },
     ],
