@@ -2,7 +2,16 @@
 q-drawer(v-if="s3" v-model="rightDrawer" bordered side="right")
   q-list
     q-expansion-item(group="group" icon="account_tree" label="Дерево рубрик" default-opened header-class="text-primary")
-      q-tree(v-model:selected="selected" v-model:ticked="ticked" v-model:expanded="expanded" :nodes="simple" node-key="id" tick-strategy="leaf")
+      q-btn-group.q-mx-xs(spread flat)
+        q-btn(icon="note")
+        q-btn(icon="delete")
+        q-btn(icon="chevron_left")
+        q-btn(icon="chevron_right")
+        q-btn(icon="expand_more")
+        q-btn(icon="expand_less")
+      q-tree.q-ma-xs(v-model:selected="selected" v-model:expanded="expanded" :nodes="content??[]" node-key="id" no-selection-unset accordion)
+        template(#default-header="prop")
+          div {{prop.node.label}}
     q-separator
     q-expansion-item(group="group" icon="travel_explore" label="Настройки SEO" header-class="text-teal")
       q-card
@@ -23,14 +32,14 @@ q-page.column.full-height
 import { VAceEditor } from "vue3-ace-editor";
 import "ace-builds/esm-resolver";
 
-import { set, get } from "@vueuse/core";
+import { set, get, whenever, isDefined } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import { html_beautify as htmlBeautify } from "js-beautify";
 import app from "@/stores/app";
 
 const store = app();
-const { s3, rightDrawer } = storeToRefs(store);
+const { s3, rightDrawer, content } = storeToRefs(store);
 set(rightDrawer, true);
 const qeditor = ref("");
 const tab = ref("wysiwyg");
@@ -50,51 +59,28 @@ const source = computed({
     set(qeditor, newValue);
   },
 });
-
 const selected = ref();
-const ticked = ref(["Quality ingredients", "Good table presentation"]);
-const expanded = ref([
-  "Satisfied customers",
-  "Good service (disabled node)",
-  "Pleasant surroundings",
-]);
-const simple = ref([
-  {
-    id: 1,
-    label: "Satisfied customers",
-    children: [
-      {
-        id: 2,
-        label: "Good food",
-        children: [
-          {
-            id: 3,
-            label: "Quality ingredients",
-          },
-          {
-            id: 4,
-            label: "Good recipe",
-          },
-        ],
-      },
-      {
-        id: 5,
-        label: "Good service",
-        children: [
-          { id: 6, label: "Prompt attention" },
-          { id: 7, label: "Professional waiter" },
-        ],
-      },
-      {
-        id: 8,
-        label: "Pleasant surroundings",
-        children: [
-          { id: 9, label: "Happy atmosphere" },
-          { id: 10, label: "Good table presentation" },
-          { id: 11, label: "Pleasing decor" },
-        ],
-      },
-    ],
-  },
-]);
+/**
+ *
+ */
+const setSelected = () => {
+  if (isDefined(content)) {
+    const { id } = get(content, 0);
+    set(selected, id);
+  }
+};
+setSelected();
+whenever(content, setSelected);
+const expanded = ref([]);
+/**
+ *
+ */
+const setExpanded = () => {
+  if (isDefined(content)) {
+    const { id } = get(content, 0);
+    set(expanded, [id]);
+  }
+};
+setExpanded();
+whenever(content, setExpanded);
 </script>

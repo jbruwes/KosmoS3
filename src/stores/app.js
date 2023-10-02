@@ -199,18 +199,18 @@ export default defineStore("app", () => {
   });
   /**
    * проверка структуры сайта
-   * @param {object} index структура сайта
-   * @param {object} index.content контент
-   * @param {Array} index.template шаблон
-   * @param {Array} index.css ссылки на стили
-   * @param {string} index.style стили
-   * @param {Array} index.js ссылки на скрипты
-   * @param {string} index.script скрипт
-   * @param {object} index.settings настройки
-   * @returns {object} структура сайта
+   * @param {object} index - структура сайта
+   * @param {object} index.content - контент
+   * @param {Array} index.template - шаблон
+   * @param {Array} index.css - ссылки на стили
+   * @param {string} index.style - стили
+   * @param {Array} index.js - ссылки на скрипты
+   * @param {string} index.script - скрипт
+   * @param {object} index.settings - настройки
+   * @returns {object} - структура сайта
    */
   const calcIndex = ({
-    content: pContent = {},
+    content: pContent = [],
     template: pTemplate = [],
     css: pCss = [],
     style: pStyle = "",
@@ -218,14 +218,13 @@ export default defineStore("app", () => {
     script: pScript = "",
     settings: pSettings = {},
   } = {}) => {
-    let content = { ...pContent };
-    let template = [...pTemplate];
-    let css = [...pCss];
+    let [content] = pContent;
+    let template = [...pTemplate].filter(Boolean);
+    let css = [...pCss].filter(Boolean);
     let style = pStyle;
-    let js = [...pJs];
+    let js = [...pJs].filter(Boolean);
     let script = pScript;
     let settings = { ...pSettings };
-    template = Array.isArray(template) ? template.filter(Boolean) : [];
     if (!template.find(({ name }) => name === "content"))
       template.push({ name: "content" });
     template = template.map((element) => calcLayer(element));
@@ -243,15 +242,11 @@ export default defineStore("app", () => {
     if (!js.length) js.push({ id: crypto.randomUUID(), url: "" });
     const {
       id = crypto.randomUUID(),
-      value = get(bucket),
       visible = true,
+      label = get(bucket),
+      value = "",
     } = content;
-    content = {
-      ...content,
-      id,
-      value,
-      visible,
-    };
+    content = [{ ...content, id, visible, label, value }];
     style = String(style) === style ? style : "";
     script = String(script) === script ? script : "";
     const { yandex, metrika, google, analytics } = settings;
