@@ -9,8 +9,9 @@ q-drawer(v-if="s3" v-model="rightDrawer" bordered side="right")
         q-btn(icon="chevron_right")
         q-btn(icon="expand_more")
         q-btn(icon="expand_less")
-      q-tree.q-ma-xs(v-model:selected="selected" v-model:expanded="expanded" :nodes="content??[]" node-key="id" no-selection-unset accordion)
+      q-tree.q-ma-xs(ref="tree" v-model:selected="selected" v-model:expanded="expanded" :nodes="content??[]" node-key="id" no-selection-unset accordion)
         template(#default-header="prop")
+          q-checkbox.q-mr-xs(v-model="prop.node.visible" dense)
           div {{prop.node.label}}
     q-separator
     q-expansion-item(group="group" icon="travel_explore" label="Настройки SEO" header-class="text-teal")
@@ -21,9 +22,9 @@ q-page.column.full-height
     q-tab(name="wysiwyg" label="wysiwyg")
     q-tab(name="source" label="source")
   q-separator
-  q-tab-panels.col.column(v-model="tab" animated)
+  q-tab-panels.col.column(v-model="tab")
     q-tab-panel.col.column(name="wysiwyg")
-      q-editor.col.column(v-model="qeditor" content-class="col" flat placeholder="Добавьте контент на вашу страницу...")
+      q-editor.col.column(v-model="selectedValue" content-class="col" flat placeholder="Добавьте контент на вашу страницу...")
     q-tab-panel.col.column(name="source")
       v-ace-editor.col(v-model:value="source" lang="html")
 </template>
@@ -39,48 +40,52 @@ import { html_beautify as htmlBeautify } from "js-beautify";
 import app from "@/stores/app";
 
 const store = app();
-const { s3, rightDrawer, content } = storeToRefs(store);
+const { s3, rightDrawer, content, selected, expanded } = storeToRefs(store);
 set(rightDrawer, true);
-const qeditor = ref("");
 const tab = ref("wysiwyg");
+const tree = ref();
+const selectedValue = computed({
+  /**
+   *
+   */
+  get() {
+    const { value = "" } = get(get(tree)?.getNodeByKey(get(selected))) ?? {};
+    return value;
+  },
+  /**
+   *
+   * @param value
+   */
+  set(value) {
+    get(get(tree)?.getNodeByKey(get(selected))).value = value;
+  },
+});
 const source = computed({
   /**
    * Прихорашивание html
    * @returns {string} - красивый исходный код
    */
   get() {
-    return htmlBeautify(get(qeditor));
+    return htmlBeautify(get(selectedValue));
   },
   /**
    *
    * @param {string} newValue - отредактрованное значение
    */
   set(newValue) {
-    set(qeditor, newValue);
+    set(selectedValue, newValue);
   },
 });
-const selected = ref();
-/**
- *
- */
-const setSelected = () => {
+whenever(content, () => {
   if (isDefined(content)) {
     const { id } = get(content, 0);
     set(selected, id);
   }
-};
-setSelected();
-whenever(content, setSelected);
-const expanded = ref([]);
-/**
- *
- */
-const setExpanded = () => {
+});
+whenever(content, () => {
   if (isDefined(content)) {
     const { id } = get(content, 0);
     set(expanded, [id]);
   }
-};
-setExpanded();
-whenever(content, setExpanded);
+});
 </script>

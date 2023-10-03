@@ -18,6 +18,8 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 export default defineStore("app", () => {
+  const selected = ref();
+  const expanded = ref([]);
   /**
    * переключатель видимости правой панели
    * @type {boolean}
@@ -409,5 +411,6 @@ export default defineStore("app", () => {
     ...{ content, template, js, script, css, style, settings },
     ...{ s3, putFile },
     ...{ calcLayer },
+    ...{ selected, expanded },
   };
 });
