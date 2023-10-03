@@ -13,7 +13,7 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.421.0",
+    "@aws-sdk/client-s3": "^3.423.0",
     "@fontsource/arsenal": "^5.0.8",
     "@fontsource/bad-script": "^5.0.8",
     "@fontsource/caveat": "^5.0.8",
@@ -47,7 +47,7 @@
     "@vueuse/math": "^10.4.1",
     "ace-builds": "^1.28.0",
     "animate.css": "^4.1.1",
-    "daisyui": "^3.8.2",
+    "daisyui": "^3.8.3",
     "dompurify": "^3.0.6",
     "glightbox": "^3.2.0",
     "js-beautify": "^1.14.9",
@@ -57,7 +57,7 @@
     "page": "^1.11.6",
     "pinia": "^2.1.6",
     "quasar": "^2.12.7",
-    "three": "^0.156.1",
+    "three": "^0.157.0",
     "tsparticles": "^2.12.0",
     "tsparticles-demo-configs": "^2.12.0",
     "tsparticles-engine": "^2.12.0",
