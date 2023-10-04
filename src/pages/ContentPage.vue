@@ -24,19 +24,18 @@ q-page.column.full-height
   q-separator
   q-tab-panels.col.column(v-model="tab")
     q-tab-panel.col.column(name="wysiwyg")
-      q-editor.col.column(v-model="selectedValue" content-class="col" flat placeholder="Добавьте контент на вашу страницу...")
+      v-wysiwyg.col.column(v-model="selectedValue")
     q-tab-panel.col.column(name="source")
-      v-ace-editor.col(v-model:value="source" lang="html")
+      v-source-code.col(v-model="source")
 </template>
 <script setup>
-// eslint-disable-next-line simple-import-sort/imports
-import { VAceEditor } from "vue3-ace-editor";
-import "ace-builds/esm-resolver";
-
-import { set, get, whenever, isDefined } from "@vueuse/core";
+import { get, isDefined, set, whenever } from "@vueuse/core";
+import { html_beautify as htmlBeautify } from "js-beautify";
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import { html_beautify as htmlBeautify } from "js-beautify";
+
+import VSourceCode from "@/components/VSourceCode.vue";
+import VWysiwyg from "@/components/VWysiwyg.vue";
 import app from "@/stores/app";
 
 const store = app();
