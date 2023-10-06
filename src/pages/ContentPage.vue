@@ -30,6 +30,7 @@ q-page.column.full-height
 </template>
 <script setup>
 import { get, isDefined, set, whenever } from "@vueuse/core";
+import DOMPurify from "dompurify";
 import { html_beautify as htmlBeautify } from "js-beautify";
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
@@ -43,20 +44,34 @@ const { s3, rightDrawer, content, selected, expanded } = storeToRefs(store);
 set(rightDrawer, true);
 const tab = ref("wysiwyg");
 const tree = ref();
+const configDOMPurify = {
+  SAFE_FOR_TEMPLATES: true,
+  ADD_TAGS: ["iframe"],
+  ADD_ATTR: ["target", "allow", "allowfullscreen", "frameborder", "scrolling"],
+  CUSTOM_ELEMENT_HANDLING: {
+    tagNameCheck: /^v-/,
+    attributeNameCheck: /\w+/,
+    allowCustomizedBuiltInElements: true,
+  },
+};
 const selectedValue = computed({
   /**
-   *
+   * Считывание исходного кода из структуры данных
+   * @returns {string} - html
    */
   get() {
     const { value = "" } = get(get(tree)?.getNodeByKey(get(selected))) ?? {};
     return value;
   },
   /**
-   *
-   * @param value
+   * Запись исходного кода страницы в структуры данных
+   * @param {string} value - html
    */
   set(value) {
-    get(get(tree)?.getNodeByKey(get(selected))).value = value;
+    get(get(tree)?.getNodeByKey(get(selected))).value = DOMPurify.sanitize(
+      value,
+      configDOMPurify,
+    );
   },
 });
 const source = computed({
@@ -75,16 +90,14 @@ const source = computed({
     set(selectedValue, newValue);
   },
 });
-whenever(content, () => {
-  if (isDefined(content)) {
-    const { id } = get(content, 0);
-    set(selected, id);
-  }
-});
-whenever(content, () => {
-  if (isDefined(content)) {
-    const { id } = get(content, 0);
-    set(expanded, [id]);
-  }
-});
+/**
+ *
+ */
+const init = () => {
+  const { id } = get(content, 0);
+  set(expanded, [id]);
+  set(selected, id);
+};
+if (isDefined(content)) init();
+else whenever(content, init);
 </script>
