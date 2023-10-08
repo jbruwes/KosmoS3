@@ -3,6 +3,12 @@ q-editor(:model-value="modelValue"  content-class="col" flat placeholder="Доб
 </template>
 
 <script setup>
+import * as mime from "mime-types";
+
+import app from "@/stores/app";
+
+const store = app();
+const { putFile } = store;
 defineProps({ modelValue: { default: "", type: String } });
 defineEmits(["update:modelValue"]);
 /**
@@ -19,7 +25,7 @@ const pasteCapture = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
     const { items = [] } = clipboardData;
-    for (let i = 0; i < items.length; i += 1) {
+    [...items].forEach((item) => {
       if (
         [
           "image/apng",
@@ -29,11 +35,14 @@ const pasteCapture = (evt) => {
           "image/png",
           "image/svg+xml",
           "image/webp",
-        ].includes(items[i].type)
-      )
-        console.log("image");
-      // var blob = items[i].getAsFile();
-    }
+        ].includes(item.type)
+      ) {
+        const imageURI = `images/${crypto.randomUUID()}.${mime.extension(
+          item.type,
+        )}`;
+        putFile(imageURI, item.type, item.getAsFile());
+      }
+    });
   }
 };
 /**
