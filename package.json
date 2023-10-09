@@ -45,7 +45,7 @@
     "@vueuse/core": "^10.5.0",
     "@vueuse/head": "^2.0.0",
     "@vueuse/math": "^10.5.0",
-    "ace-builds": "^1.28.0",
+    "ace-builds": "^1.29.0",
     "animate.css": "^4.1.1",
     "daisyui": "^3.9.2",
     "dompurify": "^3.0.6",
