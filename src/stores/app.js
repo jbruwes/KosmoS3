@@ -79,13 +79,7 @@ export default defineStore("app", () => {
    * @param {File} file файл
    */
   const putFile = async (Key, ContentType, file) => {
-    const fileReader = new FileReader();
-    fileReader.readAsArrayBuffer(file);
-    await new Promise((resolve) => {
-      fileReader.onloadend = resolve;
-    });
-    const { result } = fileReader;
-    await putObject(Key, ContentType, result);
+    await putObject(Key, ContentType, await file.arrayBuffer());
   };
   /**
    * Считывание объекта
