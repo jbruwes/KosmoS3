@@ -217,7 +217,7 @@ export default defineStore("app", () => {
     script: pScript = "",
     settings: pSettings = {},
   } = {}) => {
-    let [content] = pContent;
+    let [content = {}] = pContent;
     let template = [...pTemplate].filter(Boolean);
     let css = [...pCss].filter(Boolean);
     let style = pStyle;
@@ -255,7 +255,7 @@ export default defineStore("app", () => {
   whenever(s3, async () => {
     let json = {};
     try {
-      json = JSON.parse(await getObject("data.json"));
+      json = JSON.parse((await getObject("data.json")) || "{}");
     } finally {
       set(index, calcIndex(json));
     }
