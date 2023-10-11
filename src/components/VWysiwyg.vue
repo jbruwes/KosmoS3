@@ -1,5 +1,5 @@
 <template lang="pug">
-q-editor( ref="editorRef" :model-value="modelValue" :toolbar="editorTlb" :fonts="editorFnt" content-class="col" flat placeholder="Добавьте контент на вашу страницу..." :definitions="editorDef" @update:model-value="$emit('update:modelValue', $event)" @paste="pasteCapture" @drop="dropCapture")
+q-editor( ref="editorRef" :dense="$q.screen.lt.md" :model-value="modelValue" :toolbar="editorTlb" :fonts="editorFnt" content-class="col" flat placeholder="Добавьте контент на вашу страницу..." :definitions="editorDef" @update:model-value="$emit('update:modelValue', $event)" @paste="pasteCapture" @drop="dropCapture")
 </template>
 
 <script setup>
@@ -16,22 +16,45 @@ const $q = useQuasar();
 const store = app();
 const { putFile, base } = store;
 const editorRef = ref();
+
+const mTypes = [
+  "image/apng",
+  "image/avif",
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/webp",
+];
+
 const { files, open } = useFileDialog({
   multiple: false,
-  accept: "image/*,video/*",
+  accept: "image/*",
 });
-watch(files, async (newFiles) => {
+/**
+ *
+ * @param item
+ */
+const putImage = async (file) => {
+  try {
+    const { type } = file;
+    if (mTypes.includes(type)) {
+      const filePath = `image/${crypto.randomUUID()}.${mime.extension(type)}`;
+      await putFile(filePath, type, file);
+      get(editorRef).runCmd("insertImage", `${base}${filePath}`);
+    } else
+      throw new Error(
+        "Тип файла не подходит для использования в сети интернет",
+      );
+  } catch (err) {
+    const { message } = err;
+    $q.notify({ message });
+  }
+};
+watch(files, (newFiles) => {
   if (newFiles.length) {
-    // try
     const [file] = newFiles;
-    const filePath = `${crypto.randomUUID()}.${file.name.split(".").pop()}`;
-    await putFile(filePath, file.type, file);
-    // get(filePicker)(filePath, { alt: file.name });
-    console.log(filePath, { alt: file.name });
-    get(editorRef).runCmd("insertImage", `${base}${filePath}`);
-    // } catch (err) {
-    //   const { message } = err;
-    //   $q.notify({ message });
+    putImage(file);
   }
 });
 /**
@@ -39,9 +62,8 @@ watch(files, async (newFiles) => {
  */
 const editorDef = reactive({
   upload: {
-    tip: "Upload to cloud",
+    tip: "Загрузка картинки",
     icon: "cloud_upload",
-    label: "Upload",
     /** */
     handler() {
       open();
@@ -50,21 +72,7 @@ const editorDef = reactive({
 });
 
 const editorTlb = reactive([
-  [
-    {
-      label: $q.lang.editor.align,
-      icon: $q.iconSet.editor.align,
-      fixedLabel: true,
-      list: "only-icons",
-      options: ["left", "center", "right", "justify"],
-    },
-    {
-      label: $q.lang.editor.align,
-      icon: $q.iconSet.editor.align,
-      fixedLabel: true,
-      options: ["left", "center", "right", "justify"],
-    },
-  ],
+  ["left", "center", "right", "justify"],
   ["bold", "italic", "strike", "underline", "subscript", "superscript"],
   ["token", "hr", "link", "custom_btn"],
   ["print", "fullscreen"],
@@ -127,16 +135,6 @@ const editorFnt = reactive({
 });
 
 /**
- *
- * @param item
- */
-const putImage = async (item) => {
-  const { type } = item;
-  const imageURI = `images/${crypto.randomUUID()}.${mime.extension(type)}`;
-  await putFile(imageURI, type, item.getAsFile());
-  get(editorRef).runCmd("insertImage", `${base}${imageURI}`);
-};
-/**
  * { @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#image_types }
  * @param {object} evt - объект события
  */
@@ -150,19 +148,8 @@ const pasteCapture = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
     const { items = [] } = clipboardData;
-    [...items].forEach(async (item) => {
-      if (
-        [
-          "image/apng",
-          "image/avif",
-          "image/gif",
-          "image/jpeg",
-          "image/png",
-          "image/svg+xml",
-          "image/webp",
-        ].includes(item.type)
-      )
-        putImage(item);
+    [...items].forEach((item) => {
+      putImage(item.getAsFile());
     });
   }
 };
@@ -171,8 +158,8 @@ const pasteCapture = (evt) => {
  * @param evt
  */
 const dropCapture = (evt) => {
-  // evt.preventDefault();
-  // evt.stopPropagation();
+  evt.preventDefault();
+  evt.stopPropagation();
   console.log("dropCapture", evt);
 };
 </script>

@@ -41,6 +41,7 @@
     "@fontsource/tenor-sans": "^5.0.15",
     "@mdi/font": "^7.3.67",
     "@quasar/extras": "^1.16.7",
+    "@smithy/fetch-http-handler": "^2.2.3",
     "@vitejs/plugin-vue": "^2.3.4",
     "@vueuse/core": "^10.5.0",
     "@vueuse/head": "^2.0.0",
@@ -72,7 +73,7 @@
     "vue3-animate-onscroll": "^1.0.6",
     "vue3-particles": "^2.12.0",
     "vue3-runtime-template": "^1.0.2",
-    "vuetify": "^3.3.20"
+    "vuetify": "^3.3.21"
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.6.2",
@@ -84,7 +85,7 @@
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-jsdoc": "^46.8.2",
     "eslint-plugin-optimize-regex": "^1.2.1",
-    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-sonarjs": "^0.21.0",
     "eslint-plugin-vue": "^9.17.0",

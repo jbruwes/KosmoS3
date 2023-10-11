@@ -22,10 +22,10 @@ q-page.column.full-height
     q-tab(name="wysiwyg" label="wysiwyg")
     q-tab(name="source" label="source")
   q-separator
-  q-tab-panels.col.column(v-model="tab")
-    q-tab-panel.col.column(name="wysiwyg")
-      v-wysiwyg.col.column(v-model="selectedValue")
-    q-tab-panel.col.column(name="source")
+  q-tab-panels.full-width.col(v-model="tab")
+    q-tab-panel.column(name="wysiwyg")
+      v-wysiwyg.full-width.col.column(v-model="selectedValue")
+    q-tab-panel.column(name="source")
       v-source-code.col(v-model="source")
 </template>
 <script setup>

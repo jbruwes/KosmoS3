@@ -41,6 +41,7 @@ q-page.column
 </template>
 <script setup>
 import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
+import { FetchHttpHandler } from "@smithy/fetch-http-handler";
 import { get, set, useStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
@@ -147,7 +148,7 @@ watch(cred, (value) => {
 });
 let s3Client = null;
 /**
- *
+ * { @link https://fetch.spec.whatwg.org/#http-network-or-cache-fetch }
  */
 const login = async () => {
   if (!s3Client)
@@ -159,6 +160,7 @@ const login = async () => {
           accessKeyId: get(accessKeyId),
           secretAccessKey: get(secretAccessKey),
         },
+        requestHandler: new FetchHttpHandler({ keepAlive: false }),
       });
       set(creds, [
         ...get(creds).filter(({ label }) => label !== get(bucket)),
