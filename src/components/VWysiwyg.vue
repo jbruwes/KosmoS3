@@ -1,5 +1,16 @@
 <template lang="pug">
-q-editor( ref="editorRef" :dense="$q.screen.lt.md" :model-value="modelValue" :toolbar="editorTlb" :fonts="editorFnt" content-class="col" flat placeholder="Добавьте контент на вашу страницу..." :definitions="editorDef" @update:model-value="$emit('update:modelValue', $event)" @paste="capture" @drop="capture")
+.col.column
+  q-editor( ref="editorRef" :dense="$q.screen.lt.md" :model-value="modelValue" :toolbar="editorTlb" :fonts="editorFnt" content-class="col" flat placeholder="Добавьте контент на вашу страницу..." :definitions="editorDef" @update:model-value="$emit('update:modelValue', $event)" @paste="capture" @drop="capture")
+  q-dialog(v-model="prompt")
+    q-card
+        q-card-section.q-pt-none
+          div Your address
+        q-card-section
+          q-select(v-model="model" filled :options="options" label="Standard")
+          q-input(v-model="address" dense autofocus)
+        q-card-actions.text-primary(align="right")
+          q-btn(v-close-popup flat label="Cancel")
+          q-btn(v-close-popup flat label="Ok")
 </template>
 
 <script setup>
@@ -29,7 +40,7 @@ import "@fontsource/rubik-mono-one";
 import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 
-import { get, useFileDialog } from "@vueuse/core";
+import { get, set, useFileDialog } from "@vueuse/core";
 import * as mime from "mime-types";
 import { useQuasar } from "quasar";
 import { reactive, ref, watch } from "vue";
@@ -38,6 +49,8 @@ import app from "@/stores/app";
 
 defineProps({ modelValue: { default: "", type: String } });
 defineEmits(["update:modelValue"]);
+const prompt = ref(false);
+const address = ref("");
 const $q = useQuasar();
 const store = app();
 const { putFile, base } = store;
@@ -99,6 +112,16 @@ const editorDef = reactive({
     tip: "Загрузка картинки",
     icon: "cloud_upload",
     handler: open,
+  },
+  template: {
+    tip: "Выбор шаблона",
+    icon: "cloud_upload",
+    /**
+     *
+     */
+    handler() {
+      set(prompt, true);
+    },
   },
 });
 const editorTlb = reactive([
@@ -175,9 +198,8 @@ const editorTlb = reactive([
     "removeFormat",
   ],
   ["quote", "unordered", "ordered", "outdent", "indent"],
-
   ["undo", "redo"],
-  ["upload"],
+  ["upload", "template"],
 ]);
 const editorFnt = reactive({
   arial: "Arial",
@@ -215,4 +237,38 @@ const editorFnt = reactive({
   rubik: "Rubik",
   tenor_sans: "Tenor Sans",
 });
+const options = ref([
+  {
+    label: "Google",
+    value: "Google",
+    description: "Search engine",
+    category: "1",
+  },
+  {
+    label: "Facebook",
+    value: "Facebook",
+    description: "Social media",
+    category: "1",
+  },
+  {
+    label: "Twitter",
+    value: "Twitter",
+    description: "Quick updates",
+    category: "2",
+  },
+  {
+    label: "Apple",
+    value: "Apple",
+    description: "iStuff",
+    category: "2",
+  },
+  {
+    label: "Oracle",
+    value: "Oracle",
+    disable: true,
+    description: "Databases",
+    category: "3",
+  },
+]);
+const model = ref();
 </script>
