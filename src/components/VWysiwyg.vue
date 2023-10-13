@@ -1,9 +1,9 @@
 <template lang="pug">
-.col.column
-  q-editor( ref="editorRef" :dense="$q.screen.lt.md" :model-value="modelValue" :toolbar="editorTlb" :fonts="editorFnt" content-class="col" flat placeholder="Добавьте контент на вашу страницу..." :definitions="editorDef" @update:model-value="$emit('update:modelValue', $event)" @paste="capture" @drop="capture")
+div
+  q-editor.col.column.full-width( ref="editorRef" :dense="$q.screen.lt.md" :model-value="modelValue" :toolbar="editorTlb" :fonts="editorFnt" content-class="col" flat placeholder="Добавьте контент на вашу страницу..." :definitions="editorDef" @update:model-value="$emit('update:modelValue', $event)" @paste="capture" @drop="capture")
   q-dialog(v-model="prompt")
     q-card
-        q-card-section.q-pt-none
+        q-card-section
           div Your address
         q-card-section
           q-select(v-model="model" filled :options="options" label="Standard")
@@ -115,7 +115,7 @@ const editorDef = reactive({
   },
   template: {
     tip: "Выбор шаблона",
-    icon: "cloud_upload",
+    icon: "dashboard",
     /**
      *
      */
