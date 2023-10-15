@@ -1,16 +1,22 @@
 <template lang="pug">
 div
   q-editor.col.column.full-width( ref="editorRef" :dense="$q.screen.lt.md" :model-value="modelValue" :toolbar="editorTlb" :fonts="editorFnt" content-class="col" flat placeholder="Добавьте контент на вашу страницу..." :definitions="editorDef" @update:model-value="$emit('update:modelValue', $event)" @paste="capture" @drop="capture")
-  q-dialog(v-model="prompt")
-    q-card
-        q-card-section
-          div Your address
-        q-card-section
-          q-select(v-model="model" filled :options="options" label="Standard")
-          q-input(v-model="address" dense autofocus)
-        q-card-actions.text-primary(align="right")
-          q-btn(v-close-popup flat label="Cancel")
-          q-btn(v-close-popup flat label="Ok")
+  q-dialog(v-model="prompt" full-width full-height persistent)
+    q-card.column
+      q-card-section.row.items-center.q-pb-none
+        .text-h6 Выбор компонента для вставки
+        q-space
+        q-btn(v-close-popup icon="close" flat round dense)
+      q-card-section
+        q-select(v-model="model" filled :options="options" label="Компонент" emit-value map-options)
+      q-card-section.col.column
+        q-card.col.column(flat bordered)
+          q-card-section.col.column
+            // eslint-disable-next-line vue/no-v-html
+            .col(v-html="model")
+      q-card-actions.text-primary(align="right")
+        q-btn(v-close-popup flat label="Отмена")
+        q-btn(v-close-popup flat label="Ок"  @click="editorRef.runCmd('insertHTML', model)")
 </template>
 
 <script setup>
@@ -50,7 +56,6 @@ import app from "@/stores/app";
 defineProps({ modelValue: { default: "", type: String } });
 defineEmits(["update:modelValue"]);
 const prompt = ref(false);
-const address = ref("");
 const $q = useQuasar();
 const store = app();
 const { putFile, base } = store;
@@ -237,38 +242,16 @@ const editorFnt = reactive({
   rubik: "Rubik",
   tenor_sans: "Tenor Sans",
 });
-const options = ref([
+const options = reactive([
   {
-    label: "Google",
-    value: "Google",
-    description: "Search engine",
-    category: "1",
+    label: "Компонент №1",
+    value: "<b>Компонент №1</b>",
   },
   {
-    label: "Facebook",
-    value: "Facebook",
-    description: "Social media",
-    category: "1",
-  },
-  {
-    label: "Twitter",
-    value: "Twitter",
-    description: "Quick updates",
-    category: "2",
-  },
-  {
-    label: "Apple",
-    value: "Apple",
-    description: "iStuff",
-    category: "2",
-  },
-  {
-    label: "Oracle",
-    value: "Oracle",
-    disable: true,
-    description: "Databases",
-    category: "3",
+    label: "Компонент №2",
+    value: "<b>Компонент №2</b>",
   },
 ]);
-const model = ref();
+const [{ value }] = options;
+const model = ref(value);
 </script>
