@@ -92,8 +92,7 @@
     "eslint-plugin-vue-pug": "^0.6.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.3",
-    "pug": "^3.0.2",
-    "quasar-app-extension-qdraggabletree": "^2.0.5"
+    "pug": "^3.0.2"
   },
   "engines": {
     "node": "^18 || ^16 || ^14.19",
