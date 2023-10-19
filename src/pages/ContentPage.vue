@@ -1,10 +1,10 @@
 <template lang="pug">
-q-drawer(v-if="s3" v-model="rightDrawer" bordered side="right")
+q-drawer(v-model="rightDrawer" bordered side="right")
   q-list
     q-expansion-item(group="group" icon="account_tree" label="Дерево рубрик" default-opened header-class="text-primary")
       q-btn-group.q-mx-xs(spread flat)
-        q-btn(icon="note")
-        q-btn(icon="delete")
+        q-btn(icon="note" @click="newPage")
+        q-btn(icon="delete" @click="deletePage")
         q-btn(icon="chevron_left")
         q-btn(icon="chevron_right")
         q-btn(icon="expand_more")
@@ -12,7 +12,7 @@ q-drawer(v-if="s3" v-model="rightDrawer" bordered side="right")
       q-tree.q-ma-xs(ref="tree" v-model:selected="selected" v-model:expanded="expanded" :nodes="content??[]" node-key="id" no-selection-unset accordion)
         template(#default-header="prop")
           q-checkbox.q-mr-xs(v-model="prop.node.visible" dense)
-          div {{prop.node.label}}
+          q-input(v-model="prop.node.label" dense outlined readonly @click.stop)
     q-separator
     q-expansion-item(group="group" icon="travel_explore" label="Настройки SEO" header-class="text-teal")
       q-card
@@ -33,14 +33,17 @@ import { get, isDefined, set, whenever } from "@vueuse/core";
 import DOMPurify from "dompurify";
 import { html_beautify as htmlBeautify } from "js-beautify";
 import { storeToRefs } from "pinia";
+import { useQuasar } from "quasar";
 import { computed, ref } from "vue";
 
 import VSourceCode from "@/components/VSourceCode.vue";
 import VWysiwyg from "@/components/VWysiwyg.vue";
-import app from "@/stores/app";
+import contentStore from "@/stores/contentStore";
 
-const store = app();
-const { s3, rightDrawer, content, selected, expanded } = storeToRefs(store);
+const $q = useQuasar();
+const store = contentStore();
+const { rightDrawer, content, selected, expanded, selectedObject } =
+  storeToRefs(store);
 set(rightDrawer, true);
 const tab = ref("wysiwyg");
 const tree = ref();
@@ -60,7 +63,7 @@ const selectedValue = computed({
    * @returns {string} - html
    */
   get() {
-    const { value = "" } = get(get(tree)?.getNodeByKey(get(selected))) ?? {};
+    const { value = "" } = get(selectedObject) ?? {};
     return value;
   },
   /**
@@ -68,10 +71,7 @@ const selectedValue = computed({
    * @param {string} value - html
    */
   set(value) {
-    get(get(tree)?.getNodeByKey(get(selected))).value = DOMPurify.sanitize(
-      value,
-      configDOMPurify,
-    );
+    get(selectedObject).value = DOMPurify.sanitize(value, configDOMPurify);
   },
 });
 const source = computed({
@@ -100,4 +100,47 @@ const init = () => {
 };
 if (isDefined(content)) init();
 else whenever(content, init);
+/**
+ *
+ */
+const newPage = () => {
+  const { parent, children, index } = get(selectedObject);
+  const id = crypto.randomUUID();
+  const visible = true;
+  const label = "";
+  const value = "";
+  const page = { id, visible, label, value };
+  if (parent) parent.children.splice(index + 1, 0, page);
+  else children.unshift(page);
+  set(selected, id);
+};
+/**
+ *
+ */
+const deletePage = () => {
+  const { parent, prev, next } = get(selectedObject) ?? {};
+  if (parent)
+    $q.dialog({
+      title: "Подтверждение",
+      message: "Вы действительно хотите удалить эту и все дочерние страницы?",
+      cancel: true,
+      persistent: true,
+    }).onOk(() => {
+      let id;
+      switch (true) {
+        case !!next:
+          ({ id } = next);
+          break;
+        case !!prev:
+          ({ id } = prev);
+          break;
+        default:
+          ({ id } = parent);
+      }
+      parent.children = parent.children.filter(
+        ({ id: pId }) => pId !== get(selected),
+      );
+      set(selected, id);
+    });
+};
 </script>

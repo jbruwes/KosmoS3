@@ -18,13 +18,6 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 export default defineStore("app", () => {
-  const selected = ref();
-  const expanded = ref([]);
-  /**
-   * переключатель видимости правой панели
-   * @type {boolean}
-   */
-  const rightDrawer = ref(null);
   /**
    * корзина в сервисе s3
    * @type {string}
@@ -338,20 +331,6 @@ export default defineStore("app", () => {
       if (isDefined(index)) get(index).template = value;
     },
   });
-  const content = computed({
-    /**
-     * чтение контента
-     * @returns {object} контент
-     */
-    get: () => get(index)?.content,
-    /**
-     * запись контента
-     * @param {object} value контент
-     */
-    set(value) {
-      if (isDefined(index)) get(index).content = value;
-    },
-  });
   whenever(logicNot(s3), () => {
     set(index, undefined);
   });
@@ -398,10 +377,8 @@ export default defineStore("app", () => {
   );
   return {
     ...{ bucket, wendpoint, base },
-    ...{ rightDrawer },
-    ...{ content, template, js, script, css, style, settings },
+    ...{ index, template, js, script, css, style, settings },
     ...{ s3, putFile },
     ...{ calcLayer },
-    ...{ selected, expanded },
   };
 });

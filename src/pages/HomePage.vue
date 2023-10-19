@@ -49,15 +49,16 @@ import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 import app from "@/stores/app";
+import contentStore from "@/stores/contentStore";
 
 const router = useRouter();
 const $q = useQuasar();
-const store = app();
-const { s3, bucket, wendpoint, rightDrawer } = storeToRefs(store);
+const { s3, bucket, wendpoint } = storeToRefs(app());
+const { rightDrawer: cntRightDrawer } = storeToRefs(contentStore());
 set(s3, null);
 set(bucket, "");
 set(wendpoint, "");
-set(rightDrawer, null);
+set(cntRightDrawer, null);
 const accessKeyId = ref("");
 const secretAccessKey = ref("");
 const region = ref("");

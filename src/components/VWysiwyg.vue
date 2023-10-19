@@ -16,7 +16,7 @@ div
             .col(v-html="model")
       q-card-actions.text-primary(align="right")
         q-btn(v-close-popup flat label="Отмена")
-        q-btn(v-close-popup flat label="Ок"  @click="editorRef.runCmd('insertHTML', model)")
+        q-btn(v-close-popup flat label="Ok"  @click="editorRef.runCmd('insertHTML', model)")
 </template>
 
 <script setup>
