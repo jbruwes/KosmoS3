@@ -11,8 +11,9 @@ q-drawer(v-model="rightDrawer" bordered side="right")
         q-btn(icon="expand_less")
       q-tree.q-ma-xs(ref="tree" v-model:selected="selected" v-model:expanded="expanded" :nodes="content??[]" node-key="id" no-selection-unset accordion)
         template(#default-header="prop")
-          q-checkbox.q-mr-xs(v-model="prop.node.visible" dense)
-          q-input(v-model="prop.node.label" dense outlined readonly @click.stop)
+          .row.items-center(@dblclick="prop.node.edit=true")
+            q-checkbox.q-mr-xs(v-model="prop.node.visible" dense)
+            q-input(v-model="prop.node.label" dense :readonly="!prop.node.edit" outlined :bg-color="prop.node.id === selected? 'primary': undefined" @click.stop="selected=prop.node.id")
     q-separator
     q-expansion-item(group="group" icon="travel_explore" label="Настройки SEO" header-class="text-teal")
       q-card
@@ -34,7 +35,7 @@ import DOMPurify from "dompurify";
 import { html_beautify as htmlBeautify } from "js-beautify";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 import VSourceCode from "@/components/VSourceCode.vue";
 import VWysiwyg from "@/components/VWysiwyg.vue";
@@ -42,7 +43,7 @@ import contentStore from "@/stores/contentStore";
 
 const $q = useQuasar();
 const store = contentStore();
-const { rightDrawer, content, selected, expanded, selectedObject } =
+const { rightDrawer, content, selected, expanded, selectedObject, list } =
   storeToRefs(store);
 set(rightDrawer, true);
 const tab = ref("wysiwyg");
@@ -143,4 +144,10 @@ const deletePage = () => {
       set(selected, id);
     });
 };
+watch(selected, () => {
+  get(list).foreach((val) => {
+    const pVal = val;
+    delete pVal.edit;
+  });
+});
 </script>

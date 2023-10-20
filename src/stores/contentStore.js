@@ -24,56 +24,57 @@ export default defineStore("templateStore", () => {
     },
   });
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   const list = computed(() =>
     (function getMembers(members, pParent) {
       return members.reduce((accumulator, current) => {
-        Object.defineProperties(current, {
-          parent: {
+        if (!("parent" in current))
+          Object.defineProperty(current, "parent", {
             /**
              * @returns {object} - родительский объект
              */
             get() {
               return pParent;
             },
-            configurable: true,
-          },
-          siblings: {
+          });
+        if (!("siblings" in current))
+          Object.defineProperty(current, "siblings", {
             /**
              * @returns {Array} - массив одноуровневых объектов
              */
             get() {
               return this.parent ? this.parent?.children : [this];
             },
-            configurable: true,
-          },
-          index: {
+          });
+        if (!("index" in current))
+          Object.defineProperty(current, "index", {
             /**
-             * @returns {number} - позиция в массиве однокровневых объектов
+             * @returns {number} - позиция в массиве одноуровневых объектов
              */
             get() {
               return this.siblings.findIndex(({ id }) => this.id === id);
             },
-            configurable: true,
-          },
-          prev: {
+          });
+        if (!("prev" in current))
+          Object.defineProperty(current, "prev", {
             /**
              * @returns {Array} - массив одноуровневых объектов
              */
             get() {
               return this.siblings[this.index - 1];
             },
-            configurable: true,
-          },
-          next: {
+          });
+        if (!("next" in current))
+          Object.defineProperty(current, "next", {
             /**
              * @returns {Array} - массив одноуровневых объектов
              */
             get() {
               return this.siblings[this.index + 1];
             },
-            configurable: true,
-          },
-          branch: {
+          });
+        if (!("branch" in current))
+          Object.defineProperty(current, "branch", {
             /**
              * @returns {Array} - массив родительских объектов
              */
@@ -86,9 +87,7 @@ export default defineStore("templateStore", () => {
               }
               return branch;
             },
-            configurable: true,
-          },
-        });
+          });
         return current.children?.length
           ? [...accumulator, ...getMembers(current.children, current)]
           : accumulator;
