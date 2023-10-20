@@ -30,7 +30,7 @@ q-page.column.full-height
       v-source-code.col(v-model="source")
 </template>
 <script setup>
-import { get, isDefined, set, whenever } from "@vueuse/core";
+import { get, isDefined, set, useArrayFind, whenever } from "@vueuse/core";
 import DOMPurify from "dompurify";
 import { html_beautify as htmlBeautify } from "js-beautify";
 import { storeToRefs } from "pinia";
@@ -144,10 +144,8 @@ const deletePage = () => {
       set(selected, id);
     });
 };
-watch(selected, () => {
-  get(list).forEach((val) => {
-    const pVal = val;
-    delete pVal.edit;
-  });
+watch(selected, (newVal, oldVal) => {
+  const prevObj = useArrayFind(list, ({ id }) => id === oldVal);
+  delete get(prevObj)?.edit;
 });
 </script>
