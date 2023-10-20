@@ -145,7 +145,7 @@ const deletePage = () => {
     });
 };
 watch(selected, () => {
-  get(list).foreach((val) => {
+  get(list).forEach((val) => {
     const pVal = val;
     delete pVal.edit;
   });
