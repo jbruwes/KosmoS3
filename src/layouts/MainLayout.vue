@@ -50,11 +50,6 @@ const privateItems = [
     to: "/content",
   },
   {
-    title: "Template",
-    icon: "format_paint",
-    to: "/template",
-  },
-  {
     title: "CSS",
     icon: "css",
     to: "/css",

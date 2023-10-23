@@ -12,8 +12,6 @@ import {
   whenever,
 } from "@vueuse/core";
 import { logicAnd, logicNot } from "@vueuse/math";
-import DOMPurify from "dompurify";
-import Konva from "konva";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -121,73 +119,10 @@ export default defineStore("app", () => {
     () =>
       `${isDefined(wendpoint) ? get(wendpoint) : "htpps:/"}/${get(bucket)}/`,
   );
-  const configDOMPurify = {
-    SAFE_FOR_TEMPLATES: true,
-    ADD_TAGS: ["iframe"],
-    ADD_ATTR: [
-      "target",
-      "allow",
-      "allowfullscreen",
-      "frameborder",
-      "scrolling",
-    ],
-    CUSTOM_ELEMENT_HANDLING: {
-      tagNameCheck: /^v-/,
-      attributeNameCheck: /\w+/,
-      allowCustomizedBuiltInElements: true,
-    },
-  };
-  /**
-   * проверка слоя
-   * @param {object} layer слой
-   * @param {string} layer.id уникальный идентификатор
-   * @param {string} layer.fill цвет заливки
-   * @param {string} layer.name имя
-   * @param {boolean} layer.visible видимость слоя
-   * @param {object} layer.params параметры
-   * @param {string} layer.params.position вид позиционирования
-   * @param {string} layer.params.responsive адаптивность
-   * @param {Array} layer.params.width параметры ширины
-   * @param {Array} layer.params.height параметры высоты
-   * @param {string} layer.params.value html
-   * @returns {object} слой
-   */
-  const calcLayer = ({
-    id = crypto.randomUUID(),
-    fill = Konva.Util.getRandomColor(),
-    name = "",
-    visible = true,
-    params: { position, responsive, width, height, value = "" } = {},
-  } = {}) => ({
-    opacity: 0.5,
-    draggable: true,
-    width: 1,
-    height: 1,
-    offsetX: 0.5,
-    offsetY: 0.5,
-    id,
-    fill,
-    name,
-    visible: !!visible,
-    params: {
-      edit: false,
-      position: +position || 0,
-      responsive: !!responsive,
-      width: Array.isArray(width)
-        ? width.map((element) => Math.round(element))
-        : [0, 100],
-      height: Array.isArray(height)
-        ? height.map((element) => Math.round(element))
-        : [0, 100],
-      value:
-        name === "content" ? "" : DOMPurify.sanitize(value, configDOMPurify),
-    },
-  });
   /**
    * проверка структуры сайта
    * @param {object} index - структура сайта
    * @param {object} index.content - контент
-   * @param {Array} index.template - шаблон
    * @param {Array} index.css - ссылки на стили
    * @param {string} index.style - стили
    * @param {Array} index.js - ссылки на скрипты
@@ -197,7 +132,6 @@ export default defineStore("app", () => {
    */
   const calcIndex = ({
     content: pContent = [],
-    template: pTemplate = [],
     css: pCss = [],
     style: pStyle = "",
     js: pJs = [],
@@ -205,15 +139,11 @@ export default defineStore("app", () => {
     settings: pSettings = {},
   } = {}) => {
     let [content = {}] = pContent;
-    let template = [...pTemplate].filter(Boolean);
     let css = [...pCss].filter(Boolean);
     let style = pStyle;
     let js = [...pJs].filter(Boolean);
     let script = pScript;
     let settings = { ...pSettings };
-    if (!template.find(({ name }) => name === "content"))
-      template.push({ name: "content" });
-    template = template.map((element) => calcLayer(element));
     css = Array.isArray(css)
       ? css
           .map(({ id = crypto.randomUUID(), url = "" }) => ({ id, url }))
@@ -237,7 +167,7 @@ export default defineStore("app", () => {
     script = String(script) === script ? script : "";
     const { yandex, metrika, google, analytics } = settings;
     settings = { yandex, metrika, google, analytics };
-    return { content, template, css, style, js, script, settings };
+    return { content, css, style, js, script, settings };
   };
   whenever(s3, async () => {
     let json = {};
@@ -317,20 +247,6 @@ export default defineStore("app", () => {
       if (isDefined(index)) get(index).css = value.filter(({ url }) => url);
     },
   });
-  const template = computed({
-    /**
-     * чтение шаблона
-     * @returns {Array} шаблон
-     */
-    get: () => get(index)?.template,
-    /**
-     * запись шаблона
-     * @param {Array} value шаблон
-     */
-    set(value) {
-      if (isDefined(index)) get(index).template = value;
-    },
-  });
   whenever(logicNot(s3), () => {
     set(index, undefined);
   });
@@ -377,8 +293,7 @@ export default defineStore("app", () => {
   );
   return {
     ...{ bucket, wendpoint, base },
-    ...{ index, template, js, script, css, style, settings },
+    ...{ index, js, script, css, style, settings },
     ...{ s3, putFile },
-    ...{ calcLayer },
   };
 });

@@ -51,23 +51,6 @@ const routes = [
     ],
   },
   {
-    path: "/template",
-    /**
-     * @returns {object} - модуль шаблона по умолчанию
-     */
-    component: () => import("@/layouts/MainLayout.vue"),
-    children: [
-      {
-        path: "",
-        name: "Template",
-        /**
-         * @returns {object} - модуль страницы шаблон
-         */
-        component: () => import("@/pages/TemplatePage.vue"),
-      },
-    ],
-  },
-  {
     path: "/css",
     /**
      * @returns {object} - модуль шаблона по умолчанию
