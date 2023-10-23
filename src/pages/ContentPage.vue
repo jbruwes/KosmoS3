@@ -5,15 +5,16 @@ q-drawer(v-model="rightDrawer" bordered side="right")
       q-btn-group.q-mx-xs(spread flat)
         q-btn(icon="note" @click="newPage")
         q-btn(icon="delete" @click="deletePage")
-        q-btn(icon="chevron_left")
-        q-btn(icon="chevron_right")
-        q-btn(icon="expand_more")
-        q-btn(icon="expand_less")
-      q-tree.q-ma-xs(ref="tree" v-model:selected="selected" v-model:expanded="expanded" :nodes="content??[]" node-key="id" no-selection-unset accordion)
-        template(#default-header="prop")
-          .row.items-center(@dblclick="prop.node.edit=true")
-            q-checkbox.q-mr-xs(v-model="prop.node.visible" dense)
-            q-input(v-model="prop.node.label" dense :readonly="!prop.node.edit" outlined :bg-color="prop.node.id === selected? 'primary': undefined" @click.stop="selected=prop.node.id")
+        q-btn(icon="chevron_left" @click="leftPage")
+        q-btn(icon="chevron_right" @click="rightPage")
+        q-btn(icon="expand_more" @click="downPage")
+        q-btn(icon="expand_less" @click="upPage")
+      .scroll
+        q-tree.q-ma-xs(ref="tree" v-model:selected="selected" v-model:expanded="expanded" :nodes="content??[]" node-key="id" no-selection-unset accordion)
+          template(#default-header="prop")
+            .row.items-center.no-wrap(@dblclick="prop.node.edit=true")
+              q-checkbox.q-mr-xs(v-model="prop.node.visible" dense)
+              q-input.min-w-96(v-model="prop.node.label" dense :readonly="!prop.node.edit" outlined :bg-color="prop.node.id === selected? 'primary': undefined" @click.stop="selected=prop.node.id")
     q-separator
     q-expansion-item(group="group" icon="travel_explore" label="Настройки SEO" header-class="text-teal")
       q-card
@@ -102,24 +103,24 @@ const init = () => {
 if (isDefined(content)) init();
 else whenever(content, init);
 /**
- *
+ * Добавление новой страницы
  */
 const newPage = () => {
-  const { parent, children, index } = get(selectedObject);
+  const { parent, children, index, siblings } = get(selectedObject);
   const id = crypto.randomUUID();
   const visible = true;
   const label = "";
   const value = "";
   const page = { id, visible, label, value };
-  if (parent) parent.children.splice(index + 1, 0, page);
+  if (parent) siblings.splice(index + 1, 0, page);
   else children.unshift(page);
   set(selected, id);
 };
 /**
- *
+ * Удаление текущей страницы
  */
 const deletePage = () => {
-  const { parent, prev, next } = get(selectedObject) ?? {};
+  const { parent, prev, next, siblings } = get(selectedObject) ?? {};
   if (parent)
     $q.dialog({
       title: "Подтверждение",
@@ -138,14 +139,63 @@ const deletePage = () => {
         default:
           ({ id } = parent);
       }
-      parent.children = parent.children.filter(
-        ({ id: pId }) => pId !== get(selected),
-      );
+      parent.children = siblings.filter(({ id: pId }) => pId !== get(selected));
       set(selected, id);
     });
+};
+/**
+ * Перемещение страницы вверх на одну позицию
+ */
+const upPage = () => {
+  const { index, siblings } = get(selectedObject) ?? {};
+  if (index)
+    [siblings[index - 1], siblings[index]] = [
+      siblings[index],
+      siblings[index - 1],
+    ];
+};
+/**
+ * Перемещение страницы вниз на одну позицию
+ */
+const downPage = () => {
+  const { index, siblings } = get(selectedObject) ?? {};
+  if (index < siblings.length - 1)
+    [siblings[index], siblings[index + 1]] = [
+      siblings[index + 1],
+      siblings[index],
+    ];
+};
+/**
+ * Перемещение страницы вправо на одну позицию
+ */
+const rightPage = () => {
+  const { index, siblings, prev } = get(selectedObject) ?? {};
+  if (prev) {
+    const { children = [], id } = prev;
+    prev.children = [...children, ...siblings.splice(index, 1)];
+    get(tree).setExpanded(id, true);
+  }
+};
+/**
+ * Перемещение страницы влево на одну позицию
+ */
+const leftPage = () => {
+  const {
+    index,
+    parent: { index: parIndex, parent, siblings, children, id } = {},
+  } = get(selectedObject) ?? {};
+  if (parent) {
+    get(tree).setExpanded(id, false);
+    siblings.splice(parIndex + 1, 0, ...children.splice(index, 1));
+  }
 };
 watch(selected, (newVal, oldVal) => {
   const prevObj = useArrayFind(list, ({ id }) => id === oldVal);
   delete get(prevObj)?.edit;
 });
 </script>
+<style>
+.min-w-96 {
+  min-width: 96px;
+}
+</style>
