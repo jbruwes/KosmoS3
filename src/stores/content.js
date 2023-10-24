@@ -92,13 +92,8 @@ export default defineStore("templateStore", () => {
           ? [...accumulator, ...getMembers(current.children, current)]
           : accumulator;
       }, members);
-    })(get(content) ?? []),
+    })(get(content) ?? [{}]),
   );
-  /**
-   * переключатель видимости правой панели
-   * @type {boolean}
-   */
-  const rightDrawer = ref(null);
   const selectedObject = useArrayFind(list, ({ id }) => id === get(selected));
-  return { rightDrawer, content, selected, expanded, list, selectedObject };
+  return { content, selected, expanded, list, selectedObject };
 });

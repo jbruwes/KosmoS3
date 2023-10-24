@@ -48,17 +48,15 @@ import { useQuasar } from "quasar";
 import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
-import app from "@/stores/app";
-import contentStore from "@/stores/contentStore";
+import storeApp from "@/stores/app";
 
 const router = useRouter();
 const $q = useQuasar();
-const { s3, bucket, wendpoint } = storeToRefs(app());
-const { rightDrawer: cntRightDrawer } = storeToRefs(contentStore());
+const { rightDrawer, s3, bucket, wendpoint } = storeToRefs(storeApp());
 set(s3, null);
 set(bucket, "");
 set(wendpoint, "");
-set(cntRightDrawer, null);
+set(rightDrawer, null);
 const accessKeyId = ref("");
 const secretAccessKey = ref("");
 const region = ref("");

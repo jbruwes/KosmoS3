@@ -1,7 +1,7 @@
 <template lang="pug">
 q-drawer(v-model="rightDrawer" bordered side="right")
   q-list
-    q-expansion-item(group="group" icon="account_tree" label="Дерево рубрик" default-opened header-class="text-primary")
+    q-expansion-item(icon="account_tree" label="Дерево рубрик" default-opened header-class="text-primary")
       q-btn-group.q-mx-xs(spread flat)
         q-btn(icon="note" @click="newPage")
         q-btn(icon="delete" @click="deletePage")
@@ -14,11 +14,23 @@ q-drawer(v-model="rightDrawer" bordered side="right")
           template(#default-header="prop")
             .row.items-center.no-wrap(@dblclick="prop.node.edit=true")
               q-checkbox.q-mr-xs(v-model="prop.node.visible" dense)
-              q-input.min-w-96(v-model="prop.node.label" dense :readonly="!prop.node.edit" outlined :bg-color="prop.node.id === selected? 'primary': undefined" @click.stop="selected=prop.node.id")
+              q-input.min-w-96(v-model.trim="prop.node.label" dense :readonly="!prop.node.edit" outlined :bg-color="prop.node.id === selected? 'primary': undefined" @click.stop="selected=prop.node.id" @keyup.enter="delete prop.node.edit")
     q-separator
-    q-expansion-item(group="group" icon="travel_explore" label="Настройки SEO" header-class="text-teal")
-      q-card
-        q-card-section Настройки SEO
+    q-card(flat)
+      q-item.text-teal
+        q-item-section(avatar)
+          q-icon(name="travel_explore")
+        q-item-section
+          q-item-label Настройки SEO
+      q-card-section
+        q-input(v-model.trim="selectedObject.title" label="Заголовок страницы")
+        q-input(v-model.trim="selectedObject.description" type="textarea" autogrow label="Описание страницы")
+        q-select(v-model.trim="selectedObject.keywords" multiple use-chips use-input new-value-mode="add" stack-label hide-dropdown-icon label="Ключевые слова")
+        q-input(v-model.trim="selectedObject.loc" label="Постоянная ссылка" type="url")
+        q-input(v-model="selectedObject.lastmod" label="Последнее изменение" type="date")
+        q-select(v-model="selectedObject.changefreq" :options="changefreq" label="Частота обновления" clearable)
+        q-input(v-model.number="selectedObject.priority" label="Приоритет" type="number" min="0" max="1" step="0.1")
+        q-icon-picker(v-model="selectedObject.icon" v-model:model-pagination="pagination" icon-set="material-icons" :filter="filter")
 q-page.column.full-height
   q-tabs(v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator)
     q-tab(name="wysiwyg" label="wysiwyg")
@@ -36,16 +48,32 @@ import DOMPurify from "dompurify";
 import { html_beautify as htmlBeautify } from "js-beautify";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { computed, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 
 import VSourceCode from "@/components/VSourceCode.vue";
 import VWysiwyg from "@/components/VWysiwyg.vue";
-import contentStore from "@/stores/contentStore";
+import storeApp from "@/stores/app";
+import storeContent from "@/stores/content";
 
 const $q = useQuasar();
-const store = contentStore();
-const { rightDrawer, content, selected, expanded, selectedObject, list } =
-  storeToRefs(store);
+const { rightDrawer } = storeToRefs(storeApp());
+const { content, selected, expanded, selectedObject, list } = storeToRefs(
+  storeContent(),
+);
+const changefreq = reactive([
+  "always",
+  "hourly",
+  "daily",
+  "weekly",
+  "monthly",
+  "yearly",
+  "never",
+]);
+const filter = ref("");
+const pagination = reactive({
+  itemsPerPage: 60,
+  page: 0,
+});
 set(rightDrawer, true);
 const tab = ref("wysiwyg");
 const tree = ref();

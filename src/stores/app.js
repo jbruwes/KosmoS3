@@ -17,6 +17,11 @@ import { computed, ref } from "vue";
 
 export default defineStore("app", () => {
   /**
+   * переключатель видимости правой панели
+   * @type {boolean}
+   */
+  const rightDrawer = ref(null);
+  /**
    * корзина в сервисе s3
    * @type {string}
    */
@@ -295,5 +300,6 @@ export default defineStore("app", () => {
     ...{ bucket, wendpoint, base },
     ...{ index, js, script, css, style, settings },
     ...{ s3, putFile },
+    ...{ rightDrawer },
   };
 });

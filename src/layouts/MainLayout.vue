@@ -24,11 +24,10 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 
-import app from "@/stores/app";
+import storeApp from "@/stores/app";
 
 const router = useRouter();
-const store = app();
-const { s3, rightDrawer } = storeToRefs(store);
+const { s3, rightDrawer } = storeToRefs(storeApp());
 const leftDrawer = ref(false);
 const miniState = ref(true);
 const publicItems = [
