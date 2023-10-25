@@ -30,7 +30,7 @@ q-drawer(v-model="rightDrawer" bordered side="right")
         q-input(v-model="selectedObject.lastmod" label="Последнее изменение" type="date")
         q-select(v-model="selectedObject.changefreq" :options="changefreq" label="Частота обновления" clearable)
         q-input(v-model.number="selectedObject.priority" label="Приоритет" type="number" min="0" max="1" step="0.1")
-        q-icon-picker(v-model="selectedObject.icon" v-model:model-pagination="pagination" icon-set="material-icons" :filter="filter")
+        q-icon-picker(v-model="selectedObject.icon" v-model:model-pagination="data.pagination" :icons="icons" :filter="data.filter" style="height: 500px;" tooltips)
 q-page.column.full-height
   q-tabs(v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator)
     q-tab(name="wysiwyg" label="wysiwyg")
@@ -43,6 +43,7 @@ q-page.column.full-height
       v-source-code.col(v-model="source")
 </template>
 <script setup>
+import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/material-icons";
 import { get, isDefined, set, useArrayFind, whenever } from "@vueuse/core";
 import DOMPurify from "dompurify";
 import { html_beautify as htmlBeautify } from "js-beautify";
@@ -69,11 +70,16 @@ const changefreq = reactive([
   "yearly",
   "never",
 ]);
-const filter = ref("");
-const pagination = reactive({
-  itemsPerPage: 60,
-  page: 0,
+const icons = ref(materialIcons.icons);
+
+const data = ref({
+  filter: "",
+  pagination: {
+    itemsPerPage: 75,
+    page: 0,
+  },
 });
+
 set(rightDrawer, true);
 const tab = ref("wysiwyg");
 const tree = ref();

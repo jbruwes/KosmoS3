@@ -13,7 +13,7 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.433.0",
+    "@aws-sdk/client-s3": "^3.435.0",
     "@fontsource/arsenal": "^5.0.8",
     "@fontsource/bad-script": "^5.0.8",
     "@fontsource/caveat": "^5.0.15",
@@ -42,6 +42,7 @@
     "@mdi/font": "^7.3.67",
     "@quasar/extras": "^1.16.7",
     "@quasar/quasar-app-extension-qiconpicker": "^2.0.7",
+    "@quasar/quasar-ui-qiconpicker": "^2.0.7",
     "@smithy/fetch-http-handler": "^2.2.4",
     "@vitejs/plugin-vue": "^2.3.4",
     "@vueuse/core": "^10.5.0",
@@ -63,7 +64,7 @@
     "tsparticles-engine": "^2.12.0",
     "vanta": "^0.5.24",
     "vite": "^2.9.16",
-    "vue": "^3.3.6",
+    "vue": "^3.3.7",
     "vue-router": "^4.2.5",
     "vue3-ace-editor": "^2.2.3",
     "vue3-animate-onscroll": "^1.0.6",
