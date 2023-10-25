@@ -16,7 +16,7 @@ q-drawer(v-model="rightDrawer" bordered side="right")
               q-checkbox.q-mr-xs(v-model="prop.node.visible" dense)
               q-input.min-w-96(v-model.trim="prop.node.label" dense :readonly="!prop.node.edit" outlined :bg-color="prop.node.id === selected? 'primary': undefined" @click.stop="selected=prop.node.id" @keyup.enter="delete prop.node.edit")
     q-separator
-    q-card(flat)
+    q-card(v-if="selectedObject" flat)
       q-item.text-teal
         q-item-section(avatar)
           q-icon(name="travel_explore")
@@ -30,7 +30,10 @@ q-drawer(v-model="rightDrawer" bordered side="right")
         q-input(v-model="selectedObject.lastmod" label="Последнее изменение" type="date")
         q-select(v-model="selectedObject.changefreq" :options="changefreq" label="Частота обновления" clearable)
         q-input(v-model.number="selectedObject.priority" label="Приоритет" type="number" min="0" max="1" step="0.1")
-        q-icon-picker(v-model="selectedObject.icon" v-model:model-pagination="data.pagination" :icons="icons" :filter="data.filter" style="height: 500px;" tooltips)
+        q-input(v-model.trim="selectedObject.icon" clearable label="Иконка")
+          template(#prepend)
+            q-icon(v-if="selectedObject.icon" :name="selectedObject.icon")
+        q-icon-picker.q-mt-md(v-model="selectedObject.icon" v-model:model-pagination="data.pagination" :icons="icons" :filter="data.filter" style="height: 400px;" dense tooltips)
 q-page.column.full-height
   q-tabs(v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator)
     q-tab(name="wysiwyg" label="wysiwyg")
@@ -43,7 +46,7 @@ q-page.column.full-height
       v-source-code.col(v-model="source")
 </template>
 <script setup>
-import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/material-icons";
+import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
 import { get, isDefined, set, useArrayFind, whenever } from "@vueuse/core";
 import DOMPurify from "dompurify";
 import { html_beautify as htmlBeautify } from "js-beautify";
@@ -57,7 +60,7 @@ import storeApp from "@/stores/app";
 import storeContent from "@/stores/content";
 
 const $q = useQuasar();
-const { rightDrawer } = storeToRefs(storeApp());
+const { rightDrawer, base } = storeToRefs(storeApp());
 const { content, selected, expanded, selectedObject, list } = storeToRefs(
   storeContent(),
 );
@@ -93,21 +96,43 @@ const configDOMPurify = {
     allowCustomizedBuiltInElements: true,
   },
 };
+const parser = new DOMParser();
 const selectedValue = computed({
   /**
    * Считывание исходного кода из структуры данных
    * @returns {string} - html
    */
   get() {
-    const { value = "" } = get(selectedObject) ?? {};
-    return value;
+    const { html = "" } = get(selectedObject) ?? {};
+    const htmlDoc = parser.parseFromString(html, "text/html");
+    htmlDoc.querySelectorAll("img[src]").forEach((img) => {
+      const { href } = new URL(img.getAttribute("src"), get(base));
+      img.setAttribute("src", href);
+    });
+    const {
+      body: { innerHTML },
+    } = htmlDoc;
+    return innerHTML;
   },
   /**
    * Запись исходного кода страницы в структуры данных
    * @param {string} value - html
    */
   set(value) {
-    get(selectedObject).value = DOMPurify.sanitize(value, configDOMPurify);
+    const htmlDoc = parser.parseFromString(
+      DOMPurify.sanitize(value, configDOMPurify),
+      "text/html",
+    );
+    htmlDoc.querySelectorAll("img[src]").forEach((img) => {
+      img.setAttribute(
+        "src",
+        img.getAttribute("src").replace(new RegExp(`^(${get(base)})`), ""),
+      );
+    });
+    const {
+      body: { innerHTML },
+    } = htmlDoc;
+    get(selectedObject).html = innerHTML;
   },
 });
 const source = computed({
@@ -144,8 +169,8 @@ const newPage = () => {
   const id = crypto.randomUUID();
   const visible = true;
   const label = "";
-  const value = "";
-  const page = { id, visible, label, value };
+  const html = "";
+  const page = { id, visible, label, html };
   if (parent) siblings.splice(index + 1, 0, page);
   else children.unshift(page);
   set(selected, id);

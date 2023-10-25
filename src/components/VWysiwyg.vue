@@ -48,6 +48,7 @@ import "@fontsource/tenor-sans";
 
 import { get, set, useFileDialog } from "@vueuse/core";
 import * as mime from "mime-types";
+import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { reactive, ref, watch } from "vue";
 
@@ -58,7 +59,8 @@ defineEmits(["update:modelValue"]);
 const prompt = ref(false);
 const $q = useQuasar();
 const store = app();
-const { putFile, base } = store;
+const { base } = storeToRefs(store);
+const { putFile } = store;
 const editorRef = ref();
 /**
  * { @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#image_types }
@@ -81,7 +83,7 @@ const putImage = async (file) => {
     if (mTypes.includes(type)) {
       const filePath = `images/${crypto.randomUUID()}.${mime.extension(type)}`;
       await putFile(filePath, type, file);
-      get(editorRef).runCmd("insertImage", `${base}${filePath}`);
+      get(editorRef).runCmd("insertImage", `${get(base)}${filePath}`);
     } else
       throw new Error(
         "Тип графического файла не подходит для использования в сети интернет",

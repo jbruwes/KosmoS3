@@ -165,9 +165,9 @@ export default defineStore("app", () => {
       id = crypto.randomUUID(),
       visible = true,
       label = get(bucket),
-      value = "",
+      html = "",
     } = content;
-    content = [{ ...content, id, visible, label, value }];
+    content = [{ ...content, id, visible, label, html }];
     style = String(style) === style ? style : "";
     script = String(script) === script ? script : "";
     const { yandex, metrika, google, analytics } = settings;
