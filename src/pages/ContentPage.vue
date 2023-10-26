@@ -33,7 +33,12 @@ q-drawer(v-model="rightDrawer" bordered side="right")
         q-input(v-model.trim="selectedObject.icon" clearable label="Иконка")
           template(#prepend)
             q-icon(v-if="selectedObject.icon" :name="selectedObject.icon")
-        q-icon-picker.q-mt-md(v-model="selectedObject.icon" v-model:model-pagination="data.pagination" :icons="icons" :filter="data.filter" style="height: 400px;" dense tooltips)
+        q-icon-picker.q-my-md(v-model="selectedObject.icon" v-model:model-pagination="data.pagination" :icons="icons" :filter="data.filter" style="height: 400px;" dense tooltips)
+        q-img(:src="`${base}${selectedObject.img}`" class="rounded-borders" :ratio="16/9")
+          q-btn.absolute.all-pointer-events(size="xs" icon="close" round color="white" text-color="black" dense  style="top: 8px; right: 8px" @click="delete selectedObject.img")
+          template(#error)
+            .absolute-full.flex.flex-center
+              q-btn(label="Загрузить картинку" color="primary" @click="open")
 q-page.column.full-height
   q-tabs(v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator)
     q-tab(name="wysiwyg" label="wysiwyg")
@@ -47,9 +52,17 @@ q-page.column.full-height
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
-import { get, isDefined, set, useArrayFind, whenever } from "@vueuse/core";
+import {
+  get,
+  isDefined,
+  set,
+  useArrayFind,
+  useFileDialog,
+  whenever,
+} from "@vueuse/core";
 import DOMPurify from "dompurify";
 import { html_beautify as htmlBeautify } from "js-beautify";
+import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { computed, reactive, ref, watch } from "vue";
@@ -60,7 +73,9 @@ import storeApp from "@/stores/app";
 import storeContent from "@/stores/content";
 
 const $q = useQuasar();
-const { rightDrawer, base } = storeToRefs(storeApp());
+const appStore = storeApp();
+const { rightDrawer, base } = storeToRefs(appStore);
+const { putFile } = appStore;
 const { content, selected, expanded, selectedObject, list } = storeToRefs(
   storeContent(),
 );
@@ -96,7 +111,6 @@ const configDOMPurify = {
     allowCustomizedBuiltInElements: true,
   },
 };
-const parser = new DOMParser();
 const selectedValue = computed({
   /**
    * Считывание исходного кода из структуры данных
@@ -104,35 +118,24 @@ const selectedValue = computed({
    */
   get() {
     const { html = "" } = get(selectedObject) ?? {};
-    const htmlDoc = parser.parseFromString(html, "text/html");
-    htmlDoc.querySelectorAll("img[src]").forEach((img) => {
-      const { href } = new URL(img.getAttribute("src"), get(base));
-      img.setAttribute("src", href);
+    return html.replace(/src="([^"]+)"/gi, (match, p1) => {
+      const { href } = new URL(p1, get(base));
+      return `src="${href}"`;
     });
-    const {
-      body: { innerHTML },
-    } = htmlDoc;
-    return innerHTML;
   },
   /**
    * Запись исходного кода страницы в структуры данных
    * @param {string} value - html
    */
   set(value) {
-    const htmlDoc = parser.parseFromString(
-      DOMPurify.sanitize(value, configDOMPurify),
-      "text/html",
+    get(selectedObject).html = DOMPurify.sanitize(
+      value,
+      configDOMPurify,
+    ).replace(
+      /src="([^"]+)"/gi,
+      // eslint-disable-next-line sonarjs/no-nested-template-literals
+      (match, p1) => `src="${p1.replace(new RegExp(`^${get(base)}`), "")}"`,
     );
-    htmlDoc.querySelectorAll("img[src]").forEach((img) => {
-      img.setAttribute(
-        "src",
-        img.getAttribute("src").replace(new RegExp(`^(${get(base)})`), ""),
-      );
-    });
-    const {
-      body: { innerHTML },
-    } = htmlDoc;
-    get(selectedObject).html = innerHTML;
   },
 });
 const source = computed({
@@ -251,6 +254,42 @@ const leftPage = () => {
 watch(selected, (newVal, oldVal) => {
   const prevObj = useArrayFind(list, ({ id }) => id === oldVal);
   delete get(prevObj)?.edit;
+});
+const { files, open } = useFileDialog({
+  multiple: false,
+  accept: "image/*",
+  capture: "Выберите картинку",
+  reset: true,
+});
+watch(files, async (newFiles) => {
+  const [file] = newFiles ?? [];
+  if (file)
+    try {
+      const { type } = file;
+      if (
+        [
+          "image/apng",
+          "image/avif",
+          "image/gif",
+          "image/jpeg",
+          "image/png",
+          "image/svg+xml",
+          "image/webp",
+        ].includes(type)
+      ) {
+        const filePath = `images/${crypto.randomUUID()}.${mime.extension(
+          type,
+        )}`;
+        await putFile(filePath, type, file);
+        get(selectedObject).img = filePath;
+      } else
+        throw new Error(
+          "Тип графического файла не подходит для использования в сети интернет",
+        );
+    } catch (err) {
+      const { message } = err;
+      $q.notify({ message });
+    }
 });
 </script>
 <style>

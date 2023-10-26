@@ -13,7 +13,7 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.435.0",
+    "@aws-sdk/client-s3": "^3.436.0",
     "@fontsource/arsenal": "^5.0.8",
     "@fontsource/bad-script": "^5.0.8",
     "@fontsource/caveat": "^5.0.15",
@@ -54,7 +54,7 @@
     "glightbox": "^3.2.0",
     "js-beautify": "^1.14.9",
     "mime-types": "^2.1.35",
-    "p5": "^1.7.0",
+    "p5": "^1.8.0",
     "page": "^1.11.6",
     "pinia": "^2.1.7",
     "quasar": "^2.13.0",
@@ -73,7 +73,7 @@
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.6.2",
-    "@vue/language-plugin-pug": "^1.8.20",
+    "@vue/language-plugin-pug": "^1.8.21",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.52.0",
     "eslint-config-airbnb-base": "^15.0.0",

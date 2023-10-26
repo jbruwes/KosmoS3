@@ -64,23 +64,22 @@ const { putFile } = store;
 const editorRef = ref();
 /**
  * { @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#image_types }
- */
-const mTypes = [
-  "image/apng",
-  "image/avif",
-  "image/gif",
-  "image/jpeg",
-  "image/png",
-  "image/svg+xml",
-  "image/webp",
-];
-/**
  * @param { object } file - файл
  */
 const putImage = async (file) => {
   try {
     const { type } = file;
-    if (mTypes.includes(type)) {
+    if (
+      [
+        "image/apng",
+        "image/avif",
+        "image/gif",
+        "image/jpeg",
+        "image/png",
+        "image/svg+xml",
+        "image/webp",
+      ].includes(type)
+    ) {
       const filePath = `images/${crypto.randomUUID()}.${mime.extension(type)}`;
       await putFile(filePath, type, file);
       get(editorRef).runCmd("insertImage", `${get(base)}${filePath}`);
