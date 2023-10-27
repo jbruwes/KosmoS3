@@ -13,7 +13,7 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.436.0",
+    "@aws-sdk/client-s3": "^3.437.0",
     "@fontsource/arsenal": "^5.0.8",
     "@fontsource/bad-script": "^5.0.8",
     "@fontsource/caveat": "^5.0.15",
@@ -49,8 +49,7 @@
     "@vueuse/math": "^10.5.0",
     "ace-builds": "^1.31.0",
     "animate.css": "^4.1.1",
-    "daisyui": "^3.9.3",
-    "dompurify": "^3.0.6",
+    "daisyui": "^3.9.4",
     "glightbox": "^3.2.0",
     "js-beautify": "^1.14.9",
     "mime-types": "^2.1.35",
@@ -73,7 +72,8 @@
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.6.2",
-    "@vue/language-plugin-pug": "^1.8.21",
+    "@tailwindcss/typography": "^0.5.10",
+    "@vue/language-plugin-pug": "^1.8.22",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.52.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -84,11 +84,12 @@
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-sonarjs": "^0.21.0",
-    "eslint-plugin-vue": "^9.18.0",
+    "eslint-plugin-vue": "^9.18.1",
     "eslint-plugin-vue-pug": "^0.6.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.3",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "tailwindcss": "^3.3.5"
   },
   "engines": {
     "node": "^18 || ^16 || ^14.19",

@@ -34,11 +34,11 @@ q-drawer(v-model="rightDrawer" bordered side="right")
           template(#prepend)
             q-icon(v-if="selectedObject.icon" :name="selectedObject.icon")
         q-icon-picker.q-my-md(v-model="selectedObject.icon" v-model:model-pagination="data.pagination" :icons="icons" :filter="data.filter" style="height: 400px;" dense tooltips)
-        q-img(:src="`${base}${selectedObject.img}`" class="rounded-borders" :ratio="16/9")
+        q-img.rounded-borders(v-if="selectedObject.img" :src="`${base}${selectedObject.img}`" :ratio="16/9")
           q-btn.absolute.all-pointer-events(size="xs" icon="close" round color="white" text-color="black" dense  style="top: 8px; right: 8px" @click="delete selectedObject.img")
-          template(#error)
-            .absolute-full.flex.flex-center
-              q-btn(label="Загрузить картинку" color="primary" @click="open")
+        q-img.rounded-borders(v-if="!selectedObject.img" :ratio="16/9" )
+          .absolute-full.flex.flex-center
+            q-btn(label="Загрузить картинку" color="primary" @click="open")
 q-page.column.full-height
   q-tabs(v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator)
     q-tab(name="wysiwyg" label="wysiwyg")
@@ -60,7 +60,6 @@ import {
   useFileDialog,
   whenever,
 } from "@vueuse/core";
-import DOMPurify from "dompurify";
 import { html_beautify as htmlBeautify } from "js-beautify";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
@@ -101,16 +100,6 @@ const data = ref({
 set(rightDrawer, true);
 const tab = ref("wysiwyg");
 const tree = ref();
-const configDOMPurify = {
-  SAFE_FOR_TEMPLATES: true,
-  ADD_TAGS: ["iframe"],
-  ADD_ATTR: ["target", "allow", "allowfullscreen", "frameborder", "scrolling"],
-  CUSTOM_ELEMENT_HANDLING: {
-    tagNameCheck: /^v-/,
-    attributeNameCheck: /\w+/,
-    allowCustomizedBuiltInElements: true,
-  },
-};
 const selectedValue = computed({
   /**
    * Считывание исходного кода из структуры данных
@@ -128,10 +117,7 @@ const selectedValue = computed({
    * @param {string} value - html
    */
   set(value) {
-    get(selectedObject).html = DOMPurify.sanitize(
-      value,
-      configDOMPurify,
-    ).replace(
+    get(selectedObject).html = value.replace(
       /src="([^"]+)"/gi,
       // eslint-disable-next-line sonarjs/no-nested-template-literals
       (match, p1) => `src="${p1.replace(new RegExp(`^${get(base)}`), "")}"`,
