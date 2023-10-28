@@ -113,6 +113,8 @@ const { files, open } = useFileDialog({ accept: "image/*" });
 watch(files, (newFiles) => {
   [...newFiles].forEach(putImage);
 });
+const e = $q.lang.editor;
+const i = $q.iconSet.editor;
 const editorDef = reactive({
   upload: {
     tip: "Загрузка картинки",
@@ -129,6 +131,46 @@ const editorDef = reactive({
       set(prompt, true);
     },
   },
+  h1: {
+    cmd: "formatBlock",
+    param: "H1",
+    icon: i.heading1 || i.heading,
+    tip: e.heading1,
+    htmlTip: `<span class="prose"><h1 class="q-ma-none">${e.heading1}</h1></span>`,
+  },
+  h2: {
+    cmd: "formatBlock",
+    param: "H2",
+    icon: i.heading2 || i.heading,
+    tip: e.heading2,
+    htmlTip: `<span class="prose"><h2 class="q-ma-none">${e.heading2}</h2></span>`,
+  },
+  h3: {
+    cmd: "formatBlock",
+    param: "H3",
+    icon: i.heading3 || i.heading,
+    tip: e.heading3,
+    htmlTip: `<span class="prose"><h3 class="q-ma-none">${e.heading3}</h3></span>`,
+  },
+  h4: {
+    cmd: "formatBlock",
+    param: "H4",
+    icon: i.heading4 || i.heading,
+    tip: e.heading4,
+    htmlTip: `<span class="prose"><h4 class="q-ma-none">${e.heading4}</h4></span>`,
+  },
+  p: {
+    cmd: "formatBlock",
+    param: "DIV",
+    icon: i.heading,
+    tip: e.paragraph,
+  },
+  code: {
+    cmd: "formatBlock",
+    param: "PRE",
+    icon: i.code,
+    htmlTip: `<span class="prose"><code>${e.code}</code></span>`,
+  },
 });
 const editorTlb = reactive([
   ["left", "center", "right", "justify"],
@@ -137,14 +179,14 @@ const editorTlb = reactive([
   ["print", "fullscreen"],
   [
     {
-      label: $q.lang.editor.formatting,
-      icon: $q.iconSet.editor.formatting,
+      label: e.formatting,
+      icon: i.formatting,
       list: "no-icons",
-      options: ["p", "h1", "h2", "h3", "h4", "h5", "h6", "code"],
+      options: ["p", "h1", "h2", "h3", "h4", "code"],
     },
     {
-      label: $q.lang.editor.fontSize,
-      icon: $q.iconSet.editor.fontSize,
+      label: e.fontSize,
+      icon: i.fontSize,
       fixedLabel: true,
       fixedIcon: true,
       list: "no-icons",
@@ -159,8 +201,8 @@ const editorTlb = reactive([
       ],
     },
     {
-      label: $q.lang.editor.defaultFont,
-      icon: $q.iconSet.editor.font,
+      label: e.defaultFont,
+      icon: i.font,
       fixedIcon: true,
       list: "no-icons",
       options: [
