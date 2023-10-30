@@ -13,6 +13,7 @@ import {
 } from "@vueuse/core";
 import { logicAnd, logicNot } from "@vueuse/math";
 import { defineStore } from "pinia";
+import { uid } from "quasar";
 import { computed, ref } from "vue";
 
 export default defineStore("app", () => {
@@ -151,18 +152,18 @@ export default defineStore("app", () => {
     let settings = { ...pSettings };
     css = Array.isArray(css)
       ? css
-          .map(({ id = crypto.randomUUID(), url = "" }) => ({ id, url }))
+          .map(({ id = uid(), url = "" }) => ({ id, url }))
           .filter(({ url }) => url)
       : [];
-    if (!css.length) css.push({ id: crypto.randomUUID(), url: "" });
+    if (!css.length) css.push({ id: uid(), url: "" });
     js = Array.isArray(js)
       ? js
-          .map(({ id = crypto.randomUUID(), url = "" }) => ({ id, url }))
+          .map(({ id = uid(), url = "" }) => ({ id, url }))
           .filter(({ url }) => url)
       : [];
-    if (!js.length) js.push({ id: crypto.randomUUID(), url: "" });
+    if (!js.length) js.push({ id: uid(), url: "" });
     const {
-      id = crypto.randomUUID(),
+      id = uid(),
       visible = true,
       label = get(bucket),
       html = "",

@@ -49,7 +49,7 @@ import "@fontsource/tenor-sans";
 import { get, set, useFileDialog } from "@vueuse/core";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
-import { useQuasar } from "quasar";
+import { uid, useQuasar } from "quasar";
 import { reactive, ref, watch } from "vue";
 
 import app from "@/stores/app";
@@ -80,7 +80,7 @@ const putImage = async (file) => {
         "image/webp",
       ].includes(type)
     ) {
-      const filePath = `images/${crypto.randomUUID()}.${mime.extension(type)}`;
+      const filePath = `images/${uid()}.${mime.extension(type)}`;
       await putFile(filePath, type, file);
       get(editorRef).runCmd("insertImage", `${get(base)}${filePath}`);
     } else

@@ -63,7 +63,7 @@ import {
 import { html_beautify as htmlBeautify } from "js-beautify";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
-import { useQuasar } from "quasar";
+import { uid, useQuasar } from "quasar";
 import { computed, reactive, ref, watch } from "vue";
 
 import VSourceCode from "@/components/VSourceCode.vue";
@@ -155,7 +155,7 @@ else whenever(content, init);
  */
 const newPage = () => {
   const { parent, children, index, siblings } = get(selectedObject);
-  const id = crypto.randomUUID();
+  const id = uid();
   const visible = true;
   const label = "";
   const html = "";
@@ -263,9 +263,7 @@ watch(files, async (newFiles) => {
           "image/webp",
         ].includes(type)
       ) {
-        const filePath = `images/${crypto.randomUUID()}.${mime.extension(
-          type,
-        )}`;
+        const filePath = `images/${uid()}.${mime.extension(type)}`;
         await putFile(filePath, type, file);
         get(selectedObject).img = filePath;
       } else
