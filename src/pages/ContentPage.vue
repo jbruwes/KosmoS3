@@ -27,7 +27,6 @@ q-drawer(v-model="rightDrawer" bordered side="right")
         q-input(v-model.trim="selectedObject.description" type="textarea" autogrow label="Описание страницы")
         q-select(v-model.trim="selectedObject.keywords" multiple use-chips use-input new-value-mode="add" stack-label hide-dropdown-icon label="Ключевые слова")
         q-input(v-model.trim="selectedObject.loc" label="Постоянная ссылка" type="url")
-        q-input(v-model="selectedObject.lastmod" label="Последнее изменение" type="date")
         q-select(v-model="selectedObject.changefreq" :options="changefreq" label="Частота обновления" clearable)
         q-input(v-model.number="selectedObject.priority" label="Приоритет" type="number" min="0" max="1" step="0.1")
         q-input(v-model.trim="selectedObject.icon" clearable label="Иконка")
@@ -48,7 +47,7 @@ q-page.column.full-height
     q-tab-panel.column(name="wysiwyg")
       v-wysiwyg.full-width.col.column(v-model="selectedValue")
     q-tab-panel.column(name="source")
-      v-source-code.col(v-model="source")
+      v-source-code.col(v-model="selectedValue")
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
@@ -60,7 +59,6 @@ import {
   useFileDialog,
   whenever,
 } from "@vueuse/core";
-import { html_beautify as htmlBeautify } from "js-beautify";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
@@ -117,27 +115,12 @@ const selectedValue = computed({
    * @param {string} value - html
    */
   set(value) {
+    const regexp = new RegExp(`^${get(base)}`);
     get(selectedObject).html = value.replace(
       /src="([^"]+)"/gi,
-      // eslint-disable-next-line sonarjs/no-nested-template-literals
-      (match, p1) => `src="${p1.replace(new RegExp(`^${get(base)}`), "")}"`,
+      (match, p1) => `src="${p1.replace(regexp, "")}"`,
     );
-  },
-});
-const source = computed({
-  /**
-   * Прихорашивание html
-   * @returns {string} - красивый исходный код
-   */
-  get() {
-    return htmlBeautify(get(selectedValue));
-  },
-  /**
-   *
-   * @param {string} newValue - отредактрованное значение
-   */
-  set(newValue) {
-    set(selectedValue, newValue);
+    get(selectedObject).lastmod = new Date().toISOString();
   },
 });
 /**
