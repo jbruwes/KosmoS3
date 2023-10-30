@@ -38,115 +38,30 @@
     />
     <link rel="icon" type="image/ico" href="favicon.ico" />
     <style>
-      .loader {
-        font-size: 10px;
-        width: 1em;
-        height: 1em;
+      #loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid black;
+        border-bottom-color: transparent;
         border-radius: 50%;
+        animation: rotation 1s linear infinite;
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-left: -0.5em;
-        margin-top: -0.5em;
-        text-indent: -9999em;
-        animation: mulShdSpin 1.3s infinite linear;
-        transform: translateZ(0);
+        margin: -24px auto auto -24px;
       }
-      @keyframes mulShdSpin {
-        0%,
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
+        }
         100% {
-          box-shadow:
-            0 -3em 0 0.2em,
-            2em -2em 0 0em,
-            3em 0 0 -1em,
-            2em 2em 0 -1em,
-            0 3em 0 -1em,
-            -2em 2em 0 -1em,
-            -3em 0 0 -1em,
-            -2em -2em 0 0;
-        }
-        12.5% {
-          box-shadow:
-            0 -3em 0 0,
-            2em -2em 0 0.2em,
-            3em 0 0 0,
-            2em 2em 0 -1em,
-            0 3em 0 -1em,
-            -2em 2em 0 -1em,
-            -3em 0 0 -1em,
-            -2em -2em 0 -1em;
-        }
-        25% {
-          box-shadow:
-            0 -3em 0 -0.5em,
-            2em -2em 0 0,
-            3em 0 0 0.2em,
-            2em 2em 0 0,
-            0 3em 0 -1em,
-            -2em 2em 0 -1em,
-            -3em 0 0 -1em,
-            -2em -2em 0 -1em;
-        }
-        37.5% {
-          box-shadow:
-            0 -3em 0 -1em,
-            2em -2em 0 -1em,
-            3em 0em 0 0,
-            2em 2em 0 0.2em,
-            0 3em 0 0em,
-            -2em 2em 0 -1em,
-            -3em 0em 0 -1em,
-            -2em -2em 0 -1em;
-        }
-        50% {
-          box-shadow:
-            0 -3em 0 -1em,
-            2em -2em 0 -1em,
-            3em 0 0 -1em,
-            2em 2em 0 0em,
-            0 3em 0 0.2em,
-            -2em 2em 0 0,
-            -3em 0em 0 -1em,
-            -2em -2em 0 -1em;
-        }
-        62.5% {
-          box-shadow:
-            0 -3em 0 -1em,
-            2em -2em 0 -1em,
-            3em 0 0 -1em,
-            2em 2em 0 -1em,
-            0 3em 0 0,
-            -2em 2em 0 0.2em,
-            -3em 0 0 0,
-            -2em -2em 0 -1em;
-        }
-        75% {
-          box-shadow:
-            0em -3em 0 -1em,
-            2em -2em 0 -1em,
-            3em 0em 0 -1em,
-            2em 2em 0 -1em,
-            0 3em 0 -1em,
-            -2em 2em 0 0,
-            -3em 0em 0 0.2em,
-            -2em -2em 0 0;
-        }
-        87.5% {
-          box-shadow:
-            0em -3em 0 0,
-            2em -2em 0 -1em,
-            3em 0 0 -1em,
-            2em 2em 0 -1em,
-            0 3em 0 -1em,
-            -2em 2em 0 0,
-            -3em 0em 0 0,
-            -2em -2em 0 0.2em;
+          transform: rotate(360deg);
         }
       }
     </style>
   </head>
   <body>
-    <div class="loader"></div>
+    <div id="loader"></div>
     <!-- quasar:entry-point -->
   </body>
 </html>

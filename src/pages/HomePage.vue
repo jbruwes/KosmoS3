@@ -1,7 +1,7 @@
 <template lang="pug">
 q-page.column
   .col.column.q-ma-md
-    q-img.col.rounded-borders(src="~assets/bg.jpg")
+    q-img.col.rounded-borders(src="~assets/bg.jpg" no-spinner)
       q-card.absolute-center
         q-form(@submit="login")
           .row.q-col-gutter-x-md
