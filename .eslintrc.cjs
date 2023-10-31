@@ -26,7 +26,12 @@ module.exports = {
     "plugin:prettier/recommended",
   ],
 
-  plugins: ["simple-import-sort"],
+  plugins: [
+    // https://eslint.vuejs.org/user-guide/#why-doesn-t-it-work-on-vue-files
+    // required to lint *.vue files
+    "vue",
+    "simple-import-sort",
+  ],
 
   globals: {
     ga: "readonly", // Google Analytics
