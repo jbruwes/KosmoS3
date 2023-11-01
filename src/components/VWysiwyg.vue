@@ -71,13 +71,16 @@ import "@fontsource/rubik-mono-one";
 import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 
+import { setup } from "@twind/core";
 import { get, set, useFileDialog } from "@vueuse/core";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
-import { reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 
 import app from "@/stores/app";
+
+import config from "../../twind.config";
 
 defineProps({ modelValue: { default: "", type: String } });
 defineEmits(["update:modelValue"]);
@@ -321,4 +324,7 @@ const options = reactive([
 ]);
 const [{ value }] = options;
 const model = ref(value);
+onMounted(() => {
+  setup(config, undefined, get(editorRef).getContentEl());
+});
 </script>
