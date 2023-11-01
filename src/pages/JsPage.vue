@@ -1,12 +1,19 @@
 <template lang="pug">
 q-page.column.full-height
-  q-tabs(v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator)
-    q-tab(name="script" label="Script")
-    q-tab(name="js" label="JS")
+  q-tabs.text-grey(
+    v-model="tab",
+    dense,
+    active-color="primary",
+    indicator-color="primary",
+    align="justify",
+    narrow-indicator
+  )
+    q-tab(name="script", label="Script")
+    q-tab(name="js", label="JS")
   q-separator
   q-tab-panels.full-width.col(v-model="tab")
     q-tab-panel.column(name="script")
-      v-source-code.col(v-model="script" lang="javascript")
+      v-source-code.col(v-model="script", lang="javascript")
     q-tab-panel.column(name="js") {{ js }}
 </template>
 <script setup>

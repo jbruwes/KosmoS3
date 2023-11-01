@@ -11,13 +11,15 @@ export default defineStore("templateStore", () => {
   const expanded = ref([]);
   const content = computed({
     /**
-     * чтение контента
-     * @returns {object} контент
+     * Чтение контента
+     *
+     * @returns {object} Контент
      */
     get: () => get(index)?.content,
     /**
-     * запись контента
-     * @param {object} value контент
+     * Запись контента
+     *
+     * @param {object} value Контент
      */
     set(value) {
       if (isDefined(index)) get(index).content = value;
@@ -28,54 +30,42 @@ export default defineStore("templateStore", () => {
       return members.reduce((accumulator, current) => {
         Object.defineProperties(current, {
           parent: {
-            /**
-             * @returns {object} - родительский объект
-             */
+            /** @returns {object} - Родительский объект */
             get() {
               return pParent;
             },
             configurable: true,
           },
           siblings: {
-            /**
-             * @returns {Array} - массив одноуровневых объектов
-             */
+            /** @returns {Array} - Массив одноуровневых объектов */
             get() {
               return this.parent ? this.parent?.children : [this];
             },
             configurable: true,
           },
           index: {
-            /**
-             * @returns {number} - позиция в массиве однокровневых объектов
-             */
+            /** @returns {number} - Позиция в массиве однокровневых объектов */
             get() {
               return this.siblings.findIndex(({ id }) => this.id === id);
             },
             configurable: true,
           },
           prev: {
-            /**
-             * @returns {Array} - массив одноуровневых объектов
-             */
+            /** @returns {Array} - Массив одноуровневых объектов */
             get() {
               return this.siblings[this.index - 1];
             },
             configurable: true,
           },
           next: {
-            /**
-             * @returns {Array} - массив одноуровневых объектов
-             */
+            /** @returns {Array} - Массив одноуровневых объектов */
             get() {
               return this.siblings[this.index + 1];
             },
             configurable: true,
           },
           branch: {
-            /**
-             * @returns {Array} - массив родительских объектов
-             */
+            /** @returns {Array} - Массив родительских объектов */
             get() {
               const branch = [this];
               let { parent } = this;

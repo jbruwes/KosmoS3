@@ -32,8 +32,9 @@ export default defineConfig({
       output: {
         /**
          * Разборка по вендорам
-         * @param {string} id - путь до модуля
-         * @returns {string} - вендор
+         *
+         * @param {string} id - Путь до модуля
+         * @returns {string} - Вендор
          */
         manualChunks: (id) =>
           id.includes("node_modules")

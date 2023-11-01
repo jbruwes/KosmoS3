@@ -1,43 +1,113 @@
 <template lang="pug">
 q-page.column
   .col.column.q-ma-md
-    q-img.col.rounded-borders(src="~assets/bg.jpg" no-spinner)
+    q-img.col.rounded-borders(src="~assets/bg.jpg", no-spinner)
       q-card.absolute-center
         q-form(@submit="login")
           .row.q-col-gutter-x-md
             .col-12.col-md.min-w-300
               .text-overline WEBSITE
-              q-select(v-model="cred" dark filled clearable label="saved credentials" :options="creds" hint="")
+              q-select(
+                v-model="cred",
+                dark,
+                filled,
+                clearable,
+                label="saved credentials",
+                :options="creds",
+                hint=""
+              )
                 template(#prepend)
                   q-icon(name="save")
-              q-input(v-model.trim="bucket" :rules="[(v) => !!v || 'Item is required']" lazy-rules dark filled label="domain" placeholder="example.com")
+              q-input(
+                v-model.trim="bucket",
+                :rules="[(v) => !!v || 'Item is required']",
+                lazy-rules,
+                dark,
+                filled,
+                label="domain",
+                placeholder="example.com"
+              )
                 template(#prepend)
                   q-icon(name="language")
-              q-input(v-model.trim="accessKeyId" :rules="[(v) => !!v || 'Item is required']" lazy-rules dark filled label="access key id")
+              q-input(
+                v-model.trim="accessKeyId",
+                :rules="[(v) => !!v || 'Item is required']",
+                lazy-rules,
+                dark,
+                filled,
+                label="access key id"
+              )
                 template(#prepend)
                   q-icon(name="key")
-              q-input(v-model.trim="secretAccessKey" :rules="[(v) => !!v || 'Item is required']" lazy-rules dark label="secret access key" filled :type="isPwd ? 'password' : 'text'")
+              q-input(
+                v-model.trim="secretAccessKey",
+                :rules="[(v) => !!v || 'Item is required']",
+                lazy-rules,
+                dark,
+                label="secret access key",
+                filled,
+                :type="isPwd ? 'password' : 'text'"
+              )
                 template(#prepend)
                   q-icon(name="lock")
                 template(#append)
-                  q-icon.cursor-pointer(:name="isPwd ? 'visibility_off' : 'visibility'" @click="isPwd = !isPwd")
+                  q-icon.cursor-pointer(
+                    :name="isPwd ? 'visibility_off' : 'visibility'",
+                    @click="isPwd = !isPwd"
+                  )
             .col-12.col-md.min-w-300
               .text-overline CLOUD
-              q-select(v-model="provider" clearable :options="providers" dark filled label="cloud provider" hint="")
+              q-select(
+                v-model="provider",
+                clearable,
+                :options="providers",
+                dark,
+                filled,
+                label="cloud provider",
+                hint=""
+              )
                 template(#prepend)
                   q-icon(name="cloud")
-              q-select(v-model.trim="region" use-input filled hide-selected fill-input input-debounce="0" :options="regions" label="region" lazy-rules :rules="[(v) => !!v || 'Item is required']" dark :disable="provider && provider.label === 'yandex'" @input-value="(val) => {region=val}")
+              q-select(
+                v-model.trim="region",
+                use-input,
+                filled,
+                hide-selected,
+                fill-input,
+                input-debounce="0",
+                :options="regions",
+                label="region",
+                lazy-rules,
+                :rules="[(v) => !!v || 'Item is required']",
+                dark,
+                :disable="provider && provider.label === 'yandex'",
+                @input-value="(val) => { region = val; }"
+              )
                 template(#prepend)
                   q-icon(name="flag")
-              q-input(v-model.trim="endpoint" dark filled label="endpoint url" :disable="!!provider" hint="")
+              q-input(
+                v-model.trim="endpoint",
+                dark,
+                filled,
+                label="endpoint url",
+                :disable="!!provider",
+                hint=""
+              )
                 template(#prepend)
                   q-icon(name="link")
-              q-input(v-model.trim="wendpoint" dark filled label="website endpoint url" :disable="!!provider" hint="")
+              q-input(
+                v-model.trim="wendpoint",
+                dark,
+                filled,
+                label="website endpoint url",
+                :disable="!!provider",
+                hint=""
+              )
                 template(#prepend)
                   q-icon(name="web")
-          q-toggle.q-mb-md(v-model="remember" label="remember credentials")
+          q-toggle.q-mb-md(v-model="remember", label="remember credentials")
           div
-            q-btn.full-width(label="LogIn" type="submit" color="primary")
+            q-btn.full-width(label="LogIn", type="submit", color="primary")
 </template>
 <script setup>
 import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
@@ -146,9 +216,7 @@ watch(cred, (value) => {
   }
 });
 let s3Client = null;
-/**
- * { @link https://fetch.spec.whatwg.org/#http-network-or-cache-fetch }
- */
+/** { @link https://fetch.spec.whatwg.org/#http-network-or-cache-fetch } */
 const login = async () => {
   if (!s3Client)
     try {

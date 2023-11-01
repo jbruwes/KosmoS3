@@ -1,47 +1,129 @@
 <template lang="pug">
-q-drawer(v-model="rightDrawer" bordered side="right")
+q-drawer(v-model="rightDrawer", bordered, side="right")
   q-list
-    q-expansion-item(icon="account_tree" label="Дерево рубрик" default-opened header-class="text-primary")
-      q-btn-group.q-mx-xs(spread flat)
-        q-btn(icon="note" @click="newPage")
-        q-btn(icon="delete" @click="deletePage")
-        q-btn(icon="chevron_left" @click="leftPage")
-        q-btn(icon="chevron_right" @click="rightPage")
-        q-btn(icon="expand_more" @click="downPage")
-        q-btn(icon="expand_less" @click="upPage")
+    q-expansion-item(
+      icon="account_tree",
+      label="Дерево рубрик",
+      default-opened,
+      header-class="text-primary"
+    )
+      q-btn-group.q-mx-xs(spread, flat)
+        q-btn(icon="note", @click="newPage")
+        q-btn(icon="delete", @click="deletePage")
+        q-btn(icon="chevron_left", @click="leftPage")
+        q-btn(icon="chevron_right", @click="rightPage")
+        q-btn(icon="expand_more", @click="downPage")
+        q-btn(icon="expand_less", @click="upPage")
       .scroll
-        q-tree.q-ma-xs(ref="tree" v-model:selected="selected" v-model:expanded="expanded" :nodes="content??[]" node-key="id" no-selection-unset accordion)
+        q-tree.q-ma-xs(
+          ref="tree",
+          v-model:selected="selected",
+          v-model:expanded="expanded",
+          :nodes="content ?? []",
+          node-key="id",
+          no-selection-unset,
+          accordion
+        )
           template(#default-header="prop")
-            .row.items-center.no-wrap(@dblclick="prop.node.edit=true")
-              q-checkbox.q-mr-xs(v-model="prop.node.visible" dense)
-              q-input.min-w-96(v-model.trim="prop.node.label" dense :readonly="!prop.node.edit" outlined :bg-color="prop.node.id === selected? 'primary': undefined" @click.stop="selected=prop.node.id" @keyup.enter="delete prop.node.edit")
+            .row.no-wrap.items-center(@dblclick="prop.node.edit = true")
+              q-checkbox.q-mr-xs(v-model="prop.node.visible", dense)
+              q-input.min-w-96(
+                v-model.trim="prop.node.label",
+                dense,
+                :readonly="!prop.node.edit",
+                outlined,
+                :bg-color="prop.node.id === selected ? 'primary' : undefined",
+                @click.stop="selected = prop.node.id",
+                @keyup.enter="delete prop.node.edit"
+              )
     q-separator
-    q-card(v-if="selectedObject" flat)
+    q-card(v-if="selectedObject", flat)
       q-item.text-teal
         q-item-section(avatar)
           q-icon(name="travel_explore")
         q-item-section
           q-item-label Настройки SEO
       q-card-section
-        q-input(v-model.trim="selectedObject.title" label="Заголовок страницы")
-        q-input(v-model.trim="selectedObject.description" type="textarea" autogrow label="Описание страницы")
-        q-select(v-model.trim="selectedObject.keywords" multiple use-chips use-input new-value-mode="add" stack-label hide-dropdown-icon label="Ключевые слова")
-        q-input(v-model.trim="selectedObject.loc" label="Постоянная ссылка" type="url")
-        q-select(v-model="selectedObject.changefreq" :options="changefreq" label="Частота обновления" clearable)
-        q-input(v-model.number="selectedObject.priority" label="Приоритет" type="number" min="0" max="1" step="0.1")
-        q-input(v-model.trim="selectedObject.icon" clearable label="Иконка")
+        q-input(
+          v-model.trim="selectedObject.title",
+          label="Заголовок страницы"
+        )
+        q-input(
+          v-model.trim="selectedObject.description",
+          type="textarea",
+          autogrow,
+          label="Описание страницы"
+        )
+        q-select(
+          v-model.trim="selectedObject.keywords",
+          multiple,
+          use-chips,
+          use-input,
+          new-value-mode="add",
+          stack-label,
+          hide-dropdown-icon,
+          label="Ключевые слова"
+        )
+        q-input(
+          v-model.trim="selectedObject.loc",
+          label="Постоянная ссылка",
+          type="url"
+        )
+        q-select(
+          v-model="selectedObject.changefreq",
+          :options="changefreq",
+          label="Частота обновления",
+          clearable
+        )
+        q-input(
+          v-model.number="selectedObject.priority",
+          label="Приоритет",
+          type="number",
+          min="0",
+          max="1",
+          step="0.1"
+        )
+        q-input(v-model.trim="selectedObject.icon", clearable, label="Иконка")
           template(#prepend)
-            q-icon(v-if="selectedObject.icon" :name="selectedObject.icon")
-        q-icon-picker.q-my-md(v-model="selectedObject.icon" v-model:model-pagination="data.pagination" :icons="icons" :filter="data.filter" style="height: 400px;" dense tooltips)
-        q-img.rounded-borders(v-if="selectedObject.img" :src="`${base}${selectedObject.img}`" :ratio="16/9")
-          q-btn.absolute.all-pointer-events(size="xs" icon="close" round color="white" text-color="black" dense  style="top: 8px; right: 8px" @click="delete selectedObject.img")
-        q-img.rounded-borders(v-if="!selectedObject.img" :ratio="16/9" )
-          .absolute-full.flex.flex-center
-            q-btn(label="Загрузить картинку" color="primary" @click="open")
+            q-icon(v-if="selectedObject.icon", :name="selectedObject.icon")
+        q-icon-picker.q-my-md(
+          v-model="selectedObject.icon",
+          v-model:model-pagination="data.pagination",
+          :icons="icons",
+          :filter="data.filter",
+          style="height: 400px",
+          dense,
+          tooltips
+        )
+        q-img.rounded-borders(
+          v-if="selectedObject.img",
+          :src="`${base}${selectedObject.img}`",
+          :ratio="16 / 9"
+        )
+          q-btn.all-pointer-events.absolute(
+            size="xs",
+            icon="close",
+            round,
+            color="white",
+            text-color="black",
+            dense,
+            style="top: 8px; right: 8px",
+            @click="delete selectedObject.img"
+          )
+        q-img.rounded-borders(v-if="!selectedObject.img", :ratio="16 / 9")
+          .absolute-full.flex-center.flex
+            q-btn(label="Загрузить картинку", color="primary", @click="open")
 q-page.column.full-height
-  q-tabs(v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator)
-    q-tab(name="wysiwyg" label="wysiwyg")
-    q-tab(name="source" label="source")
+  q-tabs.text-grey(
+    v-model="tab",
+    dense,
+    active-color="primary",
+    indicator-color="primary",
+    align="justify",
+    narrow-indicator
+  )
+    q-tab(name="wysiwyg", label="wysiwyg")
+    q-tab(name="source", label="source")
   q-separator
   q-tab-panels.full-width.col(v-model="tab")
     q-tab-panel.column(name="wysiwyg")
@@ -101,7 +183,8 @@ const tree = ref();
 const selectedValue = computed({
   /**
    * Считывание исходного кода из структуры данных
-   * @returns {string} - html
+   *
+   * @returns {string} - Html
    */
   get() {
     const { html = "" } = get(selectedObject) ?? {};
@@ -112,7 +195,8 @@ const selectedValue = computed({
   },
   /**
    * Запись исходного кода страницы в структуры данных
-   * @param {string} value - html
+   *
+   * @param {string} value - Html
    */
   set(value) {
     const regexp = new RegExp(`^${get(base)}`);
@@ -123,9 +207,7 @@ const selectedValue = computed({
     get(selectedObject).lastmod = new Date().toISOString();
   },
 });
-/**
- *
- */
+/** Инициализация */
 const init = () => {
   const { id } = get(content, 0);
   set(expanded, [id]);
@@ -133,9 +215,7 @@ const init = () => {
 };
 if (isDefined(content)) init();
 else whenever(content, init);
-/**
- * Добавление новой страницы
- */
+/** Добавление новой страницы */
 const newPage = () => {
   const { parent, children, index, siblings } = get(selectedObject);
   const id = uid();
@@ -147,9 +227,7 @@ const newPage = () => {
   else children.unshift(page);
   set(selected, id);
 };
-/**
- * Удаление текущей страницы
- */
+/** Удаление текущей страницы */
 const deletePage = () => {
   const { parent, prev, next, siblings } = get(selectedObject) ?? {};
   if (parent)
@@ -174,9 +252,7 @@ const deletePage = () => {
       set(selected, id);
     });
 };
-/**
- * Перемещение страницы вверх на одну позицию
- */
+/** Перемещение страницы вверх на одну позицию */
 const upPage = () => {
   const { index, siblings } = get(selectedObject) ?? {};
   if (index)
@@ -185,9 +261,7 @@ const upPage = () => {
       siblings[index - 1],
     ];
 };
-/**
- * Перемещение страницы вниз на одну позицию
- */
+/** Перемещение страницы вниз на одну позицию */
 const downPage = () => {
   const { index, siblings } = get(selectedObject) ?? {};
   if (index < siblings.length - 1)
@@ -196,9 +270,7 @@ const downPage = () => {
       siblings[index],
     ];
 };
-/**
- * Перемещение страницы вправо на одну позицию
- */
+/** Перемещение страницы вправо на одну позицию */
 const rightPage = () => {
   const { index, siblings, prev } = get(selectedObject) ?? {};
   if (prev) {
@@ -207,9 +279,7 @@ const rightPage = () => {
     get(tree).setExpanded(id, true);
   }
 };
-/**
- * Перемещение страницы влево на одну позицию
- */
+/** Перемещение страницы влево на одну позицию */
 const leftPage = () => {
   const {
     index,

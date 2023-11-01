@@ -16,6 +16,7 @@ export default defineStore("app", () => {
   const routeParams = ref(undefined);
   /**
    * Вычисление вектора
+   *
    * @param {object} item Объект вычисления
    * @returns {object[]} Вектор
    */
@@ -24,6 +25,7 @@ export default defineStore("app", () => {
   const list = computed(() => jsel(get(tree)).selectAll("//*[@id]"));
   /**
    * Вычисленние роута
+   *
    * @param {object} item Объект вычисления
    * @returns {string} Путь
    */
@@ -36,6 +38,7 @@ export default defineStore("app", () => {
       : "";
   /**
    * Вычисленние пути
+   *
    * @param {object} item Объект вычисления
    * @returns {string} Путь
    */
@@ -49,6 +52,7 @@ export default defineStore("app", () => {
   };
   /**
    * Вычисленние ссылки
+   *
    * @param {object} item Объект вычисления
    * @returns {string} Путь
    */
@@ -62,12 +66,14 @@ export default defineStore("app", () => {
 
   /**
    * Вычисление заголовка
+   *
    * @param {object} item Объект вычисления
    * @returns {string} Заголовок
    */
   const getTitle = (item) => (item.title ? item.title : item.value);
   /**
    * Вычисление родителя
+   *
    * @param {object} item Объект вычисления
    * @returns {object} Родитель
    */
@@ -75,6 +81,7 @@ export default defineStore("app", () => {
     jsel(get(tree)).select(`//*[@id="${item.id}"]/../parent::*[@id]`);
   /**
    * Вычисление объектов одного уровня
+   *
    * @param {object} item Объект вычисления
    * @returns {object[]} Объекты одного уровня
    */
@@ -93,7 +100,6 @@ export default defineStore("app", () => {
     computed(() => `${encodeURIComponent(get(nextId))}.htm`),
     {
       /**
-       *
        * @param {object} root0 Объект параметров
        * @param {Function} root0.cancel Ф-ция отмены запроса
        */
@@ -101,7 +107,6 @@ export default defineStore("app", () => {
         if (!get(pageLen) || get(nextItem).page) cancel();
       },
       /**
-       *
        * @param {object} ctx Контекст запроса
        * @returns {object} Возврат измененного контекста
        */
@@ -169,17 +174,18 @@ export default defineStore("app", () => {
   const parentImage = computed(() => get(parent).image);
   /**
    * Получение массива дочерних объектов
-   * @param {object} x аттрибуты xpath
-   * @param {(number | boolean)} x.deep Флаг использования рекурсии
-   *  по дочерним объектам
+   *
+   * @param {object} x Аттрибуты xpath
+   * @param {number | boolean} x.deep Флаг использования рекурсии по дочерним
+   *   объектам
    * @param {number} x.length Количество дочерних объектов для изъятия
-   * @param {(number | boolean)} x.reveal Флаг указывающий показывать ли
-   *  скрытые объекты
-   * @param {string} x.sort Флаг указывающий на необходимость
-   *  отсортировать результат
+   * @param {number | boolean} x.reveal Флаг указывающий показывать ли скрытые
+   *   объекты
+   * @param {string} x.sort Флаг указывающий на необходимость отсортировать
+   *   результат
    * @param {string} x.path CSV путей до дочерних объектов
-   * @param {(number | boolean)} x.children Выбирать папки или файлы?
-   * Если путое значение то всё
+   * @param {number | boolean} x.children Выбирать папки или файлы? Если путое
+   *   значение то всё
    * @param {string} [x.selector] Путь xpath
    * @param {string} x.axe Заведует включением параметра xpath axe
    * @returns {object[]} Массив дочерних объектов

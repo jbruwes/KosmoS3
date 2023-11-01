@@ -1,5 +1,5 @@
 /**
- * plugins/index.js
+ * Plugins/index.js
  *
  * Automatically included in `./src/main.js`
  */
@@ -12,10 +12,7 @@ import pinia from "../store";
 import head from "../store/head";
 import vuetify from "./vuetify";
 
-/**
- *
- * @param {object} app - Объект приложения
- */
+/** @param {object} app - Объект приложения */
 function registerPlugins(app) {
   app.use(vuetify).use(pinia).use(head).use(Particles).use(VueAnimateOnScroll);
 }

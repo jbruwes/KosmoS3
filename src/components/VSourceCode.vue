@@ -1,5 +1,9 @@
 <template lang="pug">
-v-ace-editor(:value="modelValue" :lang="lang" @update:value="$emit('update:modelValue', $event)")
+v-ace-editor(
+  :value="modelValue",
+  :lang="lang",
+  @update:value="$emit('update:modelValue', $event)"
+)
 </template>
 
 <script setup>

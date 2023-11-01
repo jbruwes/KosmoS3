@@ -18,34 +18,40 @@ import { computed, ref } from "vue";
 
 export default defineStore("app", () => {
   /**
-   * переключатель видимости правой панели
+   * Переключатель видимости правой панели
+   *
    * @type {boolean}
    */
   const rightDrawer = ref(null);
   /**
-   * корзина в сервисе s3
+   * Корзина в сервисе s3
+   *
    * @type {string}
    */
   const bucket = ref("");
   /**
-   * путь к сайту через сервис s3
+   * Путь к сайту через сервис s3
+   *
    * @type {string}
    */
   const wendpoint = ref("");
   /**
-   * клиент к сервису s3
+   * Клиент к сервису s3
+   *
    * @type {object}
    */
   const s3 = ref();
   /**
-   * индекс сайта
+   * Индекс сайта
+   *
    * @type {object}
    */
   const index = ref();
   /**
-   * считывание заголовка файла
-   * @param {string} Key имя файла
-   * @returns {object} заголовок файла
+   * Считывание заголовка файла
+   *
+   * @param {string} Key Имя файла
+   * @returns {object} Заголовок файла
    */
   const headObject = async (Key) => {
     const Bucket = get(bucket);
@@ -56,9 +62,10 @@ export default defineStore("app", () => {
   };
   /**
    * Запись объекта
-   * @param {string} Key имя файла
-   * @param {string} ContentType тип mime
-   * @param {string | Uint8Array | Buffer} body тело файла
+   *
+   * @param {string} Key Имя файла
+   * @param {string} ContentType Тип mime
+   * @param {string | Uint8Array | Buffer} body Тело файла
    */
   const putObject = async (Key, ContentType, body) => {
     const Bucket = get(bucket);
@@ -71,15 +78,17 @@ export default defineStore("app", () => {
   };
   /**
    * Запись файла
-   * @param {string} Key имя файла
-   * @param {string} ContentType тип mime
-   * @param {File} file файл
+   *
+   * @param {string} Key Имя файла
+   * @param {string} ContentType Тип mime
+   * @param {File} file Файл
    */
   const putFile = async (Key, ContentType, file) => {
     await putObject(Key, ContentType, await file.arrayBuffer());
   };
   /**
    * Считывание объекта
+   *
    * @param {string} Key Имя файла
    * @returns {string} Тело файла
    */
@@ -110,8 +119,9 @@ export default defineStore("app", () => {
   const { data } = useFetch("monolit/manifest.json", {
     /**
      * Преводим в массив
-     * @param { object } ctx - возвращаемый объект
-     * @returns { object } - трансформируемый возвращаемый объект
+     *
+     * @param {object} ctx - Возвращаемый объект
+     * @returns {object} - Трансформируемый возвращаемый объект
      */
     afterFetch(ctx) {
       ctx.data = [
@@ -126,15 +136,16 @@ export default defineStore("app", () => {
       `${isDefined(wendpoint) ? get(wendpoint) : "htpps:/"}/${get(bucket)}/`,
   );
   /**
-   * проверка структуры сайта
-   * @param {object} index - структура сайта
-   * @param {object} index.content - контент
-   * @param {Array} index.css - ссылки на стили
-   * @param {string} index.style - стили
-   * @param {Array} index.js - ссылки на скрипты
-   * @param {string} index.script - скрипт
-   * @param {object} index.settings - настройки
-   * @returns {object} - структура сайта
+   * Проверка структуры сайта
+   *
+   * @param {object} index - Структура сайта
+   * @param {object} index.content - Контент
+   * @param {Array} index.css - Ссылки на стили
+   * @param {string} index.style - Стили
+   * @param {Array} index.js - Ссылки на скрипты
+   * @param {string} index.script - Скрипт
+   * @param {object} index.settings - Настройки
+   * @returns {object} - Структура сайта
    */
   const calcIndex = ({
     content: pContent = [],
@@ -185,13 +196,15 @@ export default defineStore("app", () => {
   });
   const settings = computed({
     /**
-     * чтение настроек
-     * @returns {object} настройки
+     * Чтение настроек
+     *
+     * @returns {object} Настройки
      */
     get: () => get(index)?.settings,
     /**
-     * запись настроек
-     * @param {object} value настройки
+     * Запись настроек
+     *
+     * @param {object} value Настройки
      */
     set(value) {
       if (isDefined(index)) get(index).settings = value;
@@ -199,13 +212,15 @@ export default defineStore("app", () => {
   });
   const script = computed({
     /**
-     * чтение скрипта
-     * @returns {string} скрипт
+     * Чтение скрипта
+     *
+     * @returns {string} Скрипт
      */
     get: () => get(index)?.script,
     /**
-     * запись скрипта
-     * @param {string} value скрипт
+     * Запись скрипта
+     *
+     * @param {string} value Скрипт
      */
     set(value) {
       if (isDefined(index)) get(index).script = value;
@@ -213,13 +228,15 @@ export default defineStore("app", () => {
   });
   const style = computed({
     /**
-     * чтение стилей
-     * @returns {string} стили
+     * Чтение стилей
+     *
+     * @returns {string} Стили
      */
     get: () => get(index)?.style,
     /**
-     * запись стилей
-     * @param {string} value стили
+     * Запись стилей
+     *
+     * @param {string} value Стили
      */
     set(value) {
       if (isDefined(index)) get(index).style = value;
@@ -227,13 +244,15 @@ export default defineStore("app", () => {
   });
   const js = computed({
     /**
-     * чтение массива ссылок на скрипты
-     * @returns {Array} массив ссылок на скрипты
+     * Чтение массива ссылок на скрипты
+     *
+     * @returns {Array} Массив ссылок на скрипты
      */
     get: () => get(index)?.js,
     /**
-     * запись массива ссылок на скрипты
-     * @param {Array} value массив ссылок на скрипты
+     * Запись массива ссылок на скрипты
+     *
+     * @param {Array} value Массив ссылок на скрипты
      */
     set(value) {
       if (isDefined(index)) get(index).js = value.filter(({ url }) => url);
@@ -241,13 +260,15 @@ export default defineStore("app", () => {
   });
   const css = computed({
     /**
-     * чтение массива ссылок на стили
-     * @returns {Array} массив ссылок на стили
+     * Чтение массива ссылок на стили
+     *
+     * @returns {Array} Массив ссылок на стили
      */
     get: () => get(index)?.css,
     /**
-     * запись массива ссылок на стили
-     * @param {Array} value массив ссылок на стили
+     * Запись массива ссылок на стили
+     *
+     * @param {Array} value Массив ссылок на стили
      */
     set(value) {
       if (isDefined(index)) get(index).css = value.filter(({ url }) => url);
@@ -257,10 +278,7 @@ export default defineStore("app", () => {
     set(index, undefined);
   });
   whenever(logicAnd(s3, data), () => {
-    /**
-     *
-     * @param {string} pAsset - путь до файла ресурса
-     */
+    /** @param {string} pAsset - Путь до файла ресурса */
     const headPutObject = async (pAsset) => {
       try {
         const head = await headObject(pAsset);

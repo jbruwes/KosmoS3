@@ -11,7 +11,7 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const props = defineProps({
   options: {
-    /** @returns {object} default options */
+    /** @returns {object} Default options */
     default: () => ({}),
     type: Object,
   },

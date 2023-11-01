@@ -1,22 +1,47 @@
 <template lang="pug">
 div
-  q-editor.col.column.full-width( ref="editorRef" :dense="$q.screen.lt.md" :model-value="modelValue" :toolbar="editorTlb" :fonts="editorFnt" content-class="col prose max-w-none" flat placeholder="Добавьте контент на вашу страницу..." :definitions="editorDef" @update:model-value="$emit('update:modelValue', $event)" @paste="capture" @drop="capture")
-  q-dialog(v-model="prompt" full-width full-height persistent)
+  q-editor.col.column.full-width(
+    ref="editorRef",
+    :dense="$q.screen.lt.md",
+    :model-value="modelValue",
+    :toolbar="editorTlb",
+    :fonts="editorFnt",
+    content-class="col prose max-w-none",
+    flat,
+    placeholder="Добавьте контент на вашу страницу...",
+    :definitions="editorDef",
+    @update:model-value="$emit('update:modelValue', $event)",
+    @paste="capture",
+    @drop="capture"
+  )
+  q-dialog(v-model="prompt", full-width, full-height, persistent)
     q-card.column
-      q-card-section.row.items-center.q-pb-none
+      q-card-section.row.q-pb-none.items-center
         .text-h6 Выбор компонента для вставки
         q-space
-        q-btn(v-close-popup icon="close" flat round dense)
+        q-btn(v-close-popup, icon="close", flat, round, dense)
       q-card-section
-        q-select(v-model="model" filled :options="options" label="Компонент" emit-value map-options)
+        q-select(
+          v-model="model",
+          filled,
+          :options="options",
+          label="Компонент",
+          emit-value,
+          map-options
+        )
       q-card-section.col.column
-        q-card.col.column(flat bordered)
+        q-card.col.column(flat, bordered)
           q-card-section.col.column
             // eslint-disable-next-line vue/no-v-html
             .col(v-html="model")
       q-card-actions.text-primary(align="right")
-        q-btn(v-close-popup flat label="Отмена")
-        q-btn(v-close-popup flat label="Ok"  @click="editorRef.runCmd('insertHTML', model)")
+        q-btn(v-close-popup, flat, label="Отмена")
+        q-btn(
+          v-close-popup,
+          flat,
+          label="Ok",
+          @click="editorRef.runCmd('insertHTML', model)"
+        )
 </template>
 
 <script setup>
@@ -63,8 +88,11 @@ const { base } = storeToRefs(store);
 const { putFile } = store;
 const editorRef = ref();
 /**
- * { @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#image_types }
- * @param { object } file - файл
+ * { @link
+ * https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#image_types
+ * }
+ *
+ * @param {object} file - Файл
  */
 const putImage = async (file) => {
   try {
@@ -92,9 +120,7 @@ const putImage = async (file) => {
     $q.notify({ message });
   }
 };
-/**
- * @param {object} evt - объект события
- */
+/** @param {object} evt - Объект события */
 const capture = (evt) => {
   const { files = [] } =
     evt?.dataTransfer ||
@@ -124,9 +150,7 @@ const editorDef = reactive({
   template: {
     tip: "Выбор шаблона",
     icon: "dashboard",
-    /**
-     *
-     */
+    /** Открытие модального окна */
     handler() {
       set(prompt, true);
     },

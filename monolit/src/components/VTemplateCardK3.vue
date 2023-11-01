@@ -12,7 +12,7 @@ v-hover(v-slot="{ isHovering, props }")
   )
     v-img(:src="params.image", :aspect-ratio="4 / 3", cover)
       v-expand-transition
-        .d-flex.transition-fast-in-slow-out.bg-white.align-center.justify-center.position-absolute.w-100(
+        .d-flex.transition-fast-in-slow-out.align-center.position-absolute.w-100.justify-center.bg-white(
           v-if="isHovering",
           style="height: 100%; bottom: 0; opacity: 0.9"
         )

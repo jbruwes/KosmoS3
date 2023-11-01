@@ -107,9 +107,7 @@ export default {
     VVantaWavesK3,
     VSingleBannerWavesK3,
   },
-  /**
-   * @returns {object} Параметры спутника
-   */
+  /** @returns {object} Параметры спутника */
   setup() {
     const drawer = ref(false);
     const store = app();
@@ -219,10 +217,7 @@ export default {
     });
     watch(tree, () => {
       if (!window.frameElement) {
-        /**
-         *
-         * @param {object} context Контекст роутера
-         */
+        /** @param {object} context Контекст роутера */
         const route = async (context) => {
           await nextTick();
           if (get(routePath) !== context.routePath) {
