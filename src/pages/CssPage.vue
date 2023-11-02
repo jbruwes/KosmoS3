@@ -14,12 +14,14 @@ q-page.column.full-height
   q-tab-panels.full-width.col(v-model="tab")
     q-tab-panel.column(name="style")
       v-source-code.col(v-model="style", lang="css")
-    q-tab-panel.column(name="css") {{ css }}
+    q-tab-panel.column(name="css")
+      v-interactive-list(v-model="css")
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
+import VInteractiveList from "@/components/VInteractiveList.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 import storeApp from "@/stores/app";
 
