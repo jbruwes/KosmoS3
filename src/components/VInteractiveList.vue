@@ -7,7 +7,7 @@ q-btn-group.q-ma-xs(flat)
 .scroll
   q-list
     q-item(
-      v-for="item in props.modelValue",
+      v-for="item in modelValue",
       :key="item.url",
       v-bind="item",
       clickable
@@ -16,7 +16,7 @@ q-btn-group.q-ma-xs(flat)
         q-item-label {{ item.title }}
 </template>
 <script setup>
-const props = defineProps({
+defineProps({
   modelValue: {
     /** @returns {Array} - Пустой массив */
     default: () => [],

@@ -7,35 +7,12 @@ q-drawer(v-model="rightDrawer", bordered, side="right")
       default-opened,
       header-class="text-primary"
     )
-      q-btn-group.q-mx-xs(spread, flat)
-        q-btn(icon="note", @click="newPage")
-        q-btn(icon="delete", @click="deletePage")
-        q-btn(icon="chevron_left", @click="leftPage")
-        q-btn(icon="chevron_right", @click="rightPage")
-        q-btn(icon="expand_more", @click="downPage")
-        q-btn(icon="expand_less", @click="upPage")
-      .scroll
-        q-tree.q-ma-xs(
-          ref="tree",
-          v-model:selected="selected",
-          v-model:expanded="expanded",
-          :nodes="content ?? []",
-          node-key="id",
-          no-selection-unset,
-          accordion
-        )
-          template(#default-header="prop")
-            .row.no-wrap.items-center(@dblclick="prop.node.edit = true")
-              q-checkbox.q-mr-xs(v-model="prop.node.visible", dense)
-              q-input.min-w-96(
-                v-model.trim="prop.node.label",
-                dense,
-                :readonly="!prop.node.edit",
-                outlined,
-                :bg-color="prop.node.id === selected ? 'primary' : undefined",
-                @click.stop="selected = prop.node.id",
-                @keyup.enter="delete prop.node.edit"
-              )
+      v-interactive-tree(
+        v-model:selected="selected",
+        v-model:expanded="expanded",
+        :nodes="content",
+        :list="list"
+      )
     q-separator
     q-card(v-if="selectedObject", flat)
       q-item.text-teal
@@ -133,19 +110,13 @@ q-page.column.full-height
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
-import {
-  get,
-  isDefined,
-  set,
-  useArrayFind,
-  useFileDialog,
-  whenever,
-} from "@vueuse/core";
+import { get, isDefined, set, useFileDialog, whenever } from "@vueuse/core";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
 import { computed, reactive, ref, watch } from "vue";
 
+import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 import VWysiwyg from "@/components/VWysiwyg.vue";
 import storeApp from "@/stores/app";
@@ -168,7 +139,6 @@ const changefreq = reactive([
   "never",
 ]);
 const icons = ref(materialIcons.icons);
-
 const data = ref({
   filter: "",
   pagination: {
@@ -176,10 +146,8 @@ const data = ref({
     page: 0,
   },
 });
-
 set(rightDrawer, true);
 const tab = ref("wysiwyg");
-const tree = ref();
 const selectedValue = computed({
   /**
    * Считывание исходного кода из структуры данных
@@ -215,85 +183,6 @@ const init = () => {
 };
 if (isDefined(content)) init();
 else whenever(content, init);
-/** Добавление новой страницы */
-const newPage = () => {
-  const { parent, children, index, siblings } = get(selectedObject);
-  const id = uid();
-  const visible = true;
-  const label = "";
-  const html = "";
-  const page = { id, visible, label, html };
-  if (parent) siblings.splice(index + 1, 0, page);
-  else children.unshift(page);
-  set(selected, id);
-};
-/** Удаление текущей страницы */
-const deletePage = () => {
-  const { parent, prev, next, siblings } = get(selectedObject) ?? {};
-  if (parent)
-    $q.dialog({
-      title: "Подтверждение",
-      message: "Вы действительно хотите удалить эту и все дочерние страницы?",
-      cancel: true,
-      persistent: true,
-    }).onOk(() => {
-      let id;
-      switch (true) {
-        case !!next:
-          ({ id } = next);
-          break;
-        case !!prev:
-          ({ id } = prev);
-          break;
-        default:
-          ({ id } = parent);
-      }
-      parent.children = siblings.filter(({ id: pId }) => pId !== get(selected));
-      set(selected, id);
-    });
-};
-/** Перемещение страницы вверх на одну позицию */
-const upPage = () => {
-  const { index, siblings } = get(selectedObject) ?? {};
-  if (index)
-    [siblings[index - 1], siblings[index]] = [
-      siblings[index],
-      siblings[index - 1],
-    ];
-};
-/** Перемещение страницы вниз на одну позицию */
-const downPage = () => {
-  const { index, siblings } = get(selectedObject) ?? {};
-  if (index < siblings.length - 1)
-    [siblings[index], siblings[index + 1]] = [
-      siblings[index + 1],
-      siblings[index],
-    ];
-};
-/** Перемещение страницы вправо на одну позицию */
-const rightPage = () => {
-  const { index, siblings, prev } = get(selectedObject) ?? {};
-  if (prev) {
-    const { children = [], id } = prev;
-    prev.children = [...children, ...siblings.splice(index, 1)];
-    get(tree).setExpanded(id, true);
-  }
-};
-/** Перемещение страницы влево на одну позицию */
-const leftPage = () => {
-  const {
-    index,
-    parent: { index: parIndex, parent, siblings, children, id } = {},
-  } = get(selectedObject) ?? {};
-  if (parent) {
-    get(tree).setExpanded(id, false);
-    siblings.splice(parIndex + 1, 0, ...children.splice(index, 1));
-  }
-};
-watch(selected, (newVal, oldVal) => {
-  const prevObj = useArrayFind(list, ({ id }) => id === oldVal);
-  delete get(prevObj)?.edit;
-});
 const { files, open } = useFileDialog({
   multiple: false,
   accept: "image/*",
@@ -329,8 +218,3 @@ watch(files, async (newFiles) => {
     }
 });
 </script>
-<style>
-.min-w-96 {
-  min-width: 96px;
-}
-</style>
