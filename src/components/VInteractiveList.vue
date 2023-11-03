@@ -19,9 +19,7 @@ q-btn-group.q-ma-xs(flat)
 const props = defineProps({
   modelValue: {
     /** @returns {Array} - Пустой массив */
-    default() {
-      return [];
-    },
+    default: () => [],
     type: Array,
   },
 });
