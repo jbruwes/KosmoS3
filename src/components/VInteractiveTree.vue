@@ -2,16 +2,16 @@
 q-btn-group.q-mx-xs(spread, flat)
   q-btn(icon="note", @click="newPage")
   q-btn(icon="delete", @click="deletePage")
-  q-btn(icon="chevron_left", @click="leftPage")
-  q-btn(icon="chevron_right", @click="rightPage")
+  q-btn(v-if="nodes", icon="chevron_left", @click="leftPage")
+  q-btn(v-if="nodes", icon="chevron_right", @click="rightPage")
   q-btn(icon="expand_more", @click="downPage")
   q-btn(icon="expand_less", @click="upPage")
-.scroll
+.scroll.col
   q-tree.q-ma-xs(
     ref="tree",
     :selected="selected",
     :expanded="expanded",
-    :nodes="nodes ?? []",
+    :nodes="nodes ?? list",
     node-key="id",
     no-selection-unset,
     accordion,
@@ -19,12 +19,13 @@ q-btn-group.q-mx-xs(spread, flat)
     @update:expanded="$emit('update:expanded', $event)"
   )
     template(#default-header="prop")
-      .row.no-wrap.items-center(@dblclick="prop.node.edit = true")
+      .row.no-wrap.full-width.items-center(@dblclick="prop.node.edit = true")
         q-checkbox.q-mr-xs(v-model="prop.node.visible", dense)
-        q-input.min-w-96(
-          v-model.trim="prop.node.label",
+        q-input.min-w-96.full-width(
+          v-model.trim="prop.node[type === 'text' ? 'label' : type]",
           dense,
           :readonly="!prop.node.edit",
+          :type="type",
           outlined,
           :bg-color="prop.node.id === selected ? 'primary' : undefined",
           @click.stop="$emit('update:selected', prop.node.id)",
@@ -32,22 +33,19 @@ q-btn-group.q-mx-xs(spread, flat)
         )
 </template>
 <script setup>
-import { get, useArrayFind } from "@vueuse/core";
+import { get, useArrayFind, useArrayFindIndex } from "@vueuse/core";
 import { uid, useQuasar } from "quasar";
 import { ref, toRef, watch } from "vue";
 
 const props = defineProps({
   selected: { default: "", type: String },
+  type: { default: "text", type: String },
   expanded: {
     /** @returns {Array} - Пустой массив */
     default: () => [],
     type: Array,
   },
-  nodes: {
-    /** @returns {Array} - Пустой массив */
-    default: () => [],
-    type: Array,
-  },
+  nodes: { default: undefined, type: Array },
   list: {
     /** @returns {Array} - Пустой массив */
     default: () => [],
@@ -60,20 +58,31 @@ const tree = ref();
 const updateSelected = "update:selected";
 const refList = toRef(props, "list");
 const selectedObject = useArrayFind(refList, ({ id }) => id === props.selected);
+const selectedObjectIndex = useArrayFindIndex(
+  refList,
+  ({ id }) => id === props.selected,
+);
 watch(selectedObject, (newVal, oldVal) => {
   const lOldVal = oldVal;
   delete lOldVal?.edit;
 });
 /** Добавление новой страницы */
 const newPage = () => {
-  const { parent, children, index, siblings } = get(selectedObject);
+  const { parent, children, index, siblings } = get(selectedObject) ?? {};
   const id = uid();
   const visible = true;
-  const label = "";
-  const html = "";
-  const page = { id, visible, label, html };
-  if (parent) siblings.splice(index + 1, 0, page);
-  else children.unshift(page);
+  const page = { id, visible };
+  switch (true) {
+    case !!parent:
+      siblings.splice(index + 1, 0, page);
+      break;
+    case !!children:
+      children.unshift(page);
+      break;
+    default:
+      refList.value.splice(get(selectedObjectIndex) + 1, 0, page);
+      break;
+  }
   emits(updateSelected, id);
 };
 /** Удаление текущей страницы */
