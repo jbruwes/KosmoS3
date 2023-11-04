@@ -163,16 +163,24 @@ export default defineStore("app", () => {
     let settings = { ...pSettings };
     css = Array.isArray(css)
       ? css
-          .map(({ id = uid(), url = "" }) => ({ id, url }))
+          .map(({ id = uid(), url = "", visible = true }) => ({
+            id,
+            url,
+            visible,
+          }))
           .filter(({ url }) => url)
       : [];
-    if (!css.length) css.push({ id: uid(), url: "" });
+    if (!css.length) css.push({ id: uid(), url: "", visible: true });
     js = Array.isArray(js)
       ? js
-          .map(({ id = uid(), url = "" }) => ({ id, url }))
+          .map(({ id = uid(), url = "", visible = true }) => ({
+            id,
+            url,
+            visible,
+          }))
           .filter(({ url }) => url)
       : [];
-    if (!js.length) js.push({ id: uid(), url: "" });
+    if (!js.length) js.push({ id: uid(), url: "", visible: true });
     const {
       id = uid(),
       visible = true,
