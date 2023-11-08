@@ -33,7 +33,7 @@ q-btn-group.q-mx-xs(spread, flat)
         )
 </template>
 <script setup>
-import { get, useArrayFind, useArrayFindIndex } from "@vueuse/core";
+import { get, useArrayFind } from "@vueuse/core";
 import { uid, useQuasar } from "quasar";
 import { ref, toRef, watch } from "vue";
 
@@ -58,10 +58,6 @@ const tree = ref();
 const updateSelected = "update:selected";
 const refList = toRef(props, "list");
 const selectedObject = useArrayFind(refList, ({ id }) => id === props.selected);
-const selectedObjectIndex = useArrayFindIndex(
-  refList,
-  ({ id }) => id === props.selected,
-);
 watch(selectedObject, (newVal, oldVal) => {
   const lOldVal = oldVal;
   delete lOldVal?.edit;
@@ -80,18 +76,24 @@ const newPage = () => {
       children.unshift(page);
       break;
     default:
-      refList.value.splice(get(selectedObjectIndex) + 1, 0, page);
+      siblings.splice(index + 1, 0, page);
       break;
   }
   emits(updateSelected, id);
 };
 /** Удаление текущей страницы */
 const deletePage = () => {
-  const { parent, prev, next, siblings } = get(selectedObject) ?? {};
-  if (parent)
+  const {
+    parent,
+    children,
+    prev,
+    next,
+    siblings = get(refList),
+  } = get(selectedObject) ?? {};
+  if (parent || !(parent || children))
     $q.dialog({
       title: "Подтверждение",
-      message: "Вы действительно хотите удалить эту и все дочерние страницы?",
+      message: "Вы действительно хотите удалить?",
       cancel: true,
       persistent: true,
     }).onOk(() => {
@@ -104,7 +106,7 @@ const deletePage = () => {
           ({ id } = prev);
           break;
         default:
-          ({ id } = parent);
+          ({ id } = parent ?? {});
       }
       parent.children = siblings.filter(
         ({ id: pId }) => pId !== props.selected,

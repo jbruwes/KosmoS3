@@ -4,7 +4,7 @@ import { computed, ref } from "vue";
 
 import app from "./app";
 
-export default defineStore("templateStore", () => {
+export default defineStore("contentStore", () => {
   const store = app();
   const { index } = storeToRefs(store);
   const selected = ref();
@@ -44,7 +44,7 @@ export default defineStore("templateStore", () => {
             configurable: true,
           },
           index: {
-            /** @returns {number} - Позиция в массиве однокровневых объектов */
+            /** @returns {number} - Позиция в массиве одноуровневых объектов */
             get() {
               return this.siblings.findIndex(({ id }) => this.id === id);
             },

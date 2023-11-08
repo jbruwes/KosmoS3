@@ -266,22 +266,6 @@ export default defineStore("app", () => {
       if (isDefined(index)) get(index).js = value.filter(({ url }) => url);
     },
   });
-  const css = computed({
-    /**
-     * Чтение массива ссылок на стили
-     *
-     * @returns {Array} Массив ссылок на стили
-     */
-    get: () => get(index)?.css,
-    /**
-     * Запись массива ссылок на стили
-     *
-     * @param {Array} value Массив ссылок на стили
-     */
-    set(value) {
-      if (isDefined(index)) get(index).css = value.filter(({ url }) => url);
-    },
-  });
   whenever(logicNot(s3), () => {
     set(index, undefined);
   });
@@ -325,7 +309,7 @@ export default defineStore("app", () => {
   );
   return {
     ...{ bucket, wendpoint, base },
-    ...{ index, js, script, css, style, settings },
+    ...{ index, js, script, style, settings },
     ...{ s3, putFile },
     ...{ rightDrawer },
   };
