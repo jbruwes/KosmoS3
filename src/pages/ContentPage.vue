@@ -11,7 +11,8 @@ q-drawer(v-model="rightDrawer", bordered, side="right")
         v-model:selected="selected",
         v-model:expanded="expanded",
         :nodes="content",
-        :list="list"
+        :list="list",
+        :selected-object="selectedObject"
       )
     q-separator
     q-card(v-if="selectedObject", flat)

@@ -33,7 +33,7 @@ q-btn-group.q-mx-xs(spread, flat)
         )
 </template>
 <script setup>
-import { get, useArrayFind } from "@vueuse/core";
+import { get } from "@vueuse/core";
 import { uid, useQuasar } from "quasar";
 import { ref, toRef, watch } from "vue";
 
@@ -51,20 +51,24 @@ const props = defineProps({
     default: () => [],
     type: Array,
   },
+  selectedObject: {
+    /** @returns {object} - Пустой объект */
+    default: () => ({}),
+    type: Object,
+  },
 });
 const emits = defineEmits(["update:expanded", "update:selected"]);
 const $q = useQuasar();
 const tree = ref();
 const updateSelected = "update:selected";
-const refList = toRef(props, "list");
-const selectedObject = useArrayFind(refList, ({ id }) => id === props.selected);
-watch(selectedObject, (newVal, oldVal) => {
+const refSelectedObject = toRef(props, "selectedObject");
+watch(refSelectedObject, (newVal, oldVal) => {
   const lOldVal = oldVal;
   delete lOldVal?.edit;
 });
 /** Добавление новой страницы */
 const newPage = () => {
-  const { parent, children, index, siblings } = get(selectedObject) ?? {};
+  const { parent, children, index, siblings } = props.selectedObject;
   const id = uid();
   const visible = true;
   const page = { id, visible };
@@ -83,13 +87,8 @@ const newPage = () => {
 };
 /** Удаление текущей страницы */
 const deletePage = () => {
-  const {
-    parent,
-    children,
-    prev,
-    next,
-    siblings = get(refList),
-  } = get(selectedObject) ?? {};
+  const { parent, children, prev, next, siblings, index } =
+    props.selectedObject;
   if (parent || !(parent || children))
     $q.dialog({
       title: "Подтверждение",
@@ -106,17 +105,16 @@ const deletePage = () => {
           ({ id } = prev);
           break;
         default:
-          ({ id } = parent ?? {});
+          ({ id = uid() } = parent ?? {});
       }
-      parent.children = siblings.filter(
-        ({ id: pId }) => pId !== props.selected,
-      );
+      siblings.splice(index, 1);
+      if (!siblings.length && !parent) siblings.push({ id, visible: true });
       emits(updateSelected, id);
     });
 };
 /** Перемещение страницы вверх на одну позицию */
 const upPage = () => {
-  const { index, siblings } = get(selectedObject) ?? {};
+  const { index, siblings } = props.selectedObject;
   if (index)
     [siblings[index - 1], siblings[index]] = [
       siblings[index],
@@ -125,7 +123,7 @@ const upPage = () => {
 };
 /** Перемещение страницы вниз на одну позицию */
 const downPage = () => {
-  const { index, siblings } = get(selectedObject) ?? {};
+  const { index, siblings } = props.selectedObject;
   if (index < siblings.length - 1)
     [siblings[index], siblings[index + 1]] = [
       siblings[index + 1],
@@ -134,7 +132,7 @@ const downPage = () => {
 };
 /** Перемещение страницы вправо на одну позицию */
 const rightPage = () => {
-  const { index, siblings, prev } = get(selectedObject) ?? {};
+  const { index, siblings, prev } = props.selectedObject;
   if (prev) {
     const { children = [], id } = prev;
     prev.children = [...children, ...siblings.splice(index, 1)];
@@ -146,7 +144,7 @@ const leftPage = () => {
   const {
     index,
     parent: { index: parIndex, parent, siblings, children, id } = {},
-  } = get(selectedObject) ?? {};
+  } = props.selectedObject;
   if (parent) {
     get(tree).setExpanded(id, false);
     siblings.splice(parIndex + 1, 0, ...children.splice(index, 1));

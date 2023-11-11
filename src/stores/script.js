@@ -1,36 +1,52 @@
-import { get, isDefined } from "@vueuse/core";
+import { get, isDefined, useArrayFind } from "@vueuse/core";
 import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import app from "./app";
 
-export default defineStore("cssStore", () => {
+export default defineStore("scriptStore", () => {
   const store = app();
   const { index } = storeToRefs(store);
   const selected = ref();
-  const css = computed({
+  const script = computed({
     /**
-     * Чтение массива ссылок на стили
+     * Чтение скрипта
      *
-     * @returns {Array} Массив ссылок на стили
+     * @returns {string} Скрипт
      */
-    get: () => get(index)?.css,
+    get: () => get(index)?.script,
     /**
-     * Запись массива ссылок на стили
+     * Запись скрипта
      *
-     * @param {Array} value Массив ссылок на стили
+     * @param {string} value Скрипт
      */
     set(value) {
-      if (isDefined(index)) get(index).css = value.filter(({ url }) => url);
+      if (isDefined(index)) get(index).script = value;
+    },
+  });
+  const js = computed({
+    /**
+     * Чтение массива ссылок на скрипты
+     *
+     * @returns {Array} Массив ссылок на скрипты
+     */
+    get: () => get(index)?.js,
+    /**
+     * Запись массива ссылок на скрипты
+     *
+     * @param {Array} value Массив ссылок на скрипты
+     */
+    set(value) {
+      if (isDefined(index)) get(index).js = value.filter(({ url }) => url);
     },
   });
   const list = computed(() =>
-    get(css).map((current) => {
+    get(js).map((current) => {
       Object.defineProperties(current, {
         siblings: {
           /** @returns {Array} - Массив одноуровневых объектов */
           get() {
-            return get(css);
+            return get(js);
           },
           configurable: true,
         },
@@ -59,5 +75,6 @@ export default defineStore("cssStore", () => {
       return current;
     }),
   );
-  return { css, selected, list };
+  const selectedObject = useArrayFind(list, ({ id }) => id === get(selected));
+  return { js, script, selected, list, selectedObject };
 });

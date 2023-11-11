@@ -15,7 +15,12 @@ q-page.column.full-height
     q-tab-panel.column(name="style")
       v-source-code.col(v-model="style", lang="css")
     q-tab-panel.column(name="css")
-      v-interactive-tree(v-model:selected="selected", type="url", :list="list")
+      v-interactive-tree(
+        v-model:selected="selected",
+        type="url",
+        :list="list",
+        :selected-object="selectedObject"
+      )
 </template>
 <script setup>
 import { get, isDefined, set, whenever } from "@vueuse/core";
@@ -24,11 +29,11 @@ import { ref } from "vue";
 
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
-import storeApp from "@/stores/app";
-import storeCss from "@/stores/css";
+import styleStore from "@/stores/style";
 
-const { style } = storeToRefs(storeApp());
-const { css, selected, list } = storeToRefs(storeCss());
+const { css, style, selected, list, selectedObject } = storeToRefs(
+  styleStore(),
+);
 const tab = ref("style");
 /** Инициализация */
 const init = () => {

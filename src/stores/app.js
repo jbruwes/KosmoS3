@@ -218,54 +218,6 @@ export default defineStore("app", () => {
       if (isDefined(index)) get(index).settings = value;
     },
   });
-  const script = computed({
-    /**
-     * Чтение скрипта
-     *
-     * @returns {string} Скрипт
-     */
-    get: () => get(index)?.script,
-    /**
-     * Запись скрипта
-     *
-     * @param {string} value Скрипт
-     */
-    set(value) {
-      if (isDefined(index)) get(index).script = value;
-    },
-  });
-  const style = computed({
-    /**
-     * Чтение стилей
-     *
-     * @returns {string} Стили
-     */
-    get: () => get(index)?.style,
-    /**
-     * Запись стилей
-     *
-     * @param {string} value Стили
-     */
-    set(value) {
-      if (isDefined(index)) get(index).style = value;
-    },
-  });
-  const js = computed({
-    /**
-     * Чтение массива ссылок на скрипты
-     *
-     * @returns {Array} Массив ссылок на скрипты
-     */
-    get: () => get(index)?.js,
-    /**
-     * Запись массива ссылок на скрипты
-     *
-     * @param {Array} value Массив ссылок на скрипты
-     */
-    set(value) {
-      if (isDefined(index)) get(index).js = value.filter(({ url }) => url);
-    },
-  });
   whenever(logicNot(s3), () => {
     set(index, undefined);
   });
@@ -309,7 +261,7 @@ export default defineStore("app", () => {
   );
   return {
     ...{ bucket, wendpoint, base },
-    ...{ index, js, script, style, settings },
+    ...{ index, settings },
     ...{ s3, putFile },
     ...{ rightDrawer },
   };
