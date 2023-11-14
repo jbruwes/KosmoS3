@@ -8,6 +8,7 @@ export default defineStore("scriptStore", () => {
   const store = app();
   const { index } = storeToRefs(store);
   const selected = ref();
+  const tab = ref("script");
   const script = computed({
     /**
      * Чтение скрипта
@@ -76,5 +77,5 @@ export default defineStore("scriptStore", () => {
     }),
   );
   const selectedObject = useArrayFind(list, ({ id }) => id === get(selected));
-  return { js, script, selected, list, selectedObject };
+  return { js, script, selected, list, selectedObject, tab };
 });

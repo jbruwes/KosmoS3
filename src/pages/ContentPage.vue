@@ -127,9 +127,8 @@ const $q = useQuasar();
 const appStore = storeApp();
 const { rightDrawer, base } = storeToRefs(appStore);
 const { putFile } = appStore;
-const { content, selected, expanded, selectedObject, list } = storeToRefs(
-  storeContent(),
-);
+const { content, selected, expanded, selectedObject, list, tab } =
+  storeToRefs(storeContent());
 const changefreq = reactive([
   "always",
   "hourly",
@@ -148,7 +147,6 @@ const data = ref({
   },
 });
 set(rightDrawer, true);
-const tab = ref("wysiwyg");
 const selectedValue = computed({
   /**
    * Считывание исходного кода из структуры данных

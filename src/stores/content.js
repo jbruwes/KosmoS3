@@ -9,6 +9,7 @@ export default defineStore("contentStore", () => {
   const { index } = storeToRefs(store);
   const selected = ref();
   const expanded = ref([]);
+  const tab = ref("wysiwyg");
   const content = computed({
     /**
      * Чтение контента
@@ -85,5 +86,5 @@ export default defineStore("contentStore", () => {
     })(get(content) ?? [{}]),
   );
   const selectedObject = useArrayFind(list, ({ id }) => id === get(selected));
-  return { content, selected, expanded, list, selectedObject };
+  return { content, selected, expanded, list, selectedObject, tab };
 });

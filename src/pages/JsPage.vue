@@ -25,16 +25,16 @@ q-page.column.full-height
 <script setup>
 import { get, isDefined, set, whenever } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
 
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
+import storeApp from "@/stores/app";
 import scriptStore from "@/stores/script";
 
-const { js, script, selected, list, selectedObject } = storeToRefs(
-  scriptStore(),
-);
-const tab = ref("script");
+const { rightDrawer } = storeToRefs(storeApp());
+const { js, script, selected, list, selectedObject, tab } =
+  storeToRefs(scriptStore());
+set(rightDrawer, null);
 /** Инициализация */
 const init = () => {
   const [{ id }] = get(js);

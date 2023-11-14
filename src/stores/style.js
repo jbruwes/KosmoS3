@@ -8,6 +8,7 @@ export default defineStore("styleStore", () => {
   const store = app();
   const { index } = storeToRefs(store);
   const selected = ref();
+  const tab = ref("style");
   const css = computed({
     /**
      * Чтение массива ссылок на стили
@@ -76,5 +77,5 @@ export default defineStore("styleStore", () => {
     }),
   );
   const selectedObject = useArrayFind(list, ({ id }) => id === get(selected));
-  return { css, style, selected, list, selectedObject };
+  return { css, style, selected, list, selectedObject, tab };
 });

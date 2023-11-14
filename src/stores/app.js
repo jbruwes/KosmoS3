@@ -202,22 +202,6 @@ export default defineStore("app", () => {
       set(index, calcIndex(json));
     }
   });
-  const settings = computed({
-    /**
-     * Чтение настроек
-     *
-     * @returns {object} Настройки
-     */
-    get: () => get(index)?.settings,
-    /**
-     * Запись настроек
-     *
-     * @param {object} value Настройки
-     */
-    set(value) {
-      if (isDefined(index)) get(index).settings = value;
-    },
-  });
   whenever(logicNot(s3), () => {
     set(index, undefined);
   });
@@ -261,7 +245,7 @@ export default defineStore("app", () => {
   );
   return {
     ...{ bucket, wendpoint, base },
-    ...{ index, settings },
+    ...{ index },
     ...{ s3, putFile },
     ...{ rightDrawer },
   };
