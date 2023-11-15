@@ -246,7 +246,7 @@ export default defineStore("app", () => {
   return {
     ...{ bucket, wendpoint, base },
     ...{ index },
-    ...{ s3, putFile },
+    ...{ s3, putFile, putObject },
     ...{ rightDrawer },
   };
 });

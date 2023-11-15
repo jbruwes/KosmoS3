@@ -1,13 +1,14 @@
-import { get, isDefined, useArrayFind } from "@vueuse/core";
+import { get, isDefined, useArrayFind, watchDebounced } from "@vueuse/core";
 import { defineStore, storeToRefs } from "pinia";
 import { toXML } from "to-xml";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 import app from "./app";
 
 export default defineStore("contentStore", () => {
   const store = app();
-  const { index } = storeToRefs(store);
+  const { index, bucket } = storeToRefs(store);
+  const { putObject } = store;
   const selected = ref();
   const expanded = ref([]);
   const tab = ref("wysiwyg");
@@ -79,6 +80,16 @@ export default defineStore("contentStore", () => {
             },
             configurable: true,
           },
+          path: {
+            /** @returns {string} - Путь до объекта */
+            get() {
+              return this.branch
+                .map(({ label }) => encodeURIComponent(label))
+                .slice(1)
+                .join("/");
+            },
+            configurable: true,
+          },
         });
         return current.children?.length
           ? [...accumulator, ...getMembers(current.children, current)]
@@ -87,28 +98,25 @@ export default defineStore("contentStore", () => {
     })(get(content) ?? [{}]),
   );
   const selectedObject = useArrayFind(list, ({ id }) => id === get(selected));
-
-  const sitemap = computed(() => {
-    return {
-      "?": 'xml version="1.0" encoding="UTF-8"',
-      urlset: {
-        "@xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9",
-        url: get(list).map(({ loc, lastmod, changefreq, priority }) => ({
-          loc,
-          lastmod,
-          changefreq,
-          priority,
-        })),
-      },
-    };
-  });
-  watch(
-    sitemap,
-    (val) => {
-      console.log(JSON.stringify(val));
-      console.log(toXML(val));
+  const sitemap = computed(() => ({
+    "?": 'xml version="1.0" encoding="UTF-8"',
+    urlset: {
+      "@xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9",
+      url: get(list).map(({ loc, lastmod, changefreq, priority, path }) => ({
+        loc: `https://${get(bucket)}/${loc ? encodeURI(loc) : path}`,
+        lastmod,
+        changefreq,
+        priority,
+      })),
     },
-    { deep: true },
+  }));
+  watchDebounced(
+    sitemap,
+    (value, oldValue) => {
+      if (value && oldValue)
+        putObject("sitemap.xml", "application/xml", toXML(value));
+    },
+    { debounce: 1000, maxWait: 10000 },
   );
   return { content, selected, expanded, list, selectedObject, tab };
 });
