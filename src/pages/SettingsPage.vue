@@ -1,6 +1,6 @@
 <template lang="pug">
 q-page.column.full-height
-  q-card.q-ma-xl.col(flat)
+  q-card.q-ma-xl.col.scroll(flat)
     q-card-section
       .text-h6 YANDEX
     q-separator
