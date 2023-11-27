@@ -10,6 +10,7 @@
     "format": "prettier --write \"**/*.{js,vue,css,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
+    "build:monolit": "vite build monolit --emptyOutDir --base=./",
     "build": "quasar build"
   },
   "dependencies": {

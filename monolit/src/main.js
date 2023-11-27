@@ -1,9 +1,3 @@
-/**
- * Main.js
- *
- * Bootstraps Vuetify and other plugins then mounts the App`
- */
-
 import "@fontsource/arsenal";
 import "@fontsource/bad-script";
 import "@fontsource/caveat";
@@ -33,12 +27,10 @@ import "glightbox/dist/css/glightbox.css";
 import "animate.css/animate.css";
 import "./styles/index.css";
 
-// Components
-// Composables
+import { createPinia } from "pinia";
 import { createApp } from "vue";
-
-// Plugins
-import registerPlugins from "@/plugins";
+import VueAnimateOnScroll from "vue3-animate-onscroll";
+import Particles from "vue3-particles";
 
 import App from "./App.vue";
 
@@ -50,5 +42,5 @@ document.addEventListener("click", (event) => {
 });
 
 const app = createApp(App);
-registerPlugins(app);
+app.use(createPinia()).use(Particles).use(VueAnimateOnScroll);
 app.mount("#app");

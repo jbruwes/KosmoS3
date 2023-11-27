@@ -1,4 +1,8 @@
-<script>
+<template lang="pug">
+div test
+</template>
+
+<!--script>
 import { get, set, useBrowserLocation, useScriptTag } from "@vueuse/core";
 import { useHead } from "@vueuse/head";
 import GLightbox from "glightbox";
@@ -7,7 +11,7 @@ import { storeToRefs } from "pinia";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import VRuntimeTemplate from "vue3-runtime-template";
 
-import app from "@/store/app";
+import app from "@/stores/app";
 
 import VBreadcrumbsK3 from "./components/VBreadcrumbsK3.vue";
 import VCarouselBannerK3 from "./components/VCarouselBannerK3.vue";
@@ -302,4 +306,4 @@ export default {
     };
   },
 };
-</script>
+</script-->

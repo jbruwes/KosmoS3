@@ -1,26 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <div id="app">
-      <v-app>
-        <v-navigation-drawer-k3 v-model="drawer"></v-navigation-drawer-k3>
-        <v-app-bar app hide-on-scroll>
-          <v-app-bar-nav-icon
-            @click.stop="drawer = !drawer"
-          ></v-app-bar-nav-icon>
-          <v-toolbar-title :text="title"></v-toolbar-title>
-          <v-spacer></v-spacer><v-menu-k3></v-menu-k3>
-        </v-app-bar>
-        <v-main
-          ><v-container fluid class="pa-0"><div id="kosmos3"></div></v-container
-        ></v-main>
-      </v-app>
-    </div>
+    <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
