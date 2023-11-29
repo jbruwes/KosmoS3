@@ -226,9 +226,10 @@ export default defineStore("app", () => {
         if (lBody) putObject(pAsset, lBody.type, lBody);
       }
     };
-    get(data).forEach((asset) => {
-      headPutObject(asset);
-    });
+    get(data).reduce(async (promise, asset) => {
+      await promise;
+      await headPutObject(asset);
+    }, Promise.resolve());
   });
   watchDebounced(
     index,

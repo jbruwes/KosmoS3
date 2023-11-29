@@ -25,7 +25,6 @@ import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 import "glightbox/dist/css/glightbox.css";
 import "animate.css/animate.css";
-import "./styles/index.css";
 
 import { createPinia } from "pinia";
 import { createApp } from "vue";

@@ -13,6 +13,7 @@ export default defineConfig({
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },
+  base: "",
   build: {
     manifest: true,
     outDir: "../public/monolit",

@@ -11,44 +11,19 @@
       name="viewport"
       content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>"
     />
-
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="128x128"
-      href="icons/favicon-128x128.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="96x96"
-      href="icons/favicon-96x96.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="icons/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="icons/favicon-16x16.png"
-    />
-    <link rel="icon" type="image/ico" href="favicon.ico" />
+    <link rel="icon" href="favicon.svg" sizes="any" type="image/svg+xml" />
     <style>
       #loader {
-        width: 48px;
-        height: 48px;
-        border: 5px solid black;
-        border-bottom-color: transparent;
-        border-radius: 50%;
-        animation: rotation 1s linear infinite;
         position: absolute;
         top: 50%;
         left: 50%;
+        animation: rotation 1s linear infinite;
         margin: -24px auto auto -24px;
+        border: 5px solid black;
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
       }
       @keyframes rotation {
         0% {
