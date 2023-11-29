@@ -115,7 +115,6 @@ export default defineStore("app", () => {
     }
     return ret;
   };
-  const requiredFiles = ["index.html", "favicon.ico"];
   const { data } = useFetch("monolit/.vite/manifest.json", {
     /**
      * Преводим в массив
@@ -125,7 +124,7 @@ export default defineStore("app", () => {
      */
     afterFetch(ctx) {
       ctx.data = [
-        ...requiredFiles,
+        "index.html",
         ...Object.values(ctx.data).map(({ file }) => file),
       ];
       return ctx;
@@ -210,7 +209,7 @@ export default defineStore("app", () => {
     const headPutObject = async (pAsset) => {
       try {
         const head = await headObject(pAsset);
-        if (requiredFiles.includes(pAsset)) throw new Error(head.ContentLength);
+        if (pAsset === "index.html") throw new Error(head.ContentLength);
       } catch (e) {
         const byteLength = +e.message;
         const { data: body } = await useFetch(`monolit/${pAsset}`).blob();
