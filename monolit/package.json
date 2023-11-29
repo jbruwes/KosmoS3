@@ -5,6 +5,7 @@
   "productName": "monolit",
   "author": "Jerry Bruwes <jbruwes@gmail.com>",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "vite build --emptyOutDir"
   },

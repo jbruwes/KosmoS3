@@ -116,7 +116,7 @@ export default defineStore("app", () => {
     return ret;
   };
   const requiredFiles = ["index.html", "favicon.ico"];
-  const { data } = useFetch("monolit/manifest.json", {
+  const { data } = useFetch("monolit/.vite/manifest.json", {
     /**
      * Преводим в массив
      *
