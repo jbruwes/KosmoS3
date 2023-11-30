@@ -1,7 +1,43 @@
 <template lang="pug">
-div test
+.drawer
+  input#my-drawer-3.drawer-toggle(type="checkbox")
+  .drawer-content.flex.flex-col
+    .navbar.bg-base-300.w-full
+      .flex-none(class="lg:hidden")
+        label.btn.btn-square.btn-ghost(
+          for="my-drawer-3",
+          aria-label="open sidebar"
+        )
+          svg.inline-block.h-6.w-6.stroke-current(
+            xmlns="http://www.w3.org/2000/svg",
+            fill="none",
+            viewBox="0 0 24 24"
+          )
+            path(
+              stroke-linecap="round",
+              stroke-linejoin="round",
+              stroke-width="2",
+              d="M4 6h16M4 12h16M4 18h16"
+            )
+      .mx-2.flex-1.px-2 Navbar Title
+      .hidden.flex-none(class="lg:block")
+        ul.menu.menu-horizontal
+          li
+            a Navbar Item 1
+          li
+            a Navbar Item 2
+    | Content
+  .drawer-side
+    label.drawer-overlay(for="my-drawer-3", aria-label="close sidebar")
+    ul.menu.bg-base-200.min-h-full.w-80.p-4
+      li
+        a Sidebar Item 1
+      li
+        a Sidebar Item 2
 </template>
-
+<script setup>
+import "daisyui/dist/full.css";
+</script>
 <!--script>
 import { get, set, useBrowserLocation, useScriptTag } from "@vueuse/core";
 import { useHead } from "@vueuse/head";

@@ -208,22 +208,11 @@ export default defineStore("app", () => {
     /** @param {string} pAsset - Путь до файла ресурса */
     const headPutObject = async (pAsset) => {
       try {
-        const head = await headObject(pAsset);
-        if (pAsset === "index.html") throw new Error(head.ContentLength);
+        if (pAsset === "index.html") throw new Error();
+        await headObject(pAsset);
       } catch (e) {
-        const byteLength = +e.message;
         const { data: body } = await useFetch(`monolit/${pAsset}`).blob();
-        let lBody = null;
-        if (Number.isNaN(byteLength)) lBody = get(body);
-        else {
-          const blob = new Blob(
-            [(await get(body).text()).replace(/{{ domain }}/g, get(bucket))],
-            { type: get(body).type },
-          );
-          if (byteLength !== (await blob.arrayBuffer()).byteLength)
-            lBody = blob;
-        }
-        if (lBody) putObject(pAsset, lBody.type, lBody);
+        putObject(pAsset, get(body).type, get(body));
       }
     };
     get(data).reduce(async (promise, asset) => {

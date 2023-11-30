@@ -38,6 +38,8 @@
     "@mdi/font": "^7.3.67",
     "@twind/core": "^1.1.3",
     "@twind/preset-autoprefix": "^1.0.7",
+    "@twind/preset-container-queries": "^1.0.7",
+    "@twind/preset-ext": "^1.0.7",
     "@twind/preset-tailwind": "^1.1.4",
     "@twind/preset-typography": "^1.0.7",
     "@unhead/vue": "^1.8.8",
@@ -56,14 +58,14 @@
     "tsparticles-demo-configs": "^2.12.0",
     "tsparticles-engine": "^2.12.0",
     "vanta": "^0.5.24",
-    "vite": "^5.0.3",
+    "vite": "^5.0.4",
     "vue": "^3.3.9",
     "vue3-animate-onscroll": "^1.0.6",
     "vue3-particles": "^2.12.0",
     "vue3-runtime-template": "^1.0.2"
   },
   "devDependencies": {
-    "@vue/language-plugin-pug": "^1.8.22",
+    "@vue/language-plugin-pug": "^1.8.24",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",
     "pug": "^3.0.2"

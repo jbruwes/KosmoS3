@@ -70,6 +70,7 @@ import "@fontsource/roboto";
 import "@fontsource/rubik-mono-one";
 import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
+import "daisyui/dist/full.css";
 
 import { setup } from "@twind/core";
 import { get, set, useFileDialog } from "@vueuse/core";

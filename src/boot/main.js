@@ -1,5 +1,3 @@
-import "daisyui/dist/full.css";
-
 import { boot } from "quasar/wrappers";
 
 export default boot(() => {
