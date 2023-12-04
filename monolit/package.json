@@ -35,7 +35,7 @@
     "@fontsource/rubik": "^5.0.17",
     "@fontsource/rubik-mono-one": "^5.0.17",
     "@fontsource/tenor-sans": "^5.0.17",
-    "@mdi/font": "^7.3.67",
+    "@mdi/js": "^7.3.67",
     "@twind/core": "^1.1.3",
     "@twind/preset-autoprefix": "^1.0.7",
     "@twind/preset-container-queries": "^1.0.7",
@@ -43,11 +43,11 @@
     "@twind/preset-tailwind": "^1.1.4",
     "@twind/preset-typography": "^1.0.7",
     "@unhead/vue": "^1.8.8",
-    "@vitejs/plugin-vue": "^4.5.0",
+    "@vitejs/plugin-vue": "^4.5.1",
     "@vueuse/core": "^10.6.1",
     "@vueuse/math": "^10.6.1",
     "animate.css": "^4.1.1",
-    "daisyui": "^4.4.14",
+    "daisyui": "^4.4.18",
     "glightbox": "^3.2.0",
     "p5": "^1.9.0",
     "page": "^1.11.6",
@@ -60,6 +60,7 @@
     "vanta": "^0.5.24",
     "vite": "^5.0.4",
     "vue": "^3.3.9",
+    "vue-router": "^4.2.5",
     "vue3-animate-onscroll": "^1.0.6",
     "vue3-particles": "^2.12.0",
     "vue3-runtime-template": "^1.0.2"
@@ -67,7 +68,7 @@
   "devDependencies": {
     "@vue/language-plugin-pug": "^1.8.24",
     "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.31",
+    "postcss": "^8.4.32",
     "pug": "^3.0.2"
   },
   "engines": {
