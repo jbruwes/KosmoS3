@@ -80,13 +80,13 @@ import { uid, useQuasar } from "quasar";
 import { onMounted, reactive, ref, watch } from "vue";
 
 import config from "@/../twind.config";
-import app from "@/stores/app";
+import storeS3 from "@/stores/s3";
 
 defineProps({ modelValue: { default: "", type: String } });
 defineEmits(["update:modelValue"]);
 const prompt = ref(false);
 const $q = useQuasar();
-const store = app();
+const store = storeS3();
 const { base } = storeToRefs(store);
 const { putFile } = store;
 const editorRef = ref();

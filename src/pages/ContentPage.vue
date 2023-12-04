@@ -122,11 +122,13 @@ import VSourceCode from "@/components/VSourceCode.vue";
 import VWysiwyg from "@/components/VWysiwyg.vue";
 import storeApp from "@/stores/app";
 import storeContent from "@/stores/content";
+import storeS3 from "@/stores/s3";
 
 const $q = useQuasar();
-const appStore = storeApp();
-const { rightDrawer, base } = storeToRefs(appStore);
-const { putFile } = appStore;
+const s3Store = storeS3();
+const { rightDrawer } = storeToRefs(storeApp());
+const { base } = storeToRefs(s3Store);
+const { putFile } = s3Store;
 const { content, selected, expanded, selectedObject, list, tab } =
   storeToRefs(storeContent());
 const changefreq = reactive([

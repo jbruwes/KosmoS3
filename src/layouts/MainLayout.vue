@@ -47,9 +47,11 @@ import { computed, ref } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 
 import storeApp from "@/stores/app";
+import storeS3 from "@/stores/s3";
 
 const router = useRouter();
-const { s3, rightDrawer } = storeToRefs(storeApp());
+const { rightDrawer } = storeToRefs(storeApp());
+const { s3 } = storeToRefs(storeS3());
 const leftDrawer = ref(false);
 const miniState = ref(true);
 const publicItems = [

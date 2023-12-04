@@ -4,11 +4,13 @@ import { toXML } from "to-xml";
 import { computed, ref } from "vue";
 
 import app from "./app";
+import storeS3 from "./s3";
 
 export default defineStore("contentStore", () => {
-  const store = app();
-  const { index, bucket } = storeToRefs(store);
-  const { putObject } = store;
+  const s3Store = storeS3();
+  const { index } = storeToRefs(app());
+  const { bucket } = storeToRefs(s3Store);
+  const { putObject } = s3Store;
   const selected = ref();
   const expanded = ref([]);
   const tab = ref("wysiwyg");

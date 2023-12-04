@@ -119,10 +119,12 @@ import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 import storeApp from "@/stores/app";
+import storeS3 from "@/stores/s3";
 
 const router = useRouter();
 const $q = useQuasar();
-const { rightDrawer, s3, bucket, wendpoint } = storeToRefs(storeApp());
+const { rightDrawer } = storeToRefs(storeApp());
+const { s3, bucket, wendpoint } = storeToRefs(storeS3());
 set(s3, null);
 set(bucket, "");
 set(wendpoint, "");
