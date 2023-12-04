@@ -1,42 +1,27 @@
 <template lang="pug">
 .drawer
-  input#my-drawer-3.drawer-toggle(type="checkbox")
-  .drawer-content.flex.flex-col
-    .navbar.bg-base-300.w-full
-      .flex-none(class="lg:hidden")
-        label.btn.btn-square.btn-ghost(
-          for="my-drawer-3",
-          aria-label="open sidebar"
-        )
-          svg.inline-block.h-6.w-6.stroke-current(
-            xmlns="http://www.w3.org/2000/svg",
-            fill="none",
-            viewBox="0 0 24 24"
-          )
-            path(
-              stroke-linecap="round",
-              stroke-linejoin="round",
-              stroke-width="2",
-              d="M4 6h16M4 12h16M4 18h16"
-            )
+  input#drawer.drawer-toggle(type="checkbox")
+  .drawer-content.carousel-vertical.h-screen
+    .navbar.bg-base-100.rounded-box.absolute.left-6.right-6.top-6.opacity-0.shadow-xl.transition-opacity.duration-1000.ease-out(
+      class="!w-auto hover:opacity-100"
+    )
+      .flex-none
+        label.btn.btn-square.btn-ghost(for="drawer")
+          svg.h-6.w-6
+            path(:d="mdiMenu")
       .mx-2.flex-1.px-2 Navbar Title
-      .hidden.flex-none(class="lg:block")
-        ul.menu.menu-horizontal
-          li
-            a Navbar Item 1
-          li
-            a Navbar Item 2
-    | Content
+    .carousel-item.min-h-screen.w-screen Content1
+    .carousel-item.min-h-screen.w-screen Content2
   .drawer-side
-    label.drawer-overlay(for="my-drawer-3", aria-label="close sidebar")
-    ul.menu.bg-base-200.min-h-full.w-80.p-4
-      li
-        a Sidebar Item 1
-      li
-        a Sidebar Item 2
+    .bg-base-200.min-h-full.w-full
+      label.btn.btn-square.btn-ghost.absolute.right-1.top-1(for="drawer")
+        svg.h-6.w-6
+          path(:d="mdiClose")
 </template>
 <script setup>
 import "daisyui/dist/full.css";
+
+import { mdiClose, mdiMenu } from "@mdi/js";
 </script>
 <!--script>
 import { get, set, useBrowserLocation, useScriptTag } from "@vueuse/core";
