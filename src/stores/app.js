@@ -8,7 +8,7 @@ import storeS3 from "./s3";
 
 export default defineStore("app", () => {
   const store = storeS3();
-  const { bucket, s3 } = storeToRefs(store);
+  const { bucket, S3 } = storeToRefs(store);
   const { putObject, getObject, headObject } = store;
   /**
    * Переключатель видимости правой панели
@@ -91,7 +91,7 @@ export default defineStore("app", () => {
     settings = { yandex, metrika, google, analytics };
     return { content, css, style, js, script, settings };
   };
-  whenever(s3, async () => {
+  whenever(S3, async () => {
     let json = {};
     try {
       json = JSON.parse((await getObject("data.json")) || "{}");
@@ -99,10 +99,10 @@ export default defineStore("app", () => {
       set(index, calcIndex(json));
     }
   });
-  whenever(logicNot(s3), () => {
+  whenever(logicNot(S3), () => {
     set(index, undefined);
   });
-  whenever(logicAnd(s3, data), () => {
+  whenever(logicAnd(S3, data), () => {
     /** @param {string} pAsset - Путь до файла ресурса */
     const headPutObject = async (pAsset) => {
       try {

@@ -25,7 +25,7 @@ export default defineStore("s3", () => {
    *
    * @type {object}
    */
-  const s3 = ref();
+  const S3 = ref();
   /**
    * Считывание заголовка файла
    *
@@ -35,8 +35,8 @@ export default defineStore("s3", () => {
   const headObject = async (Key) => {
     const Bucket = get(bucket);
     let head;
-    if (isDefined(s3))
-      head = await get(s3).send(new HeadObjectCommand({ Bucket, Key }));
+    if (isDefined(S3))
+      head = await get(S3).send(new HeadObjectCommand({ Bucket, Key }));
     return head;
   };
   /**
@@ -50,8 +50,8 @@ export default defineStore("s3", () => {
     const Bucket = get(bucket);
     const Body =
       typeof body === "string" ? new TextEncoder().encode(body) : body;
-    if (isDefined(s3))
-      await get(s3).send(
+    if (isDefined(S3))
+      await get(S3).send(
         new PutObjectCommand({ Bucket, Key, ContentType, Body }),
       );
   };
@@ -75,8 +75,8 @@ export default defineStore("s3", () => {
     const Bucket = get(bucket);
     const ResponseCacheControl = "no-store";
     let ret;
-    if (isDefined(s3)) {
-      const { Body } = await get(s3).send(
+    if (isDefined(S3)) {
+      const { Body } = await get(S3).send(
         new GetObjectCommand({ ResponseCacheControl, Bucket, Key }),
       );
       ret = await new Promise((resolve) => {
@@ -94,12 +94,13 @@ export default defineStore("s3", () => {
     }
     return ret;
   };
-  const base = computed(
-    () =>
-      `${isDefined(wendpoint) ? get(wendpoint) : "htpps:/"}/${get(bucket)}/`,
+  const base = computed(() =>
+    isDefined(S3)
+      ? `${isDefined(wendpoint) ? get(wendpoint) : "htpps:/"}/${get(bucket)}/`
+      : undefined,
   );
   return {
     ...{ bucket, wendpoint, base },
-    ...{ s3, putFile, putObject, getObject, headObject },
+    ...{ S3, putFile, putObject, getObject, headObject },
   };
 });

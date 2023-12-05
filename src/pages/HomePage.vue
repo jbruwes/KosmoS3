@@ -124,8 +124,8 @@ import storeS3 from "@/stores/s3";
 const router = useRouter();
 const $q = useQuasar();
 const { rightDrawer } = storeToRefs(storeApp());
-const { s3, bucket, wendpoint } = storeToRefs(storeS3());
-set(s3, null);
+const { S3, bucket, wendpoint } = storeToRefs(storeS3());
+set(S3, null);
 set(bucket, "");
 set(wendpoint, "");
 set(rightDrawer, null);
@@ -252,7 +252,7 @@ const login = async () => {
           Bucket: get(bucket),
         }),
       );
-      set(s3, s3Client);
+      set(S3, s3Client);
       router.push("/content");
     } catch (err) {
       s3Client = null;
