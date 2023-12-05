@@ -29,11 +29,16 @@ import { storeToRefs } from "pinia";
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 import storeApp from "@/stores/app";
-import scriptStore from "@/stores/script";
 
-const { rightDrawer } = storeToRefs(storeApp());
-const { js, script, selected, list, selectedObject, tab } =
-  storeToRefs(scriptStore());
+const {
+  rightDrawer,
+  js,
+  script,
+  jsSelected: selected,
+  jsList: list,
+  jsSelectedObject: selectedObject,
+  jsTab: tab,
+} = storeToRefs(storeApp());
 set(rightDrawer, null);
 /** Инициализация */
 const init = () => {

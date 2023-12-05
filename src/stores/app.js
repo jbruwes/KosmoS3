@@ -1,22 +1,31 @@
-import { get, set, useFetch, watchDebounced, whenever } from "@vueuse/core";
-import { logicAnd, logicNot } from "@vueuse/math";
+import {
+  get,
+  set,
+  useArrayFind,
+  useFetch,
+  watchDebounced,
+  whenever,
+} from "@vueuse/core";
+import { logicAnd } from "@vueuse/math";
 import { defineStore, storeToRefs } from "pinia";
-import { uid } from "quasar";
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 
+import storeData from "./data";
 import storeS3 from "./s3";
 
 export default defineStore("app", () => {
   const store = storeS3();
-  const { bucket, S3 } = storeToRefs(store);
-  const { putObject, getObject, headObject } = store;
+  const { S3, base } = storeToRefs(store);
+  const { putObject, headObject } = store;
+  const dataStore = storeData();
+  const { path, index, settings, script, js } = storeToRefs(dataStore);
+  const { calcIndex } = dataStore;
   /**
    * Переключатель видимости правой панели
    *
    * @type {boolean}
    */
   const rightDrawer = ref(null);
-  const index = ref();
   const { data } = useFetch("monolit/.vite/manifest.json", {
     /**
      * Преводим в массив
@@ -32,75 +41,8 @@ export default defineStore("app", () => {
       return ctx;
     },
   }).json();
-  /**
-   * Проверка структуры сайта
-   *
-   * @param {object} index - Структура сайта
-   * @param {object} index.content - Контент
-   * @param {Array} index.css - Ссылки на стили
-   * @param {string} index.style - Стили
-   * @param {Array} index.js - Ссылки на скрипты
-   * @param {string} index.script - Скрипт
-   * @param {object} index.settings - Настройки
-   * @returns {object} - Структура сайта
-   */
-  const calcIndex = ({
-    content: pContent = [],
-    css: pCss = [],
-    style: pStyle = "",
-    js: pJs = [],
-    script: pScript = "",
-    settings: pSettings = {},
-  } = {}) => {
-    let [content = {}] = pContent;
-    let css = [...pCss].filter(Boolean);
-    let style = pStyle;
-    let js = [...pJs].filter(Boolean);
-    let script = pScript;
-    let settings = { ...pSettings };
-    css = Array.isArray(css)
-      ? css
-          .map(({ id = uid(), url = "", visible = true }) => ({
-            id,
-            url,
-            visible,
-          }))
-          .filter(({ url }) => url)
-      : [];
-    if (!css.length) css.push({ id: uid(), url: "", visible: true });
-    js = Array.isArray(js)
-      ? js
-          .map(({ id = uid(), url = "", visible = true }) => ({
-            id,
-            url,
-            visible,
-          }))
-          .filter(({ url }) => url)
-      : [];
-    if (!js.length) js.push({ id: uid(), url: "", visible: true });
-    const {
-      id = uid(),
-      visible = true,
-      label = get(bucket),
-      html = "",
-    } = content;
-    content = [{ ...content, id, visible, label, html }];
-    style = String(style) === style ? style : "";
-    script = String(script) === script ? script : "";
-    const { yandex, metrika, google, analytics } = settings;
-    settings = { yandex, metrika, google, analytics };
-    return { content, css, style, js, script, settings };
-  };
-  whenever(S3, async () => {
-    let json = {};
-    try {
-      json = JSON.parse((await getObject("data.json")) || "{}");
-    } finally {
-      set(index, calcIndex(json));
-    }
-  });
-  whenever(logicNot(S3), () => {
-    set(index, undefined);
+  watch(base, (val) => {
+    set(path, val);
   });
   whenever(logicAnd(S3, data), () => {
     /** @param {string} pAsset - Путь до файла ресурса */
@@ -130,5 +72,59 @@ export default defineStore("app", () => {
     },
     { deep: true, debounce: 1000, maxWait: 10000 },
   );
-  return { index, rightDrawer };
+
+  const jsSelected = ref();
+  const jsTab = ref("script");
+  const jsList = computed(() =>
+    get(js).map((current) => {
+      Object.defineProperties(current, {
+        siblings: {
+          /** @returns {Array} - Массив одноуровневых объектов */
+          get() {
+            return get(js);
+          },
+          configurable: true,
+        },
+        index: {
+          /** @returns {number} - Позиция в массиве одноуровневых объектов */
+          get() {
+            return this.siblings.findIndex(({ id }) => this.id === id);
+          },
+          configurable: true,
+        },
+        prev: {
+          /** @returns {Array} - Массив одноуровневых объектов */
+          get() {
+            return this.siblings[this.index - 1];
+          },
+          configurable: true,
+        },
+        next: {
+          /** @returns {Array} - Массив одноуровневых объектов */
+          get() {
+            return this.siblings[this.index + 1];
+          },
+          configurable: true,
+        },
+      });
+      return current;
+    }),
+  );
+  const jsSelectedObject = useArrayFind(
+    jsList,
+    ({ id }) => id === get(jsSelected),
+  );
+  return {
+    index,
+    settings,
+    rightDrawer,
+    ...{
+      script,
+      js,
+      jsSelected,
+      jsTab,
+      jsList,
+      jsSelectedObject,
+    },
+  };
 });

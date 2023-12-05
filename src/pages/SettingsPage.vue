@@ -43,9 +43,7 @@ import { set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import storeApp from "@/stores/app";
-import storeSettings from "@/stores/settings";
 
-const { rightDrawer } = storeToRefs(storeApp());
-const { settings } = storeToRefs(storeSettings());
+const { rightDrawer, settings } = storeToRefs(storeApp());
 set(rightDrawer, null);
 </script>
