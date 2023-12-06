@@ -10,8 +10,9 @@ v-ace-editor(
 // eslint-disable-next-line simple-import-sort/imports
 import { VAceEditor } from "vue3-ace-editor";
 import "ace-builds/esm-resolver";
-import { get } from "@vueuse/core";
 import { onMounted } from "vue";
+import { get, watchOnce } from "@vueuse/core";
+
 import {
   js_beautify as jsBeautify,
   css_beautify as cssBeautify,
@@ -23,19 +24,29 @@ const props = defineProps({
   modelValue: { default: "", type: String },
 });
 const emits = defineEmits(["update:modelValue"]);
-onMounted(() => {
+/** @param {string} value */
+const beautify = (value) => {
   let code;
   switch (props.lang) {
     case "javascript":
-      code = jsBeautify(get(props.modelValue));
+      code = jsBeautify(value);
       break;
     case "css":
-      code = cssBeautify(get(props.modelValue));
+      code = cssBeautify(value);
       break;
     default:
-      code = htmlBeautify(get(props.modelValue));
+      code = htmlBeautify(value);
       break;
   }
   emits("update:modelValue", code);
+};
+watchOnce(
+  () => props.modelValue,
+  (value, oldValue) => {
+    if (!oldValue && value) beautify(value);
+  },
+);
+onMounted(() => {
+  if (get(props.modelValue)) beautify(get(props.modelValue));
 });
 </script>
