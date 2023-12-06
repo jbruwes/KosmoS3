@@ -123,12 +123,12 @@ import storeS3 from "@/stores/s3";
 
 const router = useRouter();
 const $q = useQuasar();
-const { rightDrawer } = storeToRefs(storeApp());
+const { state } = storeToRefs(storeApp());
 const { S3, bucket, wendpoint } = storeToRefs(storeS3());
 set(S3, null);
 set(bucket, "");
 set(wendpoint, "");
-set(rightDrawer, null);
+get(state).rightDrawer = null;
 const accessKeyId = ref("");
 const secretAccessKey = ref("");
 const region = ref("");

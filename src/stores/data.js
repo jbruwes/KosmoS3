@@ -130,21 +130,160 @@ export default defineStore("data", () => {
       if (isDefined(index)) get(index).script = value;
     },
   });
-  const js = computed({
+  const style = computed({
     /**
-     * Чтение массива ссылок на скрипты
+     * Чтение стилей
      *
-     * @returns {Array} Массив ссылок на скрипты
+     * @returns {string} Стили
      */
-    get: () => get(index)?.js,
+    get: () => get(index)?.style,
     /**
-     * Запись массива ссылок на скрипты
+     * Запись стилей
      *
-     * @param {Array} value Массив ссылок на скрипты
+     * @param {string} value Стили
      */
     set(value) {
-      if (isDefined(index)) get(index).js = value.filter(({ url }) => url);
+      if (isDefined(index)) get(index).style = value;
     },
   });
-  return { index, path, settings, script, js, calcIndex };
+  /**
+   * @param {object} element
+   * @param {number} i
+   * @param {Array} array
+   * @returns {object}
+   */
+  const addProperties = (element, i, array) => {
+    Object.defineProperties(element, {
+      siblings: {
+        /** @returns {Array} - Массив одноуровневых объектов */
+        get() {
+          return array;
+        },
+        configurable: true,
+      },
+      index: {
+        /** @returns {number} - Позиция в массиве одноуровневых объектов */
+        get() {
+          return this.siblings.findIndex(({ id }) => this.id === id);
+        },
+        configurable: true,
+      },
+      prev: {
+        /** @returns {Array} - Массив одноуровневых объектов */
+        get() {
+          return this.siblings[this.index - 1];
+        },
+        configurable: true,
+      },
+      next: {
+        /** @returns {Array} - Массив одноуровневых объектов */
+        get() {
+          return this.siblings[this.index + 1];
+        },
+        configurable: true,
+      },
+    });
+    return element;
+  };
+  const js = computed(() => get(index)?.js.map(addProperties));
+  const css = computed(() => get(index)?.css.map(addProperties));
+
+  const content = computed({
+    /**
+     * Чтение контента
+     *
+     * @returns {object} Контент
+     */
+    get: () => get(index)?.content,
+    /**
+     * Запись контента
+     *
+     * @param {object} value Контент
+     */
+    set(value) {
+      if (isDefined(index)) get(index).content = value;
+    },
+  });
+  const list = computed(() =>
+    (function getMembers(members, pParent) {
+      return members.reduce((accumulator, current) => {
+        Object.defineProperties(current, {
+          parent: {
+            /** @returns {object} - Родительский объект */
+            get() {
+              return pParent;
+            },
+            configurable: true,
+          },
+          siblings: {
+            /** @returns {Array} - Массив одноуровневых объектов */
+            get() {
+              return this.parent ? this.parent?.children : [this];
+            },
+            configurable: true,
+          },
+          index: {
+            /** @returns {number} - Позиция в массиве одноуровневых объектов */
+            get() {
+              return this.siblings.findIndex(({ id }) => this.id === id);
+            },
+            configurable: true,
+          },
+          prev: {
+            /** @returns {Array} - Массив одноуровневых объектов */
+            get() {
+              return this.siblings[this.index - 1];
+            },
+            configurable: true,
+          },
+          next: {
+            /** @returns {Array} - Массив одноуровневых объектов */
+            get() {
+              return this.siblings[this.index + 1];
+            },
+            configurable: true,
+          },
+          branch: {
+            /** @returns {Array} - Массив родительских объектов */
+            get() {
+              const branch = [this];
+              let { parent } = this;
+              while (parent) {
+                branch.unshift(parent);
+                ({ parent } = parent);
+              }
+              return branch;
+            },
+            configurable: true,
+          },
+          path: {
+            /** @returns {string} - Путь до объекта */
+            get() {
+              return this.branch
+                .map(({ label }) => encodeURIComponent(label))
+                .slice(1)
+                .join("/");
+            },
+            configurable: true,
+          },
+        });
+        return current.children?.length
+          ? [...accumulator, ...getMembers(current.children, current)]
+          : accumulator;
+      }, members);
+    })(get(content) ?? [{}]),
+  );
+
+  return {
+    index,
+    path,
+    settings,
+    script,
+    js,
+    style,
+    css,
+    content,
+    list,
+    calcIndex,
+  };
 });

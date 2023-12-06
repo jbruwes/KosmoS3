@@ -1,5 +1,5 @@
 <template lang="pug">
-q-drawer(v-model="rightDrawer", bordered, side="right")
+q-drawer(v-model="state.rightDrawer", bordered, side="right")
   q-list
     q-expansion-item(
       icon="account_tree",
@@ -8,8 +8,8 @@ q-drawer(v-model="rightDrawer", bordered, side="right")
       header-class="text-primary"
     )
       v-interactive-tree(
-        v-model:selected="selected",
-        v-model:expanded="expanded",
+        v-model:selected="state.content.selected",
+        v-model:expanded="state.content.expanded",
         :nodes="content",
         :list="list",
         :selected-object="selectedObject"
@@ -93,7 +93,7 @@ q-drawer(v-model="rightDrawer", bordered, side="right")
             q-btn(label="Загрузить картинку", color="primary", @click="open")
 q-page.column.full-height
   q-tabs.text-grey(
-    v-model="tab",
+    v-model="state.content.tab",
     dense,
     active-color="primary",
     indicator-color="primary",
@@ -103,7 +103,7 @@ q-page.column.full-height
     q-tab(name="wysiwyg", label="wysiwyg")
     q-tab(name="source", label="source")
   q-separator
-  q-tab-panels.full-width.col(v-model="tab")
+  q-tab-panels.full-width.col(v-model="state.content.tab")
     q-tab-panel.column(name="wysiwyg")
       v-wysiwyg.full-width.col.column(v-model="selectedValue")
     q-tab-panel.column(name="source")
@@ -111,7 +111,13 @@ q-page.column.full-height
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
-import { get, isDefined, set, useFileDialog, whenever } from "@vueuse/core";
+import {
+  get,
+  isDefined,
+  useArrayFind,
+  useFileDialog,
+  whenever,
+} from "@vueuse/core";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
@@ -121,16 +127,13 @@ import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 import VWysiwyg from "@/components/VWysiwyg.vue";
 import storeApp from "@/stores/app";
-import storeContent from "@/stores/content";
 import storeS3 from "@/stores/s3";
 
 const $q = useQuasar();
 const s3Store = storeS3();
-const { rightDrawer } = storeToRefs(storeApp());
+const { state, content, list } = storeToRefs(storeApp());
 const { base } = storeToRefs(s3Store);
 const { putFile } = s3Store;
-const { content, selected, expanded, selectedObject, list, tab } =
-  storeToRefs(storeContent());
 const changefreq = reactive([
   "always",
   "hourly",
@@ -140,6 +143,10 @@ const changefreq = reactive([
   "yearly",
   "never",
 ]);
+const selectedObject = useArrayFind(
+  list,
+  ({ id }) => id === get(state).content.selected,
+);
 const icons = ref(materialIcons.icons);
 const data = ref({
   filter: "",
@@ -148,7 +155,7 @@ const data = ref({
     page: 0,
   },
 });
-set(rightDrawer, true);
+get(state).rightDrawer = true;
 const selectedValue = computed({
   /**
    * Считывание исходного кода из структуры данных
@@ -179,8 +186,8 @@ const selectedValue = computed({
 /** Инициализация */
 const init = () => {
   const { id } = get(content, 0);
-  set(expanded, [id]);
-  set(selected, id);
+  get(state).content.expanded = [id];
+  get(state).content.selected = id;
 };
 if (isDefined(content)) init();
 else whenever(content, init);

@@ -7,12 +7,12 @@ q-layout(view="hHh Lpr lff")
         q-avatar(icon="rocket_launch", size="xl")
         | kosmos3
       q-btn(
-        v-if="rightDrawer !== null",
+        v-if="state.rightDrawer !== null",
         flat,
         dense,
         round,
         icon="more_vert",
-        @click="rightDrawer = !rightDrawer"
+        @click="state.rightDrawer = !state.rightDrawer"
       )
   q-drawer(
     v-model="leftDrawer",
@@ -50,7 +50,7 @@ import storeApp from "@/stores/app";
 import storeS3 from "@/stores/s3";
 
 const router = useRouter();
-const { rightDrawer } = storeToRefs(storeApp());
+const { state } = storeToRefs(storeApp());
 const { S3 } = storeToRefs(storeS3());
 const leftDrawer = ref(false);
 const miniState = ref(true);

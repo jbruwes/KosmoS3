@@ -39,11 +39,11 @@ q-page.column.full-height
           q-icon(name="mdi-google-analytics")
 </template>
 <script setup>
-import { set } from "@vueuse/core";
+import { get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
-import storeApp from "@/stores/app";
+import app from "@/stores/app";
 
-const { rightDrawer, settings } = storeToRefs(storeApp());
-set(rightDrawer, null);
+const { settings, state } = storeToRefs(app());
+get(state).rightDrawer = null;
 </script>

@@ -1,7 +1,7 @@
 <template lang="pug">
 q-page.column.full-height
   q-tabs.text-grey(
-    v-model="tab",
+    v-model="state.css.tab",
     dense,
     active-color="primary",
     indicator-color="primary",
@@ -11,34 +11,35 @@ q-page.column.full-height
     q-tab(name="style", label="Style")
     q-tab(name="css", label="CSS")
   q-separator
-  q-tab-panels.full-width.col(v-model="tab")
+  q-tab-panels.full-width.col(v-model="state.css.tab")
     q-tab-panel.column(name="style")
       v-source-code.col(v-model="style", lang="css")
     q-tab-panel.column(name="css")
       v-interactive-tree(
-        v-model:selected="selected",
+        v-model:selected="state.css.selected",
         type="url",
-        :list="list",
+        :list="css",
         :selected-object="selectedObject"
       )
 </template>
 <script setup>
-import { get, isDefined, set, whenever } from "@vueuse/core";
+import { get, isDefined, useArrayFind, whenever } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
-import storeApp from "@/stores/app";
-import styleStore from "@/stores/style";
+import app from "@/stores/app";
 
-const { rightDrawer } = storeToRefs(storeApp());
-const { css, style, selected, list, selectedObject, tab } =
-  storeToRefs(styleStore());
-set(rightDrawer, null);
+const { style, css, state } = storeToRefs(app());
+const selectedObject = useArrayFind(
+  css,
+  ({ id }) => id === get(state).css.selected,
+);
+get(state).rightDrawer = null;
 /** Инициализация */
 const init = () => {
   const [{ id }] = get(css);
-  set(selected, id);
+  get(state).css.selected = id;
 };
 if (isDefined(css)) init();
 else whenever(css, init);
