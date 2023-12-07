@@ -43,7 +43,7 @@
     "@twind/preset-tailwind": "^1.1.4",
     "@twind/preset-typography": "^1.0.7",
     "@unhead/vue": "^1.8.8",
-    "@vitejs/plugin-vue": "^4.5.1",
+    "@vitejs/plugin-vue": "^4.5.2",
     "@vueuse/core": "^10.7.0",
     "@vueuse/math": "^10.7.0",
     "animate.css": "^4.1.1",

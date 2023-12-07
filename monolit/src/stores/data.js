@@ -1,11 +1,10 @@
 import { get, isDefined, set, useFetch, whenever } from "@vueuse/core";
 import { logicNot } from "@vueuse/math";
 import { defineStore } from "pinia";
-import { uid } from "quasar";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 export default defineStore("data", () => {
-  const path = ref();
+  const uri = ref();
   const index = ref();
   /**
    * Проверка структуры сайта
@@ -35,25 +34,32 @@ export default defineStore("data", () => {
     let settings = { ...pSettings };
     css = Array.isArray(css)
       ? css
-          .map(({ id = uid(), url = "", visible = true }) => ({
+          .map(({ id = crypto.randomUUID(), url = "", visible = true }) => ({
             id,
             url,
             visible,
           }))
           .filter(({ url }) => url)
       : [];
-    if (!css.length) css.push({ id: uid(), url: "", visible: true });
+    if (!css.length)
+      css.push({ id: crypto.randomUUID(), url: "", visible: true });
     js = Array.isArray(js)
       ? js
-          .map(({ id = uid(), url = "", visible = true }) => ({
+          .map(({ id = crypto.randomUUID(), url = "", visible = true }) => ({
             id,
             url,
             visible,
           }))
           .filter(({ url }) => url)
       : [];
-    if (!js.length) js.push({ id: uid(), url: "", visible: true });
-    const { id = uid(), visible = true, label = "", html = "" } = content;
+    if (!js.length)
+      js.push({ id: crypto.randomUUID(), url: "", visible: true });
+    const {
+      id = crypto.randomUUID(),
+      visible = true,
+      label = "",
+      html = "",
+    } = content;
     content = [{ ...content, id, visible, label, html }];
     style = String(style) === style ? style : "";
     script = String(script) === script ? script : "";
@@ -61,41 +67,41 @@ export default defineStore("data", () => {
     settings = { yandex, metrika, google, analytics };
     return { content, css, style, js, script, settings };
   };
-  const uri = computed(() =>
-    isDefined(path) ? `${get(path)}data.json` : undefined,
-  );
-  const { /* isFetching, */ data } = useFetch(uri, {
-    /**
-     * Добавляем no-cache
-     *
-     * @param {object} ctx
-     * @param {object} ctx.options
-     * @returns {object}
-     */
-    beforeFetch({ options }) {
-      const ret = options;
-      ret.headers = {
-        ...ret.headers,
-        "cache-control": "no-cache",
-      };
-      return { ret };
+  const { data } = useFetch(
+    () => (isDefined(uri) ? `${get(uri)}data.json` : undefined),
+    {
+      /**
+       * Добавляем no-cache
+       *
+       * @param {object} ctx
+       * @param {object} ctx.options
+       * @returns {object}
+       */
+      beforeFetch({ options }) {
+        const ret = options;
+        ret.headers = {
+          ...ret.headers,
+          "cache-control": "no-cache",
+        };
+        return { ret };
+      },
+      /**
+       * Преводим в массив
+       *
+       * @param {object} ctx - Возвращаемый объект
+       * @returns {object} - Трансформируемый возвращаемый объект
+       */
+      afterFetch(ctx) {
+        ctx.data = calcIndex(ctx.data);
+        return ctx;
+      },
+      refetch: true,
     },
-    /**
-     * Преводим в массив
-     *
-     * @param {object} ctx - Возвращаемый объект
-     * @returns {object} - Трансформируемый возвращаемый объект
-     */
-    afterFetch(ctx) {
-      ctx.data = calcIndex(ctx.data);
-      return ctx;
-    },
-    refetch: true,
-  }).json();
-  watch(data, (value) => {
+  ).json();
+  whenever(data, (value) => {
     set(index, value);
   });
-  whenever(logicNot(path), () => {
+  whenever(logicNot(uri), () => {
     set(index, undefined);
   });
   const settings = computed({
@@ -148,19 +154,10 @@ export default defineStore("data", () => {
   });
   /**
    * @param {object} element
-   * @param {number} i
-   * @param {Array} array
-   * @returns {object}
+   * @param {object} parent
    */
-  const addProperties = (element, i, array) => {
+  const addCommonProperties = (element) => {
     Object.defineProperties(element, {
-      siblings: {
-        /** @returns {Array} - Массив одноуровневых объектов */
-        get() {
-          return array;
-        },
-        configurable: true,
-      },
       index: {
         /** @returns {number} - Позиция в массиве одноуровневых объектов */
         get() {
@@ -183,27 +180,29 @@ export default defineStore("data", () => {
         configurable: true,
       },
     });
+  };
+  /**
+   * @param {object} element
+   * @param {number} i
+   * @param {Array} array
+   * @returns {object}
+   */
+  const addProperties = (element, i, array) => {
+    Object.defineProperties(element, {
+      siblings: {
+        /** @returns {Array} - Массив одноуровневых объектов */
+        get() {
+          return array;
+        },
+        configurable: true,
+      },
+    });
+    addCommonProperties(element);
     return element;
   };
   const js = computed(() => get(index)?.js.map(addProperties));
   const css = computed(() => get(index)?.css.map(addProperties));
-
-  const content = computed({
-    /**
-     * Чтение контента
-     *
-     * @returns {object} Контент
-     */
-    get: () => get(index)?.content,
-    /**
-     * Запись контента
-     *
-     * @param {object} value Контент
-     */
-    set(value) {
-      if (isDefined(index)) get(index).content = value;
-    },
-  });
+  const content = computed(() => get(index)?.content);
   const list = computed(() =>
     (function getMembers(members, pParent) {
       return members.reduce((accumulator, current) => {
@@ -219,27 +218,6 @@ export default defineStore("data", () => {
             /** @returns {Array} - Массив одноуровневых объектов */
             get() {
               return this.parent ? this.parent?.children : [this];
-            },
-            configurable: true,
-          },
-          index: {
-            /** @returns {number} - Позиция в массиве одноуровневых объектов */
-            get() {
-              return this.siblings.findIndex(({ id }) => this.id === id);
-            },
-            configurable: true,
-          },
-          prev: {
-            /** @returns {Array} - Массив одноуровневых объектов */
-            get() {
-              return this.siblings[this.index - 1];
-            },
-            configurable: true,
-          },
-          next: {
-            /** @returns {Array} - Массив одноуровневых объектов */
-            get() {
-              return this.siblings[this.index + 1];
             },
             configurable: true,
           },
@@ -267,16 +245,16 @@ export default defineStore("data", () => {
             configurable: true,
           },
         });
+        addCommonProperties(current);
         return current.children?.length
           ? [...accumulator, ...getMembers(current.children, current)]
           : accumulator;
       }, members);
     })(get(content) ?? [{}]),
   );
-
   return {
     index,
-    path,
+    uri,
     settings,
     script,
     js,

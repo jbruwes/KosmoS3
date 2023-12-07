@@ -50,6 +50,7 @@ module.exports = configure((/* ctx */) => ({
   build: {
     alias: {
       "@": path.join(__dirname, "./src"),
+      "~": __dirname,
     },
     target: {
       browser: ["es2019", "edge88", "firefox78", "chrome87", "safari13.1"],

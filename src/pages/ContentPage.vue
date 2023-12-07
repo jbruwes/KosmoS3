@@ -20,6 +20,15 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         q-item-section(avatar)
           q-icon(name="travel_explore")
         q-item-section
+          q-item-label Настройки слоя
+      q-card-section
+        q-toggle(label="Адаптивность")
+    q-separator
+    q-card(v-if="selectedObject", flat)
+      q-item.text-teal
+        q-item-section(avatar)
+          q-icon(name="travel_explore")
+        q-item-section
           q-item-label Настройки SEO
       q-card-section
         q-input(

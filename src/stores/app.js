@@ -4,7 +4,8 @@ import { defineStore, storeToRefs } from "pinia";
 import { toXML } from "to-xml";
 import { computed, reactive, watch } from "vue";
 
-import storeData from "./data";
+import storeData from "~/monolit/src/stores/data";
+
 import storeS3 from "./s3";
 
 export default defineStore("app", () => {
@@ -12,17 +13,8 @@ export default defineStore("app", () => {
   const { S3, base, bucket } = storeToRefs(store);
   const { putObject, headObject } = store;
   const dataStore = storeData();
-  const {
-    path: path1,
-    index,
-    settings,
-    script,
-    js,
-    style,
-    css,
-    content,
-    list,
-  } = storeToRefs(dataStore);
+  const { uri, index, settings, script, js, style, css, content, list } =
+    storeToRefs(dataStore);
   const { calcIndex } = dataStore;
   /**
    * Переключатель видимости правой панели
@@ -45,7 +37,7 @@ export default defineStore("app", () => {
     },
   }).json();
   watch(base, (val) => {
-    set(path1, val);
+    set(uri, val);
   });
   whenever(logicAnd(S3, data), () => {
     /** @param {string} pAsset - Путь до файла ресурса */
