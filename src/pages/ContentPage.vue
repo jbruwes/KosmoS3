@@ -22,7 +22,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         q-item-section
           q-item-label Настройки слоя
       q-card-section
-        q-toggle(label="Адаптивность")
+        q-toggle(v-model="selectedObject.responsive", label="Адаптивность")
     q-separator
     q-card(v-if="selectedObject", flat)
       q-item.text-teal

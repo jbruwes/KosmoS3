@@ -22,6 +22,20 @@
 import "daisyui/dist/full.css";
 
 import { mdiClose, mdiMenu } from "@mdi/js";
+import { get, isDefined, set, whenever } from "@vueuse/core";
+import { storeToRefs } from "pinia";
+
+import data from "@/stores/data";
+
+const { content, uri } = storeToRefs(data());
+
+set(uri, "./");
+/** Инициализация */
+const init = () => {
+  console.log(get(content));
+};
+if (isDefined(content)) init();
+else whenever(content, init);
 </script>
 <!--script>
 import { get, set, useBrowserLocation, useScriptTag } from "@vueuse/core";
