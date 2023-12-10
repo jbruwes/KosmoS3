@@ -83,8 +83,8 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           tooltips
         )
         q-img.rounded-borders(
-          v-if="selectedObject.img",
-          :src="`${base}${selectedObject.img}`",
+          v-if="selectedObject.image",
+          :src="`${base}${selectedObject.image}`",
           :ratio="16 / 9"
         )
           q-btn.all-pointer-events.absolute(
@@ -95,9 +95,9 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
             text-color="black",
             dense,
             style="top: 8px; right: 8px",
-            @click="delete selectedObject.img"
+            @click="delete selectedObject.image"
           )
-        q-img.rounded-borders(v-if="!selectedObject.img", :ratio="16 / 9")
+        q-img.rounded-borders(v-if="!selectedObject.image", :ratio="16 / 9")
           .absolute-full.flex-center.flex
             q-btn(label="Загрузить картинку", color="primary", @click="open")
 q-page.column.full-height
@@ -224,7 +224,7 @@ watch(files, async (newFiles) => {
       ) {
         const filePath = `images/${uid()}.${mime.extension(type)}`;
         await putFile(filePath, type, file);
-        get(selectedObject).img = filePath;
+        get(selectedObject).image = filePath;
       } else
         throw new Error(
           "Тип графического файла не подходит для использования в сети интернет",

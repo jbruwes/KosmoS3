@@ -27,6 +27,7 @@ import "glightbox/dist/css/glightbox.css";
 import "animate.css/animate.css";
 
 import { install } from "@twind/core";
+import { createHead } from "@unhead/vue";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 import VueAnimateOnScroll from "vue3-animate-onscroll";
@@ -45,5 +46,5 @@ document.addEventListener("click", (event) => {
 });
 
 const app = createApp(App);
-app.use(createPinia()).use(Particles).use(VueAnimateOnScroll);
+app.use(createPinia()).use(createHead()).use(Particles).use(VueAnimateOnScroll);
 app.mount("#app");

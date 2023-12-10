@@ -204,53 +204,55 @@ export default defineStore("data", () => {
   const css = computed(() => get(index)?.css.map(addProperties));
   const content = computed(() => get(index)?.content);
   const list = computed(() =>
-    (function getMembers(members, pParent) {
-      return members.reduce((accumulator, current) => {
-        Object.defineProperties(current, {
-          parent: {
-            /** @returns {object} - Родительский объект */
-            get() {
-              return pParent;
-            },
-            configurable: true,
-          },
-          siblings: {
-            /** @returns {Array} - Массив одноуровневых объектов */
-            get() {
-              return this.parent ? this.parent?.children : [this];
-            },
-            configurable: true,
-          },
-          branch: {
-            /** @returns {Array} - Массив родительских объектов */
-            get() {
-              const branch = [this];
-              let { parent } = this;
-              while (parent) {
-                branch.unshift(parent);
-                ({ parent } = parent);
-              }
-              return branch;
-            },
-            configurable: true,
-          },
-          path: {
-            /** @returns {string} - Путь до объекта */
-            get() {
-              return this.branch
-                .map(({ label }) => encodeURIComponent(label))
-                .slice(1)
-                .join("/");
-            },
-            configurable: true,
-          },
-        });
-        addCommonProperties(current);
-        return current.children?.length
-          ? [...accumulator, ...getMembers(current.children, current)]
-          : accumulator;
-      }, members);
-    })(get(content) ?? [{}]),
+    isDefined(content)
+      ? (function getMembers(members, pParent) {
+          return members.reduce((accumulator, current) => {
+            Object.defineProperties(current, {
+              parent: {
+                /** @returns {object} - Родительский объект */
+                get() {
+                  return pParent;
+                },
+                configurable: true,
+              },
+              siblings: {
+                /** @returns {Array} - Массив одноуровневых объектов */
+                get() {
+                  return this.parent ? this.parent?.children : [this];
+                },
+                configurable: true,
+              },
+              branch: {
+                /** @returns {Array} - Массив родительских объектов */
+                get() {
+                  const branch = [this];
+                  let { parent } = this;
+                  while (parent) {
+                    branch.unshift(parent);
+                    ({ parent } = parent);
+                  }
+                  return branch;
+                },
+                configurable: true,
+              },
+              path: {
+                /** @returns {string} - Путь до объекта */
+                get() {
+                  return this.branch
+                    .map(({ label }) => encodeURIComponent(label))
+                    .slice(1)
+                    .join("/");
+                },
+                configurable: true,
+              },
+            });
+            addCommonProperties(current);
+            return current.children?.length
+              ? [...accumulator, ...getMembers(current.children, current)]
+              : accumulator;
+          }, members);
+        })(get(content))
+      : [],
   );
   return {
     index,

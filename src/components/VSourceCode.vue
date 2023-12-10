@@ -24,7 +24,7 @@ const props = defineProps({
   modelValue: { default: "", type: String },
 });
 const emits = defineEmits(["update:modelValue"]);
-/** @param {string} value */
+/** @param {string} value - Исходный код */
 const beautify = (value) => {
   let code;
   switch (props.lang) {

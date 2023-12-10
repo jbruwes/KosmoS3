@@ -1,4 +1,28 @@
 <template lang="pug">
+Head(v-if="selectedObject")
+  title(v-if="selectedObject.label") {{ selectedObject.label }}
+  meta(
+    v-if="selectedObject.description",
+    name="description",
+    :content="selectedObject.description"
+  )
+  meta(
+    v-if="selectedObject.label",
+    property="og:title",
+    :content="selectedObject.label"
+  )
+  meta(v-if="selectedObject.label", property="og:url", content="")
+  meta(
+    v-if="selectedObject.image",
+    property="og:image",
+    :content="selectedObject.image"
+  )
+  link(
+    v-if="selectedObject.icon",
+    rel="icon",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='${mdi[selectedObject.icon.replace(/-./g, (x) => x[1].toUpperCase())]}'/></svg>`",
+    type="image/svg+xml"
+  )
 .drawer
   input#drawer.drawer-toggle(type="checkbox")
   .drawer-content.carousel-vertical.h-screen
@@ -8,34 +32,37 @@
       .flex-none
         label.btn.btn-square.btn-ghost(for="drawer")
           svg.h-6.w-6
-            path(:d="mdiMenu")
+            path(:d="mdi.mdiMenu")
       .mx-2.flex-1.px-2 Navbar Title
-    .carousel-item.min-h-screen.w-screen Content1
-    .carousel-item.min-h-screen.w-screen Content2
+    .carousel-item.min-h-screen.w-full Content1
+    .carousel-item.min-h-screen.w-full Content2
   .drawer-side
     .bg-base-200.min-h-full.w-full
       label.btn.btn-square.btn-ghost.absolute.right-1.top-1(for="drawer")
         svg.h-6.w-6
-          path(:d="mdiClose")
+          path(:d="mdi.mdiClose")
 </template>
 <script setup>
 import "daisyui/dist/full.css";
 
-import { mdiClose, mdiMenu } from "@mdi/js";
-import { get, isDefined, set, whenever } from "@vueuse/core";
+import * as mdi from "@mdi/js";
+import { Head } from "@unhead/vue/components";
+import { get, isDefined, set, useArrayFind, whenever } from "@vueuse/core";
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 
 import data from "@/stores/data";
 
-const { content, uri } = storeToRefs(data());
-
+const { index, list, uri } = storeToRefs(data());
+const curPath = ref("");
+const selectedObject = useArrayFind(list, ({ path }) => path === get(curPath));
 set(uri, "./");
 /** Инициализация */
 const init = () => {
-  console.log(get(content));
+  console.log(get(list));
 };
-if (isDefined(content)) init();
-else whenever(content, init);
+if (isDefined(index)) init();
+else whenever(index, init);
 </script>
 <!--script>
 import { get, set, useBrowserLocation, useScriptTag } from "@vueuse/core";
