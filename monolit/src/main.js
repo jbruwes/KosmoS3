@@ -33,18 +33,23 @@ import { createApp } from "vue";
 import VueAnimateOnScroll from "vue3-animate-onscroll";
 import Particles from "vue3-particles";
 
-import config from "@/../twind.config";
-
+import config from "../twind.config";
 import App from "./App.vue";
+import router from "./router";
 
 install(config);
-document.addEventListener("click", (event) => {
-  const element = event.target;
-  const href = element.getAttribute("href");
-  if (element.tagName.toLowerCase() === "a" && href && href.indexOf("#") === 0)
-    element.href = window.location.href.split("#")[0] + href;
-});
+// document.addEventListener("click", (event) => {
+//   const element = event.target;
+//   const href = element.getAttribute("href");
+//   if (element.tagName.toLowerCase() === "a" && href && href.indexOf("#") === 0)
+//     element.href = window.location.href.split("#")[0] + href;
+// });
 
 const app = createApp(App);
-app.use(createPinia()).use(createHead()).use(Particles).use(VueAnimateOnScroll);
+app
+  .use(createPinia())
+  .use(router)
+  .use(createHead())
+  .use(Particles)
+  .use(VueAnimateOnScroll);
 app.mount("#app");

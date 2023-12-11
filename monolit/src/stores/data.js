@@ -239,7 +239,9 @@ export default defineStore("data", () => {
                 /** @returns {string} - Путь до объекта */
                 get() {
                   return this.branch
-                    .map(({ label }) => encodeURIComponent(label))
+                    .map(({ label }) =>
+                      encodeURIComponent(label.replace(" ", "_")),
+                    )
                     .slice(1)
                     .join("/");
                 },
