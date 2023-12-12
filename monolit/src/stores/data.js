@@ -218,7 +218,7 @@ export default defineStore("data", () => {
               siblings: {
                 /** @returns {Array} - Массив одноуровневых объектов */
                 get() {
-                  return this.parent ? this.parent?.children : [this];
+                  return this.parent ? this.parent?.children : this.children;
                 },
                 configurable: true,
               },

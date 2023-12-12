@@ -9,7 +9,7 @@ Head(v-if="list.length")
   link(
     v-if="selectedObject?.icon",
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='${mdi[selectedObject.icon.replace(/-./g, (x) => x[1].toUpperCase())]}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='${mdi[selectedObject.icon?.replace(/-./g, (x) => x[1].toUpperCase()) ?? 'mdiWebBox']}'/></svg>`",
     type="image/svg+xml"
   )
   component(
@@ -39,13 +39,16 @@ Head(v-if="list.length")
         label.btn.btn-square.btn-ghost(for="drawer")
           svg.h-6.w-6
             path(:d="mdi.mdiMenu")
-      .mx-2.flex-1.px-2 Navbar Title
+      .mx-2.flex-1.px-2 {{ selectedObject?.label }}
     RouterView
   .drawer-side
-    .bg-base-200.min-h-full.w-full
-      label.btn.btn-square.btn-ghost.absolute.right-1.top-1(for="drawer")
+    .bg-base-200.flex.min-h-full.w-full.flex-col
+      label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
         svg.h-6.w-6
           path(:d="mdi.mdiClose")
+      .flex.flex-auto.items-center
+        .container.mx-auto
+          v-runtime-template(v-if="list.length", :template="list[0].html")
 </template>
 <script setup>
 import "daisyui/dist/full.css";
@@ -62,6 +65,7 @@ import {
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { RouterView, useRouter } from "vue-router";
+import VRuntimeTemplate from "vue3-runtime-template";
 
 import data from "./stores/data";
 
