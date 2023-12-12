@@ -1,5 +1,5 @@
 <template lang="pug">
-Head
+Head(v-if="list.length")
   title {{ selectedObject?.label }}
   meta(name="description", :content="selectedObject?.description")
   meta(property="og:title", :content="selectedObject?.label")
@@ -9,9 +9,26 @@ Head
   link(
     v-if="selectedObject?.icon",
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='${mdi[selectedObject.icon.replace(/-./g, (x) => x[1].toUpperCase())]}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='${mdi[selectedObject.icon.replace(/-./g, (x) => x[1].toUpperCase())]}'/></svg>`",
     type="image/svg+xml"
   )
+  component(
+    :is="tagScript",
+    v-for="currentJs in visibleJs",
+    :key="currentJs.id",
+    crossorigin,
+    deffer,
+    :src="currentJs.url"
+  )
+  link(
+    v-for="currentCss in visibleCss",
+    :key="currentCss.id",
+    crossorigin,
+    rel="stylesheet",
+    :href="currentCss.url"
+  )
+  component(:is="tagStyle", v-if="style") {{ style }}
+  component(:is="tagScript", v-if="script") {{ `try{${script}\n}catch(e){console.error(e.message)}` }}
 .drawer
   input#drawer.drawer-toggle(type="checkbox")
   .drawer-content.carousel-vertical.h-screen
@@ -34,9 +51,14 @@ Head
 import "daisyui/dist/full.css";
 
 import * as mdi from "@mdi/js";
-import { useHead } from "@unhead/vue";
 import { Head } from "@unhead/vue/components";
-import { get, set, useArrayFind, watchOnce } from "@vueuse/core";
+import {
+  get,
+  set,
+  useArrayFilter,
+  useArrayFind,
+  watchOnce,
+} from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { RouterView, useRouter } from "vue-router";
@@ -46,7 +68,11 @@ import data from "./stores/data";
 const router = useRouter();
 const { list, css, js, uri, script, style } = storeToRefs(data());
 const curPath = ref("");
+const tagStyle = ref("style");
+const tagScript = ref("script");
 const selectedObject = useArrayFind(list, ({ path }) => path === get(curPath));
+const visibleJs = useArrayFilter(js, ({ visible }) => visible);
+const visibleCss = useArrayFilter(css, ({ visible }) => visible);
 set(uri, "./");
 /**
  * Инициализация
@@ -54,18 +80,6 @@ set(uri, "./");
  * @param {Array} value - Массив страниц
  */
 const init = (value) => {
-  useHead({
-    script: [
-      ...get(js)
-        .filter(({ visible }) => visible)
-        .map(({ url }) => ({ scr: url, defer: true, crossorigin: true })),
-      `try{${get(script)}\n}catch(e){console.error(e.message)}`,
-    ],
-    link: get(css)
-      .filter(({ visible }) => visible)
-      .map(({ url }) => ({ href: url, rel: "stylesheet" })),
-    style: get(style),
-  });
   value.forEach((element) => {
     const { path, id } = element;
     router.addRoute({
