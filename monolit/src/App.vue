@@ -7,9 +7,8 @@ Head(v-if="list.length")
   meta(property="og:url", content="")
   meta(property="og:image", :content="selectedObject?.image")
   link(
-    v-if="selectedObject?.icon",
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='${mdi[selectedObject.icon?.replace(/-./g, (x) => x[1].toUpperCase()) ?? 'mdiWebBox']}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='${mdi[selectedObject.icon?.replace(/-./g, (x) => x[1].toUpperCase()) ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
   )
   component(
@@ -47,7 +46,7 @@ Head(v-if="list.length")
         svg.h-6.w-6
           path(:d="mdi.mdiClose")
       .flex.flex-auto.items-center
-        .container.mx-auto
+        .mx-auto.flex-auto(:class="{ container: selectedObject?.responsive }")
           v-runtime-template(v-if="list.length", :template="list[0].html")
 </template>
 <script setup>
