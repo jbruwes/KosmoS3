@@ -14,7 +14,7 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.470.0",
+    "@aws-sdk/client-s3": "^3.472.0",
     "@fontsource/arsenal": "^5.0.8",
     "@fontsource/bad-script": "^5.0.8",
     "@fontsource/caveat": "^5.0.16",
