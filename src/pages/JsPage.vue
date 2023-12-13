@@ -23,7 +23,7 @@ q-page.column.full-height
       )
 </template>
 <script setup>
-import { get, isDefined, useArrayFind, whenever } from "@vueuse/core";
+import { get, isDefined, useArrayFind, watchOnce } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
@@ -39,8 +39,11 @@ get(state).rightDrawer = null;
 /** Инициализация */
 const init = () => {
   const [{ id }] = get(js);
-  get(state).js.selected = id;
+  const {
+    js: { selected },
+  } = get(state);
+  if (!selected) get(state).js.selected = id;
 };
 if (isDefined(js)) init();
-else whenever(js, init);
+else watchOnce(js, init);
 </script>

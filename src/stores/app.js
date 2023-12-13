@@ -13,8 +13,19 @@ export default defineStore("app", () => {
   const { S3, base, bucket } = storeToRefs(store);
   const { putObject, headObject } = store;
   const dataStore = storeData();
-  const { uri, index, settings, script, js, style, css, content, list } =
-    storeToRefs(dataStore);
+  const {
+    uri,
+    index,
+    settings,
+    script,
+    js,
+    style,
+    css,
+    content,
+    list,
+    selected,
+    selectedObject,
+  } = storeToRefs(dataStore);
   const { calcIndex } = dataStore;
   /**
    * Переключатель видимости правой панели
@@ -50,8 +61,8 @@ export default defineStore("app", () => {
         putObject(pAsset, get(body).type, get(body));
       }
     };
-    get(data).reduce(async (promise, asset) => {
-      await promise;
+    get(data).reduce(async (promise, asset, currentIndex) => {
+      if (currentIndex % 2) await promise;
       await headPutObject(asset);
     }, Promise.resolve());
   });
@@ -79,7 +90,7 @@ export default defineStore("app", () => {
       tab: "style",
     },
     content: {
-      selected: undefined,
+      selected,
       tab: "wysiwyg",
       expanded: [],
     },
@@ -116,6 +127,7 @@ export default defineStore("app", () => {
       css,
       content,
       list,
+      selectedObject,
     },
   };
 });

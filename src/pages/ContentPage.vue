@@ -120,13 +120,7 @@ q-page.column.full-height
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
-import {
-  get,
-  isDefined,
-  useArrayFind,
-  useFileDialog,
-  whenever,
-} from "@vueuse/core";
+import { get, isDefined, useFileDialog, watchOnce } from "@vueuse/core";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
@@ -140,7 +134,7 @@ import storeS3 from "@/stores/s3";
 
 const $q = useQuasar();
 const s3Store = storeS3();
-const { state, content, list } = storeToRefs(storeApp());
+const { state, content, list, selectedObject } = storeToRefs(storeApp());
 const { base } = storeToRefs(s3Store);
 const { putFile } = s3Store;
 const changefreq = reactive([
@@ -152,10 +146,6 @@ const changefreq = reactive([
   "yearly",
   "never",
 ]);
-const selectedObject = useArrayFind(
-  list,
-  ({ id }) => id === get(state).content.selected,
-);
 const icons = ref(materialIcons.icons);
 const data = ref({
   filter: "",
@@ -195,11 +185,14 @@ const selectedValue = computed({
 /** Инициализация */
 const init = () => {
   const { id } = get(content, 0);
-  get(state).content.expanded = [id];
-  get(state).content.selected = id;
+  const {
+    content: { expanded, selected },
+  } = get(state);
+  if (!expanded.length) get(state).content.expanded = [id];
+  if (!selected) get(state).content.selected = id;
 };
 if (isDefined(content)) init();
-else whenever(content, init);
+else watchOnce(content, init);
 const { files, open } = useFileDialog({
   multiple: false,
   accept: "image/*",
