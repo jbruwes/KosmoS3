@@ -81,9 +81,9 @@ export default defineStore("data", () => {
       /**
        * Добавляем no-cache
        *
-       * @param {object} ctx
-       * @param {object} ctx.options
-       * @returns {object}
+       * @param {object} ctx - Контекстный объект
+       * @param {object} ctx.options - Свойства запроса
+       * @returns {object} - Трансформированный контекстный объект
        */
       beforeFetch({ options }) {
         const ret = options;
@@ -96,8 +96,8 @@ export default defineStore("data", () => {
       /**
        * Преводим в массив
        *
-       * @param {object} ctx - Возвращаемый объект
-       * @returns {object} - Трансформируемый возвращаемый объект
+       * @param {object} ctx - Контекстный объект
+       * @returns {object} - Трансформированный контекстный объект
        */
       afterFetch(ctx) {
         ctx.data = calcIndex(ctx.data);
@@ -160,10 +160,7 @@ export default defineStore("data", () => {
       if (isDefined(index)) get(index).style = value;
     },
   });
-  /**
-   * @param {object} element
-   * @param {object} parent
-   */
+  /** @param {object} element - Объект для добавления новых свойств */
   const addCommonProperties = (element) => {
     Object.defineProperties(element, {
       index: {
@@ -190,10 +187,10 @@ export default defineStore("data", () => {
     });
   };
   /**
-   * @param {object} element
-   * @param {number} i
-   * @param {Array} array
-   * @returns {object}
+   * @param {object} element - Объект для добавления новых свойств
+   * @param {number} i - Порядковый номер в массиве
+   * @param {Array} array - Исходный массив
+   * @returns {object} - Объект с новыми свойствами
    */
   const addProperties = (element, i, array) => {
     Object.defineProperties(element, {

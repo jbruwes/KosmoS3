@@ -62,18 +62,21 @@ import {
   watchOnce,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { RouterView, useRouter } from "vue-router";
 import VRuntimeTemplate from "vue3-runtime-template";
 
 import data from "./stores/data";
 
 const router = useRouter();
-const { list, css, js, uri, script, style } = storeToRefs(data());
+const { list, css, js, uri, script, style, selected } = storeToRefs(data());
 const curPath = ref("");
 const tagStyle = ref("style");
 const tagScript = ref("script");
 const selectedObject = useArrayFind(list, ({ path }) => path === get(curPath));
+watch(selectedObject, ({ id }) => {
+  set(selected, id);
+});
 const visibleJs = useArrayFilter(js, ({ visible }) => visible);
 const visibleCss = useArrayFilter(css, ({ visible }) => visible);
 set(uri, "./");
