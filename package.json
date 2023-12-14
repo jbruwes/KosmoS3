@@ -14,7 +14,7 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.472.0",
+    "@aws-sdk/client-s3": "^3.473.0",
     "@fontsource/arsenal": "^5.0.8",
     "@fontsource/bad-script": "^5.0.8",
     "@fontsource/caveat": "^5.0.16",
@@ -76,7 +76,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-alias": "^1.1.2",
-    "eslint-plugin-jsdoc": "^46.9.0",
+    "eslint-plugin-jsdoc": "^46.9.1",
     "eslint-plugin-optimize-regex": "^1.2.1",
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
