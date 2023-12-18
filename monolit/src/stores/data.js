@@ -245,7 +245,7 @@ export default defineStore("data", () => {
                 get() {
                   return this.branch
                     .map(({ label }) =>
-                      encodeURIComponent(label.replace(" ", "_")),
+                      encodeURIComponent(label?.replace(" ", "_")),
                     )
                     .slice(1)
                     .join("/");

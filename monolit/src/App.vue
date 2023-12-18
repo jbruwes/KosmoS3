@@ -46,7 +46,9 @@ Head(v-if="list.length")
         svg.h-6.w-6
           path(:d="mdi.mdiClose")
       .flex.flex-auto.items-center
-        .mx-auto.flex-auto(:class="{ container: selectedObject?.responsive }")
+        .prose.mx-auto.flex-auto(
+          :class="{ container: selectedObject?.responsive }"
+        )
           v-runtime-template(v-if="list.length", :template="list[0].html")
 </template>
 <script setup>

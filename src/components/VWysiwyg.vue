@@ -14,7 +14,7 @@ div
     @paste="capture",
     @drop="capture"
   )
-  q-dialog(v-model="prompt", full-width, full-height, persistent)
+  q-dialog(v-model="template", full-width, full-height, persistent)
     q-card.column
       q-card-section.row.q-pb-none.items-center
         .text-h6 Выбор компонента для вставки
@@ -41,6 +41,33 @@ div
           flat,
           label="Ok",
           @click="editorRef.runCmd('insertHTML', model)"
+        )
+  q-dialog(v-model="routerLink", full-width, full-height, persistent)
+    q-card.column
+      q-card-section.row.q-pb-none.items-center
+        .text-h6 Выбор внутренней ссылки для вставки
+        q-space
+        q-btn(v-close-popup, icon="close", flat, round, dense)
+      q-card-section.col.column.full-width
+        q-card.col.column.full-width(flat, bordered)
+          q-card-section.col.column.full-width
+            q-tree.col.scroll.full-width(
+              v-if="content",
+              v-model:selected="selected",
+              :nodes="content",
+              default-expand-all,
+              node-key="id",
+              no-selection-unset,
+              selected-color="primary"
+            )
+
+      q-card-actions.text-primary(align="right")
+        q-btn(v-close-popup, flat, label="Отмена")
+        q-btn(
+          v-close-popup,
+          flat,
+          label="Ok",
+          @click="editorRef.runCmd('insertHTML', `<router-link to='/${selectedObject.path}'>${selectedObject.label}</router-link>`)"
         )
 </template>
 
@@ -73,22 +100,41 @@ import "@fontsource/tenor-sans";
 import "daisyui/dist/full.css";
 
 import { setup } from "@twind/core";
-import { get, set, useFileDialog } from "@vueuse/core";
+import {
+  get,
+  isDefined,
+  set,
+  useArrayFind,
+  useFileDialog,
+  watchOnce,
+} from "@vueuse/core";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
 import { onMounted, reactive, ref, watch } from "vue";
 
 import config from "@/../twind.config";
+import storeApp from "@/stores/app";
 import storeS3 from "@/stores/s3";
 
 defineProps({ modelValue: { default: "", type: String } });
 defineEmits(["update:modelValue"]);
-const prompt = ref(false);
+const template = ref(false);
+const routerLink = ref(false);
 const $q = useQuasar();
 const store = storeS3();
 const { base } = storeToRefs(store);
 const { putFile } = store;
+const { content, list } = storeToRefs(storeApp());
+const selected = ref(null);
+const selectedObject = useArrayFind(list, ({ id }) => id === get(selected));
+/** Инициализация */
+const init = () => {
+  const { id } = get(content, 0);
+  set(selected, id);
+};
+if (isDefined(content)) init();
+else watchOnce(content, init);
 const editorRef = ref();
 /**
  * { @link
@@ -155,7 +201,15 @@ const editorDef = reactive({
     icon: "dashboard",
     /** Открытие модального окна */
     handler() {
-      set(prompt, true);
+      set(template, true);
+    },
+  },
+  routerLink: {
+    tip: "Вставка внутренней ссылки",
+    icon: "share",
+    /** Открытие модального окна */
+    handler() {
+      set(routerLink, true);
     },
   },
   h1: {
@@ -274,7 +328,7 @@ const editorTlb = reactive([
   ],
   ["quote", "unordered", "ordered", "outdent", "indent"],
   ["undo", "redo"],
-  ["upload", "template"],
+  ["upload", "template", "routerLink"],
 ]);
 const editorFnt = reactive({
   arial: "Arial",

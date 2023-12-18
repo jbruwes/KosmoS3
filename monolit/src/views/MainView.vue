@@ -4,7 +4,7 @@
   :id="object.id",
   :key="object.id"
 )
-  .mx-auto.flex-auto(:class="{ container: object.responsive }")
+  .prose.mx-auto.flex-auto(:class="{ container: object.responsive }")
     v-runtime-template(:template="object.html")
 </template>
 <script setup>
