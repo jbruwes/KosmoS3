@@ -29,7 +29,7 @@ Head(v-if="list.length")
   component(:is="tagStyle", v-if="style") {{ style }}
   component(:is="tagScript", v-if="script") {{ `try{${script}\n}catch(e){console.error(e.message)}` }}
 .drawer
-  input#drawer.drawer-toggle(type="checkbox")
+  input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
   .drawer-content.carousel-vertical.h-screen
     .navbar.bg-base-100.rounded-box.absolute.left-6.right-6.top-6.opacity-0.shadow-xl.transition-opacity.duration-1000.ease-out(
       class="!w-auto hover:opacity-100"
@@ -39,7 +39,9 @@ Head(v-if="list.length")
           svg.h-6.w-6
             path(:d="mdi.mdiMenu")
       .mx-2.flex-1.px-2 {{ selectedObject?.label }}
-    RouterView
+    RouterView(v-slot="{ Component, route }")
+      transition(name="fade")
+        component(:is="Component", :key="route.path")
   .drawer-side
     .bg-base-200.flex.min-h-full.w-full.flex-col
       label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
@@ -75,13 +77,14 @@ const { list, css, js, uri, script, style, selected } = storeToRefs(data());
 const curPath = ref("");
 const tagStyle = ref("style");
 const tagScript = ref("script");
+const drawer = ref(false);
 const selectedObject = useArrayFind(list, ({ path }) => path === get(curPath));
 watch(selectedObject, ({ id }) => {
   set(selected, id);
 });
 const visibleJs = useArrayFilter(js, ({ visible }) => visible);
 const visibleCss = useArrayFilter(css, ({ visible }) => visible);
-set(uri, "./");
+set(uri, "/");
 /**
  * Инициализация
  *
@@ -106,6 +109,9 @@ const init = (value) => {
 };
 if (get(list).length) init(get(list));
 else watchOnce(list, init);
+router.beforeEach(() => {
+  set(drawer, false);
+});
 </script>
 <!--script>
 import { get, set, useBrowserLocation, useScriptTag } from "@vueuse/core";

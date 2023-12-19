@@ -14,7 +14,7 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.474.0",
+    "@aws-sdk/client-s3": "^3.476.0",
     "@fontsource/arsenal": "^5.0.8",
     "@fontsource/bad-script": "^5.0.8",
     "@fontsource/caveat": "^5.0.16",
@@ -63,7 +63,7 @@
     "mime-types": "^2.1.35",
     "pinia": "^2.1.7",
     "prettier-plugin-jsdoc": "^1.1.1",
-    "quasar": "^2.14.1",
+    "quasar": "^2.14.2",
     "to-xml": "^0.1.11",
     "vite": "^2.9.16",
     "vue": "^3.3.11",

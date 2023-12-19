@@ -382,3 +382,9 @@ onMounted(() => {
   setup(config, undefined, get(editorRef).getContentEl());
 });
 </script>
+<style lang="sass">
+router-link
+  color: var(--tw-prose-links)
+  text-decoration: underline
+  font-weight: 500
+</style>
