@@ -8,7 +8,7 @@ Head(v-if="list.length")
   meta(property="og:image", :content="selectedObject?.image")
   link(
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='${mdi[selectedObject.icon?.replace(/-./g, (x) => x[1].toUpperCase()) ?? 'mdiWeb']}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='${mdi[selectedObject?.icon?.replace(/-./g, (x) => x[1].toUpperCase()) ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
   )
   component(
@@ -58,30 +58,27 @@ import "daisyui/dist/full.css";
 
 import * as mdi from "@mdi/js";
 import { Head } from "@unhead/vue/components";
-import {
-  get,
-  set,
-  useArrayFilter,
-  useArrayFind,
-  watchOnce,
-} from "@vueuse/core";
+import { get, set, useArrayFilter, watchOnce } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
-import { RouterView, useRouter } from "vue-router";
+import { RouterView, useRoute, useRouter } from "vue-router";
 import VRuntimeTemplate from "vue3-runtime-template";
 
 import data from "./stores/data";
 
 const router = useRouter();
-const { list, css, js, uri, script, style, selected } = storeToRefs(data());
-const curPath = ref("");
+const curRoute = useRoute();
+const { list, css, js, uri, script, style, selected, selectedObject } =
+  storeToRefs(data());
 const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
-const selectedObject = useArrayFind(list, ({ path }) => path === get(curPath));
-watch(selectedObject, ({ id }) => {
-  set(selected, id);
-});
+watch(
+  () => curRoute.name,
+  (id) => {
+    set(selected, id);
+  },
+);
 const visibleJs = useArrayFilter(js, ({ visible }) => visible);
 const visibleCss = useArrayFilter(css, ({ visible }) => visible);
 set(uri, "/");
