@@ -14,7 +14,7 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.477.0",
+    "@aws-sdk/client-s3": "^3.478.0",
     "@fontsource/arsenal": "^5.0.8",
     "@fontsource/bad-script": "^5.0.8",
     "@fontsource/caveat": "^5.0.16",
@@ -58,7 +58,7 @@
     "@vueuse/core": "^10.7.0",
     "@vueuse/math": "^10.7.0",
     "ace-builds": "^1.32.2",
-    "daisyui": "^4.4.22",
+    "daisyui": "^4.4.23",
     "js-beautify": "^1.14.11",
     "mime-types": "^2.1.35",
     "pinia": "^2.1.7",
