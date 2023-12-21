@@ -8,7 +8,7 @@ Head(v-if="list.length")
   meta(property="og:image", :content="selectedObject?.image")
   link(
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='${mdi[selectedObject?.icon?.replace(/-./g, (x) => x[1].toUpperCase()) ?? 'mdiWeb']}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject?.icon?.replace(/-./g, (x) => x[1].toUpperCase()) ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
   )
   component(
