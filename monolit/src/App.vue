@@ -39,9 +39,9 @@ Head(v-if="list.length")
           svg.h-6.w-6
             path(:d="mdi.mdiMenu")
       .mx-2.flex-1.px-2 {{ selectedObject?.label }}
-    RouterView(v-slot="{ Component, route }")
+    RouterView(v-slot="{ Component }")
       transition(name="fade")
-        component(:is="Component", :key="route.path")
+        component(:is="Component")
   .drawer-side
     .bg-base-200.flex.min-h-full.w-full.flex-col
       label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
