@@ -7,6 +7,7 @@ Head(v-if="list.length")
   meta(property="og:url", content="")
   meta(property="og:image", :content="selectedObject?.image")
   link(
+    :key="favicon",
     rel="icon",
     :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject?.icon?.replace(/-./g, (x) => x[1].toUpperCase()) ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
@@ -30,9 +31,10 @@ Head(v-if="list.length")
   component(:is="tagScript", v-if="script") {{ `try{${script}\n}catch(e){console.error(e.message)}` }}
 .drawer
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
-  .drawer-content.carousel-vertical.h-screen
+  .drawer-content.carousel-vertical.h-screen(@scroll.passive="start()")
     .navbar.bg-base-100.rounded-box.absolute.left-6.right-6.top-6.opacity-0.shadow-xl.transition-opacity.duration-1000.ease-out(
-      class="!w-auto hover:opacity-100"
+      class="!w-auto hover:opacity-100",
+      :class="{ 'opacity-100': !ready }"
     )
       .flex-none
         label.btn.btn-square.btn-ghost(for="drawer")
@@ -58,7 +60,7 @@ import "daisyui/dist/full.css";
 
 import * as mdi from "@mdi/js";
 import { Head } from "@unhead/vue/components";
-import { get, set, useArrayFilter, watchOnce } from "@vueuse/core";
+import { get, set, useArrayFilter, useTimeout, watchOnce } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -66,6 +68,7 @@ import VRuntimeTemplate from "vue3-runtime-template";
 
 import data from "./stores/data";
 
+const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const curRoute = useRoute();
 const { list, css, js, uri, script, style, selected, selectedObject } =
@@ -73,6 +76,12 @@ const { list, css, js, uri, script, style, selected, selectedObject } =
 const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
+/**
+ * @constant {object} favicon - Ref
+ * @type {string} favicon.value - Уникальный ключ для favicon. Иначе иконка
+ *   динамически не обновляется в chrome при смене страницы
+ */
+const favicon = ref(crypto.randomUUID());
 watch(
   () => curRoute.name,
   (id) => {
