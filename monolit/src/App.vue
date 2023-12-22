@@ -60,7 +60,14 @@ import "daisyui/dist/full.css";
 
 import * as mdi from "@mdi/js";
 import { Head } from "@unhead/vue/components";
-import { get, set, useArrayFilter, useTimeout, watchOnce } from "@vueuse/core";
+import {
+  get,
+  isDefined,
+  set,
+  useArrayFilter,
+  useTimeout,
+  watchOnce,
+} from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -71,8 +78,17 @@ import data from "./stores/data";
 const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const curRoute = useRoute();
-const { list, css, js, uri, script, style, selected, selectedObject } =
-  storeToRefs(data());
+const {
+  list,
+  css,
+  js,
+  uri,
+  script,
+  style,
+  selected,
+  selectedObject,
+  settings,
+} = storeToRefs(data());
 const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
@@ -118,6 +134,16 @@ else watchOnce(list, init);
 router.beforeEach(() => {
   set(drawer, false);
 });
+/**
+ * Инициализация настроек
+ *
+ * @param {object} value - Объект настроек
+ */
+const initSettings = (value) => {
+  document.documentElement.dataset.theme = value?.theme;
+};
+if (isDefined(settings)) initSettings(get(settings));
+else watchOnce(settings, initSettings);
 </script>
 <!--script>
 import { get, set, useBrowserLocation, useScriptTag } from "@vueuse/core";

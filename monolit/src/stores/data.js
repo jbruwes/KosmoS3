@@ -71,8 +71,8 @@ export default defineStore("data", () => {
     content = [{ ...content, id, visible, label, html }];
     style = String(style) === style ? style : "";
     script = String(script) === script ? script : "";
-    const { yandex, metrika, google, analytics } = settings;
-    settings = { yandex, metrika, google, analytics };
+    const { yandex, metrika, google, analytics, theme = "light" } = settings;
+    settings = { yandex, metrika, google, analytics, theme };
     return { content, css, style, js, script, settings };
   };
   const { data } = useFetch(
