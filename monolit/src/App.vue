@@ -39,7 +39,7 @@ Head(v-if="list.length")
           svg.h-6.w-6
             path(:d="mdi.mdiMenu")
       .mx-2.flex-1.px-2 {{ selectedObject?.label }}
-    RouterView(v-slot="{ Component }")
+    router-view(v-slot="{ Component }")
       transition(name="fade")
         component(:is="Component")
   .drawer-side
@@ -61,7 +61,7 @@ import { Head } from "@unhead/vue/components";
 import { get, set, useArrayFilter, watchOnce } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
-import { RouterView, useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import VRuntimeTemplate from "vue3-runtime-template";
 
 import data from "./stores/data";
