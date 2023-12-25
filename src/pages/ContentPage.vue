@@ -23,6 +23,13 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           q-item-label Настройки слоя
       q-card-section
         q-toggle(v-model="selectedObject.responsive", label="Адаптивность")
+        q-select(
+          v-model="selectedObject.theme",
+          label="Цветовая тема",
+          :options="themes"
+        )
+          template(#prepend)
+            q-icon(name="mdi-theme-light-dark")
     q-separator
     q-card(v-if="selectedObject", flat)
       q-item.text-teal
@@ -159,11 +166,11 @@ const selectedValue = computed({
   /**
    * Считывание исходного кода из структуры данных
    *
-   * @returns {string} - Html
+   * @returns {string} - Template
    */
   get() {
-    const { html = "" } = get(selectedObject) ?? {};
-    return html.replace(/src="([^"]+)"/gi, (match, p1) => {
+    const { template = "" } = get(selectedObject) ?? {};
+    return template.replace(/src="([^"]+)"/gi, (match, p1) => {
       const { href } = new URL(p1, get(base));
       return `src="${href}"`;
     });
@@ -171,11 +178,11 @@ const selectedValue = computed({
   /**
    * Запись исходного кода страницы в структуры данных
    *
-   * @param {string} value - Html
+   * @param {string} value - Template
    */
   set(value) {
     const regexp = new RegExp(`^${get(base)}`);
-    get(selectedObject).html = value.replace(
+    get(selectedObject).template = value.replace(
       /src="([^"]+)"/gi,
       (match, p1) => `src="${p1.replace(regexp, "")}"`,
     );
@@ -227,4 +234,38 @@ watch(files, async (newFiles) => {
       $q.notify({ message });
     }
 });
+const themes = reactive([
+  "light",
+  "dark",
+  "cupcake",
+  "bumblebee",
+  "emerald",
+  "corporate",
+  "synthwave",
+  "retro",
+  "cyberpunk",
+  "valentine",
+  "halloween",
+  "garden",
+  "forest",
+  "aqua",
+  "lofi",
+  "pastel",
+  "fantasy",
+  "wireframe",
+  "black",
+  "luxury",
+  "dracula",
+  "cmyk",
+  "autumn",
+  "business",
+  "acid",
+  "lemonade",
+  "night",
+  "coffee",
+  "winter",
+  "dim",
+  "nord",
+  "sunset",
+]);
 </script>

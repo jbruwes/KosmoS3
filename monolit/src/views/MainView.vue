@@ -6,7 +6,7 @@
   ref="itemRefs"
 )
   .prose.mx-auto.flex-auto(:class="{ container: object.responsive }")
-    v-runtime-template(:template="object.html")
+    v-runtime-template(:template="object.template")
 </template>
 <script setup>
 import { get, useArrayFind } from "@vueuse/core";

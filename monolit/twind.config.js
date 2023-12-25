@@ -1,4 +1,4 @@
-import { defineConfig } from "@twind/core";
+import { autoDarkColor, defineConfig } from "@twind/core";
 import presetAutoprefix from "@twind/preset-autoprefix";
 import presetContainerQueries from "@twind/preset-container-queries";
 import presetExt from "@twind/preset-ext";
@@ -9,6 +9,8 @@ import presetTailwindForms from "@twind/preset-tailwind-forms";
 import presetTypography from "@twind/preset-typography";
 
 export default defineConfig({
+  darkMode: "class",
+  darkColor: autoDarkColor,
   presets: [
     presetAutoprefix(),
     presetContainerQueries(),

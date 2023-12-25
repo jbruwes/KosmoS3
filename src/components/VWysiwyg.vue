@@ -53,7 +53,7 @@ div
           q-card-section.col.column.full-width
             q-tree.col.scroll.full-width(
               v-if="content",
-              v-model:selected="selected",
+              v-model:selected="inserted",
               :nodes="content",
               default-expand-all,
               node-key="id",
@@ -67,7 +67,7 @@ div
           v-close-popup,
           flat,
           label="Ok",
-          @click="editorRef.runCmd('insertHTML', `<router-link to='/${selectedObject.path}'>${selectedObject.label}</router-link>`)"
+          @click="editorRef.runCmd('insertHTML', `<router-link to='/${insertedObject.path}'>${insertedObject.label}</router-link>`)"
         )
 </template>
 
@@ -125,13 +125,13 @@ const $q = useQuasar();
 const store = storeS3();
 const { base } = storeToRefs(store);
 const { putFile } = store;
-const { content, list } = storeToRefs(storeApp());
-const selected = ref(null);
-const selectedObject = useArrayFind(list, ({ id }) => id === get(selected));
+const { content, list, selectedObject } = storeToRefs(storeApp());
+const inserted = ref(null);
+const insertedObject = useArrayFind(list, ({ id }) => id === get(inserted));
 /** Инициализация */
 const init = () => {
   const { id } = get(content, 0);
-  set(selected, id);
+  set(inserted, id);
 };
 if (isDefined(content)) init();
 else watchOnce(content, init);
@@ -366,6 +366,18 @@ const editorFnt = reactive({
   rubik: "Rubik",
   tenor_sans: "Tenor Sans",
 });
+onMounted(() => {
+  console.log(get(selectedObject));
+  const { theme } = get(selectedObject) ?? {};
+  setup(config, undefined, get(editorRef).getContentEl());
+  get(editorRef).getContentEl().dataset.theme = theme;
+});
+watch(
+  () => get(selectedObject)?.theme,
+  (value) => {
+    get(editorRef).getContentEl().dataset.theme = value;
+  },
+);
 const options = reactive([
   {
     label: "Компонент №1",
@@ -378,9 +390,6 @@ const options = reactive([
 ]);
 const [{ value }] = options;
 const model = ref(value);
-onMounted(() => {
-  setup(config, undefined, get(editorRef).getContentEl());
-});
 </script>
 <style lang="sass">
 router-link

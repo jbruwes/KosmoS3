@@ -71,7 +71,8 @@ const newPage = () => {
   const { parent, children, index, siblings } = props.selectedObject;
   const id = uid();
   const visible = true;
-  const page = { id, visible };
+  const theme = "light";
+  const page = { id, visible, theme };
   switch (true) {
     case !!parent:
       siblings.splice(index + 1, 0, page);

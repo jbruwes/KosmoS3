@@ -66,13 +66,14 @@ export default defineStore("data", () => {
       id = crypto.randomUUID(),
       visible = true,
       label = "",
-      html = "",
+      template = "",
+      theme = "light",
     } = content;
-    content = [{ ...content, id, visible, label, html }];
+    content = [{ ...content, id, visible, label, template, theme }];
     style = String(style) === style ? style : "";
     script = String(script) === script ? script : "";
-    const { yandex, metrika, google, analytics, theme = "light" } = settings;
-    settings = { yandex, metrika, google, analytics, theme };
+    const { yandex, metrika, google, analytics } = settings;
+    settings = { yandex, metrika, google, analytics };
     return { content, css, style, js, script, settings };
   };
   const { data } = useFetch(
