@@ -1,5 +1,5 @@
 <template lang="pug">
-Head(v-if="list.length")
+Head(v-if="flatTree.length")
   title {{ selectedObject?.label }}
   meta(name="description", :content="selectedObject?.description")
   meta(property="og:title", :content="selectedObject?.label")
@@ -53,7 +53,10 @@ Head(v-if="list.length")
         .prose.mx-auto.flex-auto(
           :class="{ container: selectedObject?.responsive }"
         )
-          v-runtime-template(v-if="list.length", :template="list[0].template")
+          v-runtime-template(
+            v-if="flatTree.length",
+            :template="flatTree[0].template"
+          )
 </template>
 <script setup>
 import "daisyui/dist/full.css";
@@ -71,7 +74,7 @@ import data from "./stores/data";
 const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const curRoute = useRoute();
-const { list, css, js, uri, script, style, selected, selectedObject } =
+const { flatTree, css, js, uri, script, style, selected, selectedObject } =
   storeToRefs(data());
 const tagStyle = ref("style");
 const tagScript = ref("script");
@@ -113,8 +116,8 @@ const init = (value) => {
   });
   router.replace(router.currentRoute.value.fullPath);
 };
-if (get(list).length) init(get(list));
-else watchOnce(list, init);
+if (get(flatTree).length) init(get(flatTree));
+else watchOnce(flatTree, init);
 router.beforeEach(() => {
   set(drawer, false);
 });

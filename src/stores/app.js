@@ -22,7 +22,7 @@ export default defineStore("app", () => {
     style,
     css,
     content,
-    list,
+    flatTree,
     selected,
     selectedObject,
   } = storeToRefs(dataStore);
@@ -100,12 +100,14 @@ export default defineStore("app", () => {
     "?": 'xml version="1.0" encoding="UTF-8"',
     urlset: {
       "@xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9",
-      url: get(list).map(({ loc, lastmod, changefreq, priority, path }) => ({
-        loc: `https://${get(bucket)}/${loc ? encodeURI(loc) : path}`,
-        lastmod,
-        changefreq,
-        priority,
-      })),
+      url: get(flatTree).map(
+        ({ loc, lastmod, changefreq, priority, path }) => ({
+          loc: `https://${get(bucket)}/${loc ? encodeURI(loc) : path}`,
+          lastmod,
+          changefreq,
+          priority,
+        }),
+      ),
     },
   }));
   watchDebounced(
@@ -126,7 +128,7 @@ export default defineStore("app", () => {
       style,
       css,
       content,
-      list,
+      flatTree,
       selectedObject,
     },
   };

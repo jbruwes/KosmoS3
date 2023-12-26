@@ -125,9 +125,9 @@ const $q = useQuasar();
 const store = storeS3();
 const { base } = storeToRefs(store);
 const { putFile } = store;
-const { content, list, selectedObject } = storeToRefs(storeApp());
+const { content, flatTree, selectedObject } = storeToRefs(storeApp());
 const inserted = ref(null);
-const insertedObject = useArrayFind(list, ({ id }) => id === get(inserted));
+const insertedObject = useArrayFind(flatTree, ({ id }) => id === get(inserted));
 /** Инициализация */
 const init = () => {
   const { id } = get(content, 0);

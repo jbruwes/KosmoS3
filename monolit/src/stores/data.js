@@ -209,7 +209,7 @@ export default defineStore("data", () => {
   const js = computed(() => get(index)?.js.map(addProperties));
   const css = computed(() => get(index)?.css.map(addProperties));
   const content = computed(() => get(index)?.content);
-  const list = computed(() =>
+  const flatTree = computed(() =>
     isDefined(content)
       ? (function getMembers(members, pParent) {
           return members.reduce((accumulator, current) => {
@@ -262,7 +262,10 @@ export default defineStore("data", () => {
         })(get(content))
       : [],
   );
-  const selectedObject = useArrayFind(list, ({ id }) => id === get(selected));
+  const selectedObject = useArrayFind(
+    flatTree,
+    ({ id }) => id === get(selected),
+  );
   return {
     index,
     uri,
@@ -272,7 +275,7 @@ export default defineStore("data", () => {
     style,
     css,
     content,
-    list,
+    flatTree,
     calcIndex,
     selected,
     selectedObject,
