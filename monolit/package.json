@@ -46,7 +46,7 @@
     "@twind/preset-tailwind-forms": "^1.1.2",
     "@twind/preset-typography": "^1.0.7",
     "@unhead/vue": "^1.8.9",
-    "@vitejs/plugin-vue": "^4.5.2",
+    "@vitejs/plugin-vue": "^4.6.0",
     "@vueuse/core": "^10.7.0",
     "@vueuse/math": "^10.7.0",
     "animate.css": "^4.1.1",
