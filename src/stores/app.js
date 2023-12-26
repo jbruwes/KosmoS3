@@ -69,6 +69,7 @@ export default defineStore("app", () => {
   watchDebounced(
     index,
     (value, oldValue) => {
+      console.log(value);
       if (value && oldValue)
         putObject(
           "data.json",
@@ -78,7 +79,6 @@ export default defineStore("app", () => {
     },
     { deep: true, debounce: 1000, maxWait: 10000 },
   );
-
   const state = reactive({
     rightDrawer: null,
     js: {
@@ -95,7 +95,33 @@ export default defineStore("app", () => {
       expanded: [],
     },
   });
-
+  const selectedValue = computed({
+    /**
+     * Считывание исходного кода из структуры данных
+     *
+     * @returns {string} - Template
+     */
+    get() {
+      const { template = "" } = get(selectedObject) ?? {};
+      return template.replace(/src="([^"]+)"/gi, (match, p1) => {
+        const { href } = new URL(p1, get(base));
+        return `src="${href}"`;
+      });
+    },
+    /**
+     * Запись исходного кода страницы в структуры данных
+     *
+     * @param {string} value - Template
+     */
+    set(value) {
+      const regexp = new RegExp(`^${get(base)}`);
+      get(selectedObject).template = value.replace(
+        /src="([^"]+)"/gi,
+        (match, p1) => `src="${p1.replace(regexp, "")}"`,
+      );
+      get(selectedObject).lastmod = new Date().toISOString();
+    },
+  });
   const sitemap = computed(() => ({
     "?": 'xml version="1.0" encoding="UTF-8"',
     urlset: {
@@ -129,6 +155,7 @@ export default defineStore("app", () => {
       css,
       content,
       flatTree,
+      selectedValue,
       selectedObject,
     },
   };

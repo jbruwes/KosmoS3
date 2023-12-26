@@ -194,14 +194,12 @@ export default defineStore("data", () => {
    * @returns {object} - Объект с новыми свойствами
    */
   const addProperties = (element, i, array) => {
-    Object.defineProperties(element, {
-      siblings: {
-        /** @returns {Array} - Массив одноуровневых объектов */
-        get() {
-          return array;
-        },
-        configurable: true,
+    Object.defineProperty(element, "siblings", {
+      /** @returns {Array} - Массив одноуровневых объектов */
+      get() {
+        return array;
       },
+      configurable: true,
     });
     addCommonProperties(element);
     return element;

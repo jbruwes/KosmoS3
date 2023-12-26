@@ -121,9 +121,9 @@ q-page.column.full-height
   q-separator
   q-tab-panels.full-width.col(v-model="state.content.tab")
     q-tab-panel.column(name="wysiwyg")
-      v-wysiwyg.full-width.col.column(v-model="selectedValue")
+      v-wysiwyg.full-width.col.column
     q-tab-panel.column(name="source")
-      v-source-code.col(v-model="selectedValue")
+      v-source-code.col(v-model="selectedObject.value")
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
@@ -131,7 +131,7 @@ import { get, isDefined, useFileDialog, watchOnce } from "@vueuse/core";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
-import { computed, reactive, ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
@@ -162,33 +162,6 @@ const data = ref({
   },
 });
 get(state).rightDrawer = true;
-const selectedValue = computed({
-  /**
-   * Считывание исходного кода из структуры данных
-   *
-   * @returns {string} - Template
-   */
-  get() {
-    const { template = "" } = get(selectedObject) ?? {};
-    return template.replace(/src="([^"]+)"/gi, (match, p1) => {
-      const { href } = new URL(p1, get(base));
-      return `src="${href}"`;
-    });
-  },
-  /**
-   * Запись исходного кода страницы в структуры данных
-   *
-   * @param {string} value - Template
-   */
-  set(value) {
-    const regexp = new RegExp(`^${get(base)}`);
-    get(selectedObject).template = value.replace(
-      /src="([^"]+)"/gi,
-      (match, p1) => `src="${p1.replace(regexp, "")}"`,
-    );
-    get(selectedObject).lastmod = new Date().toISOString();
-  },
-});
 /** Инициализация */
 const init = () => {
   const { id } = get(content, 0);

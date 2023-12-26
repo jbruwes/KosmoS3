@@ -2,15 +2,14 @@
 div
   q-editor.col.column.full-width(
     ref="editorRef",
+    v-model="selectedValue",
     :dense="$q.screen.lt.md",
-    :model-value="modelValue",
     :toolbar="editorTlb",
     :fonts="editorFnt",
     content-class="col prose max-w-none",
     flat,
     placeholder="Добавьте контент на вашу страницу...",
     :definitions="editorDef",
-    @update:model-value="$emit('update:modelValue', $event)",
     @paste="capture",
     @drop="capture"
   )
@@ -117,15 +116,14 @@ import config from "@/../twind.config";
 import storeApp from "@/stores/app";
 import storeS3 from "@/stores/s3";
 
-defineProps({ modelValue: { default: "", type: String } });
-defineEmits(["update:modelValue"]);
 const template = ref(false);
 const routerLink = ref(false);
 const $q = useQuasar();
 const store = storeS3();
 const { base } = storeToRefs(store);
 const { putFile } = store;
-const { content, flatTree, selectedObject } = storeToRefs(storeApp());
+const { content, flatTree, selectedObject, selectedValue } =
+  storeToRefs(storeApp());
 const inserted = ref(null);
 const insertedObject = useArrayFind(flatTree, ({ id }) => id === get(inserted));
 /** Инициализация */
@@ -367,7 +365,6 @@ const editorFnt = reactive({
   tenor_sans: "Tenor Sans",
 });
 onMounted(() => {
-  console.log(get(selectedObject));
   const { theme } = get(selectedObject) ?? {};
   setup(config, undefined, get(editorRef).getContentEl());
   get(editorRef).getContentEl().dataset.theme = theme;
