@@ -15,7 +15,7 @@ export default defineStore("app", () => {
   const dataStore = storeData();
   const {
     uri,
-    index,
+    tree,
     settings,
     script,
     js,
@@ -67,9 +67,8 @@ export default defineStore("app", () => {
     }, Promise.resolve());
   });
   watchDebounced(
-    index,
+    tree,
     (value, oldValue) => {
-      console.log(value);
       if (value && oldValue)
         putObject(
           "data.json",
@@ -145,7 +144,6 @@ export default defineStore("app", () => {
     { debounce: 1000, maxWait: 10000 },
   );
   return {
-    index,
     settings,
     state,
     ...{

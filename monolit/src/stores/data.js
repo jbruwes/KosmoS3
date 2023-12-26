@@ -13,17 +13,17 @@ import { computed, ref } from "vue";
 export default defineStore("data", () => {
   const selected = ref();
   const uri = ref();
-  const index = ref();
+  const tree = ref();
   /**
    * Проверка структуры сайта
    *
-   * @param {object} index - Структура сайта
-   * @param {object} index.content - Контент
-   * @param {Array} index.css - Ссылки на стили
-   * @param {string} index.style - Стили
-   * @param {Array} index.js - Ссылки на скрипты
-   * @param {string} index.script - Скрипт
-   * @param {object} index.settings - Настройки
+   * @param {object} tree - Структура сайта
+   * @param {object} tree.content - Контент
+   * @param {Array} tree.css - Ссылки на стили
+   * @param {string} tree.style - Стили
+   * @param {Array} tree.js - Ссылки на скрипты
+   * @param {string} tree.script - Скрипт
+   * @param {object} tree.settings - Настройки
    * @returns {object} - Структура сайта
    */
   const calcIndex = ({
@@ -108,10 +108,10 @@ export default defineStore("data", () => {
     },
   ).json();
   whenever(data, (value) => {
-    set(index, value);
+    set(tree, value);
   });
   whenever(logicNot(uri), () => {
-    set(index, undefined);
+    set(tree, undefined);
   });
   const settings = computed({
     /**
@@ -119,14 +119,14 @@ export default defineStore("data", () => {
      *
      * @returns {object} Настройки
      */
-    get: () => get(index)?.settings,
+    get: () => get(tree)?.settings,
     /**
      * Запись настроек
      *
      * @param {object} value Настройки
      */
     set(value) {
-      if (isDefined(index)) get(index).settings = value;
+      if (isDefined(tree)) get(tree).settings = value;
     },
   });
   const script = computed({
@@ -135,14 +135,14 @@ export default defineStore("data", () => {
      *
      * @returns {string} Скрипт
      */
-    get: () => get(index)?.script,
+    get: () => get(tree)?.script,
     /**
      * Запись скрипта
      *
      * @param {string} value Скрипт
      */
     set(value) {
-      if (isDefined(index)) get(index).script = value;
+      if (isDefined(tree)) get(tree).script = value;
     },
   });
   const style = computed({
@@ -151,41 +151,40 @@ export default defineStore("data", () => {
      *
      * @returns {string} Стили
      */
-    get: () => get(index)?.style,
+    get: () => get(tree)?.style,
     /**
      * Запись стилей
      *
      * @param {string} value Стили
      */
     set(value) {
-      if (isDefined(index)) get(index).style = value;
+      if (isDefined(tree)) get(tree).style = value;
     },
   });
+  const index = {
+    /** @returns {number} - Позиция в массиве одноуровневых объектов */
+    get() {
+      return this.siblings.findIndex(({ id }) => this.id === id);
+    },
+    configurable: true,
+  };
+  const prev = {
+    /** @returns {Array} - Массив одноуровневых объектов */
+    get() {
+      return this.siblings[this.index - 1];
+    },
+    configurable: true,
+  };
+  const next = {
+    /** @returns {Array} - Массив одноуровневых объектов */
+    get() {
+      return this.siblings[this.index + 1];
+    },
+    configurable: true,
+  };
   /** @param {object} element - Объект для добавления новых свойств */
   const addCommonProperties = (element) => {
-    Object.defineProperties(element, {
-      index: {
-        /** @returns {number} - Позиция в массиве одноуровневых объектов */
-        get() {
-          return this.siblings.findIndex(({ id }) => this.id === id);
-        },
-        configurable: true,
-      },
-      prev: {
-        /** @returns {Array} - Массив одноуровневых объектов */
-        get() {
-          return this.siblings[this.index - 1];
-        },
-        configurable: true,
-      },
-      next: {
-        /** @returns {Array} - Массив одноуровневых объектов */
-        get() {
-          return this.siblings[this.index + 1];
-        },
-        configurable: true,
-      },
-    });
+    Object.defineProperties(element, { index, prev, next });
   };
   /**
    * @param {object} element - Объект для добавления новых свойств
@@ -204,53 +203,79 @@ export default defineStore("data", () => {
     addCommonProperties(element);
     return element;
   };
-  const js = computed(() => get(index)?.js.map(addProperties));
-  const css = computed(() => get(index)?.css.map(addProperties));
-  const content = computed(() => get(index)?.content);
+  const js = computed(() => get(tree)?.js.map(addProperties));
+  const css = computed(() => get(tree)?.css.map(addProperties));
+  const content = computed(() => get(tree)?.content);
+  const siblings = {
+    /** @returns {Array} - Массив одноуровневых объектов */
+    get() {
+      return this.parent ? this.parent?.children : this.children;
+    },
+    configurable: true,
+  };
+  const branch = {
+    /** @returns {Array} - Массив родительских объектов */
+    get() {
+      const ret = [this];
+      let { parent } = this;
+      while (parent) {
+        ret.unshift(parent);
+        ({ parent } = parent);
+      }
+      return ret;
+    },
+    configurable: true,
+  };
+  const path = {
+    /** @returns {string} - Путь до объекта */
+    get() {
+      return this.branch
+        .map(({ label }) => encodeURIComponent(label?.replace(" ", "_")))
+        .slice(1)
+        .join("/");
+    },
+    configurable: true,
+  };
   const flatTree = computed(() =>
     isDefined(content)
       ? (function getMembers(members, pParent) {
+          const parent = {
+            /** @returns {object} - Родительский объект */
+            get() {
+              return pParent;
+            },
+            configurable: true,
+          };
           return members.reduce((accumulator, current) => {
+            const lCurrent = current;
+            Object.keys(current).forEach((key) => {
+              if (
+                ![
+                  "changefreq",
+                  "children",
+                  "description",
+                  "icon",
+                  "id",
+                  "image",
+                  "keywords",
+                  "label",
+                  "lastmod",
+                  "loc",
+                  "priority",
+                  "responsive",
+                  "template",
+                  "theme",
+                  "title",
+                  "visible",
+                ].includes(key)
+              )
+                delete lCurrent[key];
+            });
             Object.defineProperties(current, {
-              parent: {
-                /** @returns {object} - Родительский объект */
-                get() {
-                  return pParent;
-                },
-                configurable: true,
-              },
-              siblings: {
-                /** @returns {Array} - Массив одноуровневых объектов */
-                get() {
-                  return this.parent ? this.parent?.children : this.children;
-                },
-                configurable: true,
-              },
-              branch: {
-                /** @returns {Array} - Массив родительских объектов */
-                get() {
-                  const branch = [this];
-                  let { parent } = this;
-                  while (parent) {
-                    branch.unshift(parent);
-                    ({ parent } = parent);
-                  }
-                  return branch;
-                },
-                configurable: true,
-              },
-              path: {
-                /** @returns {string} - Путь до объекта */
-                get() {
-                  return this.branch
-                    .map(({ label }) =>
-                      encodeURIComponent(label?.replace(" ", "_")),
-                    )
-                    .slice(1)
-                    .join("/");
-                },
-                configurable: true,
-              },
+              parent,
+              siblings,
+              branch,
+              path,
             });
             addCommonProperties(current);
             return current.children?.length
@@ -265,7 +290,7 @@ export default defineStore("data", () => {
     ({ id }) => id === get(selected),
   );
   return {
-    index,
+    tree,
     uri,
     settings,
     script,
