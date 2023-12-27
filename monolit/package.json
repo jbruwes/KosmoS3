@@ -35,7 +35,7 @@
     "@fontsource/rubik": "^5.0.18",
     "@fontsource/rubik-mono-one": "^5.0.18",
     "@fontsource/tenor-sans": "^5.0.18",
-    "@mdi/js": "^7.3.67",
+    "@mdi/js": "^7.4.47",
     "@twind/core": "^1.1.3",
     "@twind/preset-autoprefix": "^1.0.7",
     "@twind/preset-container-queries": "^1.0.7",
@@ -67,7 +67,7 @@
     "vue3-runtime-template": "^1.0.2"
   },
   "devDependencies": {
-    "@vue/language-plugin-pug": "^1.8.26",
+    "@vue/language-plugin-pug": "^1.8.27",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
     "pug": "^3.0.2"
