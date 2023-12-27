@@ -141,7 +141,7 @@ import storeS3 from "@/stores/s3";
 
 const $q = useQuasar();
 const s3Store = storeS3();
-const { state, content, flatTree, selectedObject, selectedValue } =
+const { state, content, flatTree, selectedObject, selectedValue, themes } =
   storeToRefs(storeApp());
 const { base } = storeToRefs(s3Store);
 const { putFile } = s3Store;
@@ -208,38 +208,4 @@ watch(files, async (newFiles) => {
       $q.notify({ message });
     }
 });
-const themes = reactive([
-  "light",
-  "dark",
-  "cupcake",
-  "bumblebee",
-  "emerald",
-  "corporate",
-  "synthwave",
-  "retro",
-  "cyberpunk",
-  "valentine",
-  "halloween",
-  "garden",
-  "forest",
-  "aqua",
-  "lofi",
-  "pastel",
-  "fantasy",
-  "wireframe",
-  "black",
-  "luxury",
-  "dracula",
-  "cmyk",
-  "autumn",
-  "business",
-  "acid",
-  "lemonade",
-  "night",
-  "coffee",
-  "winter",
-  "dim",
-  "nord",
-  "sunset",
-]);
 </script>

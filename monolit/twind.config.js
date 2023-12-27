@@ -9,7 +9,6 @@ import presetTailwindForms from "@twind/preset-tailwind-forms";
 import presetTypography from "@twind/preset-typography";
 
 export default defineConfig({
-  darkMode: "class",
   darkColor: autoDarkColor,
   presets: [
     presetAutoprefix(),

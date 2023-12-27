@@ -29,7 +29,7 @@ Head(v-if="flatTree.length")
   )
   component(:is="tagStyle", v-if="style") {{ style }}
   component(:is="tagScript", v-if="script") {{ `try{${script}\n}catch(e){console.error(e.message)}` }}
-.drawer
+.drawer(ref="twind", :data-theme="settings?.theme")
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
   .drawer-content.carousel-vertical.h-screen(@scroll.passive="start()")
     .navbar.bg-base-100.rounded-box.absolute.left-6.right-6.top-6.opacity-0.shadow-xl.transition-opacity.duration-1000.ease-out(
@@ -59,23 +59,35 @@ Head(v-if="flatTree.length")
 import "daisyui/dist/full.css";
 
 import * as mdi from "@mdi/js";
+import { setup } from "@twind/core";
 import { Head } from "@unhead/vue/components";
 import { get, set, useArrayFilter, useTimeout, watchOnce } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import VRuntimeTemplate from "vue3-runtime-template";
 
+import config from "../twind.config";
 import data from "./stores/data";
 
 const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const curRoute = useRoute();
-const { flatTree, css, js, uri, script, style, selected, selectedObject } =
-  storeToRefs(data());
+const {
+  flatTree,
+  css,
+  js,
+  uri,
+  script,
+  style,
+  selected,
+  selectedObject,
+  settings,
+} = storeToRefs(data());
 const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
+const twind = ref();
 /**
  * @constant {object} favicon - Ref
  * @type {string} favicon.value - Уникальный ключ для favicon. Иначе иконка
@@ -118,16 +130,9 @@ else watchOnce(flatTree, init);
 router.beforeEach(() => {
   set(drawer, false);
 });
-// /**
-//  * Инициализация настроек
-//  *
-//  * @param {object} value - Объект настроек
-//  */
-// const initSettings = (value) => {
-//   document.documentElement.dataset.theme = value?.theme;
-// };
-// if (isDefined(settings)) initSettings(get(settings));
-// else watchOnce(settings, initSettings);
+onMounted(() => {
+  setup(config, undefined, get(twind));
+});
 </script>
 <!--script>
 import { get, set, useBrowserLocation, useScriptTag } from "@vueuse/core";
