@@ -260,6 +260,7 @@ export default defineStore("data", () => {
               theme: "light",
               title: undefined,
               visible: true,
+              background: true,
             };
             Object.keys(current).forEach((key) => {
               if (!Object.keys(referen).includes(key)) delete lCurrent[key];

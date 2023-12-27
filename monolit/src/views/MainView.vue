@@ -1,10 +1,11 @@
 <template lang="pug">
-.carousel-item.min-h-screen.w-full.flex-auto.items-center(
+.carousel-item.min-h-screen.w-full.flex-auto.items-center.bg-cover.bg-center(
   v-for="object in selectedObject.siblings",
   :id="object.id",
   :key="object.id",
   ref="itemRefs",
-  :data-theme="object.theme"
+  :data-theme="object.theme",
+  :style="backgroundImage(object)"
 )
   .prose.mx-auto.flex-auto(:class="{ container: object.responsive }")
     v-runtime-template(:template="object.template")
@@ -18,6 +19,17 @@ import VRuntimeTemplate from "vue3-runtime-template";
 import data from "../stores/data";
 
 const { selectedObject, selected } = storeToRefs(data());
+/**
+ * @param {object} object - Страница
+ * @param {string} object.image - URL картинки
+ * @param {bollean} object.background - Флаг видимости фона
+ * @returns {string} - URL загрузки
+ */
+const backgroundImage = ({ image, background }) => {
+  const ret = {};
+  if (image && background) ret.backgroundImage = `url(${image})`;
+  return ret;
+};
 const itemRefs = ref([]);
 const firstElementId = computed(() => {
   const { siblings } = get(selectedObject);

@@ -45,7 +45,10 @@ Head(v-if="flatTree.length")
       transition(name="fade")
         component(:is="Component")
   .drawer-side
-    .flex.min-h-full.w-full.flex-col(:data-theme="flatTree[0]?.theme")
+    .flex.min-h-full.w-full.flex-col.bg-cover.bg-center(
+      :data-theme="flatTree[0]?.theme",
+      :style="backgroundImage"
+    )
       label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
         svg.h-6.w-6
           path(:d="mdi.mdiClose")
@@ -63,7 +66,7 @@ import { setup } from "@twind/core";
 import { Head } from "@unhead/vue/components";
 import { get, set, useArrayFilter, useTimeout, watchOnce } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import VRuntimeTemplate from "vue3-runtime-template";
 
@@ -88,6 +91,12 @@ const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
 const twind = ref();
+const backgroundImage = computed(() => {
+  const ret = {};
+  const { image, background } = get(flatTree, 0) ?? {};
+  if (image && background) ret.backgroundImage = `url(${image})`;
+  return ret;
+});
 /**
  * @constant {object} favicon - Ref
  * @type {string} favicon.value - Уникальный ключ для favicon. Иначе иконка
