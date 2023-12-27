@@ -45,18 +45,15 @@ Head(v-if="flatTree.length")
       transition(name="fade")
         component(:is="Component")
   .drawer-side
-    .bg-base-200.flex.min-h-full.w-full.flex-col
+    .flex.min-h-full.w-full.flex-col(:data-theme="flatTree[0]?.theme")
       label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
         svg.h-6.w-6
           path(:d="mdi.mdiClose")
       .flex.flex-auto.items-center
         .prose.mx-auto.flex-auto(
-          :class="{ container: selectedObject?.responsive }"
+          :class="{ container: flatTree[0]?.responsive }"
         )
-          v-runtime-template(
-            v-if="flatTree.length",
-            :template="flatTree[0].template"
-          )
+          v-runtime-template(:template="flatTree[0]?.template")
 </template>
 <script setup>
 import "daisyui/dist/full.css";

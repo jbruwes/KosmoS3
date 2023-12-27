@@ -67,9 +67,8 @@ export default defineStore("data", () => {
       visible = true,
       label = "",
       template = "",
-      theme = "light",
     } = content;
-    content = [{ ...content, id, visible, label, template, theme }];
+    content = [{ ...content, id, visible, label, template }];
     style = String(style) === style ? style : "";
     script = String(script) === script ? script : "";
     const { yandex, metrika, google, analytics } = settings;
@@ -182,10 +181,6 @@ export default defineStore("data", () => {
     },
     configurable: true,
   };
-  /** @param {object} element - Объект для добавления новых свойств */
-  const addCommonProperties = (element) => {
-    Object.defineProperties(element, { index, prev, next });
-  };
   /**
    * @param {object} element - Объект для добавления новых свойств
    * @param {number} i - Порядковый номер в массиве
@@ -200,7 +195,7 @@ export default defineStore("data", () => {
       },
       configurable: true,
     });
-    addCommonProperties(element);
+    Object.defineProperties(element, { index, prev, next });
     return element;
   };
   const js = computed(() => get(tree)?.js.map(addProperties));
@@ -248,36 +243,41 @@ export default defineStore("data", () => {
           };
           return members.reduce((accumulator, current) => {
             const lCurrent = current;
+            const referen = {
+              changefreq: undefined,
+              children: [],
+              description: undefined,
+              icon: undefined,
+              id: crypto.randomUUID(),
+              image: undefined,
+              keywords: undefined,
+              label: "",
+              lastmod: undefined,
+              loc: undefined,
+              priority: undefined,
+              responsive: true,
+              template: undefined,
+              theme: "light",
+              title: undefined,
+              visible: true,
+            };
             Object.keys(current).forEach((key) => {
-              if (
-                ![
-                  "changefreq",
-                  "children",
-                  "description",
-                  "icon",
-                  "id",
-                  "image",
-                  "keywords",
-                  "label",
-                  "lastmod",
-                  "loc",
-                  "priority",
-                  "responsive",
-                  "template",
-                  "theme",
-                  "title",
-                  "visible",
-                ].includes(key)
-              )
-                delete lCurrent[key];
+              if (!Object.keys(referen).includes(key)) delete lCurrent[key];
             });
+            Object.entries(referen)
+              .filter(([, value]) => value !== undefined)
+              .forEach(([key, value]) => {
+                if (current[key] === undefined) lCurrent[key] = value;
+              });
             Object.defineProperties(current, {
               parent,
               siblings,
               branch,
               path,
+              index,
+              prev,
+              next,
             });
-            addCommonProperties(current);
             return current.children?.length
               ? [...accumulator, ...getMembers(current.children, current)]
               : accumulator;

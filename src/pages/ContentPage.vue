@@ -123,7 +123,7 @@ q-page.column.full-height
     q-tab-panel.column(name="wysiwyg")
       v-wysiwyg.full-width.col.column
     q-tab-panel.column(name="source")
-      v-source-code.col(v-model="selectedObject.value")
+      v-source-code.col(v-model="selectedValue")
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
@@ -141,7 +141,8 @@ import storeS3 from "@/stores/s3";
 
 const $q = useQuasar();
 const s3Store = storeS3();
-const { state, content, flatTree, selectedObject } = storeToRefs(storeApp());
+const { state, content, flatTree, selectedObject, selectedValue } =
+  storeToRefs(storeApp());
 const { base } = storeToRefs(s3Store);
 const { putFile } = s3Store;
 const changefreq = reactive([

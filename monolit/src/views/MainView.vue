@@ -3,7 +3,8 @@
   v-for="object in selectedObject.siblings",
   :id="object.id",
   :key="object.id",
-  ref="itemRefs"
+  ref="itemRefs",
+  :data-theme="object.theme"
 )
   .prose.mx-auto.flex-auto(:class="{ container: object.responsive }")
     v-runtime-template(:template="object.template")
