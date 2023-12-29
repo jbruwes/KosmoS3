@@ -90,7 +90,7 @@
     "prettier": "^3.1.1",
     "prettier-plugin-css-order": "^2.0.1",
     "prettier-plugin-organize-attributes": "^1.0.0",
-    "prettier-plugin-tailwindcss": "^0.5.9",
+    "prettier-plugin-tailwindcss": "^0.5.10",
     "pug": "^3.0.2"
   },
   "engines": {
