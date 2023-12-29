@@ -22,14 +22,15 @@ const { selectedObject, selected } = storeToRefs(data());
 /**
  * @param {object} object - Страница
  * @param {string} object.image - URL картинки
- * @param {bollean} object.background - Флаг видимости фона
- * @returns {string} - URL загрузки
+ * @param {boolean} object.background - Флаг видимости фона
+ * @returns {object} - Объект со стилями
  */
-const backgroundImage = ({ image, background }) => {
-  const ret = {};
-  if (image && background) ret.backgroundImage = `url(${image})`;
-  return ret;
-};
+const backgroundImage = ({ image, background }) =>
+  image && background
+    ? {
+        backgroundImage: `url(${image})`,
+      }
+    : {};
 const itemRefs = ref([]);
 const firstElementId = computed(() => {
   const { siblings } = get(selectedObject);

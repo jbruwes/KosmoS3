@@ -21,7 +21,7 @@ q-btn-group.q-mx-xs(spread, flat)
     template(#default-header="prop")
       .row.no-wrap.full-width.items-center(@dblclick="prop.node.edit = true")
         q-checkbox.q-mr-xs(v-model="prop.node.visible", dense)
-        q-input.min-w-96.full-width(
+        q-input.full-width.min-w-96(
           v-model.trim="prop.node[type === 'text' ? 'label' : type]",
           dense,
           :readonly="!prop.node.edit",
