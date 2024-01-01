@@ -4,8 +4,15 @@ Head(v-if="flatTree.length")
   meta(name="description", :content="selectedObject?.description")
   meta(property="og:title", :content="selectedObject?.label")
   meta(property="og:type", :content="selectedObject?.type")
-  meta(property="og:url", content="")
   meta(property="og:image", :content="selectedObject?.image")
+  meta(
+    property="og:url",
+    :content="`${location.origin}/${selectedObject.loc ? selectedObject.loc : selectedObject.path}`"
+  )
+  link(
+    rel="canonical",
+    :href="`${location.origin}/${selectedObject.loc ? selectedObject.loc : selectedObject.path}`"
+  )
   link(
     :key="favicon",
     rel="icon",
@@ -64,7 +71,14 @@ import "daisyui/dist/full.css";
 import * as mdi from "@mdi/js";
 import { setup } from "@twind/core";
 import { Head } from "@unhead/vue/components";
-import { get, set, useArrayFilter, useTimeout, watchOnce } from "@vueuse/core";
+import {
+  get,
+  set,
+  useArrayFilter,
+  useBrowserLocation,
+  useTimeout,
+  watchOnce,
+} from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -73,6 +87,7 @@ import VRuntimeTemplate from "vue3-runtime-template";
 import config from "../twind.config";
 import data from "./stores/data";
 
+const location = useBrowserLocation();
 const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const curRoute = useRoute();
@@ -118,11 +133,11 @@ set(uri, "/");
  * @param {Array} value - Массив страниц
  */
 const init = (value) => {
-  value.forEach((element) => {
-    const { path, id } = element;
+  value.forEach(({ path, id: name, loc: alias }) => {
     router.addRoute({
-      name: id,
+      name,
       path: `/${path}`,
+      ...(alias && { alias: `/${alias}` }),
       /** @returns {object} - MainView */
       component: () => import("./views/MainView.vue"),
     });

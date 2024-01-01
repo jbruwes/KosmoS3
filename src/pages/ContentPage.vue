@@ -60,7 +60,8 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           label="Ключевые слова"
         )
         q-input(
-          v-model.trim="selectedObject.loc",
+          v-model.trim="loc",
+          prefix="/",
           label="Постоянная ссылка",
           type="url"
         )
@@ -132,7 +133,7 @@ import { get, isDefined, useFileDialog, watchOnce } from "@vueuse/core";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
-import { reactive, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
@@ -156,6 +157,16 @@ const changefreq = reactive([
   "never",
 ]);
 const icons = ref(materialIcons.icons);
+const loc = computed({
+  /** @returns {string} - Постоянная ссылка */
+  get() {
+    return get(selectedObject)?.loc;
+  },
+  /** @param {string} value - Новое значение постоянной ссылки */
+  set(value) {
+    get(selectedObject).loc = value.replace(/^\/|\/$/g, "");
+  },
+});
 const data = ref({
   filter: "",
   pagination: {
