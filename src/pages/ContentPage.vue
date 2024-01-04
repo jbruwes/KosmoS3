@@ -23,7 +23,11 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           q-item-label Настройки слоя
       q-card-section
         q-toggle(v-model="selectedObject.responsive", label="Адаптивность")
-        q-toggle(v-model="selectedObject.background", label="Показывать фон")
+        q-toggle(
+          v-model="selectedObject.background",
+          label="Показывать подложку"
+        )
+        q-toggle(v-model="selectedObject.overlay", label="Затемнение подложки")
         q-select(
           v-model="selectedObject.theme",
           label="Цветовая тема",

@@ -7,11 +7,11 @@ Head(v-if="flatTree.length")
   meta(property="og:image", :content="selectedObject?.image")
   meta(
     property="og:url",
-    :content="`${location.origin}/${selectedObject.loc ? selectedObject.loc : selectedObject.path}`"
+    :content="`${location.origin}/${selectedObject?.loc ? selectedObject?.loc : selectedObject?.path}`"
   )
   link(
     rel="canonical",
-    :href="`${location.origin}/${selectedObject.loc ? selectedObject.loc : selectedObject.path}`"
+    :href="`${location.origin}/${selectedObject?.loc ? selectedObject?.loc : selectedObject?.path}`"
   )
   link(
     :key="favicon",

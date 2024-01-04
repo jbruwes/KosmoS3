@@ -1,14 +1,16 @@
 <template lang="pug">
-.carousel-item.min-h-screen.w-full.flex-auto.items-center.bg-cover.bg-center(
+.carousel-item.min-h-screen(
   v-for="object in selectedObject.siblings",
   :id="object.id",
   :key="object.id",
-  ref="itemRefs",
-  :data-theme="object.theme",
-  :style="backgroundImage(object)"
+  ref="itemRefs"
 )
-  .prose.mx-auto.flex-auto(:class="{ container: object.responsive }")
-    v-runtime-template(:template="object.template")
+  .hero(:style="backgroundImage(object)", :data-theme="object.theme")
+    .hero-overlay(v-if="object.image && object.background && object.overlay")
+    .prose(
+      :class="{ container: object.responsive, 'w-full max-w-full': !object.responsive }"
+    )
+      v-runtime-template(:template="object.template")
 </template>
 <script setup>
 import { get, useArrayFind } from "@vueuse/core";
