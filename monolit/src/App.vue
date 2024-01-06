@@ -1,22 +1,22 @@
 <template lang="pug">
 Head(v-if="flatTree.length")
-  title {{ selectedObject?.label }}
-  meta(name="description", :content="selectedObject?.description")
-  meta(property="og:title", :content="selectedObject?.label")
-  meta(property="og:type", :content="selectedObject?.type")
-  meta(property="og:image", :content="selectedObject?.image")
+  title {{ the?.label }}
+  meta(name="description", :content="the?.description")
+  meta(property="og:title", :content="the?.label")
+  meta(property="og:type", :content="the?.type")
+  meta(property="og:image", :content="the?.image")
   meta(
     property="og:url",
-    :content="`${location.origin}/${selectedObject?.loc ? selectedObject?.loc : selectedObject?.path}`"
+    :content="`${location.origin}/${the?.loc ? the?.loc : the?.path}`"
   )
   link(
     rel="canonical",
-    :href="`${location.origin}/${selectedObject?.loc ? selectedObject?.loc : selectedObject?.path}`"
+    :href="`${location.origin}/${the?.loc ? the?.loc : the?.path}`"
   )
   link(
     :key="favicon",
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject?.icon?.replace(/-./g, (x) => x[1].toUpperCase()) ?? 'mdiWeb']}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[the?.icon?.replace(/-./g, (x) => x[1].toUpperCase()) ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
   )
   component(
@@ -47,7 +47,7 @@ Head(v-if="flatTree.length")
         label.btn.btn-square.btn-ghost(for="drawer")
           svg.h-6.w-6
             path(:d="mdi.mdiMenu")
-      .mx-2.flex-1.px-2 {{ selectedObject?.label }}
+      .mx-2.flex-1.px-2 {{ the?.label }}
     router-view(v-slot="{ Component }")
       transition(name="fade")
         component(:is="Component")
@@ -91,17 +91,8 @@ const location = useBrowserLocation();
 const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const curRoute = useRoute();
-const {
-  flatTree,
-  css,
-  js,
-  uri,
-  script,
-  style,
-  selected,
-  selectedObject,
-  settings,
-} = storeToRefs(data());
+const { flatTree, css, js, uri, script, style, selected, the, settings } =
+  storeToRefs(data());
 const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);

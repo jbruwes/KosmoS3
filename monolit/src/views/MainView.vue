@@ -1,6 +1,6 @@
 <template lang="pug">
 .carousel-item.min-h-screen(
-  v-for="object in selectedObject.siblings",
+  v-for="object in the.siblings",
   :id="object.id",
   :key="object.id",
   ref="itemRefs"
@@ -20,7 +20,7 @@ import VRuntimeTemplate from "vue3-runtime-template";
 
 import data from "../stores/data";
 
-const { selectedObject, selected } = storeToRefs(data());
+const { the, selected } = storeToRefs(data());
 /**
  * @param {object} object - Страница
  * @param {string} object.image - URL картинки
@@ -35,7 +35,7 @@ const backgroundImage = ({ image, background }) =>
     : {};
 const itemRefs = ref([]);
 const firstElementId = computed(() => {
-  const { siblings } = get(selectedObject);
+  const { siblings } = get(the);
   const [{ id }] = siblings;
   return id;
 });

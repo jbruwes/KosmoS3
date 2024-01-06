@@ -19,7 +19,7 @@ q-page.column.full-height
         v-model:selected="state.css.selected",
         type="url",
         :list="css",
-        :selected-object="selectedObject"
+        :the="the"
       )
 </template>
 <script setup>
@@ -31,10 +31,7 @@ import VSourceCode from "@/components/VSourceCode.vue";
 import app from "@/stores/app";
 
 const { style, css, state } = storeToRefs(app());
-const selectedObject = useArrayFind(
-  css,
-  ({ id }) => id === get(state).css.selected,
-);
+const the = useArrayFind(css, ({ id }) => id === get(state).css.selected);
 get(state).rightDrawer = null;
 /** Инициализация */
 const init = () => {

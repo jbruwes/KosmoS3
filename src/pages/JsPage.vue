@@ -19,7 +19,7 @@ q-page.column.full-height
         v-model:selected="state.js.selected",
         type="url",
         :list="js",
-        :selected-object="selectedObject"
+        :the="the"
       )
 </template>
 <script setup>
@@ -31,10 +31,7 @@ import VSourceCode from "@/components/VSourceCode.vue";
 import app from "@/stores/app";
 
 const { script, js, state } = storeToRefs(app());
-const selectedObject = useArrayFind(
-  js,
-  ({ id }) => id === get(state).js.selected,
-);
+const the = useArrayFind(js, ({ id }) => id === get(state).js.selected);
 get(state).rightDrawer = null;
 /** Инициализация */
 const init = () => {

@@ -12,49 +12,39 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         v-model:expanded="state.content.expanded",
         :nodes="content",
         :list="flatTree",
-        :selected-object="selectedObject"
+        :the="the"
       )
     q-separator
-    q-card(v-if="selectedObject", flat)
+    q-card(v-if="the", flat)
       q-item.text-teal
         q-item-section(avatar)
           q-icon(name="travel_explore")
         q-item-section
           q-item-label Настройки слоя
       q-card-section
-        q-toggle(v-model="selectedObject.responsive", label="Адаптивность")
-        q-toggle(
-          v-model="selectedObject.background",
-          label="Показывать подложку"
-        )
-        q-toggle(v-model="selectedObject.overlay", label="Затемнение подложки")
-        q-select(
-          v-model="selectedObject.theme",
-          label="Цветовая тема",
-          :options="themes"
-        )
+        q-toggle(v-model="the.responsive", label="Адаптивность")
+        q-toggle(v-model="the.background", label="Показывать подложку")
+        q-toggle(v-model="the.overlay", label="Затемнение подложки")
+        q-select(v-model="the.theme", label="Цветовая тема", :options="themes")
           template(#prepend)
             q-icon(name="mdi-theme-light-dark")
     q-separator
-    q-card(v-if="selectedObject", flat)
+    q-card(v-if="the", flat)
       q-item.text-teal
         q-item-section(avatar)
           q-icon(name="travel_explore")
         q-item-section
           q-item-label Настройки SEO
       q-card-section
+        q-input(v-model.trim="the.title", label="Заголовок страницы")
         q-input(
-          v-model.trim="selectedObject.title",
-          label="Заголовок страницы"
-        )
-        q-input(
-          v-model.trim="selectedObject.description",
+          v-model.trim="the.description",
           type="textarea",
           autogrow,
           label="Описание страницы"
         )
         q-select(
-          v-model.trim="selectedObject.keywords",
+          v-model.trim="the.keywords",
           multiple,
           use-chips,
           use-input,
@@ -70,24 +60,24 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           type="url"
         )
         q-select(
-          v-model="selectedObject.changefreq",
+          v-model="the.changefreq",
           :options="changefreq",
           label="Частота обновления",
           clearable
         )
         q-input(
-          v-model.number="selectedObject.priority",
+          v-model.number="the.priority",
           label="Приоритет",
           type="number",
           min="0",
           max="1",
           step="0.1"
         )
-        q-input(v-model.trim="selectedObject.icon", clearable, label="Иконка")
+        q-input(v-model.trim="the.icon", clearable, label="Иконка")
           template(#prepend)
-            q-icon(v-if="selectedObject.icon", :name="selectedObject.icon")
+            q-icon(v-if="the.icon", :name="the.icon")
         q-icon-picker.q-my-md(
-          v-model="selectedObject.icon",
+          v-model="the.icon",
           v-model:model-pagination="data.pagination",
           :icons="icons",
           :filter="data.filter",
@@ -96,8 +86,8 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           tooltips
         )
         q-img.rounded-borders(
-          v-if="selectedObject.image",
-          :src="`${base}${selectedObject.image}`",
+          v-if="the.image",
+          :src="`${base}${the.image}`",
           :ratio="16 / 9"
         )
           q-btn.all-pointer-events.absolute(
@@ -108,9 +98,9 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
             text-color="black",
             dense,
             style="top: 8px; right: 8px",
-            @click="delete selectedObject.image"
+            @click="delete the.image"
           )
-        q-img.rounded-borders(v-if="!selectedObject.image", :ratio="16 / 9")
+        q-img.rounded-borders(v-if="!the.image", :ratio="16 / 9")
           .absolute-full.flex-center.flex
             q-btn(label="Загрузить картинку", color="primary", @click="open")
 q-page.column.full-height
@@ -147,7 +137,7 @@ import storeS3 from "@/stores/s3";
 
 const $q = useQuasar();
 const s3Store = storeS3();
-const { state, content, flatTree, selectedObject, selectedValue, themes } =
+const { state, content, flatTree, the, selectedValue, themes } =
   storeToRefs(storeApp());
 const { base } = storeToRefs(s3Store);
 const { putFile } = s3Store;
@@ -164,11 +154,11 @@ const icons = ref(materialIcons.icons);
 const loc = computed({
   /** @returns {string} - Постоянная ссылка */
   get() {
-    return get(selectedObject)?.loc;
+    return get(the)?.loc;
   },
   /** @param {string} value - Новое значение постоянной ссылки */
   set(value) {
-    get(selectedObject).loc = value.replace(/^\/|\/$/g, "");
+    get(the).loc = value.replace(/^\/|\/$/g, "");
   },
 });
 const data = ref({
@@ -214,7 +204,7 @@ watch(files, async (newFiles) => {
       ) {
         const filePath = `images/${uid()}.${mime.extension(type)}`;
         await putFile(filePath, type, file);
-        get(selectedObject).image = filePath;
+        get(the).image = filePath;
       } else
         throw new Error(
           "Тип графического файла не подходит для использования в сети интернет",
