@@ -112,22 +112,7 @@ export default defineStore("data", () => {
   whenever(logicNot(uri), () => {
     set(tree, undefined);
   });
-  const settings = computed({
-    /**
-     * Чтение настроек
-     *
-     * @returns {object} Настройки
-     */
-    get: () => get(tree)?.settings,
-    /**
-     * Запись настроек
-     *
-     * @param {object} value Настройки
-     */
-    set(value) {
-      if (isDefined(tree)) get(tree).settings = value;
-    },
-  });
+  const settings = computed(() => get(tree)?.settings);
   const script = computed({
     /**
      * Чтение скрипта

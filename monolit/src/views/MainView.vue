@@ -14,13 +14,13 @@
 </template>
 <script setup>
 import { get, useArrayFind } from "@vueuse/core";
-import { storeToRefs } from "pinia";
+import { mapState, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 import VRuntimeTemplate from "vue3-runtime-template";
 
 import data from "../stores/data";
 
-const { the, selected } = storeToRefs(data());
+const { the } = storeToRefs(data());
 /**
  * @param {object} object - Страница
  * @param {string} object.image - URL картинки
@@ -35,8 +35,7 @@ const backgroundImage = ({ image, background }) =>
     : {};
 const itemRefs = ref([]);
 const firstElementId = computed(() => {
-  const { siblings } = get(the);
-  const [{ id }] = siblings;
+  const [{ id }] = get(the, "siblings");
   return id;
 });
 const scrollToElementFirst = useArrayFind(
@@ -45,7 +44,7 @@ const scrollToElementFirst = useArrayFind(
 );
 const scrollToElementCurrent = useArrayFind(
   itemRefs,
-  ({ id }) => id === get(selected),
+  ({ id }) => id === get(the, "id"),
 );
 const scrollToElement = computed(
   () => get(scrollToElementCurrent) ?? get(scrollToElementFirst),
@@ -59,4 +58,9 @@ watch(scrollToElement, (value) => {
     });
   });
 });
+</script>
+<script>
+export default {
+  computed: { ...mapState(data, ["the"]) },
+};
 </script>
