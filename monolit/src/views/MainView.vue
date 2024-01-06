@@ -13,6 +13,7 @@
       v-runtime-template(:template="object.template")
 </template>
 <script setup>
+import * as mdi from "@mdi/js";
 import { get, useArrayFind } from "@vueuse/core";
 import { mapState, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
@@ -21,6 +22,7 @@ import VRuntimeTemplate from "vue3-runtime-template";
 import data from "../stores/data";
 
 const { the } = storeToRefs(data());
+/** BackgroundImage */
 /**
  * @param {object} object - Страница
  * @param {string} object.image - URL картинки
@@ -61,6 +63,10 @@ watch(scrollToElement, (value) => {
 </script>
 <script>
 export default {
+  // eslint-disable-next-line jsdoc/require-jsdoc
+  data() {
+    return { mdi };
+  },
   computed: { ...mapState(data, ["the"]) },
 };
 </script>

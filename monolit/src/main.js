@@ -24,22 +24,15 @@ import "@fontsource/rubik-mono-one";
 import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 import "glightbox/dist/css/glightbox.css";
-import "animate.css/animate.css";
 
 import { createHead } from "@unhead/vue";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
-import VueAnimateOnScroll from "vue3-animate-onscroll";
 import Particles from "vue3-particles";
 
 import App from "./App.vue";
 import router from "./router";
 
 const app = createApp(App);
-app
-  .use(createPinia())
-  .use(router)
-  .use(createHead())
-  .use(Particles)
-  .use(VueAnimateOnScroll);
+app.use(createPinia()).use(router).use(createHead()).use(Particles);
 app.mount("#app");
