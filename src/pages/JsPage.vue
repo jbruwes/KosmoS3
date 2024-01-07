@@ -33,7 +33,7 @@ import app from "@/stores/app";
 const { script, js, state } = storeToRefs(app());
 const selectedObject = useArrayFind(
   js,
-  ({ id }) => id === get(state).js.selected,
+  ({ id }) => id === get(state, "js").selected,
 );
 get(state).rightDrawer = null;
 /** Инициализация */

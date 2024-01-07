@@ -39,7 +39,7 @@ Head(v-if="flatTree.length")
 .drawer(ref="twind", :data-theme="settings?.theme")
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
   .drawer-content.carousel-vertical.h-screen(@scroll.passive="start()")
-    .navbar.bg-base-100.rounded-box.absolute.left-6.right-6.top-6.opacity-0.shadow-xl.transition-opacity.duration-1000.ease-out(
+    .navbar.bg-base-100.rounded-box.absolute.left-6.right-6.top-6.z-40.opacity-0.shadow-xl.transition-opacity.duration-1000.ease-out(
       class="!w-auto hover:opacity-100",
       :class="{ 'opacity-100': !ready }"
     )
@@ -51,7 +51,7 @@ Head(v-if="flatTree.length")
     router-view(v-slot="{ Component }")
       transition(name="fade")
         component(:is="Component")
-  .drawer-side
+  .drawer-side.z-50
     .flex.min-h-full.w-full.flex-col.bg-cover.bg-center(
       :data-theme="flatTree[0]?.theme",
       :style="backgroundImage"
@@ -75,12 +75,13 @@ import {
   get,
   set,
   useArrayFilter,
+  useArrayFind,
   useBrowserLocation,
   useTimeout,
   watchOnce,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import VRuntimeTemplate from "vue3-runtime-template";
 
@@ -90,18 +91,9 @@ import data from "./stores/data";
 const location = useBrowserLocation();
 const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
-const curRoute = useRoute();
-const {
-  flatTree,
-  css,
-  js,
-  uri,
-  script,
-  style,
-  selected,
-  selectedObject,
-  settings,
-} = storeToRefs(data());
+const route = useRoute();
+const { flatTree, css, js, uri, script, style, settings } = storeToRefs(data());
+const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
 const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
@@ -118,12 +110,6 @@ const backgroundImage = computed(() => {
  *   динамически не обновляется в chrome при смене страницы
  */
 const favicon = ref(crypto.randomUUID());
-watch(
-  () => curRoute.name,
-  (id) => {
-    set(selected, id);
-  },
-);
 const visibleJs = useArrayFilter(js, ({ visible }) => visible);
 const visibleCss = useArrayFilter(css, ({ visible }) => visible);
 set(uri, "/");

@@ -1,4 +1,11 @@
-import { get, set, useFetch, watchDebounced, whenever } from "@vueuse/core";
+import {
+  get,
+  set,
+  useArrayFind,
+  useFetch,
+  watchDebounced,
+  whenever,
+} from "@vueuse/core";
 import { logicAnd } from "@vueuse/math";
 import { defineStore, storeToRefs } from "pinia";
 import { toXML } from "to-xml";
@@ -13,19 +20,8 @@ export default defineStore("app", () => {
   const { S3, base, bucket } = storeToRefs(store);
   const { putObject, headObject } = store;
   const dataStore = storeData();
-  const {
-    uri,
-    tree,
-    settings,
-    script,
-    js,
-    style,
-    css,
-    content,
-    flatTree,
-    selected,
-    selectedObject,
-  } = storeToRefs(dataStore);
+  const { uri, tree, settings, script, js, style, css, content, flatTree } =
+    storeToRefs(dataStore);
   const { calcIndex } = dataStore;
   /**
    * Переключатель видимости правой панели
@@ -89,11 +85,15 @@ export default defineStore("app", () => {
       tab: "style",
     },
     content: {
-      selected,
+      selected: undefined,
       tab: "wysiwyg",
       expanded: [],
     },
   });
+  const selectedObject = useArrayFind(
+    flatTree,
+    ({ id }) => id === state.content.selected,
+  );
   const selectedValue = computed({
     /**
      * Считывание исходного кода из структуры данных

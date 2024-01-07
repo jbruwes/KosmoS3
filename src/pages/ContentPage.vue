@@ -147,7 +147,7 @@ import storeS3 from "@/stores/s3";
 
 const $q = useQuasar();
 const s3Store = storeS3();
-const { state, content, flatTree, selectedObject, selectedValue, themes } =
+const { state, content, flatTree, selectedValue, themes, selectedObject } =
   storeToRefs(storeApp());
 const { base } = storeToRefs(s3Store);
 const { putFile } = s3Store;

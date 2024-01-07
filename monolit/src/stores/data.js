@@ -1,17 +1,9 @@
-import {
-  get,
-  isDefined,
-  set,
-  useArrayFind,
-  useFetch,
-  whenever,
-} from "@vueuse/core";
+import { get, isDefined, set, useFetch, whenever } from "@vueuse/core";
 import { logicNot } from "@vueuse/math";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 export default defineStore("data", () => {
-  const selected = ref();
   const uri = ref();
   const tree = ref();
   /**
@@ -272,10 +264,6 @@ export default defineStore("data", () => {
         })(get(content))
       : [],
   );
-  const selectedObject = useArrayFind(
-    flatTree,
-    ({ id }) => id === get(selected),
-  );
   return {
     tree,
     uri,
@@ -287,7 +275,5 @@ export default defineStore("data", () => {
     content,
     flatTree,
     calcIndex,
-    selected,
-    selectedObject,
   };
 });

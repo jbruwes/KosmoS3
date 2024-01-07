@@ -20,11 +20,14 @@ import * as mdi from "@mdi/js";
 import { get, useArrayFind } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import VRuntimeTemplate from "vue3-runtime-template";
 
 import data from "../stores/data";
 
-const { selectedObject } = storeToRefs(data());
+const { flatTree } = storeToRefs(data());
+const route = useRoute();
+const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
 /**
  * @param {object} object - Страница
  * @param {string} object.image - URL картинки
