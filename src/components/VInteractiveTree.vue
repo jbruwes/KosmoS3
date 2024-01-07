@@ -29,7 +29,7 @@ q-btn-group.q-mx-xs(spread, flat)
           outlined,
           :bg-color="prop.node.id === selected ? 'primary' : undefined",
           @click.stop="$emit('update:selected', prop.node.id)",
-          @keyup.enter="delete prop.node.edit"
+          @keyup.enter="prop.node.edit = false"
         )
 </template>
 <script setup>
@@ -64,7 +64,7 @@ const updateSelected = "update:selected";
 const refSelectedObject = toRef(props, "selectedObject");
 watch(refSelectedObject, (newVal, oldVal) => {
   const lOldVal = oldVal;
-  delete lOldVal?.edit;
+  lOldVal.edit = false;
 });
 /** Добавление новой страницы */
 const newPage = () => {
