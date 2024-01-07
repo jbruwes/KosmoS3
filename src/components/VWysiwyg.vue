@@ -122,7 +122,8 @@ const $q = useQuasar();
 const store = storeS3();
 const { base } = storeToRefs(store);
 const { putFile } = store;
-const { content, flatTree, the, selectedValue } = storeToRefs(storeApp());
+const { content, flatTree, selectedObject, selectedValue } =
+  storeToRefs(storeApp());
 const inserted = ref(null);
 const insertedObject = useArrayFind(flatTree, ({ id }) => id === get(inserted));
 /** Инициализация */
@@ -364,12 +365,12 @@ const editorFnt = reactive({
   tenor_sans: "Tenor Sans",
 });
 onMounted(() => {
-  const { theme } = get(the) ?? {};
+  const { theme } = get(selectedObject) ?? {};
   setup(config, undefined, get(editorRef).getContentEl());
   get(editorRef).getContentEl().dataset.theme = theme;
 });
 watch(
-  () => get(the)?.theme,
+  () => get(selectedObject)?.theme,
   (value) => {
     get(editorRef).getContentEl().dataset.theme = value;
   },

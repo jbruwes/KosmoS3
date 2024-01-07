@@ -1,28 +1,30 @@
 <template lang="pug">
 .carousel-item.min-h-screen(
-  v-for="object in the.siblings",
-  :id="object.id",
-  :key="object.id",
+  v-for="the in selectedObject.siblings",
+  :id="the.id",
+  :key="the.id",
   ref="itemRefs"
 )
-  .hero(:style="backgroundImage(object)", :data-theme="object.theme")
-    .hero-overlay(v-if="object.image && object.background && object.overlay")
+  .hero(:style="backgroundImage(the)", :data-theme="the.theme")
+    .hero-overlay(v-if="the.image && the.background && the.overlay")
     .prose(
-      :class="{ container: object.responsive, 'w-full max-w-full': !object.responsive }"
+      :class="{ container: the.responsive, 'w-full max-w-full': !the.responsive }"
     )
-      v-runtime-template(:template="object.template")
+      v-runtime-template(
+        :template="the.template",
+        :template-props="{ mdi, the }"
+      )
 </template>
 <script setup>
 import * as mdi from "@mdi/js";
 import { get, useArrayFind } from "@vueuse/core";
-import { mapState, storeToRefs } from "pinia";
+import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 import VRuntimeTemplate from "vue3-runtime-template";
 
 import data from "../stores/data";
 
-const { the } = storeToRefs(data());
-/** BackgroundImage */
+const { selectedObject } = storeToRefs(data());
 /**
  * @param {object} object - Страница
  * @param {string} object.image - URL картинки
@@ -37,7 +39,7 @@ const backgroundImage = ({ image, background }) =>
     : {};
 const itemRefs = ref([]);
 const firstElementId = computed(() => {
-  const [{ id }] = get(the, "siblings");
+  const [{ id }] = get(selectedObject, "siblings");
   return id;
 });
 const scrollToElementFirst = useArrayFind(
@@ -46,27 +48,18 @@ const scrollToElementFirst = useArrayFind(
 );
 const scrollToElementCurrent = useArrayFind(
   itemRefs,
-  ({ id }) => id === get(the, "id"),
+  ({ id }) => id === get(selectedObject, "id"),
 );
-const scrollToElement = computed(
+watch(
   () => get(scrollToElementCurrent) ?? get(scrollToElementFirst),
-);
-watch(scrollToElement, (value) => {
-  setTimeout(() => {
-    value?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-      inline: "nearest",
+  (value) => {
+    setTimeout(() => {
+      value?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
     });
-  });
-});
-</script>
-<script>
-export default {
-  // eslint-disable-next-line jsdoc/require-jsdoc
-  data() {
-    return { mdi };
   },
-  computed: { ...mapState(data, ["the"]) },
-};
+);
 </script>

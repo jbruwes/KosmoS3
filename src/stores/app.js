@@ -24,7 +24,7 @@ export default defineStore("app", () => {
     content,
     flatTree,
     selected,
-    the,
+    selectedObject,
   } = storeToRefs(dataStore);
   const { calcIndex } = dataStore;
   /**
@@ -101,7 +101,7 @@ export default defineStore("app", () => {
      * @returns {string} - Template
      */
     get() {
-      const { template = "" } = get(the) ?? {};
+      const { template = "" } = get(selectedObject) ?? {};
       return template.replace(/src="([^"]+)"/gi, (match, p1) => {
         const { href } = new URL(p1, get(base));
         return `src="${href}"`;
@@ -114,11 +114,11 @@ export default defineStore("app", () => {
      */
     set(value) {
       const regexp = new RegExp(`^${get(base)}`);
-      get(the).template = value.replace(
+      get(selectedObject).template = value.replace(
         /src="([^"]+)"/gi,
         (match, p1) => `src="${p1.replace(regexp, "")}"`,
       );
-      get(the).lastmod = new Date().toISOString();
+      get(selectedObject).lastmod = new Date().toISOString();
     },
   });
   const sitemap = computed(() => ({
@@ -189,7 +189,7 @@ export default defineStore("app", () => {
       content,
       flatTree,
       selectedValue,
-      the,
+      selectedObject,
     },
   };
 });

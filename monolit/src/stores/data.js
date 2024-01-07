@@ -272,7 +272,10 @@ export default defineStore("data", () => {
         })(get(content))
       : [],
   );
-  const the = useArrayFind(flatTree, ({ id }) => id === get(selected));
+  const selectedObject = useArrayFind(
+    flatTree,
+    ({ id }) => id === get(selected),
+  );
   return {
     tree,
     uri,
@@ -285,6 +288,6 @@ export default defineStore("data", () => {
     flatTree,
     calcIndex,
     selected,
-    the,
+    selectedObject,
   };
 });
