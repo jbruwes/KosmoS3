@@ -13,7 +13,13 @@ div
     @paste="capture",
     @drop="capture"
   )
-  q-dialog(v-model="template", full-width, full-height, persistent)
+  q-dialog(
+    v-model="template",
+    full-width,
+    full-height,
+    persistent,
+    @show="showDialog"
+  )
     q-card.column
       q-card-section.row.q-pb-none.items-center
         .text-h6 Выбор компонента для вставки
@@ -31,8 +37,12 @@ div
       q-card-section.col.column
         q-card.col.column(flat, bordered)
           q-card-section.col.column
-            // eslint-disable-next-line vue/no-v-html
-            .col(v-html="model")
+            // eslint-disable vue/no-v-html
+            .col.prose.column.q-pa-xl.max-w-full.justify-center(
+              ref="modalRef",
+              v-html="model"
+            )
+            // eslint-enable vue/no-v-html
       q-card-actions.text-primary(align="right")
         q-btn(v-close-popup, flat, label="Отмена")
         q-btn(
@@ -134,6 +144,7 @@ const init = () => {
 if (isDefined(content)) init();
 else watchOnce(content, init);
 const editorRef = ref();
+const modalRef = ref();
 /**
  * { @link
  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#image_types
@@ -375,10 +386,38 @@ watch(
     get(editorRef).getContentEl().dataset.theme = value;
   },
 );
+/** ShowDialog */
+const showDialog = () => {
+  const { theme } = get(selectedObject) ?? {};
+  setup(config, undefined, get(modalRef));
+  get(modalRef).dataset.theme = theme;
+};
 const options = reactive([
   {
-    label: "Компонент №1",
-    value: "<b>Компонент №1</b>",
+    label:
+      "Компонент для отображения большого поля или изображения с заголовком и описанием",
+    value: `
+<!--*
+    * 1. Для того, чтобы убрать подложку, удалите :style="{'background-image': \`url(\${the.image})\`}"
+    * 2. Для того, чтобы добавить оверлей, раскомментарьте <div class="hero-overlay rounded-box"></div>
+    * 3. Цветовые классы взамен class="text-neutral-content" и fill="oklch(var(--nc))" смотрим здесь:
+    * {@link https://daisyui.com/docs/colors/#-2 Список всех названий цветов daisyUI}
+    * 4. Если не нужна минимальная высота в полэкрана - убрать min-h-[50vh]
+    *-->
+<!-- hero -->
+<div class="hero shadow-xl rounded-box min-h-[50vh]" :style="{'background-image': \`url(\${the.image})\`}">
+    <!--div class="hero-overlay rounded-box"></div-->
+    <div class="hero-content">
+        <div class="glass rounded-badge p-4 text-neutral-content text-center">
+            <svg viewBox="0 0 24 24" class="fill-current mx-auto w-1/4 h-1/4">
+                <path :d="mdi[\`\${the.icon}\`]" />
+            </svg>
+            <h1 class="text-neutral-content">{{ the.title ?? the.label }}</h1>
+            <p>{{ the.description }}</p>
+        </div>
+    </div>
+</div>
+<!-- /hero -->`,
   },
   {
     label: "Компонент №2",

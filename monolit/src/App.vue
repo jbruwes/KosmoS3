@@ -60,10 +60,11 @@ Head(v-if="flatTree.length")
         svg.h-6.w-6
           path(:d="mdi.mdiClose")
       .flex.flex-auto.items-center
-        .prose.mx-auto.flex-auto(
-          :class="{ container: flatTree[0]?.responsive }"
-        )
-          v-runtime-template(:template="flatTree[0]?.template")
+        .prose.mx-auto.flex-auto(:class="{ container: the?.responsive }")
+          v-runtime-template(
+            :template="the?.template",
+            :template-props="{ mdi, the }"
+          )
 </template>
 <script setup>
 import "daisyui/dist/full.css";
@@ -93,6 +94,7 @@ const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const route = useRoute();
 const { flatTree, css, js, uri, script, style, settings } = storeToRefs(data());
+const the = computed(() => get(flatTree, 0) ?? {});
 const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
 const tagStyle = ref("style");
 const tagScript = ref("script");
@@ -100,7 +102,7 @@ const drawer = ref(false);
 const twind = ref();
 const backgroundImage = computed(() => {
   const ret = {};
-  const { image, background } = get(flatTree, 0) ?? {};
+  const { image, background } = get(the);
   if (image && background) ret.backgroundImage = `url(${image})`;
   return ret;
 });
