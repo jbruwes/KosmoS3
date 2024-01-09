@@ -399,15 +399,20 @@ const options = reactive([
     value: `
 <!--*
     * 1. Для того, чтобы убрать подложку, удалите :style="{'background-image': \`url(\${the.image})\`}"
-    * 2. Для того, чтобы добавить оверлей, раскомментарьте <div class="hero-overlay rounded-box"></div>
+    * 2. Для того, чтобы добавить оверлей, раскомментарьте <div class="hero-overlay"></div>
     * 3. Цветовые классы взамен class="text-neutral-content" и fill="oklch(var(--nc))" смотрим здесь:
     * {@link https://daisyui.com/docs/colors/#-2 Список всех названий цветов daisyUI}
     * 4. Если не нужна минимальная высота в полэкрана - убрать min-h-[50vh]
+    * 5. Если нужны 3D эффекты, поменяйте обрамляющий div на v-vanta, список возможных эффектов следующий:
+    * BIRDS, CELLS, CLOUDS, FOG, GLOBE, HALO, NET, RINGS, RIPPLE, TRUNK, WAVES
+    * 6. Подобрать параметры для v-vanta можно на сайте
+    * {@link https://www.vantajs.com/ Vanta.js}
+    * 7. Параметры v-vanta передаются в :options="{}"
     *-->
-<!-- hero -->
-<div class="hero shadow-xl rounded-box min-h-[50vh]" :style="{'background-image': \`url(\${the.image})\`}">
-    <!--div class="hero-overlay rounded-box"></div-->
-    <div class="hero-content">
+<!--v-vanta class="hero shadow-xl rounded-box overflow-hidden min-h-[50vh]" effect="BIRDS"-->
+<div class="hero shadow-xl rounded-box overflow-hidden min-h-[50vh]" :style="{'background-image':\`url(\${the.image})\`}">
+    <!--div class="hero-overlay"></div-->
+    <div class="hero-content !z-10">
         <div class="glass rounded-badge p-4 text-neutral-content text-center">
             <svg viewBox="0 0 24 24" class="fill-current mx-auto w-1/4 h-1/4">
                 <path :d="mdi[\`\${the.icon}\`]" />
@@ -417,7 +422,7 @@ const options = reactive([
         </div>
     </div>
 </div>
-<!-- /hero -->`,
+<!--/v-vanta-->`,
   },
   {
     label: "Компонент №2",

@@ -25,14 +25,55 @@ import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 import "glightbox/dist/css/glightbox.css";
 
+import { loadBigCirclesPreset } from "@tsparticles/preset-big-circles";
+import { loadBubblesPreset } from "@tsparticles/preset-bubbles";
+import { loadConfettiPreset } from "@tsparticles/preset-confetti";
+import { loadFirePreset } from "@tsparticles/preset-fire";
+import { loadFireflyPreset } from "@tsparticles/preset-firefly";
+import { loadFireworksPreset } from "@tsparticles/preset-fireworks";
+import { loadFountainPreset } from "@tsparticles/preset-fountain";
+import { loadHyperspacePreset } from "@tsparticles/preset-hyperspace";
+import { loadLinksPreset } from "@tsparticles/preset-links";
+import { loadSeaAnemonePreset } from "@tsparticles/preset-sea-anemone";
+import { loadSnowPreset } from "@tsparticles/preset-snow";
+import { loadSquaresPreset } from "@tsparticles/preset-squares";
+import { loadStarsPreset } from "@tsparticles/preset-stars";
+import { loadTrianglesPreset } from "@tsparticles/preset-triangles";
+// import { loadSlim } from "@tsparticles/slim";
+import Particles from "@tsparticles/vue3";
 import { createHead } from "@unhead/vue";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
-import Particles from "vue3-particles";
 
 import App from "./App.vue";
+import VVanta from "./components/VVanta.vue";
 import router from "./router";
 
 const app = createApp(App);
-app.use(createPinia()).use(router).use(createHead()).use(Particles);
+app
+  .use(createPinia())
+  .use(router)
+  .use(createHead())
+  .use(Particles, {
+    /** @param {object} engine - Движок для партиклов */
+    init: async (engine) => {
+      await Promise.all([
+        loadBigCirclesPreset(engine),
+        loadBubblesPreset(engine),
+        loadConfettiPreset(engine),
+        loadFirePreset(engine),
+        loadFireflyPreset(engine),
+        loadFireworksPreset(engine),
+        loadFountainPreset(engine),
+        loadHyperspacePreset(engine),
+        loadLinksPreset(engine),
+        loadSeaAnemonePreset(engine),
+        loadSnowPreset(engine),
+        loadSquaresPreset(engine),
+        loadStarsPreset(engine),
+        loadTrianglesPreset(engine),
+      ]);
+    },
+  });
+app.component("VVanta", VVanta);
 app.mount("#app");
