@@ -1,9 +1,10 @@
 <template lang="pug">
-.carousel-item.min-h-screen(
+.carousel-item(
   v-for="the in selectedObject.siblings",
   :id="the.id",
   :key="the.id",
-  ref="itemRefs"
+  ref="itemRefs",
+  class="min-h-[100dvh]"
 )
   .hero(:style="backgroundImage(the)", :data-theme="the.theme")
     .hero-overlay(v-if="the.image && the.background && the.overlay")

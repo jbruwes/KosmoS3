@@ -404,13 +404,19 @@ const options = reactive([
     * {@link https://daisyui.com/docs/colors/#-2 Список всех названий цветов daisyUI}
     * 4. Если не нужна минимальная высота в полэкрана - убрать min-h-[50vh]
     * 5. Если нужны 3D эффекты, поменяйте обрамляющий div на v-vanta, список возможных эффектов следующий:
-    * BIRDS, CELLS, CLOUDS, FOG, GLOBE, HALO, NET, RINGS, RIPPLE, TRUNK, WAVES
+    * birds, cells, clouds, fog, globe, halo, net, rings, ripple, trunk, waves
     * 6. Подобрать параметры для v-vanta можно на сайте
     * {@link https://www.vantajs.com/ Vanta.js}
     * 7. Параметры v-vanta передаются в :options="{}"
+    * 8. Если нужны партиклы, поменяйте обрамляющий div на v-particles, список возможных эффектов следующий:
+    * bigCircles, bubbles, confetti, fire, firefly, fireworks, fountain, hyperspace, links, seaAnemone, snow, squares, stars, triangles
+    * 9. Подобрать параметры для v-particles можно на сайте
+    * {@link https://particles.js.org/ tsParticles}
+    * 10. Параметры v-particles также передаются в :options="{}"
     *-->
-<!--v-vanta class="hero shadow-xl rounded-box overflow-hidden min-h-[50vh]" effect="BIRDS"-->
-<div class="hero shadow-xl rounded-box overflow-hidden min-h-[50vh]" :style="{'background-image':\`url(\${the.image})\`}">
+<!--v-particles class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh]" effect="bigCircles"-->
+<!--v-vanta class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh]" effect="birds"-->
+<div class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh]" :style="{'background-image':\`url(\${the.image})\`}">
     <!--div class="hero-overlay"></div-->
     <div class="hero-content !z-10">
         <div class="glass rounded-badge p-4 text-neutral-content text-center">
@@ -422,7 +428,8 @@ const options = reactive([
         </div>
     </div>
 </div>
-<!--/v-vanta-->`,
+<!--/v-vanta-->
+<!--/v-particles-->`,
   },
   {
     label: "Компонент №2",
