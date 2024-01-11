@@ -40,6 +40,7 @@ div
             // eslint-disable vue/no-v-html
             .col.prose.column.q-pa-xl.max-w-full.justify-center(
               ref="modalRef",
+              class="*:min-h-fit",
               v-html="model"
             )
             // eslint-enable vue/no-v-html
@@ -69,7 +70,6 @@ div
               no-selection-unset,
               selected-color="primary"
             )
-
       q-card-actions.text-primary(align="right")
         q-btn(v-close-popup, flat, label="Отмена")
         q-btn(
@@ -416,7 +416,7 @@ const options = reactive([
     *-->
 <!--v-particles class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh]" effect="bigCircles"-->
 <!--v-vanta class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh]" effect="birds"-->
-<div class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh]" :style="{'background-image':\`url(\${the.image})\`}">
+<div class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh] col" :style="{'background-image':\`url(\${the.image})\`}">
     <!--div class="hero-overlay"></div-->
     <div class="hero-content !z-10">
         <div class="glass rounded-badge p-4 text-neutral-content text-center">
