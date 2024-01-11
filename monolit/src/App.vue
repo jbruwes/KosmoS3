@@ -61,10 +61,7 @@ Head(v-if="flatTree.length")
           path(:d="mdi.mdiClose")
       .flex.flex-auto.items-center
         .prose.mx-auto.flex-auto(:class="{ container: the?.responsive }")
-          v-runtime-template(
-            :template="the?.template",
-            :template-props="{ mdi, the }"
-          )
+          component(:is="getTemplate(the)", :the="the", :mdi="mdi")
 </template>
 <script setup>
 import "daisyui/dist/full.css";
@@ -84,11 +81,12 @@ import {
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import VRuntimeTemplate from "vue3-runtime-template";
 
 import config from "../twind.config";
+import app from "./stores/app";
 import data from "./stores/data";
 
+const { getTemplate } = app();
 const location = useBrowserLocation();
 const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();

@@ -11,10 +11,7 @@
     .prose(
       :class="{ container: the.responsive, 'w-full max-w-full': !the.responsive }"
     )
-      v-runtime-template(
-        :template="the.template",
-        :template-props="{ mdi, the }"
-      )
+      component(:is="getTemplate(the)", :the="the", :mdi="mdi")
 </template>
 <script setup>
 import * as mdi from "@mdi/js";
@@ -22,11 +19,12 @@ import { get, useArrayFind } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import VRuntimeTemplate from "vue3-runtime-template";
 
+import app from "../stores/app";
 import data from "../stores/data";
 
 const { flatTree } = storeToRefs(data());
+const { getTemplate } = app();
 const route = useRoute();
 const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
 /**
