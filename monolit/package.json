@@ -61,10 +61,10 @@
     "@twind/preset-tailwind-forms": "^1.1.2",
     "@twind/preset-typography": "^1.0.7",
     "@unhead/vue": "^1.8.9",
-    "@vitejs/plugin-vue": "^5.0.2",
+    "@vitejs/plugin-vue": "^5.0.3",
     "@vueuse/core": "^10.7.1",
     "@vueuse/math": "^10.7.1",
-    "daisyui": "^4.5.0",
+    "daisyui": "^4.6.0",
     "glightbox": "^3.2.0",
     "p5": "^1.9.0",
     "pinia": "^2.1.7",
@@ -72,9 +72,10 @@
     "three": "0.135.0",
     "vanta": "^0.5.24",
     "vite": "^5.0.11",
-    "vue": "^3.4.6",
+    "vue": "^3.4.8",
     "vue-router": "^4.2.5",
-    "vue3-runtime-template": "^1.0.2"
+    "vue3-runtime-template": "^1.0.2",
+    "vue3-sfc-loader": "^0.8.4"
   },
   "devDependencies": {
     "@vue/language-plugin-pug": "^1.8.27",
