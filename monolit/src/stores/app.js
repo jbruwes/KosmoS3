@@ -1,3 +1,4 @@
+import { useStyleTag } from "@vueuse/core";
 import { defineStore } from "pinia";
 import * as Vue from "vue";
 import { loadModule } from "vue3-sfc-loader";
@@ -15,15 +16,13 @@ export default defineStore("app", () => {
           vue: Vue,
         },
         /** @returns {string} - Шаблон */
-        getFile: () => {
-          // eslint-disable-next-line no-useless-escape
-          return `<script setup>defineProps(["the","mdi"])<\/script><template>${
+        getFile: () => `<script setup>const props=defineProps(["the","mdi"]);
+          ${the.script ?? ""}</script><template>${
             the.template ?? ""
-          }</template>`;
-        },
-        /** AddStyle */
-        addStyle() {
-          /* unused here */
+          }</template><style scoped>${the.style ?? ""}</style>`,
+        /** @param {string} value - Стили */
+        addStyle(value) {
+          if (value) useStyleTag(value, { id: `vueuse_styletag_${the.id}` });
         },
       }),
     );

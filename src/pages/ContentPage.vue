@@ -123,13 +123,19 @@ q-page.column.full-height
     narrow-indicator
   )
     q-tab(name="wysiwyg", label="wysiwyg")
-    q-tab(name="source", label="source")
+    q-tab(name="template", label="template")
+    q-tab(name="script", label="script setup")
+    q-tab(name="style", label="style scoped")
   q-separator
   q-tab-panels.full-width.col(v-model="state.content.tab")
     q-tab-panel.column(name="wysiwyg")
       v-wysiwyg.full-width.col.column
-    q-tab-panel.column(name="source")
+    q-tab-panel.column(name="template")
       v-source-code.col(v-model="selectedValue")
+    q-tab-panel.column(name="script")
+      v-source-code.col(v-model="selectedObject.script", lang="javascript")
+    q-tab-panel.column(name="style")
+      v-source-code.col(v-model="selectedObject.style", lang="css")
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";

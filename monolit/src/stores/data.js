@@ -234,6 +234,8 @@ export default defineStore("data", () => {
               priority: undefined,
               responsive: true,
               template: undefined,
+              script: undefined,
+              style: undefined,
               theme: "light",
               title: undefined,
               visible: true,
