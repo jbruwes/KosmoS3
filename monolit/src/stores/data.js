@@ -267,6 +267,14 @@ export default defineStore("data", () => {
         })(get(content))
       : [],
   );
+  const altogether = {
+    /** @returns {Array} - Все вместе */
+    get: () => flatTree,
+    configurable: true,
+  };
+  get(flatTree).forEach((element) => {
+    Object.defineProperty(element, "altogether", altogether);
+  });
   return {
     tree,
     uri,

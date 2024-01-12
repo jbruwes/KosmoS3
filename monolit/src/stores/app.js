@@ -24,6 +24,14 @@ export default defineStore("app", () => {
         addStyle(value) {
           useStyleTag(value, { id: `vueuse_styletag_${the.id}` });
         },
+        /**
+         * @param {string} type - Тип записи
+         * @param {...any} args - Содержимое записи
+         */
+        log(type, ...args) {
+          // eslint-disable-next-line no-console
+          console[type](...args);
+        },
       }),
     );
 

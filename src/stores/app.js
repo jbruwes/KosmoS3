@@ -102,10 +102,10 @@ export default defineStore("app", () => {
      */
     get() {
       const { template = "" } = get(selectedObject) ?? {};
-      return template.replace(/src="([^"]+)"/gi, (match, p1) => {
-        const { href } = new URL(p1, get(base));
-        return `src="${href}"`;
-      });
+      return template.replace(
+        /(["'(;])([^"'(;:]*?\.(?:apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)[^'")&]*(?=[^<]+?>))/gi,
+        (match, p1, p2) => `${p1}${new URL(p2, get(base)).href}`,
+      );
     },
     /**
      * Запись исходного кода страницы в структуры данных
@@ -115,8 +115,8 @@ export default defineStore("app", () => {
     set(value) {
       const regexp = new RegExp(`^${get(base)}`);
       get(selectedObject).template = value.replace(
-        /src="([^"]+)"/gi,
-        (match, p1) => `src="${p1.replace(regexp, "")}"`,
+        /[^"'(;]+?\.(?:apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)[^'")&]*(?=[^<]+?>)/gi,
+        (match) => match.replace(regexp, ""),
       );
       get(selectedObject).lastmod = new Date().toISOString();
     },
