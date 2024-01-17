@@ -2,6 +2,7 @@
 Head(v-if="flatTree.length")
   title {{ selectedObject?.label }}
   meta(name="description", :content="selectedObject?.description")
+  meta(property="og:type", content="website")
   meta(property="og:title", :content="selectedObject?.label")
   meta(property="og:type", :content="theselectedObject?.type")
   meta(property="og:image", :content="selectedObject?.image")
@@ -112,7 +113,7 @@ const backgroundImage = computed(() => {
 const favicon = ref(crypto.randomUUID());
 const visibleJs = useArrayFilter(js, ({ visible }) => visible);
 const visibleCss = useArrayFilter(css, ({ visible }) => visible);
-set(uri, "/");
+set(uri, "");
 /**
  * Инициализация
  *

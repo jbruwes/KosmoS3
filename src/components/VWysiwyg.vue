@@ -168,7 +168,7 @@ const putImage = async (file) => {
     ) {
       const filePath = `images/${uid()}.${mime.extension(type)}`;
       await putFile(filePath, type, file);
-      get(editorRef).runCmd("insertImage", `${get(base)}${filePath}`);
+      get(editorRef).runCmd("insertImage", `${get(base)}/${filePath}`);
     } else
       throw new Error(
         "Тип графического файла не подходит для использования в сети интернет",

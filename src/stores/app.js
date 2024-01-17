@@ -102,9 +102,11 @@ export default defineStore("app", () => {
      */
     get() {
       const { template = "" } = get(selectedObject) ?? {};
+      const baseUrl = `${get(base)}/`;
       return template.replace(
         /(["'(;])([^"'(;:]*?\.(?:apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)[^'")&]*(?=[^<]+?>))/gi,
-        (match, p1, p2) => `${p1}${new URL(p2, get(base)).href}`,
+        (match, p1, p2) =>
+          `${p1}${new URL(p2.replace(/^\//, ""), baseUrl).href}`,
       );
     },
     /**

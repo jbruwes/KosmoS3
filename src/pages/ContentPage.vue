@@ -236,7 +236,7 @@ watch(files, async (newFiles) => {
       ) {
         const filePath = `images/${uid()}.${mime.extension(type)}`;
         await putFile(filePath, type, file);
-        get(selectedObject).image = filePath;
+        get(selectedObject).image = `/${filePath}`;
       } else
         throw new Error(
           "Тип графического файла не подходит для использования в сети интернет",

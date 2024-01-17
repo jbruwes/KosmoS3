@@ -68,7 +68,7 @@ export default defineStore("data", () => {
     return { content, css, style, js, script, settings };
   };
   const { data } = useFetch(
-    () => (isDefined(uri) ? `${get(uri)}data.json` : undefined),
+    () => (isDefined(uri) ? `${get(uri)}/data.json` : undefined),
     {
       /**
        * Добавляем no-cache
