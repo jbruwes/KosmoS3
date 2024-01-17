@@ -60,7 +60,7 @@
     "@twind/preset-tailwind": "^1.1.4",
     "@twind/preset-tailwind-forms": "^1.1.2",
     "@twind/preset-typography": "^1.0.7",
-    "@unhead/vue": "^1.8.9",
+    "@unhead/vue": "^1.8.10",
     "@vitejs/plugin-vue": "^5.0.3",
     "@vueuse/core": "^10.7.2",
     "@vueuse/math": "^10.7.2",
