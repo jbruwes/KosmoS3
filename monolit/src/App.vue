@@ -62,7 +62,7 @@ Head(v-if="flatTree.length")
           path(:d="mdi.mdiClose")
       .flex.flex-auto.items-center
         .prose.mx-auto.flex-auto(:class="{ container: the?.responsive }")
-          component(:is="getTemplate(the)", :the="the", :mdi="mdi")
+          component(:is="theTemplate", :the="the", :mdi="mdi")
 </template>
 <script setup>
 import "daisyui/dist/full.css";
@@ -94,6 +94,7 @@ const router = useRouter();
 const route = useRoute();
 const { flatTree, css, js, uri, script, style, settings } = storeToRefs(data());
 const the = computed(() => get(flatTree, 0) ?? {});
+const theTemplate = computed(() => getTemplate(get(the)));
 const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
 const tagStyle = ref("style");
 const tagScript = ref("script");
