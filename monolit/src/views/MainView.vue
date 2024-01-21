@@ -11,20 +11,31 @@
     .prose(
       :class="{ container: the.responsive, 'w-full max-w-full': !the.responsive }"
     )
-      component(:is="the.id", :the="the", :mdi="mdi")
+      component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
 </template>
 <script setup>
 import * as mdi from "@mdi/js";
-import { get, useArrayFind } from "@vueuse/core";
+import { get, useArrayFind, useArrayReduce } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
+import app from "../stores/app";
 import data from "../stores/data";
 
+const { getTemplate } = app();
 const { flatTree } = storeToRefs(data());
 const route = useRoute();
 const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
+const theTemplate = useArrayReduce(
+  get(selectedObject, "siblings"),
+  (sum, { id, template, script, style }) => {
+    const value = getTemplate({ id, template, script, style });
+    Object.defineProperty(sum, id, { value });
+    return sum;
+  },
+  {},
+);
 /**
  * @param {object} object - Страница
  * @param {string} object.image - URL картинки

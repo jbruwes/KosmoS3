@@ -54,7 +54,7 @@ Head(v-if="flatTree.length")
         component(:is="Component")
   .drawer-side.z-50
     .flex.min-h-full.w-full.flex-col.bg-cover.bg-center(
-      :data-theme="flatTree[0]?.theme",
+      :data-theme="the?.theme",
       :style="backgroundImage"
     )
       label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
@@ -77,7 +77,6 @@ import {
   useArrayFind,
   useBrowserLocation,
   useTimeout,
-  watchOnce,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
@@ -115,30 +114,6 @@ const favicon = ref(crypto.randomUUID());
 const visibleJs = useArrayFilter(js, ({ visible }) => visible);
 const visibleCss = useArrayFilter(css, ({ visible }) => visible);
 set(uri, "");
-/**
- * Инициализация
- *
- * @param {Array} value - Массив страниц
- */
-const init = (value) => {
-  value.forEach(({ path, id: name, loc: alias }) => {
-    router.addRoute({
-      name,
-      path: `/${path}`,
-      ...(alias && { alias: `/${alias}` }),
-      /** @returns {object} - MainView */
-      component: () => import("./views/MainView.vue"),
-    });
-  });
-  router.addRoute({
-    path: "/:catchAll(.*)*",
-    /** @returns {object} - Страница ошибки */
-    component: () => import("./views/NotFoundView.vue"),
-  });
-  router.replace(router.currentRoute.value.fullPath);
-};
-if (get(flatTree).length) init(get(flatTree));
-else watchOnce(flatTree, init);
 router.beforeEach(() => {
   set(drawer, false);
 });
