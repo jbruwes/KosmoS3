@@ -17,7 +17,7 @@ Head(v-if="flatTree.length")
   link(
     :key="favicon",
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject?.icon ?? 'mdiWeb']}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject?.svg ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
   )
   component(
@@ -55,13 +55,15 @@ Head(v-if="flatTree.length")
   .drawer-side.z-50
     .flex.min-h-full.w-full.flex-col.bg-cover.bg-center(
       :data-theme="the?.theme",
-      :style="backgroundImage"
+      :style="the?.image && the?.background ? { backgroundImage: `url(${the?.image})` } : {}"
     )
       label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
         svg.h-6.w-6
           path(:d="mdi.mdiClose")
       .flex.flex-auto.items-center
-        .prose.mx-auto.flex-auto(:class="{ container: the?.responsive }")
+        .prose.mx-auto.flex-auto(
+          :class="{ container: the?.responsive, 'w-full max-w-none': !the?.responsive }"
+        )
           component(:is="theTemplate", :the="the", :mdi="mdi")
 </template>
 <script setup>
@@ -99,12 +101,6 @@ const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
 const twind = ref();
-const backgroundImage = computed(() => {
-  const ret = {};
-  const { image, background } = get(the);
-  if (image && background) ret.backgroundImage = `url(${image})`;
-  return ret;
-});
 /**
  * @constant {object} favicon - Ref
  * @type {string} favicon.value - Уникальный ключ для favicon. Иначе иконка

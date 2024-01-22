@@ -225,6 +225,7 @@ export default defineStore("data", () => {
               children: [],
               description: undefined,
               icon: undefined,
+              svg: undefined,
               id: crypto.randomUUID(),
               image: undefined,
               keywords: undefined,
@@ -240,7 +241,7 @@ export default defineStore("data", () => {
               title: undefined,
               visible: true,
               background: true,
-              overlay: true,
+              overlay: false,
               edit: false,
             };
             Object.keys(current).forEach((key) => {

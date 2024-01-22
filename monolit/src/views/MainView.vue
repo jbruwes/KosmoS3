@@ -6,10 +6,13 @@
   ref="itemRefs",
   class="min-h-[100dvh]"
 )
-  .hero(:style="backgroundImage(the)", :data-theme="the.theme")
-    .hero-overlay(v-if="the.image && the.background && the.overlay")
+  .hero(
+    :style="the.image && the.background ? { backgroundImage: `url(${the.image})` } : {}",
+    :data-theme="the.theme"
+  )
+    .hero-overlay(v-if="the.overlay")
     .prose(
-      :class="{ container: the.responsive, 'w-full max-w-full': !the.responsive }"
+      :class="{ container: the.responsive, 'w-full max-w-none': !the.responsive }"
     )
       component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
 </template>
@@ -36,18 +39,6 @@ const theTemplate = useArrayReduce(
   },
   {},
 );
-/**
- * @param {object} object - Страница
- * @param {string} object.image - URL картинки
- * @param {boolean} object.background - Флаг видимости фона
- * @returns {object} - Объект со стилями
- */
-const backgroundImage = ({ image, background }) =>
-  image && background
-    ? {
-        backgroundImage: `url(${image})`,
-      }
-    : {};
 const itemRefs = ref([]);
 const firstElementId = computed(() => {
   const [{ id }] = get(selectedObject, "siblings");

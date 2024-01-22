@@ -169,18 +169,15 @@ const changefreq = reactive([
 const icons = ref(materialIcons.icons);
 const icon = computed({
   /** @returns {string} - Kebab case */
-  get() {
-    return get(selectedObject, "icon")
-      ?.replace(/([a-z])([A-Z])/g, "$1-$2")
-      .toLowerCase();
-  },
+  get: () => get(selectedObject, "icon"),
   /**
    * Camel case
    *
    * @param {string} value - Kebab case
    */
   set(value) {
-    get(selectedObject).icon = value?.replace(/-./g, (x) => x[1].toUpperCase());
+    get(selectedObject).icon = value;
+    get(selectedObject).svg = value?.replace(/-./g, (x) => x[1].toUpperCase());
   },
 });
 const loc = computed({
