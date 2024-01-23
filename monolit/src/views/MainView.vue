@@ -29,7 +29,7 @@ const { flatTree } = storeToRefs(data());
 const route = useRoute();
 const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
 const theTemplate = useArrayReduce(
-  get(selectedObject, "siblings"),
+  () => get(selectedObject, "siblings"),
   (sum, { id, template, script, style }) => {
     const value = getTemplate({ id, template, script, style });
     Object.defineProperty(sum, id, { value });
