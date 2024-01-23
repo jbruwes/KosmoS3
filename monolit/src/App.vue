@@ -39,7 +39,7 @@ Head(v-if="flatTree.length")
   component(:is="tagScript", v-if="script") {{ `try{${script}\n}catch(e){console.error(e.message)}` }}
 .drawer(ref="twind", :data-theme="settings?.theme")
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
-  .drawer-content.carousel-vertical.h-screen(@scroll.passive="start()")
+  .drawer-content.carousel-vertical(class="h-[100dvh]", @scroll.passive="start")
     .navbar.bg-base-100.rounded-box.absolute.left-6.right-6.top-6.z-40.opacity-0.shadow-xl.transition-opacity.duration-1000.ease-out(
       class="!w-auto hover:opacity-100",
       :class="{ 'opacity-100': !ready }"
@@ -49,22 +49,22 @@ Head(v-if="flatTree.length")
           svg.h-6.w-6
             path(:d="mdi.mdiMenu")
       .mx-2.flex-1.px-2 {{ selectedObject?.label }}
-    router-view(v-slot="{ Component }")
-      transition(name="fade")
-        component(:is="Component")
+    router-view
   .drawer-side.z-50
-    .flex.min-h-full.w-full.flex-col.bg-cover.bg-center(
-      :data-theme="the?.theme",
-      :style="the?.image && the?.background ? { backgroundImage: `url(${the?.image})` } : {}"
+    .hero.min-h-full(
+      :style="the.image && the.background ? { backgroundImage: `url(${the.image})` } : {}",
+      :data-theme="the.theme"
     )
-      label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
-        svg.h-6.w-6
-          path(:d="mdi.mdiClose")
-      .flex.flex-auto.items-center
-        .prose.mx-auto.flex-auto(
-          :class="{ container: the?.responsive, 'w-full max-w-none': !the?.responsive }"
+      .hero-overlay(v-if="the.overlay")
+      .flex.h-full.w-full.flex-col
+        label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
+          svg.h-6.w-6
+            path(:d="mdi.mdiClose")
+        .hero.flex-1.self-center(
+          :class="the?.responsive ? 'container' : 'w-full'"
         )
-          component(:is="theTemplate", :the="the", :mdi="mdi")
+          .prose.w-full.max-w-none
+            component(:is="theTemplate", :the="the", :mdi="mdi")
 </template>
 <script setup>
 import "daisyui/dist/full.css";

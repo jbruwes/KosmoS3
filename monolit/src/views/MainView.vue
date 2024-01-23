@@ -11,9 +11,7 @@
     :data-theme="the.theme"
   )
     .hero-overlay(v-if="the.overlay")
-    .prose(
-      :class="{ container: the.responsive, 'w-full max-w-none': !the.responsive }"
-    )
+    .prose(:class="the.responsive ? 'container' : 'w-full max-w-none'")
       component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
 </template>
 <script setup>
