@@ -14,7 +14,7 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.496.0",
+    "@aws-sdk/client-s3": "^3.498.0",
     "@fontsource/arsenal": "^5.0.8",
     "@fontsource/bad-script": "^5.0.8",
     "@fontsource/caveat": "^5.0.16",
@@ -66,7 +66,7 @@
     "quasar": "^2.14.2",
     "to-xml": "^0.1.11",
     "vite": "^2.9.17",
-    "vue": "^3.4.8",
+    "vue": "^3.4.15",
     "vue-router": "^4.2.5",
     "vue3-ace-editor": "^2.2.4"
   },

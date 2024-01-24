@@ -72,9 +72,9 @@
     "three": "0.135.0",
     "vanta": "^0.5.24",
     "vite": "^5.0.12",
-    "vue": "^3.4.8",
+    "vue": "^3.4.15",
     "vue-router": "^4.2.5",
-    "vue3-sfc-loader": "^0.8.4"
+    "vue3-sfc-loader": "0.9.1"
   },
   "devDependencies": {
     "@vue/language-plugin-pug": "^1.8.27",
