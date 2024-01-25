@@ -177,7 +177,9 @@ const icon = computed({
    */
   set(value) {
     get(selectedObject).icon = value;
-    get(selectedObject).svg = value?.replace(/-./g, (x) => x[1].toUpperCase());
+    get(selectedObject).favicon = value?.replace(/-./g, (x) =>
+      x[1].toUpperCase(),
+    );
   },
 });
 const loc = computed({

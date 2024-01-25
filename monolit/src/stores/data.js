@@ -225,7 +225,7 @@ export default defineStore("data", () => {
               children: [],
               description: undefined,
               icon: undefined,
-              svg: undefined,
+              favicon: undefined,
               id: crypto.randomUUID(),
               image: undefined,
               keywords: undefined,

@@ -421,7 +421,7 @@ const options = reactive([
     <div class="hero-content !z-10">
         <div class="glass rounded-badge p-4 text-neutral-content text-center">
             <svg viewBox="0 0 24 24" class="fill-current mx-auto w-1/4 h-1/4">
-                <path :d="mdi[\`\${the.icon}\`]" />
+                <path :d="mdi[\`\${the.favicon}\`]" />
             </svg>
             <h1 class="text-neutral-content">{{ the.title ?? the.label }}</h1>
             <p>{{ the.description }}</p>

@@ -17,7 +17,7 @@ Head(v-if="flatTree.length")
   link(
     :key="favicon",
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject?.svg ?? 'mdiWeb']}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject?.favicon ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
   )
   component(
