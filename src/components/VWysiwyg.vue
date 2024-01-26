@@ -423,7 +423,7 @@ const options = reactive([
             <svg viewBox="0 0 24 24" class="fill-current mx-auto w-1/4 h-1/4">
                 <path :d="mdi[\`\${the.favicon}\`]" />
             </svg>
-            <h1 class="text-neutral-content">{{ the.title ?? the.label }}</h1>
+            <h1 class="text-neutral-content">{{ the.name }}</h1>
             <p>{{ the.description }}</p>
         </div>
     </div>

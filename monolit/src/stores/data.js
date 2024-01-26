@@ -208,6 +208,20 @@ export default defineStore("data", () => {
     },
     configurable: true,
   };
+  const name = {
+    /** @returns {string} - Вычисленное название страницы */
+    get() {
+      return this.title ?? this.label;
+    },
+    configurable: true,
+  };
+  const favicon = {
+    /** @returns {string} - Вычисленное название иконки */
+    get() {
+      return this.icon?.replace(/-./g, (x) => x[1].toUpperCase());
+    },
+    configurable: true,
+  };
   const flatTree = computed(() =>
     isDefined(content)
       ? (function getMembers(members, pParent) {
@@ -225,7 +239,6 @@ export default defineStore("data", () => {
               children: [],
               description: undefined,
               icon: undefined,
-              favicon: undefined,
               id: crypto.randomUUID(),
               image: undefined,
               keywords: undefined,
@@ -260,6 +273,8 @@ export default defineStore("data", () => {
               index,
               prev,
               next,
+              name,
+              favicon,
             });
             return current.children?.length
               ? [...accumulator, ...getMembers(current.children, current)]
