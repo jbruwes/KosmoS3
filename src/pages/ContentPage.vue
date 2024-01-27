@@ -83,11 +83,11 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           max="1",
           step="0.1"
         )
-        q-input(v-model.trim="icon", clearable, label="Иконка")
+        q-input(v-model.trim="selectedObject.icon", clearable, label="Иконка")
           template(#prepend)
-            q-icon(v-if="icon", :name="icon")
+            q-icon(v-if="selectedObject.icon", :name="selectedObject.icon")
         q-icon-picker.q-my-md(
-          v-model="icon",
+          v-model="selectedObject.icon",
           v-model:model-pagination="data.pagination",
           :icons="icons",
           :filter="data.filter",
@@ -167,22 +167,6 @@ const changefreq = reactive([
   "never",
 ]);
 const icons = ref(materialIcons.icons);
-const icon = computed({
-  /** @returns {string} - Kebab case */
-  get() {
-    return get(selectedObject, "icon")
-      ?.replace(/([a-z])([A-Z])/g, "$1-$2")
-      .toLowerCase();
-  },
-  /**
-   * Camel case
-   *
-   * @param {string} value - Kebab case
-   */
-  set(value) {
-    get(selectedObject).icon = value?.replace(/-./g, (x) => x[1].toUpperCase());
-  },
-});
 const loc = computed({
   /** @returns {string} - Постоянная ссылка */
   get() {
