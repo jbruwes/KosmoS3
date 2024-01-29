@@ -64,7 +64,7 @@
     "@vitejs/plugin-vue": "^5.0.3",
     "@vueuse/core": "^10.7.2",
     "@vueuse/math": "^10.7.2",
-    "daisyui": "^4.6.0",
+    "daisyui": "^4.6.1",
     "glightbox": "^3.2.0",
     "p5": "^1.9.0",
     "pinia": "^2.1.7",
@@ -73,8 +73,10 @@
     "vanta": "^0.5.24",
     "vite": "^5.0.12",
     "vue": "^3.4.15",
+    "vue-gtag": "^2.0.1",
     "vue-router": "^4.2.5",
-    "vue3-sfc-loader": "^0.9.4"
+    "vue3-sfc-loader": "^0.9.4",
+    "vue3-yandex-metrika": "^0.0.4"
   },
   "devDependencies": {
     "@vue/language-plugin-pug": "^1.8.27",

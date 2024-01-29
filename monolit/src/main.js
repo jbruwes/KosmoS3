@@ -44,6 +44,8 @@ import { createHead } from "@unhead/vue";
 import { watchOnce } from "@vueuse/core";
 import { createPinia, storeToRefs } from "pinia";
 import { createApp } from "vue";
+import VueGtag from "vue-gtag";
+import VueYandexMetrika from "vue3-yandex-metrika";
 
 import App from "./App.vue";
 import VParticles from "./components/VParticles.vue";
@@ -68,7 +70,7 @@ loadStarsPreset(tsParticles);
 loadTrianglesPreset(tsParticles);
 const app = createApp(App);
 app.use(createPinia());
-const { flatTree } = storeToRefs(dataStore());
+const { flatTree, settings } = storeToRefs(dataStore());
 app.use(router);
 app.use(createHead());
 app.component("VVanta", VVanta);
@@ -91,4 +93,22 @@ watchOnce(flatTree, (value) => {
     component: () => import("./views/NotFoundView.vue"),
   });
   router.replace(router.currentRoute.value.fullPath);
+});
+watchOnce(settings, ({ metrika, analytics }) => {
+  if (metrika)
+    app.use(VueYandexMetrika, {
+      id: metrika,
+      router,
+      env: "production",
+    });
+  if (analytics)
+    app.use(
+      VueGtag,
+      {
+        config: {
+          id: analytics,
+        },
+      },
+      router,
+    );
 });

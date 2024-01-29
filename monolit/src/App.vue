@@ -1,11 +1,37 @@
 <template lang="pug">
 Head(v-if="selectedObject")
-  title {{ selectedObject.name }}
-  meta(name="description", :content="selectedObject.description")
-  meta(property="og:title", :content="selectedObject.name")
-  meta(property="og:type", :content="selectedObject.type")
-  meta(property="og:image", :content="selectedObject.image")
-  meta(property="og:url", :content="canonical")
+  title(v-if="selectedObject.name") {{ selectedObject.name }}
+  meta(
+    v-if="settings.yandex",
+    name="yandex-verification",
+    :content="settings.yandex"
+  )
+  meta(
+    v-if="settings.google",
+    name="google-site-verification",
+    :content="settings.google"
+  )
+  meta(
+    v-if="selectedObject.description",
+    name="description",
+    :content="selectedObject.description"
+  )
+  meta(
+    v-if="selectedObject.name",
+    property="og:title",
+    :content="selectedObject.name"
+  )
+  meta(
+    v-if="selectedObject.type",
+    property="og:type",
+    :content="selectedObject.type"
+  )
+  meta(
+    v-if="selectedObject.image",
+    property="og:image",
+    :content="selectedObject.image"
+  )
+  meta(v-if="canonical", property="og:url", :content="canonical")
   link(v-if="canonical", rel="canonical", :href="canonical")
   link(
     :key="favicon",

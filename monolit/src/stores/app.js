@@ -26,7 +26,7 @@ export default defineStore("app", () => {
           }</template><style scoped>${the.style ?? ""}</style>`,
         /** @param {string} value - Стили */
         addStyle(value) {
-          useStyleTag(value, { id: `vueuse_styletag_${the.id}` });
+          useStyleTag(value, { id: `style_${the.id}` });
         },
         /**
          * @param {string} type - Тип записи
