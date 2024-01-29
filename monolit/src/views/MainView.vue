@@ -17,6 +17,7 @@
 <script setup>
 import * as mdi from "@mdi/js";
 import { get, useArrayFind, useArrayReduce } from "@vueuse/core";
+import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -55,6 +56,34 @@ watch(
   () => get(scrollToElementCurrent) ?? get(scrollToElementFirst),
   (value) => {
     setTimeout(() => {
+      GLightbox({
+        touchNavigation: true,
+        loop: true,
+        autoplayVideos: true,
+        zoomable: false,
+        selector: [
+          '$=".apng"',
+          '$=".avif"',
+          '$=".gif"',
+          '$=".jpg"',
+          '$=".jpeg"',
+          '$=".jfif"',
+          '$=".pjpeg"',
+          '$=".pjp"',
+          '$=".png"',
+          '$=".svg"',
+          '$=".webp"',
+          '^="https://www.youtube.com/embed/"',
+          '^="https://www.youtube.com/watch?v="',
+          '^="https://www.youtu.be/embed/"',
+          '^="https://www.youtu.be/watch?v="',
+          '^="https://www.youtube-nocookie.com/embed/"',
+          '^="https://www.youtube-nocookie.com/watch?v="',
+          '^="https://vimeo.com/"',
+        ]
+          .map((el) => `a[href${el}]`)
+          .join(),
+      });
       value?.scrollIntoView({
         behavior: "smooth",
         block: "start",
