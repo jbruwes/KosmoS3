@@ -1,19 +1,12 @@
 <template lang="pug">
 Head(v-if="flatTree.length")
-  title {{ selectedObject?.label }}
+  title {{ selectedObject?.name ?? "Page Not Found" }}
   meta(name="description", :content="selectedObject?.description")
-  meta(property="og:type", content="website")
-  meta(property="og:title", :content="selectedObject?.label")
-  meta(property="og:type", :content="theselectedObject?.type")
+  meta(property="og:title", :content="selectedObject?.name")
+  meta(property="og:type", :content="selectedObject?.type")
   meta(property="og:image", :content="selectedObject?.image")
-  meta(
-    property="og:url",
-    :content="`${location.origin}/${selectedObject?.loc ? selectedObject?.loc : selectedObject?.path}`"
-  )
-  link(
-    rel="canonical",
-    :href="`${location.origin}/${selectedObject?.loc ? selectedObject?.loc : selectedObject?.path}`"
-  )
+  meta(property="og:url", :content="canonical")
+  link(v-if="canonical", rel="canonical", :href="canonical")
   link(
     :key="favicon",
     rel="icon",
@@ -48,7 +41,7 @@ Head(v-if="flatTree.length")
         label.btn.btn-square.btn-ghost(for="drawer")
           svg.h-6.w-6
             path(:d="mdi.mdiMenu")
-      .mx-2.flex-1.px-2 {{ selectedObject?.label }}
+      .mx-2.flex-1.px-2 {{ selectedObject?.name }}
     router-view
   .drawer-side.z-50
     .hero.min-h-full(
@@ -74,6 +67,7 @@ import { setup } from "@twind/core";
 import { Head } from "@unhead/vue/components";
 import {
   get,
+  isDefined,
   set,
   useArrayFilter,
   useArrayFind,
@@ -101,14 +95,19 @@ const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
 const twind = ref();
+const canonical = computed(() =>
+  isDefined(selectedObject)
+    ? `${get(location, "origin")}/${get(selectedObject, "loc") ? get(selectedObject, "loc") : get(selectedObject, "path")}`
+    : undefined,
+);
 /**
  * @constant {object} favicon - Ref
  * @type {string} favicon.value - Уникальный ключ для favicon. Иначе иконка
  *   динамически не обновляется в chrome при смене страницы
  */
 const favicon = ref(crypto.randomUUID());
-const visibleJs = useArrayFilter(js, ({ visible }) => visible);
-const visibleCss = useArrayFilter(css, ({ visible }) => visible);
+const visibleJs = useArrayFilter(js, ({ visible, url }) => visible && url);
+const visibleCss = useArrayFilter(css, ({ visible, url }) => visible && url);
 set(uri, "");
 router.beforeEach(() => {
   set(drawer, false);
