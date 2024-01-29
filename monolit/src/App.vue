@@ -1,16 +1,16 @@
 <template lang="pug">
-Head(v-if="flatTree.length")
-  title {{ selectedObject?.name ?? "Page Not Found" }}
-  meta(name="description", :content="selectedObject?.description")
-  meta(property="og:title", :content="selectedObject?.name")
-  meta(property="og:type", :content="selectedObject?.type")
-  meta(property="og:image", :content="selectedObject?.image")
+Head(v-if="selectedObject")
+  title {{ selectedObject.name }}
+  meta(name="description", :content="selectedObject.description")
+  meta(property="og:title", :content="selectedObject.name")
+  meta(property="og:type", :content="selectedObject.type")
+  meta(property="og:image", :content="selectedObject.image")
   meta(property="og:url", :content="canonical")
   link(v-if="canonical", rel="canonical", :href="canonical")
   link(
     :key="favicon",
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject?.favicon ?? 'mdiWeb']}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject.favicon ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
   )
   component(
@@ -67,7 +67,6 @@ import { setup } from "@twind/core";
 import { Head } from "@unhead/vue/components";
 import {
   get,
-  isDefined,
   set,
   useArrayFilter,
   useArrayFind,
@@ -95,10 +94,9 @@ const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
 const twind = ref();
-const canonical = computed(() =>
-  isDefined(selectedObject)
-    ? `${get(location, "origin")}/${get(selectedObject, "loc") ? get(selectedObject, "loc") : get(selectedObject, "path")}`
-    : undefined,
+const canonical = computed(
+  () =>
+    `${get(location, "origin")}/${get(selectedObject, "loc") ? get(selectedObject, "loc") : get(selectedObject, "path")}`,
 );
 /**
  * @constant {object} favicon - Ref
