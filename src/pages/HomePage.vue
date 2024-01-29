@@ -261,8 +261,7 @@ const login = async () => {
     }
 };
 </script>
-<style>
-.min-w-300 {
-  min-width: 300px !important;
-}
+<style lang="sass">
+.min-w-300
+  min-width: 300px !important
 </style>

@@ -1,18 +1,5 @@
 const routes = [
   {
-    path: "/",
-    /** @returns {object} - Модуль шаблона по умолчанию */
-    component: () => import("@/layouts/MainLayout.vue"),
-    children: [
-      {
-        path: "",
-        name: "Home",
-        /** @returns {object} - Модуль домашней страницы */
-        component: () => import("@/pages/HomePage.vue"),
-      },
-    ],
-  },
-  {
     path: "/about",
     /** @returns {object} - Модуль шаблона по умолчанию */
     component: () => import("@/layouts/MainLayout.vue"),
@@ -79,8 +66,16 @@ const routes = [
   },
   {
     path: "/:catchAll(.*)*",
-    /** @returns {object} - Страница ошибки */
-    component: () => import("@/pages/ErrorNotFound.vue"),
+    /** @returns {object} - Модуль шаблона по умолчанию */
+    component: () => import("@/layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Home",
+        /** @returns {object} - Модуль домашней страницы */
+        component: () => import("@/pages/HomePage.vue"),
+      },
+    ],
   },
 ];
 

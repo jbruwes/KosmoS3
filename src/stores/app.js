@@ -16,6 +16,7 @@ import storeData from "~/monolit/src/stores/data";
 import storeS3 from "./s3";
 
 export default defineStore("app", () => {
+  const rootFileName = "index.html";
   const store = storeS3();
   const { S3, base, bucket } = storeToRefs(store);
   const { putObject, headObject } = store;
@@ -37,8 +38,11 @@ export default defineStore("app", () => {
      */
     afterFetch(ctx) {
       ctx.data = [
-        "index.html",
-        ...Object.values(ctx.data).map(({ file }) => file),
+        ...new Set([
+          rootFileName,
+          ...Object.values(ctx.data).map(({ file }) => file),
+          ...ctx.data[rootFileName].css,
+        ]),
       ];
       return ctx;
     },
@@ -50,7 +54,7 @@ export default defineStore("app", () => {
     /** @param {string} pAsset - Путь до файла ресурса */
     const headPutObject = async (pAsset) => {
       try {
-        if (pAsset === "index.html") throw new Error();
+        if (pAsset === rootFileName) throw new Error();
         await headObject(pAsset);
       } catch (e) {
         const { data: body } = await useFetch(`monolit/${pAsset}`).blob();

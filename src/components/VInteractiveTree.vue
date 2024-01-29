@@ -152,8 +152,7 @@ const leftPage = () => {
   }
 };
 </script>
-<style>
-.min-w-96 {
-  min-width: 96px;
-}
+<style lang="sass">
+.min-w-96
+  min-width: 96px
 </style>

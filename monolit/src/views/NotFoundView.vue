@@ -1,3 +1,7 @@
 <template lang="pug">
-div 404
+.hero.h-full
+  .hero-content
+    .prose.text-center
+      .text-9xl 404
+      p Oops. Nothing here...
 </template>
