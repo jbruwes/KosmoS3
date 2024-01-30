@@ -146,7 +146,10 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
             @click="delete selectedObject.image"
           )
           .absolute-bottom.text-center the.image
-        q-img.rounded-borders(v-if="!selectedObject.image", :ratio="16 / 9")
+        q-img.q-mt-md.rounded-borders(
+          v-if="!selectedObject.image",
+          :ratio="16 / 9"
+        )
           .absolute-full.flex-center.flex
             q-btn(label="Загрузить картинку", color="primary", @click="open")
 q-page.column.full-height
