@@ -1,5 +1,5 @@
 <template lang="pug">
-Head(v-if="selectedObject")
+v-head(v-if="selectedObject")
   title(v-if="selectedObject.name") {{ selectedObject.name }}
   meta(
     v-if="settings.yandex",
@@ -90,7 +90,6 @@ import "daisyui/dist/full.css";
 
 import * as mdi from "@mdi/js";
 import { setup } from "@twind/core";
-import { Head } from "@unhead/vue/components";
 import {
   get,
   set,

@@ -1,5 +1,5 @@
 <template lang="pug">
-Head
+v-head
   title Page Not Found
 .hero.h-full
   .hero-content
@@ -7,6 +7,3 @@ Head
       .text-9xl 404
       p Oops. Nothing here...
 </template>
-<script setup>
-import { Head } from "@unhead/vue/components";
-</script>

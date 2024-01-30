@@ -41,6 +41,7 @@ import { loadSquaresPreset } from "@tsparticles/preset-squares";
 import { loadStarsPreset } from "@tsparticles/preset-stars";
 import { loadTrianglesPreset } from "@tsparticles/preset-triangles";
 import { createHead } from "@unhead/vue";
+import { Head } from "@unhead/vue/components";
 import { watchOnce } from "@vueuse/core";
 import { createPinia, storeToRefs } from "pinia";
 import { createApp } from "vue";
@@ -73,6 +74,7 @@ app.use(createPinia());
 const { flatTree, settings } = storeToRefs(dataStore());
 app.use(router);
 app.use(createHead());
+app.component("VHead", Head);
 app.component("VVanta", VVanta);
 app.component("VParticles", VParticles);
 
