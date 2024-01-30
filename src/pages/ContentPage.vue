@@ -22,16 +22,30 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         q-item-section
           q-item-label Настройки слоя
       q-card-section
-        q-toggle(v-model="selectedObject.responsive", label="Адаптивность")
-        q-toggle(
-          v-model="selectedObject.background",
-          label="Показывать подложку"
-        )
-        q-toggle(v-model="selectedObject.overlay", label="Затемнение подложки")
+        q-list
+          q-item(v-ripple, tag="label")
+            q-item-section
+              q-item-label Адаптивность
+              q-item-label(caption) the.responsive
+            q-item-section(avatar)
+              q-toggle(v-model="selectedObject.responsive")
+          q-item(v-ripple, tag="label")
+            q-item-section
+              q-item-label Показывать подложку
+              q-item-label(caption) the.background
+            q-item-section(avatar)
+              q-toggle(v-model="selectedObject.background")
+          q-item(v-ripple, tag="label")
+            q-item-section
+              q-item-label Затемнение подложки
+              q-item-label(caption) the.overlay
+            q-item-section(avatar)
+              q-toggle(v-model="selectedObject.overlay")
         q-select(
           v-model="selectedObject.theme",
           label="Цветовая тема",
-          :options="themes"
+          :options="themes",
+          hint="the.theme"
         )
           template(#prepend)
             q-icon(name="mdi-theme-light-dark")
@@ -45,13 +59,15 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
       q-card-section
         q-input(
           v-model.trim="selectedObject.title",
-          label="Заголовок страницы"
+          label="Заголовок страницы",
+          hint="the.title"
         )
         q-input(
           v-model.trim="selectedObject.description",
           type="textarea",
           autogrow,
-          label="Описание страницы"
+          label="Описание страницы",
+          hint="the.description"
         )
         q-select(
           v-model.trim="selectedObject.keywords",
@@ -61,19 +77,22 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           new-value-mode="add",
           stack-label,
           hide-dropdown-icon,
-          label="Ключевые слова"
+          label="Ключевые слова",
+          hint="the.keywords"
         )
         q-input(
           v-model.trim="loc",
           prefix="/",
           label="Постоянная ссылка",
-          type="url"
+          type="url",
+          hint="the.loc"
         )
         q-select(
           v-model="selectedObject.changefreq",
           :options="changefreq",
           label="Частота обновления",
-          clearable
+          clearable,
+          hint="the.changefreq"
         )
         q-input(
           v-model.number="selectedObject.priority",
@@ -81,21 +100,37 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           type="number",
           min="0",
           max="1",
-          step="0.1"
+          step="0.1",
+          hint="the.priority"
         )
-        q-input(v-model.trim="selectedObject.icon", clearable, label="Иконка")
+        q-input(
+          v-model.trim="selectedObject.icon",
+          label="Иконка",
+          clearable,
+          hint="the.icon"
+        )
           template(#prepend)
-            q-icon(v-if="selectedObject.icon", :name="selectedObject.icon")
-        q-icon-picker.q-my-md(
-          v-model="selectedObject.icon",
-          v-model:model-pagination="data.pagination",
-          :icons="icons",
-          :filter="data.filter",
-          style="height: 400px",
-          dense,
-          tooltips
-        )
-        q-img.rounded-borders(
+            q-icon.cursor-pointer(
+              :name="selectedObject.icon ?? 'mdi-tray-arrow-up'"
+            )
+              q-popup-proxy.column.items-center.justify-center(
+                v-model="data.showIconPicker"
+              )
+                q-input.q-ma-md(
+                  v-model="data.filter",
+                  label="Поиск...",
+                  clearable,
+                  dense
+                )
+                q-icon-picker(
+                  v-model="selectedObject.icon",
+                  v-model:model-pagination="data.pagination",
+                  :filter="data.filter",
+                  :icons="icons",
+                  tooltips,
+                  dense
+                )
+        q-img.q-mt-md.rounded-borders(
           v-if="selectedObject.image",
           :src="`${base}${selectedObject.image}`",
           :ratio="16 / 9"
@@ -110,6 +145,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
             style="top: 8px; right: 8px",
             @click="delete selectedObject.image"
           )
+          .absolute-bottom.text-center the.image
         q-img.rounded-borders(v-if="!selectedObject.image", :ratio="16 / 9")
           .absolute-full.flex-center.flex
             q-btn(label="Загрузить картинку", color="primary", @click="open")
@@ -178,6 +214,7 @@ const loc = computed({
   },
 });
 const data = ref({
+  showIconPicker: false,
   filter: "",
   pagination: {
     itemsPerPage: 75,
