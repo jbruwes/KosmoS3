@@ -11,8 +11,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         v-model:selected="state.content.selected",
         v-model:expanded="state.content.expanded",
         :nodes="content",
-        :list="flatTree",
-        :selected-object="selectedObject"
+        :list="flatTree"
       )
     q-separator
     q-card(v-if="selectedObject", flat)

@@ -34,9 +34,9 @@ q-btn-group.q-mx-xs(spread, flat)
         )
 </template>
 <script setup>
-import { get } from "@vueuse/core";
+import { get, useArrayFind } from "@vueuse/core";
 import { uid, useQuasar } from "quasar";
-import { computed, ref, toRef, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 const props = defineProps({
   selected: { default: "", type: String },
@@ -52,25 +52,23 @@ const props = defineProps({
     default: () => [],
     type: Array,
   },
-  selectedObject: {
-    /** @returns {object} - Пустой объект */
-    default: () => ({}),
-    type: Object,
-  },
 });
+const selectedObject = useArrayFind(
+  () => props.list,
+  ({ id }) => id === props.selected,
+);
 const name = computed(() => (props.type === "text" ? "label" : props.type));
 const emits = defineEmits(["update:expanded", "update:selected"]);
 const $q = useQuasar();
 const tree = ref();
 const updateSelected = "update:selected";
-const refSelectedObject = toRef(props, "selectedObject");
-watch(refSelectedObject, (newVal, oldVal) => {
+watch(selectedObject, (newVal, oldVal) => {
   const lOldVal = oldVal;
   lOldVal.edit = false;
 });
 /** Добавление новой страницы */
 const newPage = () => {
-  const { parent, children, index, siblings } = props.selectedObject;
+  const { parent, children, index, siblings } = get(selectedObject);
   const id = uid();
   const visible = true;
   const theme = "light";
@@ -90,8 +88,7 @@ const newPage = () => {
 };
 /** Удаление текущей страницы */
 const deletePage = () => {
-  const { parent, children, prev, next, siblings, index } =
-    props.selectedObject;
+  const { parent, children, prev, next, siblings, index } = get(selectedObject);
   if (parent || !(parent || children))
     $q.dialog({
       title: "Подтверждение",
@@ -117,7 +114,7 @@ const deletePage = () => {
 };
 /** Перемещение страницы вверх на одну позицию */
 const upPage = () => {
-  const { index, siblings } = props.selectedObject;
+  const { index, siblings } = get(selectedObject);
   if (index)
     [siblings[index - 1], siblings[index]] = [
       siblings[index],
@@ -126,7 +123,7 @@ const upPage = () => {
 };
 /** Перемещение страницы вниз на одну позицию */
 const downPage = () => {
-  const { index, siblings } = props.selectedObject;
+  const { index, siblings } = get(selectedObject);
   if (index < siblings.length - 1)
     [siblings[index], siblings[index + 1]] = [
       siblings[index + 1],
@@ -135,7 +132,7 @@ const downPage = () => {
 };
 /** Перемещение страницы вправо на одну позицию */
 const rightPage = () => {
-  const { index, siblings, prev } = props.selectedObject;
+  const { index, siblings, prev } = get(selectedObject);
   if (prev) {
     const { children = [], id } = prev;
     prev.children = [...children, ...siblings.splice(index, 1)];
@@ -147,7 +144,7 @@ const leftPage = () => {
   const {
     index,
     parent: { index: parIndex, parent, siblings, children, id } = {},
-  } = props.selectedObject;
+  } = get(selectedObject);
   if (parent) {
     get(tree).setExpanded(id, false);
     siblings.splice(parIndex + 1, 0, ...children.splice(index, 1));

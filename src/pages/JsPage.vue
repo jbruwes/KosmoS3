@@ -18,12 +18,11 @@ q-page.column.full-height
       v-interactive-tree(
         v-model:selected="state.js.selected",
         type="url",
-        :list="js",
-        :selected-object="selectedObject"
+        :list="js"
       )
 </template>
 <script setup>
-import { get, isDefined, useArrayFind, watchOnce } from "@vueuse/core";
+import { get, isDefined, watchOnce } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
@@ -31,10 +30,6 @@ import VSourceCode from "@/components/VSourceCode.vue";
 import app from "@/stores/app";
 
 const { script, js, state } = storeToRefs(app());
-const selectedObject = useArrayFind(
-  js,
-  ({ id }) => id === get(state, "js").selected,
-);
 get(state).rightDrawer = null;
 /** Инициализация */
 const init = () => {
