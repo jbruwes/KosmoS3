@@ -25,27 +25,27 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         q-list
           q-item(v-ripple, tag="label")
             q-item-section
-              q-item-label Адаптивность
-              q-item-label(caption) the.responsive
+              q-item-label the.responsive
+              q-item-label(caption) Адаптивность
             q-item-section(avatar)
               q-toggle(v-model="selectedObject.responsive")
           q-item(v-ripple, tag="label")
             q-item-section
-              q-item-label Показывать подложку
-              q-item-label(caption) the.background
+              q-item-label the.background
+              q-item-label(caption) Показывать подложку
             q-item-section(avatar)
               q-toggle(v-model="selectedObject.background")
           q-item(v-ripple, tag="label")
             q-item-section
-              q-item-label Затемнение подложки
-              q-item-label(caption) the.overlay
+              q-item-label the.overlay
+              q-item-label(caption) Затемнение подложки
             q-item-section(avatar)
               q-toggle(v-model="selectedObject.overlay")
         q-select(
           v-model="selectedObject.theme",
-          label="Цветовая тема",
+          hint="Цветовая тема",
           :options="themes",
-          hint="the.theme"
+          label="the.theme"
         )
           template(#prepend)
             q-icon(name="mdi-theme-light-dark")
@@ -59,15 +59,15 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
       q-card-section
         q-input(
           v-model.trim="selectedObject.title",
-          label="Заголовок страницы",
-          hint="the.title"
+          hint="Заголовок страницы",
+          label="the.title"
         )
         q-input(
           v-model.trim="selectedObject.description",
           type="textarea",
           autogrow,
-          label="Описание страницы",
-          hint="the.description"
+          hint="Описание страницы",
+          label="the.description"
         )
         q-select(
           v-model.trim="selectedObject.keywords",
@@ -77,37 +77,37 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           new-value-mode="add",
           stack-label,
           hide-dropdown-icon,
-          label="Ключевые слова",
-          hint="the.keywords"
+          hint="Ключевые слова",
+          label="the.keywords"
         )
         q-input(
           v-model.trim="loc",
           prefix="/",
-          label="Постоянная ссылка",
+          hint="Постоянная ссылка",
           type="url",
-          hint="the.loc"
+          label="the.loc"
         )
         q-select(
           v-model="selectedObject.changefreq",
           :options="changefreq",
-          label="Частота обновления",
+          hint="Частота обновления",
           clearable,
-          hint="the.changefreq"
+          label="the.changefreq"
         )
         q-input(
           v-model.number="selectedObject.priority",
-          label="Приоритет",
+          hint="Приоритет",
           type="number",
           min="0",
           max="1",
           step="0.1",
-          hint="the.priority"
+          label="the.priority"
         )
         q-input(
           v-model.trim="selectedObject.icon",
-          label="Иконка",
+          hint="Иконка",
           clearable,
-          hint="the.icon"
+          label="the.icon"
         )
           template(#prepend)
             q-icon.cursor-pointer(
