@@ -11,6 +11,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         v-model:selected="state.content.selected",
         v-model:expanded="state.content.expanded",
         :nodes="content",
+        :list="flatTree",
         :selected-object="selectedObject"
       )
     q-separator
@@ -191,7 +192,7 @@ import storeS3 from "@/stores/s3";
 
 const $q = useQuasar();
 const s3Store = storeS3();
-const { state, content, selectedValue, themes, selectedObject } =
+const { state, content, flatTree, selectedValue, themes, selectedObject } =
   storeToRefs(storeApp());
 const { base } = storeToRefs(s3Store);
 const { putFile } = s3Store;

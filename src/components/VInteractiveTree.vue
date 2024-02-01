@@ -2,16 +2,16 @@
 q-btn-group.q-mx-xs(spread, flat)
   q-btn(icon="note", @click="newPage")
   q-btn(icon="delete", @click="deletePage")
-  q-btn(v-if="expanded", icon="chevron_left", @click="leftPage")
-  q-btn(v-if="expanded", icon="chevron_right", @click="rightPage")
+  q-btn(v-if="nodes", icon="chevron_left", @click="leftPage")
+  q-btn(v-if="nodes", icon="chevron_right", @click="rightPage")
   q-btn(icon="expand_more", @click="downPage")
   q-btn(icon="expand_less", @click="upPage")
 .scroll.col
   q-tree.q-ma-xs(
     ref="tree",
     :selected="selected",
-    :expanded="expanded ?? []",
-    :nodes="nodes",
+    :expanded="expanded",
+    :nodes="nodes ?? list",
     node-key="id",
     no-selection-unset,
     accordion,
@@ -41,8 +41,13 @@ import { computed, ref, toRef, watch } from "vue";
 const props = defineProps({
   selected: { default: "", type: String },
   type: { default: "text", type: String },
-  expanded: { default: undefined, type: Array },
-  nodes: {
+  expanded: {
+    /** @returns {Array} - Пустой массив */
+    default: () => [],
+    type: Array,
+  },
+  nodes: { default: undefined, type: Array },
+  list: {
     /** @returns {Array} - Пустой массив */
     default: () => [],
     type: Array,
