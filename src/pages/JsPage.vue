@@ -31,14 +31,18 @@ import app from "@/stores/app";
 
 const { script, js, state } = storeToRefs(app());
 get(state).rightDrawer = null;
-/** Инициализация */
-const init = () => {
-  const [{ id }] = get(js);
+/**
+ * Инициализация
+ *
+ * @param {Array} js - Список подключаемых скриптов
+ * @param {object} js."0" - Первый элемент в списке
+ */
+const init = ([{ id }]) => {
   const {
     js: { selected },
   } = get(state);
   if (!selected) get(state).js.selected = id;
 };
-if (isDefined(js)) init();
+if (isDefined(js)) init(get(js));
 else watchOnce(js, init);
 </script>

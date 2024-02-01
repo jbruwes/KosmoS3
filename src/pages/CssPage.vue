@@ -31,14 +31,18 @@ import app from "@/stores/app";
 
 const { style, css, state } = storeToRefs(app());
 get(state).rightDrawer = null;
-/** Инициализация */
-const init = () => {
-  const [{ id }] = get(css);
+/**
+ * Инициализация
+ *
+ * @param {Array} css - Список подключаемых стилей
+ * @param {object} css."0" - Первый элемент в списке
+ */
+const init = ([{ id }]) => {
   const {
     css: { selected },
   } = get(state);
   if (!selected) get(state).css.selected = id;
 };
-if (isDefined(css)) init();
+if (isDefined(css)) init(get(css));
 else watchOnce(css, init);
 </script>

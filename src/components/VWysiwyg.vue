@@ -136,12 +136,16 @@ const { content, flatTree, selectedObject, selectedValue } =
   storeToRefs(storeApp());
 const inserted = ref(null);
 const insertedObject = useArrayFind(flatTree, ({ id }) => id === get(inserted));
-/** Инициализация */
-const init = () => {
-  const { id } = get(content, 0);
+/**
+ * Инициализация
+ *
+ * @param {Array} content - Дерево контента
+ * @param {object} content."0" - Корневой элемент
+ */
+const init = ([{ id }]) => {
   set(inserted, id);
 };
-if (isDefined(content)) init();
+if (isDefined(content)) init(get(content));
 else watchOnce(content, init);
 const editorRef = ref();
 const modalRef = ref();

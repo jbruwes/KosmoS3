@@ -22,13 +22,12 @@ q-btn-group.q-mx-xs(spread, flat)
       .row.no-wrap.full-width.items-center(@dblclick="prop.node.edit = true")
         q-checkbox.q-mr-xs(v-model="prop.node.visible", dense)
         q-input.full-width.min-w-96(
-          v-model.trim="prop.node[name]",
+          v-model.trim="prop.node[type === 'text' ? 'label' : type]",
           dense,
           :readonly="!prop.node.edit",
           :type="type",
           outlined,
           :bg-color="prop.node.id === selected ? 'primary' : undefined",
-          :label="`the.${name}`",
           @click.stop="$emit('update:selected', prop.node.id)",
           @keyup.enter="prop.node.edit = false"
         )
@@ -36,7 +35,7 @@ q-btn-group.q-mx-xs(spread, flat)
 <script setup>
 import { get, useArrayFind } from "@vueuse/core";
 import { uid, useQuasar } from "quasar";
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 const props = defineProps({
   selected: { default: "", type: String },
@@ -57,13 +56,12 @@ const selectedObject = useArrayFind(
   () => props.list,
   ({ id }) => id === props.selected,
 );
-const name = computed(() => (props.type === "text" ? "label" : props.type));
 const emits = defineEmits(["update:expanded", "update:selected"]);
 const $q = useQuasar();
 const tree = ref();
 const updateSelected = "update:selected";
 watch(selectedObject, (newVal, oldVal) => {
-  const lOldVal = oldVal;
+  const lOldVal = oldVal ?? {};
   lOldVal.edit = false;
 });
 /** Добавление новой страницы */
@@ -88,8 +86,13 @@ const newPage = () => {
 };
 /** Удаление текущей страницы */
 const deletePage = () => {
-  const { parent, children, prev, next, siblings, index } = get(selectedObject);
-  if (parent || !(parent || children))
+  const { parent, children, prev, next, siblings, index, url } =
+    get(selectedObject);
+  if (
+    parent ||
+    (url && !(siblings.length - 1)) ||
+    (!(parent || children) && siblings.length - 1)
+  )
     $q.dialog({
       title: "Подтверждение",
       message: "Вы действительно хотите удалить?",

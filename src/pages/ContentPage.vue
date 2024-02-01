@@ -24,27 +24,27 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         q-list
           q-item(v-ripple, tag="label")
             q-item-section
-              q-item-label the.responsive
-              q-item-label(caption) Адаптивность
+              q-item-label Адаптивность
+              q-item-label(caption) the.responsive
             q-item-section(avatar)
               q-toggle(v-model="selectedObject.responsive")
           q-item(v-ripple, tag="label")
             q-item-section
-              q-item-label the.background
-              q-item-label(caption) Показывать подложку
+            q-item-label Показывать подложку
+              q-item-label(caption) the.background
             q-item-section(avatar)
               q-toggle(v-model="selectedObject.background")
           q-item(v-ripple, tag="label")
             q-item-section
-              q-item-label the.overlay
-              q-item-label(caption) Затемнение подложки
+            q-item-label Затемнение подложки
+              q-item-label(caption) the.overlay
             q-item-section(avatar)
               q-toggle(v-model="selectedObject.overlay")
         q-select(
           v-model="selectedObject.theme",
-          hint="Цветовая тема",
+          label="Цветовая тема",
           :options="themes",
-          label="the.theme"
+          hint="the.theme"
         )
           template(#prepend)
             q-icon(name="mdi-theme-light-dark")
@@ -58,15 +58,15 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
       q-card-section
         q-input(
           v-model.trim="selectedObject.title",
-          hint="Заголовок страницы",
-          label="the.title"
+          label="Заголовок страницы",
+          hint="the.title"
         )
         q-input(
           v-model.trim="selectedObject.description",
           type="textarea",
           autogrow,
-          hint="Описание страницы",
-          label="the.description"
+          label="Описание страницы",
+          hint="the.description"
         )
         q-select(
           v-model.trim="selectedObject.keywords",
@@ -76,37 +76,37 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           new-value-mode="add",
           stack-label,
           hide-dropdown-icon,
-          hint="Ключевые слова",
-          label="the.keywords"
+          label="Ключевые слова",
+          hint="the.keywords"
         )
         q-input(
           v-model.trim="loc",
           prefix="/",
-          hint="Постоянная ссылка",
+          label="Постоянная ссылка",
           type="url",
-          label="the.loc"
+          hint="the.loc"
         )
         q-select(
           v-model="selectedObject.changefreq",
           :options="changefreq",
-          hint="Частота обновления",
+          label="Частота обновления",
           clearable,
-          label="the.changefreq"
+          hint="the.changefreq"
         )
         q-input(
           v-model.number="selectedObject.priority",
-          hint="Приоритет",
+          label="Приоритет",
           type="number",
           min="0",
           max="1",
           step="0.1",
-          label="the.priority"
+          hint="the.priority"
         )
         q-input(
           v-model.trim="selectedObject.icon",
-          hint="Иконка",
+          label="Иконка",
           clearable,
-          label="the.icon"
+          hint="the.icon"
         )
           template(#prepend)
             q-icon.cursor-pointer(
@@ -224,16 +224,20 @@ const data = ref({
   },
 });
 get(state).rightDrawer = true;
-/** Инициализация */
-const init = () => {
-  const { id } = get(content, 0);
+/**
+ * Инициализация
+ *
+ * @param {Array} content - Дерево контента
+ * @param {object} content."0" - Корневой элемент
+ */
+const init = ([{ id }]) => {
   const {
     content: { expanded, selected },
   } = get(state);
   if (!expanded.length) get(state).content.expanded = [id];
   if (!selected) get(state).content.selected = id;
 };
-if (isDefined(content)) init();
+if (isDefined(content)) init(get(content));
 else watchOnce(content, init);
 const { files, open } = useFileDialog({
   multiple: false,
