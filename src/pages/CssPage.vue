@@ -18,7 +18,7 @@ q-page.column.full-height
       v-interactive-tree(
         v-model:selected="state.css.selected",
         type="url",
-        :list="css",
+        :nodes="css",
         :selected-object="selectedObject"
       )
 </template>
