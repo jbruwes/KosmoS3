@@ -1,11 +1,13 @@
-import * as Core from "@vueuse/core";
-import * as Math from "@vueuse/math";
+import * as tresjsCientos from "@tresjs/cientos";
+import * as tresjsCore from "@tresjs/core";
+import * as vueuseCore from "@vueuse/core";
+import * as vueuseMath from "@vueuse/math";
 import { defineStore } from "pinia";
 import * as Vue from "vue";
 import { loadModule } from "vue3-sfc-loader";
 
 export default defineStore("app", () => {
-  const { useStyleTag } = Core;
+  const { useStyleTag } = vueuseCore;
   const { defineAsyncComponent } = Vue;
   /**
    * @param {object} the - Текущий объект
@@ -16,8 +18,10 @@ export default defineStore("app", () => {
       loadModule(`/${the.id}.vue`, {
         moduleCache: {
           vue: Vue,
-          "@vueuse/core": Core,
-          "@vueuse/math": Math,
+          "@vueuse/core": vueuseCore,
+          "@vueuse/math": vueuseMath,
+          "@tresjs/core": tresjsCore,
+          "@tresjs/cientos": tresjsCientos,
         },
         /** @returns {string} - Шаблон */
         getFile: () => `<script setup>const props=defineProps(["the","mdi"]);

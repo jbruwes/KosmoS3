@@ -25,6 +25,7 @@ import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 import "glightbox/dist/css/glightbox.css";
 
+import Tres from "@tresjs/core";
 import { tsParticles } from "@tsparticles/engine";
 import { loadBigCirclesPreset } from "@tsparticles/preset-big-circles";
 import { loadBubblesPreset } from "@tsparticles/preset-bubbles";
@@ -73,9 +74,9 @@ app.use(createPinia());
 const { flatTree, settings } = storeToRefs(dataStore());
 app.use(router);
 app.use(createHead());
+app.use(Tres);
 app.component("VHead", Head);
 app.component("VParticles", VParticles);
-
 app.mount("#app");
 watchOnce(flatTree, (value) => {
   value.forEach(({ path, id: name, loc: alias }) => {
