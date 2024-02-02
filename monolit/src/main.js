@@ -55,7 +55,13 @@ import router from "./router";
 import dataStore from "./stores/data";
 
 // eslint-disable-next-line no-console
-console.info("👨‍🚀", "The kosmos3 framework", "https://kosmos3.ru");
+console.info(
+  "👨‍🚀",
+  "The kosmos3 framework",
+  /* global __APP_VERSION__ */
+  `ver:${__APP_VERSION__}`,
+  "https://kosmos3.ru",
+);
 tsParticles.init();
 loadBigCirclesPreset(tsParticles);
 loadBubblesPreset(tsParticles);
