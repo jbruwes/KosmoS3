@@ -50,7 +50,6 @@ import VueYandexMetrika from "vue3-yandex-metrika";
 
 import App from "./App.vue";
 import VParticles from "./components/VParticles.vue";
-import VVanta from "./components/VVanta.vue";
 import router from "./router";
 import dataStore from "./stores/data";
 
@@ -75,7 +74,6 @@ const { flatTree, settings } = storeToRefs(dataStore());
 app.use(router);
 app.use(createHead());
 app.component("VHead", Head);
-app.component("VVanta", VVanta);
 app.component("VParticles", VParticles);
 
 app.mount("#app");

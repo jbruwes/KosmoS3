@@ -407,19 +407,13 @@ const options = reactive([
     * 3. Цветовые классы взамен class="text-neutral-content" и fill="oklch(var(--nc))" смотрим здесь:
     * {@link https://daisyui.com/docs/colors/#-2 Список всех названий цветов daisyUI}
     * 4. Если не нужна минимальная высота в полэкрана - убрать min-h-[50vh]
-    * 5. Если нужны 3D эффекты, поменяйте обрамляющий div на v-vanta, список возможных эффектов следующий:
-    * birds, cells, clouds, fog, globe, halo, net, rings, ripple, trunk, waves
-    * 6. Подобрать параметры для v-vanta можно на сайте
-    * {@link https://www.vantajs.com/ Vanta.js}
-    * 7. Параметры v-vanta передаются в :options="{}"
-    * 8. Если нужны партиклы, поменяйте обрамляющий div на v-particles, список возможных эффектов следующий:
+    * 5. Если нужны партиклы, поменяйте обрамляющий div на v-particles, список возможных эффектов следующий:
     * bigCircles, bubbles, confetti, fire, firefly, fireworks, fountain, hyperspace, links, seaAnemone, snow, squares, stars, triangles
-    * 9. Подобрать параметры для v-particles можно на сайте
+    * 6. Подобрать параметры для v-particles можно на сайте
     * {@link https://particles.js.org/ tsParticles}
-    * 10. Параметры v-particles также передаются в :options="{}"
+    * 7. Параметры v-particles также передаются в :options="{}"
     *-->
 <!--v-particles class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh]" effect="bigCircles"-->
-<!--v-vanta class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh]" effect="birds"-->
 <div class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh] col" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
     <!--div class="hero-overlay"></div-->
     <div class="hero-content !z-10">
@@ -432,7 +426,6 @@ const options = reactive([
         </div>
     </div>
 </div>
-<!--/v-vanta-->
 <!--/v-particles-->`,
   },
   {
