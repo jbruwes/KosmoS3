@@ -19,7 +19,7 @@ import * as mdi from "@mdi/js";
 import { get, useArrayFind, useArrayReduce } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onUpdated } from "vue";
 import { useRoute } from "vue-router";
 
 import app from "../stores/app";
@@ -55,7 +55,7 @@ const scrollToElementCurrent = useArrayFind(
 watch(
   () => get(scrollToElementCurrent) ?? get(scrollToElementFirst),
   (value) => {
-    setTimeout(() => {
+    onUpdated(() => {
       GLightbox({
         touchNavigation: true,
         loop: true,
