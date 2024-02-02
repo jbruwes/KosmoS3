@@ -19,7 +19,7 @@ import * as mdi from "@mdi/js";
 import { get, useArrayFind, useArrayReduce } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, ref, watch, onUpdated } from "vue";
+import { computed, ref, onUpdated, nextTick } from "vue";
 import { useRoute } from "vue-router";
 
 import app from "../stores/app";
@@ -52,44 +52,40 @@ const scrollToElementCurrent = useArrayFind(
   itemRefs,
   ({ id }) => id === get(selectedObject, "id"),
 );
-watch(
-  () => get(scrollToElementCurrent) ?? get(scrollToElementFirst),
-  (value) => {
-    onUpdated(() => {
-      GLightbox({
-        touchNavigation: true,
-        loop: true,
-        autoplayVideos: true,
-        zoomable: false,
-        selector: [
-          '$=".apng"',
-          '$=".avif"',
-          '$=".gif"',
-          '$=".jpg"',
-          '$=".jpeg"',
-          '$=".jfif"',
-          '$=".pjpeg"',
-          '$=".pjp"',
-          '$=".png"',
-          '$=".svg"',
-          '$=".webp"',
-          '^="https://www.youtube.com/embed/"',
-          '^="https://www.youtube.com/watch?v="',
-          '^="https://www.youtu.be/embed/"',
-          '^="https://www.youtu.be/watch?v="',
-          '^="https://www.youtube-nocookie.com/embed/"',
-          '^="https://www.youtube-nocookie.com/watch?v="',
-          '^="https://vimeo.com/"',
-        ]
-          .map((el) => `a[href${el}]`)
-          .join(),
-      });
-      value?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-        inline: "nearest",
-      });
-    });
-  },
-);
+onUpdated(async () => {
+  await nextTick();
+  GLightbox({
+    touchNavigation: true,
+    loop: true,
+    autoplayVideos: true,
+    zoomable: false,
+    selector: [
+      '$=".apng"',
+      '$=".avif"',
+      '$=".gif"',
+      '$=".jpg"',
+      '$=".jpeg"',
+      '$=".jfif"',
+      '$=".pjpeg"',
+      '$=".pjp"',
+      '$=".png"',
+      '$=".svg"',
+      '$=".webp"',
+      '^="https://www.youtube.com/embed/"',
+      '^="https://www.youtube.com/watch?v="',
+      '^="https://www.youtu.be/embed/"',
+      '^="https://www.youtu.be/watch?v="',
+      '^="https://www.youtube-nocookie.com/embed/"',
+      '^="https://www.youtube-nocookie.com/watch?v="',
+      '^="https://vimeo.com/"',
+    ]
+      .map((el) => `a[href${el}]`)
+      .join(),
+  });
+  (get(scrollToElementCurrent) ?? get(scrollToElementFirst))?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+    inline: "nearest",
+  });
+});
 </script>
