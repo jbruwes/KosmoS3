@@ -1,15 +1,20 @@
 <template lang="pug">
 v-head(v-if="selectedObject")
   title(v-if="selectedObject.name") {{ selectedObject.name }}
-  meta(
-    v-if="settings.yandex",
-    name="yandex-verification",
-    :content="settings.yandex"
+  link(
+    v-for="currentCss in visibleCss",
+    :key="currentCss.id",
+    crossorigin,
+    rel="stylesheet",
+    :href="currentCss.url"
   )
-  meta(
-    v-if="settings.google",
-    name="google-site-verification",
-    :content="settings.google"
+  component(
+    :is="tagScript",
+    v-for="currentJs in visibleJs",
+    :key="currentJs.id",
+    crossorigin,
+    deffer,
+    :src="currentJs.url"
   )
   meta(
     v-if="selectedObject.description",
@@ -26,36 +31,36 @@ v-head(v-if="selectedObject")
     property="og:type",
     :content="selectedObject.type"
   )
+  meta(v-if="canonical", property="og:url", :content="canonical")
   meta(
     v-if="selectedObject.image",
     property="og:image",
     :content="selectedObject.image"
   )
-  meta(v-if="canonical", property="og:url", :content="canonical")
-  link(v-if="canonical", rel="canonical", :href="canonical")
+  meta(
+    v-if="selectedObject.alt",
+    property="og:image:alt",
+    :content="selectedObject.alt"
+  )
   link(
     :key="favicon",
     rel="icon",
     :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject.favicon ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
   )
-  component(
-    :is="tagScript",
-    v-for="currentJs in visibleJs",
-    :key="currentJs.id",
-    crossorigin,
-    deffer,
-    :src="currentJs.url"
-  )
-  link(
-    v-for="currentCss in visibleCss",
-    :key="currentCss.id",
-    crossorigin,
-    rel="stylesheet",
-    :href="currentCss.url"
-  )
+  link(v-if="canonical", rel="canonical", :href="canonical")
   component(:is="tagStyle", v-if="style") {{ style }}
   component(:is="tagScript", v-if="script") {{ `try{${script}\n}catch(e){console.error(e.message)}` }}
+  meta(
+    v-if="settings.yandex",
+    name="yandex-verification",
+    :content="settings.yandex"
+  )
+  meta(
+    v-if="settings.google",
+    name="google-site-verification",
+    :content="settings.google"
+  )
 .drawer(ref="twind", :data-theme="settings?.theme")
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
   .drawer-content.carousel-vertical(class="h-[100dvh]", @scroll.passive="start")

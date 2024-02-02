@@ -56,6 +56,13 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         q-item-section
           q-item-label Настройки SEO
       q-card-section
+        q-select(
+          v-model="selectedObject.type",
+          :options="typelist",
+          label="Тип содержимого страницы",
+          clearable,
+          hint="the.type"
+        )
         q-input(
           v-model.trim="selectedObject.title",
           label="Заголовок страницы",
@@ -129,6 +136,13 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
                   tooltips,
                   dense
                 )
+        q-input(
+          v-model.trim="selectedObject.alt",
+          type="textarea",
+          autogrow,
+          label="Описание картинки",
+          hint="the.alt"
+        )
         q-img.q-mt-md.rounded-borders(
           v-if="selectedObject.image",
           :src="`${base}${selectedObject.image}`",
@@ -203,6 +217,20 @@ const changefreq = reactive([
   "monthly",
   "yearly",
   "never",
+]);
+const typelist = reactive([
+  "article",
+  "book",
+  "profile",
+  "website",
+  "music.song",
+  "music.album",
+  "music.playlist",
+  "music.radio_station",
+  "video.movie",
+  "video.episode",
+  "video.tv_show",
+  "video.other",
 ]);
 const icons = ref(materialIcons.icons);
 const loc = computed({
