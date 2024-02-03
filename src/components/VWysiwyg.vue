@@ -413,16 +413,16 @@ const options = reactive([
     * {@link https://particles.js.org/ tsParticles}
     * 7. Параметры v-particles также передаются в :options="{}"
     *-->
-<!--v-particles class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh]" effect="bigCircles"-->
-<div class="hero shadow-xl rounded-box overflow-hidden min-h-[90dvh] col" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
+<!--v-particles class="hero shadow-xl rounded-box min-h-[90dvh]" effect="bigCircles"-->
+<div class="hero shadow-xl rounded-box min-h-[90dvh] col" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
     <!--div class="hero-overlay"></div-->
-    <div class="hero-content !z-10">
-        <div class="glass rounded-badge p-4 text-neutral-content text-center">
-            <svg viewBox="0 0 24 24" class="fill-current mx-auto w-1/4 h-1/4">
-                <path :d="mdi[\`\${the.favicon}\`]" />
+    <div class="hero-content !z-10 overflow-x-hidden w-full">
+        <div class="glass rounded-badge p-4 text-neutral-content text-center w-full">
+            <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 h-14 sm:h-14 md:h-16 lg:h-20 xl:h-24 2xl:h-28">
+                <path :d="mdi[\`\${the.favicon??'mdiWeb'}\`]" />
             </svg>
-            <h1 class="text-neutral-content">{{ the.name }}</h1>
-            <p>{{ the.description }}</p>
+            <h1 class="text-neutral-content truncate">{{ the.name }}</h1>
+            <p v-if="the.description" class="truncate">{{ the.description }}</p>
         </div>
     </div>
 </div>

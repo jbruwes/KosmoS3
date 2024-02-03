@@ -72,22 +72,24 @@ v-head(v-if="selectedObject")
         label.btn.btn-square.btn-ghost(for="drawer")
           svg.h-6.w-6
             path(:d="mdi.mdiMenu")
-      .mx-2.flex-1.px-2 {{ selectedObject?.name }}
+      .mx-2.inline-block.flex-1.truncate.px-2 {{ selectedObject?.name }}
     router-view
   .drawer-side.z-50
-    .hero.min-h-full(
+    .hero.min-h-full.min-w-full(
       :style="the.image && the.background ? { backgroundImage: `url(${the.image})` } : {}",
       :data-theme="the.theme"
     )
       .hero-overlay(v-if="the.overlay")
-      .flex.h-full.w-full.flex-col
+      .flex.h-full.w-full.flex-col.overflow-x-hidden
         label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
           svg.h-6.w-6
             path(:d="mdi.mdiClose")
         .hero.flex-1.self-center(
           :class="the?.responsive ? 'container' : 'w-full'"
         )
-          .prose.w-full.max-w-none
+          .prose.prose-sm.w-full.max-w-none(
+            class="sm:prose-sm md:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl"
+          )
             component(:is="theTemplate", :the="the", :mdi="mdi")
 </template>
 <script setup>

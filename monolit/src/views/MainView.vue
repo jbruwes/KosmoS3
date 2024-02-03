@@ -6,12 +6,15 @@
   ref="itemRefs",
   class="min-h-[100dvh]"
 )
-  .hero(
+  .hero.overflow-x-hidden(
     :style="the.image && the.background ? { backgroundImage: `url(${the.image})` } : {}",
     :data-theme="the.theme"
   )
     .hero-overlay(v-if="the.overlay")
-    .prose(:class="the.responsive ? 'container' : 'w-full max-w-none'")
+    .prose.prose-sm(
+      :class="the.responsive ? 'container' : 'w-full max-w-none'",
+      class="sm:prose-sm md:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl"
+    )
       component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
 </template>
 <script setup>
