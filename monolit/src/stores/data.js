@@ -208,6 +208,16 @@ export default defineStore("data", () => {
     },
     configurable: true,
   };
+  const urn = {
+    /** @returns {string} - Путь до рекомендованный */
+    get() {
+      return (
+        (this.loc ? encodeURI(this.loc?.replace(" ", "_")) : this.loc) ??
+        this.path
+      );
+    },
+    configurable: true,
+  };
   const name = {
     /** @returns {string} - Вычисленное название страницы */
     get() {
@@ -276,6 +286,7 @@ export default defineStore("data", () => {
               prev,
               next,
               name,
+              urn,
               favicon,
             });
             return current.children?.length

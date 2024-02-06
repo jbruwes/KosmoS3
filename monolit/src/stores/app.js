@@ -4,6 +4,7 @@ import * as vueuseCore from "@vueuse/core";
 import * as vueuseMath from "@vueuse/math";
 import { defineStore } from "pinia";
 import * as Vue from "vue";
+import * as vueRouter from "vue-router";
 import { loadModule } from "vue3-sfc-loader";
 
 export default defineStore("app", () => {
@@ -18,6 +19,7 @@ export default defineStore("app", () => {
       loadModule(`/${the.id}.vue`, {
         moduleCache: {
           vue: Vue,
+          "vue-router": vueRouter,
           "@vueuse/core": vueuseCore,
           "@vueuse/math": vueuseMath,
           "@tresjs/core": tresjsCore,

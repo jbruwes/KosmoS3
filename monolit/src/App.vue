@@ -127,8 +127,7 @@ const tagScript = ref("script");
 const drawer = ref(false);
 const twind = ref();
 const canonical = computed(
-  () =>
-    `${get(location, "origin")}/${get(selectedObject, "loc") ? get(selectedObject, "loc") : get(selectedObject, "path")}`,
+  () => `${get(location, "origin")}/${get(selectedObject, "urn")}`,
 );
 /**
  * @constant {object} favicon - Ref

@@ -87,11 +87,11 @@ app.component("VHead", Head);
 app.component("VParticles", VParticles);
 app.mount("#app");
 watchOnce(flatTree, (value) => {
-  value.forEach(({ path, id: name, loc: alias }) => {
+  value.forEach(({ path, id: name, loc }) => {
     router.addRoute({
       name,
       path: `/${path}`,
-      ...(alias && { alias: `/${alias}` }),
+      ...(loc && { alias: `/${encodeURI(loc.replace(" ", "_"))}` }),
       /** @returns {object} - MainView */
       component: () => import("./views/MainView.vue"),
     });
