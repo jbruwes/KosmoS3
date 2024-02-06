@@ -416,7 +416,7 @@ const options = reactive([
 <!--v-particles class="hero shadow-xl rounded-box min-h-[90dvh]" effect="bigCircles"-->
 <div class="hero shadow-xl rounded-box min-h-[90dvh] col" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
     <!--div class="hero-overlay"></div-->
-    <div class="hero-content !z-10 overflow-x-hidden w-full">
+    <div class="hero-content overflow-x-hidden w-full">
         <div class="glass rounded-badge p-4 text-neutral-content text-center w-full">
             <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 h-14 sm:h-14 md:h-16 lg:h-20 xl:h-24 2xl:h-28">
                 <path :d="mdi[\`\${the.favicon??'mdiWeb'}\`]" />
