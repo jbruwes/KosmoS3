@@ -75,13 +75,13 @@
     "vue": "^3.4.15",
     "vue-gtag": "^2.0.1",
     "vue-router": "^4.2.5",
-    "vue3-sfc-loader": "^0.9.4",
+    "vue3-sfc-loader": "^0.9.5",
     "vue3-yandex-metrika": "^0.0.4"
   },
   "devDependencies": {
     "@vue/language-plugin-pug": "^1.8.27",
     "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.33",
+    "postcss": "^8.4.34",
     "pug": "^3.0.2"
   },
   "engines": {
