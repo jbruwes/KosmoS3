@@ -109,7 +109,7 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import config from "../twind.config";
+import config from "~/twind.config";
 import app from "./stores/app";
 import data from "./stores/data";
 

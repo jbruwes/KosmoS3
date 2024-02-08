@@ -2,10 +2,9 @@ import { fileURLToPath, URL } from "node:url";
 
 import { templateCompilerOptions } from "@tresjs/core";
 import vue from "@vitejs/plugin-vue";
-import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default {
   plugins: [
     vue({
       ...templateCompilerOptions,
@@ -14,6 +13,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "~": fileURLToPath(new URL("..", import.meta.url)),
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },
@@ -38,4 +38,4 @@ export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
   },
-});
+};
