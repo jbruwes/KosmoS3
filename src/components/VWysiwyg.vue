@@ -403,7 +403,7 @@ const options = reactive([
 <!--*
     * 1. Для того, чтобы убрать подложку, удалите :style="the.image?{'background-image':\`url(\${the.image})\`}:{}"
     * 2. Для того, чтобы добавить оверлей, раскомментарьте <div class="hero-overlay"></div>
-    * 3. Цветовые классы взамен bg-neutral-content и text-neutral смотрим здесь:
+    * 3. Цветовые классы взамен bg-neutral-content смотрим здесь:
     * {@link https://daisyui.com/docs/colors/#-2 Список всех названий цветов daisyUI}
     * 4. Если не нужна минимальная высота в полэкрана - убрать или изменить min-h-[80dvh]
     * 5. Если нужны партиклы, поменяйте обрамляющий div на v-particles, список возможных эффектов следующий:
@@ -416,12 +416,12 @@ const options = reactive([
 <div class="col hero shadow-xl rounded-box min-h-[80dvh] bg-neutral-content" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
     <!--div class="hero-overlay"></div-->
     <div class="hero-content overflow-x-hidden w-full">
-        <div class="glass rounded-badge p-4 text-neutral text-center w-full">
+        <div class="glass rounded-badge p-4 text-center w-full">
             <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 h-14 sm:h-14 md:h-16 lg:h-20 xl:h-24 2xl:h-28">
                 <path :d="mdi[\`\${the.favicon??'mdiWeb'}\`]" />
             </svg>
-            <h1 class="text-neutral truncate">{{ the.name }}</h1>
-            <p v-if="the.description" class="truncate">{{ the.description }}</p>
+            <h1 class="text-ellipsis overflow-hidden">{{ the.name }}</h1>
+            <p v-if="the.description" class="text-ellipsis overflow-hidden">{{ the.description }}</p>
         </div>
     </div>
 </div>
@@ -433,22 +433,22 @@ const options = reactive([
 <!--*
     * 1. Для того, чтобы убрать подложку, удалите :style="page.image?{'background-image':\`url(\${page.image})\`}:{}
     * 2. Для того, чтобы добавить оверлей, раскомментарьте <div class="hero-overlay"></div>
-    * 3. Цветовые классы взамен bg-neutral-content и text-neutral смотрим здесь:
+    * 3. Цветовые классы взамен bg-neutral-content смотрим здесь:
     * {@link https://daisyui.com/docs/colors/#-2 Список всех названий цветов daisyUI}
     * 4. Если не нужна минимальная высота - убрать или изменить min-h-[80dvh]
     *-->
 <div class="col min-h-[80dvh] flex flex-col">
-    <div class="carousel flex-auto  w-full shadow-2xl rounded-box">
+    <div class="carousel flex-auto w-full shadow-2xl rounded-box">
         <div :id="\`\${the.path}/\${page.urn}\`" class="carousel-item relative w-full" v-for="(page,index) in the.siblings" :key="page.id">
             <div class="hero bg-neutral-content" :style="page.image?{'background-image':\`url(\${page.image})\`}:{}">
                 <!--div class="hero-overlay"></div-->
                 <div class="hero-content overflow-x-hidden w-full !z-10">
-                    <div class="glass rounded-badge p-4 text-neutral text-center w-full">
+                    <div class="glass rounded-badge p-4 text-center w-full">
                         <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 h-14 sm:h-14 md:h-16 lg:h-20 xl:h-24 2xl:h-28">
                             <path :d="mdi[\`\${page.favicon??'mdiWeb'}\`]"></path>
                         </svg>
-                        <h1 class="text-neutral truncate">{{ page.name }}</h1>
-                        <p v-if="page.description" class="truncate">{{ page.description }}</p>
+                        <h1 class="text-ellipsis overflow-hidden">{{ page.name }}</h1>
+                        <p v-if="page.description" class="text-ellipsis overflow-hidden">{{ page.description }}</p>
                     </div>
                 </div>
             </div>
