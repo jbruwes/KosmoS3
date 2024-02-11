@@ -423,7 +423,7 @@ const options = reactive([
             <!--*
                 *
                 *-->
-            <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 w-14 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
+            <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 w-12 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
                 <!--*
                     *
                     *-->
@@ -476,7 +476,7 @@ const options = reactive([
                         <!--*
                             *
                             *-->
-                        <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 w-14 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
+                        <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 w-12 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
                             <!--*
                                 *
                                 *-->
@@ -526,14 +526,14 @@ const options = reactive([
     * @const {string} [class="not-prose"] - Не использовать типографику
     * @const {string} [class="shadow-2xl"] - Тень
     * @const {string} [class="rounded-box"] - Округлые края
-    * @const {string} [class="w-60"] - width: 15rem; /* 240px */
+    * @const {string} [class="w-56"] - width: 14rem; /* 224px */
     * @const {string} [class="sm:w-60"] - @media (min-width: 640px) { width: 15rem; /* 240px */ }
     * @const {string} [class="md:w-64"] - @media (min-width: 768px) { width: 16rem; /* 256px */ }
     * @const {string} [class="lg:w-72"] - @media (min-width: 1024px) { width: 18rem; /* 288px */ }
     * @const {string} [class="xl:w-80"] - @media (min-width: 1280px) { width: 20rem; /* 320px */ }
     * @const {string} [class="2xl:w-96"] - @media (min-width: 1536px) { width: 24rem; /* 384px */ }
     *-->
-<div class="not-prose shadow-2xl rounded-box w-60 sm:w-60 md:w-64 lg:w-72 xl:w-80 2xl:w-96">
+<div class="not-prose shadow-2xl rounded-box w-56 sm:w-60 md:w-64 lg:w-72 xl:w-80 2xl:w-96">
     <!--*
         * @const {string} [class="card"] - Контейнер карточки
         * @const {string} [class="glass"] - Эффект матового стекла
@@ -570,25 +570,25 @@ const options = reactive([
                     <!--*
                         * @const {string} [class="glass"] - Эффект матового стекла
                         * @const {string} {class="rounded-full"] - Полное скругление
-                        * @const {string} [class="w-24"] - width: 6rem; /* 96px */
+                        * @const {string} [class="w-20"] - width: 5rem; /* 80px */
                         * @const {string} [class="sm:w-24"] - @media (min-width: 640px) { width: 6rem; /* 96px */ }
                         * @const {string} [class="md:w-28"] - @media (min-width: 768px) { width: 7rem; /* 112px */ }
                         * @const {string} [class="lg:w-32"] - @media (min-width: 1024px) { width: 8rem; /* 128px */ }
                         * @const {string} [class="xl:w-36"] - @media (min-width: 1280px) { width: 9rem; /* 144px */ }
                         * @const {string} [class="2xl:w-40"] - @media (min-width: 1536px) { width: 10rem; /* 160px */ }
                         *-->
-                    <div class="glass rounded-full w-24 sm:w-24 md:w-28 lg:w-32 xl:w-36 2xl:w-40">
+                    <div class="glass rounded-full w-20 sm:w-24 md:w-28 lg:w-32 xl:w-36 2xl:w-40">
                         <!--*
                             * @type {number[]} [viewBox="0 0 24 24"] - Координаты области просмотра SVG для текущего фрагмента SVG
                             * @const {string} [class="fill-current"] - fill: currentColor;
-                            * @const {string} [class="w-14"] - width: 3.5rem; /* 56px */
+                            * @const {string} [class="w-12"] - width: 3rem; /* 48px */
                             * @const {string} [class="sm:w-14"] - @media (min-width: 640px) { width: 3.5rem; /* 56px */ }
                             * @const {string} [class="md:w-16"] - @media (min-width: 768px) { width: 4rem; /* 64px */ }
                             * @const {string} [class="lg:w-20"] - @media (min-width: 1024px) { width: 5rem; /* 80px */ }
                             * @const {string} [class="xl:w-24"] - @media (min-width: 1280px) { width: 6rem; /* 96px */ }
                             * @const {string} [class="2xl:w-28"] - @media (min-width: 1536px) { width: 7rem; /* 112px */ }
                             *-->
-                        <svg viewBox="0 0 24 24" class="fill-current w-14 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
+                        <svg viewBox="0 0 24 24" class="fill-current w-12 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
                             <!--*
                                 * @type {string} d - Этот атрибут определяет форму
                                 *-->
