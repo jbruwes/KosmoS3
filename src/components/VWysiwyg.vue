@@ -38,7 +38,7 @@ div
         q-card.col.column(flat, bordered)
           q-card-section.col.column
             // eslint-disable vue/no-v-html
-            .col.prose.column.q-pa-xl.max-w-full.justify-center(
+            .col.prose.column.q-pa-xl.max-w-full.items-center.justify-center(
               ref="modalRef",
               class="*:min-h-fit",
               v-html="model"
@@ -398,29 +398,44 @@ const showDialog = () => {
 };
 const options = reactive([
   {
-    label: "Компонент для отображения большого поля с заголовком и описанием",
+    label: "Hero",
     value: `
 <!--*
-    * 1. Для того, чтобы убрать подложку, удалите :style="the.image?{'background-image':\`url(\${the.image})\`}:{}"
-    * 2. Для того, чтобы добавить оверлей, раскомментарьте <div class="hero-overlay"></div>
-    * 3. Цветовые классы взамен bg-neutral-content смотрим здесь:
-    * {@link https://daisyui.com/docs/colors/#-2 Список всех названий цветов daisyUI}
-    * 4. Если не нужна минимальная высота в полэкрана - убрать или изменить min-h-[80dvh]
-    * 5. Если нужны партиклы, поменяйте обрамляющий div на v-particles, список возможных эффектов следующий:
-    * bigCircles, bubbles, confetti, fire, firefly, fireworks, fountain, hyperspace, links, seaAnemone, snow, squares, stars, triangles
-    * 6. Подобрать параметры для v-particles можно на сайте
-    * {@link https://particles.js.org/ tsParticles}
-    * 7. Параметры v-particles также передаются в :options="{}"
+    *
     *-->
 <!--v-particles class="hero shadow-2xl rounded-box min-h-[80dvh]" effect="bigCircles"-->
+<!--*
+    *
+    *-->
 <div class="col hero shadow-xl rounded-box min-h-[80dvh] bg-neutral-content" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
+    <!--*
+        *
+        *-->
     <!--div class="hero-overlay"></div-->
+    <!--*
+        *
+        *-->
     <div class="hero-content overflow-x-hidden w-full">
+        <!--*
+            *
+            *-->
         <div class="glass rounded-badge p-4 text-center w-full">
-            <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 h-14 sm:h-14 md:h-16 lg:h-20 xl:h-24 2xl:h-28">
+            <!--*
+                *
+                *-->
+            <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 w-14 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
+                <!--*
+                    *
+                    *-->
                 <path :d="mdi[\`\${the.favicon??'mdiWeb'}\`]" />
             </svg>
+            <!--*
+                *
+                *-->
             <h1 class="text-ellipsis overflow-hidden">{{ the.name }}</h1>
+            <!--*
+                *
+                *-->
             <p v-if="the.description" class="text-ellipsis overflow-hidden">{{ the.description }}</p>
         </div>
     </div>
@@ -428,38 +443,181 @@ const options = reactive([
 <!--/v-particles-->`,
   },
   {
-    label: "Компонент для отображения слайдера с заголовками и описанием",
+    label: "Hero Slider",
     value: `
 <!--*
-    * 1. Для того, чтобы убрать подложку, удалите :style="page.image?{'background-image':\`url(\${page.image})\`}:{}
-    * 2. Для того, чтобы добавить оверлей, раскомментарьте <div class="hero-overlay"></div>
-    * 3. Цветовые классы взамен bg-neutral-content смотрим здесь:
-    * {@link https://daisyui.com/docs/colors/#-2 Список всех названий цветов daisyUI}
-    * 4. Если не нужна минимальная высота - убрать или изменить min-h-[80dvh]
+    *
     *-->
-<div class="col min-h-[80dvh] flex flex-col">
-    <div class="carousel flex-auto w-full shadow-2xl rounded-box">
+<div class="col min-h-[80dvh] flex flex-col w-full">
+    <!--*
+      *
+      *-->
+    <div class="carousel flex-auto shadow-2xl rounded-box">
+        <!--*
+            *
+            *-->
         <div :id="\`\${the.path}/\${page.urn}\`" class="carousel-item relative w-full" v-for="(page,index) in the.siblings" :key="page.id">
+            <!--*
+              *
+              *-->
             <div class="hero bg-neutral-content" :style="page.image?{'background-image':\`url(\${page.image})\`}:{}">
+                <!--*
+                    *
+                    *-->
                 <!--div class="hero-overlay"></div-->
+                <!--*
+                    *
+                    *-->
                 <div class="hero-content overflow-x-hidden w-full !z-10">
+                    <!--*
+                        *
+                        *-->
                     <div class="glass rounded-badge p-4 text-center w-full">
-                        <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 h-14 sm:h-14 md:h-16 lg:h-20 xl:h-24 2xl:h-28">
+                        <!--*
+                            *
+                            *-->
+                        <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 w-14 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
+                            <!--*
+                                *
+                                *-->
                             <path :d="mdi[\`\${page.favicon??'mdiWeb'}\`]"></path>
                         </svg>
+                        <!--*
+                            *
+                            *-->
                         <h1 class="text-ellipsis overflow-hidden">{{ page.name }}</h1>
+                        <!--*
+                            *
+                            *-->
                         <p v-if="page.description" class="text-ellipsis overflow-hidden">{{ page.description }}</p>
                     </div>
                 </div>
             </div>
+            <!--*
+                *
+                *-->
             <div class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                <!--*
+                    *
+                    *-->
                 <a class="btn btn-circle" :href="\`#\${the.path}/\${the.siblings[(index||the.siblings.length)-1].urn}\`" :class="{'btn-disabled':!index}">❮</a>
+                <!--*
+                    *
+                    *-->
                 <a class="btn btn-circle" :href="\`#\${the.path}/\${the.siblings[index+1===the.siblings.length?0:index+1].urn}\`" :class="{'btn-disabled':index+1===the.siblings.length}">❯</a>
             </div>
         </div>
     </div>
+    <!--*
+        *
+        *-->
     <div class="flex justify-center w-full py-2 gap-2">
+        <!--*
+            *
+            *-->
         <a :href="\`#\${the.path}/\${page.urn}\`" class="btn btn-xs" v-for="(page,index) in the.siblings" :key="page.id">{{ index+1 }}</a>
+    </div>
+</div>`,
+  },
+  {
+    label: "Card",
+    value: `
+<!--*
+    * @const {string} [class="not-prose"] - Не использовать типографику
+    * @const {string} [class="shadow-2xl"] - Тень
+    * @const {string} [class="rounded-box"] - Округлые края
+    * @const {string} [class="w-60"] - width: 15rem; /* 240px */
+    * @const {string} [class="sm:w-60"] - @media (min-width: 640px) { width: 15rem; /* 240px */ }
+    * @const {string} [class="md:w-64"] - @media (min-width: 768px) { width: 16rem; /* 256px */ }
+    * @const {string} [class="lg:w-72"] - @media (min-width: 1024px) { width: 18rem; /* 288px */ }
+    * @const {string} [class="xl:w-80"] - @media (min-width: 1280px) { width: 20rem; /* 320px */ }
+    * @const {string} [class="2xl:w-96"] - @media (min-width: 1536px) { width: 24rem; /* 384px */ }
+    *-->
+<div class="not-prose shadow-2xl rounded-box w-60 sm:w-60 md:w-64 lg:w-72 xl:w-80 2xl:w-96">
+    <!--*
+        * @const {string} [class="card"] - Контейнер карточки
+        * @const {string} [class="glass"] - Эффект матового стекла
+        *-->
+    <div class="card glass">
+        <!--*
+            * @const {string} [class="card"] - Контейнер карточки
+            * @const {string} [class="image-full"] - Карточка с картинкой на подложке
+            *-->
+        <figure class="card image-full">
+            <!--*
+                * @type {boolean} v-if - Элемент показывается, если картинка добавлена в свойства страницы
+                *-->
+            <figure v-if="the.image">
+                <!--*
+                    * @type {string} src - URL изображения
+                    * @type {string} alt - Этим атрибутом задаётся альтернативное текстовое описание изображения
+                    * @const {string} [decoding="async"] - Декодировать изображение асинхронно, чтобы уменьшить задержку отображения другого контента
+                    * @const {string} [loading="lazy"] - Откладывает загрузку изображения до того момента, пока оно не достигнет подсчитанного расстояния области просмотра, определяемого браузером
+                    *-->
+                <img :src="the.image" :alt="the.alt" decoding="async" loading="lazy" />
+            </figure>
+            <!--*
+                * @const {string} [class="card-body"] - Контейнер контента карточки
+                *-->
+            <div class="card-body">
+                <!--*
+                    * @const {string} [class="avatar"] - Контейнер аватара
+                    * @const {string} [class="placeholder"] - Для показа текста в аватаре
+                    * @const {string} [class="justify-center"] - justify-content: center;
+                    * @const {string} [class="text-neutral"] - Нейтральный цвет текста
+                    *-->
+                <div class="avatar placeholder justify-center text-neutral">
+                    <!--*
+                        * @const {string} [class="glass"] - Эффект матового стекла
+                        * @const {string} {class="rounded-full"] - Полное скругление
+                        * @const {string} [class="w-24"] - width: 6rem; /* 96px */
+                        * @const {string} [class="sm:w-24"] - @media (min-width: 640px) { width: 6rem; /* 96px */ }
+                        * @const {string} [class="md:w-28"] - @media (min-width: 768px) { width: 7rem; /* 112px */ }
+                        * @const {string} [class="lg:w-32"] - @media (min-width: 1024px) { width: 8rem; /* 128px */ }
+                        * @const {string} [class="xl:w-36"] - @media (min-width: 1280px) { width: 9rem; /* 144px */ }
+                        * @const {string} [class="2xl:w-40"] - @media (min-width: 1536px) { width: 10rem; /* 160px */ }
+                        *-->
+                    <div class="glass rounded-full w-24 sm:w-24 md:w-28 lg:w-32 xl:w-36 2xl:w-40">
+                        <!--*
+                            * @type {number[]} [viewBox="0 0 24 24"] - Координаты области просмотра SVG для текущего фрагмента SVG
+                            * @const {string} [class="fill-current"] - fill: currentColor;
+                            * @const {string} [class="w-14"] - width: 3.5rem; /* 56px */
+                            * @const {string} [class="sm:w-14"] - @media (min-width: 640px) { width: 3.5rem; /* 56px */ }
+                            * @const {string} [class="md:w-16"] - @media (min-width: 768px) { width: 4rem; /* 64px */ }
+                            * @const {string} [class="lg:w-20"] - @media (min-width: 1024px) { width: 5rem; /* 80px */ }
+                            * @const {string} [class="xl:w-24"] - @media (min-width: 1280px) { width: 6rem; /* 96px */ }
+                            * @const {string} [class="2xl:w-28"] - @media (min-width: 1536px) { width: 7rem; /* 112px */ }
+                            *-->
+                        <svg viewBox="0 0 24 24" class="fill-current w-14 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
+                            <!--*
+                                * @type {string} d - Этот атрибут определяет форму
+                                *-->
+                            <path :d="mdi[\`\${the.favicon??'mdiWeb'}\`]"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </figure>
+        <!--*
+            * @const {string} [class="card-body"] - Контейнер контента карточки
+            *-->
+        <div class="card-body">
+            <!--*
+                * @const {string} [class="card-title"] - Заголовок карточки
+                *-->
+            <div class="card-title">
+                <!--*
+                    * @const {string} [class="text-ellipsis"] - text-overflow: ellipsis;
+                    * @const {string} [class="overflow-hidden"] - overflow: hidden;
+                    *-->
+                <h2 class="text-ellipsis overflow-hidden">{{ the.name }}</h2>
+            </div>
+            <!--*
+                * @const {string} [class="text-ellipsis"] - text-overflow: ellipsis;
+                * @const {string} [class="overflow-hidden"] - overflow: hidden;
+                *-->
+            <p class="text-ellipsis overflow-hidden">{{ the.description }}</p>
+        </div>
     </div>
 </div>`,
   },
