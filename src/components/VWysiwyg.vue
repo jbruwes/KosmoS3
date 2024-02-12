@@ -401,15 +401,33 @@ const options = reactive([
     label: "Hero",
     value: `
 <!--*
+    * При необходимости контейнер транспаранта с подложкой можно заменить на контейнер транспаранта с системой частиц
     *
+    * @param {string} [class="hero"] - {@link https://daisyui.com/components/hero/ Транспарант}
+    * @param {string} [class="shadow-2xl"] - {@link https://tailwindcss.com/docs/box-shadow Тень}
+    * @param {string} [class="rounded-box"] - {@link https://daisyui.com/docs/utilities/#-1 Округлые края}
+    * @param {string} [class="min-h-[80dvh]"] - {@link https://tailwindcss.com/docs/min-height min-height: 80dvh;}
+    * @param {string} [class="min-w-[15rem]"] - {@link https://tailwindcss.com/docs/min-width min-width: 15rem;}
+    * @param {string} [effect="bigCircles"] - {@link https://github.com/tsparticles/presets?tab=readme-ov-file#big-circles Эффект}
     *-->
-<!--v-particles class="hero shadow-2xl rounded-box min-h-[80dvh]" effect="bigCircles"-->
+<!--v-particles class="hero shadow-2xl rounded-box min-h-[80dvh] min-w-[15rem]" effect="bigCircles"-->
 <!--*
+    * Контейнер транспаранта
     *
+    * @param {string} [class="col"] - {@link https://quasar.dev/layout/grid/column Колонка}
+    * @param {string} [class="hero"] - {@link https://daisyui.com/components/hero/ Транспарант}
+    * @param {string} [class="shadow-2xl"] - {@link https://tailwindcss.com/docs/box-shadow Тень}
+    * @param {string} [class="rounded-box"] - {@link https://daisyui.com/docs/utilities/#-1 Округлые края}
+    * @param {string} [class="min-h-[80dvh]"] - {@link https://tailwindcss.com/docs/min-height min-height: 80dvh;}
+    * @param {string} [class="min-w-[15rem]"] - {@link https://tailwindcss.com/docs/min-width min-width: 15rem;}
+    * @param {string} [class="bg-neutral-content"] - {@link https://daisyui.com/docs/colors/ Подложка нейтрального цвета}
+    * @param {string} style - {@link https://developer.mozilla.org/ru/docs/Web/CSS/background-image Изображение подложки}
     *-->
-<div class="col hero shadow-xl rounded-box min-h-[80dvh] bg-neutral-content" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
+<div class="col hero shadow-2xl rounded-box min-h-[80dvh] min-w-[15rem] bg-neutral-content" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
     <!--*
+        * При необходимости можно включить оверлей
         *
+        * @param {string} [class="hero-overlay"] - {@link https://daisyui.com/components/hero/ Оверлей}
         *-->
     <!--div class="hero-overlay"></div-->
     <!--*
@@ -417,26 +435,81 @@ const options = reactive([
         *-->
     <div class="hero-content overflow-x-hidden w-full">
         <!--*
+            * Контейнер вложенной карточки
             *
+            * @param {string} [class="card"] - {@link https://daisyui.com/components/card/ Контейнер карточки}
+            * @param {string} [class="glass"] - {@link https://daisyui.com/docs/utilities/#-2 Эффект матового стекла}
+            * @param {string} [class="w-full"] - {@link https://tailwindcss.com/docs/width width: 100%;}
             *-->
-        <div class="glass rounded-badge p-4 text-center w-full">
+        <div class="card glass w-full">
             <!--*
+                * Контейнер контента вложенной карточки
                 *
+                * @param {string} [class="card-body"] - {@link https://daisyui.com/components/card/ Контейнер контента карточки}
+                * @param {string} [class="items-center"] - {@link https://tailwindcss.com/docs/align-items align-items: center;}
+                * @param {string} [class="text-center"] - {@link https://tailwindcss.com/docs/text-align text-align: center;}
                 *-->
-            <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 w-12 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
+            <div class="card-body items-center text-center">
                 <!--*
+                    * Аватар для иконки
                     *
+                    * @param {string} [class="avatar"] - {@link https://daisyui.com/components/avatar/ Контейнер аватара}
+                    * @param {string} [class="placeholder"] - {@link https://daisyui.com/components/avatar/ Для показа текста в аватаре}
+                    * @param {string} [class="text-neutral"] - {@link https://daisyui.com/docs/colors/ Нейтральный цвет текста}
                     *-->
-                <path :d="mdi[\`\${the.favicon??'mdiWeb'}\`]" />
-            </svg>
-            <!--*
-                *
-                *-->
-            <h1 class="text-ellipsis overflow-hidden">{{ the.name }}</h1>
-            <!--*
-                *
-                *-->
-            <p v-if="the.description" class="text-ellipsis overflow-hidden">{{ the.description }}</p>
+                <div class="avatar placeholder text-neutral">
+                    <!--*
+                        * Подложка иконки
+                        *
+                        * @param {string} [class="glass"] - {@link https://daisyui.com/docs/utilities/#-2 Эффект матового стекла}
+                        * @param {string} {class="rounded-full"] - {@link https://tailwindcss.com/docs/border-radius Полное скругление}
+                        * @param {string} [class="w-24"] - {@link https://tailwindcss.com/docs/width width: 6rem; /* 96px */}
+                        * @param {string} [class="md:w-28"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 768px)} { {@link https://tailwindcss.com/docs/width width: 7rem; /* 112px */} }
+                        * @param {string} [class="lg:w-32"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1024px)} { {@link https://tailwindcss.com/docs/width width: 8rem; /* 128px */} }
+                        * @param {string} [class="xl:w-36"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1280px)} { {@link https://tailwindcss.com/docs/width width: 9rem; /* 144px */} }
+                        * @param {string} [class="2xl:w-40"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1536px)} { {@link https://tailwindcss.com/docs/width width: 10rem; /* 160px */} }
+                        *-->
+                    <div class="glass rounded-full w-24 md:w-28 lg:w-32 xl:w-36 2xl:w-40">
+                        <!--*
+                            * Иконка
+                            *
+                            * @param {number[]} [viewBox="0 0 24 24"] - {@link https://developer.mozilla.org/ru/docs/Web/SVG/Attribute/viewBox Координаты области просмотра SVG для текущего фрагмента SVG}
+                            * @param {string} [class="fill-current"] - {@link https://tailwindcss.com/docs/fill fill: currentColor;}
+                            * @param {string} [class="w-14"] - {@link https://tailwindcss.com/docs/width width: 3.5rem; /* 56px */}
+                            * @param {string} [class="md:w-16"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 768px)} { {@link https://tailwindcss.com/docs/width width: 4rem; /* 64px */} }
+                            * @param {string} [class="lg:w-20"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1024px)} { {@link https://tailwindcss.com/docs/width width: 5rem; /* 80px */} }
+                            * @param {string} [class="xl:w-24"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1280px)} { {@link https://tailwindcss.com/docs/width width: 6rem; /* 96px */} }
+                            * @param {string} [class="2xl:w-28"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1536px)} { {@link https://tailwindcss.com/docs/width width: 7rem; /* 112px */} }
+                            *-->
+                        <svg viewBox="0 0 24 24" class="fill-current w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
+                            <!--*
+                                * Векторное представление иконки
+                                *
+                                * @param {string} d - {@link https://developer.mozilla.org/ru/docs/Web/SVG/Attribute/d Этот атрибут определяет форму}
+                                *-->
+                            <path :d="mdi[\`\${the.favicon??'mdiWeb'}\`]"></path>
+                        </svg>
+                    </div>
+                </div>
+                <!--*
+                    * Заголовок названия страницы
+                    *
+                    * @param {boolean} v-if - {@link https://v3.ru.vuejs.org/ru/api/directives.html#v-if Элемент показывается, если есть имя страницы}
+                    * @param {string} [class="text-ellipsis"] - {@link https://tailwindcss.com/docs/text-overflow#ellipsis text-overflow: ellipsis;}
+                    * @param {string} [class="overflow-hidden"] - {@link https://tailwindcss.com/docs/overflow#hiding-content-that-overflows overflow: hidden;}
+                    * @param {string} [class="mb-0"] - {@link https://tailwindcss.com/docs/margin margin-bottom: 0px;}
+                    *-->
+                <h1 v-if="the.name" class="text-ellipsis overflow-hidden prose-title mb-0">{{ the.name }}</h1>
+                <!--*
+                    * Описание страницы
+                    *
+                    * @param {boolean} v-if - {@link https://v3.ru.vuejs.org/ru/api/directives.html#v-if Элемент показывается, если есть описание страницы}
+                    * @param {string} [class="text-ellipsis"] - {@link https://tailwindcss.com/docs/text-overflow#ellipsis text-overflow: ellipsis;}
+                    * @param {string} [class="overflow-hidden"] - {@link https://tailwindcss.com/docs/overflow#hiding-content-that-overflows overflow: hidden;}
+                    * @param {string} [class="mb-0"] - {@link https://tailwindcss.com/docs/margin margin-bottom: 0px;}
+                    *-->
+                <p v-if="the.description" class="text-ellipsis overflow-hidden mb-0">{{ the.description }}</p>
+            </div>
         </div>
     </div>
 </div>
@@ -476,7 +549,7 @@ const options = reactive([
                         <!--*
                             *
                             *-->
-                        <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 w-12 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
+                        <svg viewBox="0 0 24 24" class="fill-current mx-auto my-5 w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
                             <!--*
                                 *
                                 *-->
@@ -523,74 +596,92 @@ const options = reactive([
     label: "Card",
     value: `
 <!--*
-    * @const {string} [class="not-prose"] - Не использовать типографику
-    * @const {string} [class="shadow-2xl"] - Тень
-    * @const {string} [class="rounded-box"] - Округлые края
-    * @const {string} [class="w-56"] - width: 14rem; /* 224px */
-    * @const {string} [class="sm:w-60"] - @media (min-width: 640px) { width: 15rem; /* 240px */ }
-    * @const {string} [class="md:w-64"] - @media (min-width: 768px) { width: 16rem; /* 256px */ }
-    * @const {string} [class="lg:w-72"] - @media (min-width: 1024px) { width: 18rem; /* 288px */ }
-    * @const {string} [class="xl:w-80"] - @media (min-width: 1280px) { width: 20rem; /* 320px */ }
-    * @const {string} [class="2xl:w-96"] - @media (min-width: 1536px) { width: 24rem; /* 384px */ }
+    * Внешний контейнер для отображения тени
+    *
+    * @param {string} [class="not-prose"] - {@link https://tailwindcss.com/docs/typography-plugin#undoing-typography-styles Не использовать типографику}
+    * @param {string} [class="shadow-2xl"] - {@link https://tailwindcss.com/docs/box-shadow Тень}
+    * @param {string} [class="rounded-box"] - {@link https://daisyui.com/docs/utilities/#-1 Округлые края}
+    * @param {string} [class="w-60"] - {@link https://tailwindcss.com/docs/width width: 15rem; /* 240px */}
+    * @param {string} [class="md:w-64"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 768px)} { {@link https://tailwindcss.com/docs/width width: 16rem; /* 256px */} }
+    * @param {string} [class="lg:w-72"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1024px)} { {@link https://tailwindcss.com/docs/width width: 18rem; /* 288px */} }
+    * @param {string} [class="xl:w-80"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1280px)} { {@link https://tailwindcss.com/docs/width width: 20rem; /* 320px */} }
+    * @param {string} [class="2xl:w-96"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1536px)} { {@link https://tailwindcss.com/docs/width width: 24rem; /* 384px */} }
     *-->
-<div class="not-prose shadow-2xl rounded-box w-56 sm:w-60 md:w-64 lg:w-72 xl:w-80 2xl:w-96">
+<div class="not-prose shadow-2xl rounded-box w-60 md:w-64 lg:w-72 xl:w-80 2xl:w-96">
     <!--*
-        * @const {string} [class="card"] - Контейнер карточки
-        * @const {string} [class="glass"] - Эффект матового стекла
+        * Контейнер основной карточки
+        *
+        * @param {string} [class="card"] - {@link https://daisyui.com/components/card/ Контейнер карточки}
+        * @param {string} [class="card-compact"] - {@link https://daisyui.com/components/card/ Компактная карточка}
+        * @param {string} [class="glass"] - {@link https://daisyui.com/docs/utilities/#-2 Эффект матового стекла}
         *-->
-    <div class="card glass">
+    <div class="card card-compact glass">
         <!--*
-            * @const {string} [class="card"] - Контейнер карточки
-            * @const {string} [class="image-full"] - Карточка с картинкой на подложке
+            * Контейнер вложенной карточки, для отображения иконки на фоне изображения
+            *
+            * @param {string} [class="card"] - {@link https://daisyui.com/components/card/ Контейнер карточки}
+            * @param {string} [class="image-full"] - {@link https://daisyui.com/components/card/ Карточка с картинкой на подложке}
             *-->
         <figure class="card image-full">
             <!--*
-                * @type {boolean} v-if - Элемент показывается, если картинка добавлена в свойства страницы
+                * Подложка
+                *
+                * @param {boolean} v-if - {@link https://v3.ru.vuejs.org/ru/api/directives.html#v-if Элемент показывается, если картинка добавлена в свойства страницы}
                 *-->
             <figure v-if="the.image">
                 <!--*
-                    * @type {string} src - URL изображения
-                    * @type {string} alt - Этим атрибутом задаётся альтернативное текстовое описание изображения
-                    * @const {string} [decoding="async"] - Декодировать изображение асинхронно, чтобы уменьшить задержку отображения другого контента
-                    * @const {string} [loading="lazy"] - Откладывает загрузку изображения до того момента, пока оно не достигнет подсчитанного расстояния области просмотра, определяемого браузером
+                    * Изображение подложки
+                    *
+                    * @param {string} src - {@link https://developer.mozilla.org/ru/docs/Web/HTML/Element/img#src URL изображения}
+                    * @param {string} alt - {@link https://developer.mozilla.org/ru/docs/Web/HTML/Element/img#alt Этим атрибутом задаётся альтернативное текстовое описание изображения}
+                    * @param {string} [decoding="async"] - {@link https://developer.mozilla.org/ru/docs/Web/HTML/Element/img#decoding Декодировать изображение асинхронно, чтобы уменьшить задержку отображения другого контента}
+                    * @param {string} [loading="lazy"] - {@link https://developer.mozilla.org/ru/docs/Web/HTML/Element/img#loading Откладывает загрузку изображения до того момента, пока оно не достигнет подсчитанного расстояния области просмотра, определяемого браузером}
                     *-->
                 <img :src="the.image" :alt="the.alt" decoding="async" loading="lazy" />
             </figure>
             <!--*
-                * @const {string} [class="card-body"] - Контейнер контента карточки
+                * Контейнер контента вложенной карточки
+                *
+                * @param {string} [class="card-body"] - {@link https://daisyui.com/components/card/ Контейнер контента карточки}
                 *-->
             <div class="card-body">
                 <!--*
-                    * @const {string} [class="avatar"] - Контейнер аватара
-                    * @const {string} [class="placeholder"] - Для показа текста в аватаре
-                    * @const {string} [class="justify-center"] - justify-content: center;
-                    * @const {string} [class="text-neutral"] - Нейтральный цвет текста
+                    * Аватар для иконки
+                    *
+                    * @param {string} [class="avatar"] - {@link https://daisyui.com/components/avatar/ Контейнер аватара}
+                    * @param {string} [class="placeholder"] - {@link https://daisyui.com/components/avatar/ Для показа текста в аватаре}
+                    * @param {string} [class="justify-center"] - {@link https://tailwindcss.com/docs/justify-content justify-content: center;}
+                    * @param {string} [class="text-neutral"] - {@link https://daisyui.com/docs/colors/ Нейтральный цвет текста}
                     *-->
                 <div class="avatar placeholder justify-center text-neutral">
                     <!--*
-                        * @const {string} [class="glass"] - Эффект матового стекла
-                        * @const {string} {class="rounded-full"] - Полное скругление
-                        * @const {string} [class="w-20"] - width: 5rem; /* 80px */
-                        * @const {string} [class="sm:w-24"] - @media (min-width: 640px) { width: 6rem; /* 96px */ }
-                        * @const {string} [class="md:w-28"] - @media (min-width: 768px) { width: 7rem; /* 112px */ }
-                        * @const {string} [class="lg:w-32"] - @media (min-width: 1024px) { width: 8rem; /* 128px */ }
-                        * @const {string} [class="xl:w-36"] - @media (min-width: 1280px) { width: 9rem; /* 144px */ }
-                        * @const {string} [class="2xl:w-40"] - @media (min-width: 1536px) { width: 10rem; /* 160px */ }
+                        * Подложка иконки
+                        *
+                        * @param {string} [class="glass"] - {@link https://daisyui.com/docs/utilities/#-2 Эффект матового стекла}
+                        * @param {string} {class="rounded-full"] - {@link https://tailwindcss.com/docs/border-radius Полное скругление}
+                        * @param {string} [class="w-24"] - {@link https://tailwindcss.com/docs/width width: 6rem; /* 96px */}
+                        * @param {string} [class="md:w-28"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 768px)} { {@link https://tailwindcss.com/docs/width width: 7rem; /* 112px */} }
+                        * @param {string} [class="lg:w-32"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1024px)} { {@link https://tailwindcss.com/docs/width width: 8rem; /* 128px */} }
+                        * @param {string} [class="xl:w-36"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1280px)} { {@link https://tailwindcss.com/docs/width width: 9rem; /* 144px */} }
+                        * @param {string} [class="2xl:w-40"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1536px)} { {@link https://tailwindcss.com/docs/width width: 10rem; /* 160px */} }
                         *-->
-                    <div class="glass rounded-full w-20 sm:w-24 md:w-28 lg:w-32 xl:w-36 2xl:w-40">
+                    <div class="glass rounded-full w-24 md:w-28 lg:w-32 xl:w-36 2xl:w-40">
                         <!--*
-                            * @type {number[]} [viewBox="0 0 24 24"] - Координаты области просмотра SVG для текущего фрагмента SVG
-                            * @const {string} [class="fill-current"] - fill: currentColor;
-                            * @const {string} [class="w-12"] - width: 3rem; /* 48px */
-                            * @const {string} [class="sm:w-14"] - @media (min-width: 640px) { width: 3.5rem; /* 56px */ }
-                            * @const {string} [class="md:w-16"] - @media (min-width: 768px) { width: 4rem; /* 64px */ }
-                            * @const {string} [class="lg:w-20"] - @media (min-width: 1024px) { width: 5rem; /* 80px */ }
-                            * @const {string} [class="xl:w-24"] - @media (min-width: 1280px) { width: 6rem; /* 96px */ }
-                            * @const {string} [class="2xl:w-28"] - @media (min-width: 1536px) { width: 7rem; /* 112px */ }
+                            * Иконка
+                            *
+                            * @param {number[]} [viewBox="0 0 24 24"] - {@link https://developer.mozilla.org/ru/docs/Web/SVG/Attribute/viewBox Координаты области просмотра SVG для текущего фрагмента SVG}
+                            * @param {string} [class="fill-current"] - {@link https://tailwindcss.com/docs/fill fill: currentColor;}
+                            * @param {string} [class="w-14"] - {@link https://tailwindcss.com/docs/width width: 3.5rem; /* 56px */}
+                            * @param {string} [class="md:w-16"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 768px)} { {@link https://tailwindcss.com/docs/width width: 4rem; /* 64px */} }
+                            * @param {string} [class="lg:w-20"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1024px)} { {@link https://tailwindcss.com/docs/width width: 5rem; /* 80px */} }
+                            * @param {string} [class="xl:w-24"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1280px)} { {@link https://tailwindcss.com/docs/width width: 6rem; /* 96px */} }
+                            * @param {string} [class="2xl:w-28"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1536px)} { {@link https://tailwindcss.com/docs/width width: 7rem; /* 112px */} }
                             *-->
-                        <svg viewBox="0 0 24 24" class="fill-current w-12 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
+                        <svg viewBox="0 0 24 24" class="fill-current w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-28">
                             <!--*
-                                * @type {string} d - Этот атрибут определяет форму
+                                * Векторное представление иконки
+                                *
+                                * @param {string} d - {@link https://developer.mozilla.org/ru/docs/Web/SVG/Attribute/d Этот атрибут определяет форму}
                                 *-->
                             <path :d="mdi[\`\${the.favicon??'mdiWeb'}\`]"></path>
                         </svg>
@@ -599,24 +690,35 @@ const options = reactive([
             </div>
         </figure>
         <!--*
-            * @const {string} [class="card-body"] - Контейнер контента карточки
+            * Контейнер контента основной карточки
+            *
+            * @param {string} [class="card-body"] - {@link https://daisyui.com/components/card/ Контейнер контента карточки}
             *-->
-        <div class="card-body">
+        <div v-if="the.name||the.description" class="card-body">
             <!--*
-                * @const {string} [class="card-title"] - Заголовок карточки
+                * Контейнер заголовка основной карточки
+                *
+                * @param {boolean} v-if - {@link https://v3.ru.vuejs.org/ru/api/directives.html#v-if Элемент показывается, если есть имя или описание страницы}
+                * @param {string} [class="card-title"] - {@link https://daisyui.com/components/card/ Заголовок карточки}
                 *-->
-            <div class="card-title">
+            <div v-if="the.name" class="card-title">
                 <!--*
-                    * @const {string} [class="text-ellipsis"] - text-overflow: ellipsis;
-                    * @const {string} [class="overflow-hidden"] - overflow: hidden;
+                    * Заголовок названия страницы
+                    *
+                    * @param {boolean} v-if - {@link https://v3.ru.vuejs.org/ru/api/directives.html#v-if Элемент показывается, если есть имя страницы}
+                    * @param {string} [class="text-ellipsis"] - {@link https://tailwindcss.com/docs/text-overflow#ellipsis text-overflow: ellipsis;}
+                    * @param {string} [class="overflow-hidden"] - {@link https://tailwindcss.com/docs/overflow#hiding-content-that-overflows overflow: hidden;}
                     *-->
-                <h2 class="text-ellipsis overflow-hidden">{{ the.name }}</h2>
+                <h2 v-if="the.name" class="text-ellipsis overflow-hidden">{{ the.name }}</h2>
             </div>
             <!--*
-                * @const {string} [class="text-ellipsis"] - text-overflow: ellipsis;
-                * @const {string} [class="overflow-hidden"] - overflow: hidden;
+                * Описание страницы
+                *
+                * @param {boolean} v-if - {@link https://v3.ru.vuejs.org/ru/api/directives.html#v-if Элемент показывается, если есть описание страницы}
+                * @param {string} [class="text-ellipsis"] - {@link https://tailwindcss.com/docs/text-overflow#ellipsis text-overflow: ellipsis;}
+                * @param {string} [class="overflow-hidden"] - {@link https://tailwindcss.com/docs/overflow#hiding-content-that-overflows overflow: hidden;}
                 *-->
-            <p class="text-ellipsis overflow-hidden">{{ the.description }}</p>
+            <p v-if="the.description" class="text-ellipsis overflow-hidden">{{ the.description }}</p>
         </div>
     </div>
 </div>`,

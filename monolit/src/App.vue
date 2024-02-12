@@ -88,7 +88,7 @@ v-head(v-if="selectedObject")
           :class="the?.responsive ? 'container' : 'w-full'"
         )
           .prose.prose-sm.w-full.max-w-none(
-            class="sm:prose-sm md:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl"
+            class="md:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl"
           )
             component(:is="theTemplate", :the="the", :mdi="mdi")
 </template>
