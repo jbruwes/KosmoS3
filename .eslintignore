@@ -5,5 +5,4 @@
 /node_modules
 .eslintrc.js
 /quasar.config.*.temporary.compiled*
-/monolit/node_modules
 /public/monolit

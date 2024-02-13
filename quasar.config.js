@@ -28,7 +28,10 @@ export default configure((/* ctx */) => ({
   // app boot file (/src/boot)
   // --> boot files are part of "main.js"
   // https://v2.quasar.dev/quasar-cli/boot-files
-  boot: ["main"],
+  boot: [
+    "main",
+    //  , "uno"
+  ],
 
   // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
   css: ["app.css"],

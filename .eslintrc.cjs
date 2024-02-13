@@ -24,6 +24,7 @@ module.exports = {
     "plugin:sonarjs/recommended",
     "plugin:optimize-regex/recommended",
     "plugin:prettier/recommended",
+    "@unocss",
   ],
 
   plugins: ["simple-import-sort"],

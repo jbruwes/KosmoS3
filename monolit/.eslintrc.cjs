@@ -1,7 +1,10 @@
 module.exports = {
   settings: {
     "import/resolver": {
-      alias: [["@", "./monolit/src"]],
+      alias: [
+        ["@", "./monolit/src"],
+        ["~", "."],
+      ],
     },
   },
 };
