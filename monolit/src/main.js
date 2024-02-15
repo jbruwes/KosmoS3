@@ -24,6 +24,7 @@ import "@fontsource/rubik-mono-one";
 import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 import "glightbox/dist/css/glightbox.css";
+import "./style.css";
 
 // import "@unocss/reset/tailwind.css";
 import Tres from "@tresjs/core";

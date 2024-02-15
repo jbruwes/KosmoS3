@@ -12,8 +12,8 @@
   )
     .hero-overlay(v-if="the.overlay")
     .prose.prose-sm(
-      :class="the.responsive ? 'container' : 'w-full max-w-none'",
-      class="sm:prose-sm md:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl"
+      :class="the?.responsive ? 'container' : 'w-full max-w-none'",
+      class="md:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl"
     )
       component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
 </template>
