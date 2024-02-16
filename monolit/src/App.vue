@@ -84,7 +84,7 @@ v-head(v-if="selectedObject")
         label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
           svg.h-6.w-6
             path(:d="mdi.mdiClose")
-        .grid.w-full.flex-1
+        .grid.w-full.flex-auto
           .hero.overflow-x-hidden
             .prose.prose-sm(
               :class="the?.responsive ? 'container' : 'w-full max-w-none'",

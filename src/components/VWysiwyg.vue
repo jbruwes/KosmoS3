@@ -431,17 +431,20 @@ const options = reactive([
         *-->
     <!--div class="hero-overlay"></div-->
     <!--*
+        * Контейнер контента
         *
+        * @param {string} [class="hero-content"] - {@link https://daisyui.com/components/hero/ Контейнер для контента}
+        * @param {string} [class="w-full"] - {@link https://tailwindcss.com/docs/width width: 100%;}
         *-->
-    <div class="hero-content overflow-x-hidden w-full">
+    <div class="hero-content w-full">
         <!--*
             * Контейнер вложенной карточки
             *
             * @param {string} [class="card"] - {@link https://daisyui.com/components/card/ Контейнер карточки}
             * @param {string} [class="glass"] - {@link https://daisyui.com/docs/utilities/#-2 Эффект матового стекла}
-            * @param {string} [class="w-full"] - {@link https://tailwindcss.com/docs/width width: 100%;}
+            * @param {string} [class="flex-auto"] - {@link https://tailwindcss.com/docs/flex#auto flex: 1 1 auto;}
             *-->
-        <div class="card glass w-full">
+        <div class="card glass flex-auto">
             <!--*
                 * Контейнер контента вложенной карточки
                 *
@@ -643,17 +646,17 @@ const options = reactive([
                 * Контейнер контента вложенной карточки
                 *
                 * @param {string} [class="card-body"] - {@link https://daisyui.com/components/card/ Контейнер контента карточки}
+                * @param {string} [class="items-center"] - {@link https://tailwindcss.com/docs/align-items align-items: center;}
                 *-->
-            <div class="card-body">
+            <div class="card-body items-center">
                 <!--*
                     * Аватар для иконки
                     *
                     * @param {string} [class="avatar"] - {@link https://daisyui.com/components/avatar/ Контейнер аватара}
                     * @param {string} [class="placeholder"] - {@link https://daisyui.com/components/avatar/ Для показа текста в аватаре}
-                    * @param {string} [class="justify-center"] - {@link https://tailwindcss.com/docs/justify-content justify-content: center;}
                     * @param {string} [class="text-neutral"] - {@link https://daisyui.com/docs/colors/ Нейтральный цвет текста}
                     *-->
-                <div class="avatar placeholder justify-center text-neutral">
+                <div class="avatar placeholder text-neutral">
                     <!--*
                         * Подложка иконки
                         *
