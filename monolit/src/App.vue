@@ -61,7 +61,7 @@ v-head(v-if="selectedObject")
     name="google-site-verification",
     :content="settings.google"
   )
-.drawer(ref="twind", :data-theme="settings?.theme")
+.drawer(:data-theme="settings?.theme")
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
   .drawer-content.carousel-vertical(class="h-[100dvh]", @scroll.passive="start")
     .navbar.bg-base-100.rounded-box.absolute.left-6.right-6.top-6.z-40.opacity-0.shadow-xl.transition-opacity.duration-1000.ease-out(
@@ -96,7 +96,6 @@ v-head(v-if="selectedObject")
 import "daisyui/dist/full.css";
 
 import * as mdi from "@mdi/js";
-// import { setup } from "@twind/core";
 import {
   get,
   set,
@@ -106,14 +105,9 @@ import {
   useTimeout,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import {
-  computed,
-  // onMounted,
-  ref,
-} from "vue";
+import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-// import config from "~/twind.config";
 import app from "./stores/app";
 import data from "./stores/data";
 
@@ -129,7 +123,6 @@ const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
 const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
-const twind = ref();
 const canonical = computed(
   () => `${get(location, "origin")}/${get(selectedObject, "urn")}`,
 );
@@ -145,7 +138,4 @@ set(uri, "");
 router.beforeEach(() => {
   set(drawer, false);
 });
-// onMounted(() => {
-//   setup(config, undefined, get(twind));
-// });
 </script>

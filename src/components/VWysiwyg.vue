@@ -6,7 +6,7 @@ div
     :dense="$q.screen.lt.md",
     :toolbar="editorTlb",
     :fonts="editorFnt",
-    content-class="col prose max-w-none",
+    content-class="col prose max-w-none full-width text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
     flat,
     placeholder="Добавьте контент на вашу страницу...",
     :definitions="editorDef",
@@ -108,7 +108,6 @@ import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 import "daisyui/dist/full.css";
 
-import { setup } from "@twind/core";
 import {
   get,
   isDefined,
@@ -122,7 +121,6 @@ import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
 import { onMounted, reactive, ref, watch } from "vue";
 
-import config from "@/../twind.config";
 import storeApp from "@/stores/app";
 import storeS3 from "@/stores/s3";
 
@@ -230,28 +228,28 @@ const editorDef = reactive({
     param: "H1",
     icon: i.heading1 || i.heading,
     tip: e.heading1,
-    htmlTip: `<span class="prose"><h1 class="q-ma-none">${e.heading1}</h1></span>`,
+    htmlTip: `<span class="prose"><h1 class="no-margin">${e.heading1}</h1></span>`,
   },
   h2: {
     cmd: "formatBlock",
     param: "H2",
     icon: i.heading2 || i.heading,
     tip: e.heading2,
-    htmlTip: `<span class="prose"><h2 class="q-ma-none">${e.heading2}</h2></span>`,
+    htmlTip: `<span class="prose"><h2 class="no-margin">${e.heading2}</h2></span>`,
   },
   h3: {
     cmd: "formatBlock",
     param: "H3",
     icon: i.heading3 || i.heading,
     tip: e.heading3,
-    htmlTip: `<span class="prose"><h3 class="q-ma-none">${e.heading3}</h3></span>`,
+    htmlTip: `<span class="prose"><h3 class="no-margin">${e.heading3}</h3></span>`,
   },
   h4: {
     cmd: "formatBlock",
     param: "H4",
     icon: i.heading4 || i.heading,
     tip: e.heading4,
-    htmlTip: `<span class="prose"><h4 class="q-ma-none">${e.heading4}</h4></span>`,
+    htmlTip: `<span class="prose"><h4 class="no-margin">${e.heading4}</h4></span>`,
   },
   p: {
     cmd: "formatBlock",
@@ -381,7 +379,6 @@ const editorFnt = reactive({
 });
 onMounted(() => {
   const { theme } = get(selectedObject) ?? {};
-  setup(config, undefined, get(editorRef).getContentEl());
   get(editorRef).getContentEl().dataset.theme = theme;
 });
 watch(
@@ -393,7 +390,6 @@ watch(
 /** ShowDialog */
 const showDialog = () => {
   const { theme } = get(selectedObject) ?? {};
-  setup(config, undefined, get(modalRef));
   get(modalRef).dataset.theme = theme;
 };
 const options = reactive([
