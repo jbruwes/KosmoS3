@@ -74,6 +74,7 @@
     "@twind/preset-tailwind-forms": "^1.1.2",
     "@twind/preset-typography": "^1.0.7",
     "@unhead/vue": "^1.8.10",
+    "@unocss/extractor-pug": "^0.58.5",
     "@unocss/preset-typography": "^0.58.5",
     "@unocss/preset-uno": "^0.58.5",
     "@unocss/reset": "^0.58.5",

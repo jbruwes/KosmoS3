@@ -76,10 +76,10 @@ v-head(v-if="selectedObject")
     router-view
   .drawer-side.z-50
     .hero.min-h-full(
-      :style="the.image && the.background ? { backgroundImage: `url(${the.image})` } : {}",
-      :data-theme="the.theme"
+      :style="the?.image && the?.background ? { backgroundImage: `url(${the?.image})` } : {}",
+      :data-theme="the?.theme"
     )
-      .hero-overlay(v-if="the.overlay")
+      .hero-overlay(v-if="the?.overlay")
       .flex.min-h-full.w-full.flex-col
         label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
           svg.h-6.w-6
@@ -90,13 +90,13 @@ v-head(v-if="selectedObject")
               :class="the?.responsive ? 'container' : 'w-full max-w-none'",
               class="md:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl"
             )
-              component(:is="theTemplate", :the="the", :mdi="mdi")
+              component(v-if="the", :is="theTemplate", :the="the", :mdi="mdi")
 </template>
 <script setup>
 import "daisyui/dist/full.css";
 
 import * as mdi from "@mdi/js";
-import { setup } from "@twind/core";
+// import { setup } from "@twind/core";
 import {
   get,
   set,
@@ -106,10 +106,14 @@ import {
   useTimeout,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import {
+  computed,
+  // onMounted,
+  ref,
+} from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import config from "~/twind.config";
+// import config from "~/twind.config";
 import app from "./stores/app";
 import data from "./stores/data";
 
@@ -119,7 +123,7 @@ const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const route = useRoute();
 const { flatTree, css, js, uri, script, style, settings } = storeToRefs(data());
-const the = computed(() => get(flatTree, 0) ?? {});
+const the = computed(() => get(flatTree, 0));
 const theTemplate = computed(() => getTemplate(get(the)));
 const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
 const tagStyle = ref("style");
@@ -141,7 +145,7 @@ set(uri, "");
 router.beforeEach(() => {
   set(drawer, false);
 });
-onMounted(() => {
-  setup(config, undefined, get(twind));
-});
+// onMounted(() => {
+//   setup(config, undefined, get(twind));
+// });
 </script>

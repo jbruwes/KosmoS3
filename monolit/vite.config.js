@@ -1,7 +1,11 @@
 import { fileURLToPath, URL } from "node:url";
 
 import { templateCompilerOptions } from "@tresjs/core";
+import extractorPug from "@unocss/extractor-pug";
 import vue from "@vitejs/plugin-vue";
+import UnoCSS from "unocss/vite";
+
+import unocssConfig from "../uno.config";
 
 // https://vitejs.dev/config/
 export default {
@@ -9,6 +13,7 @@ export default {
     vue({
       ...templateCompilerOptions,
     }),
+    UnoCSS({ ...unocssConfig, extractors: [extractorPug()] }),
   ],
   resolve: {
     alias: {

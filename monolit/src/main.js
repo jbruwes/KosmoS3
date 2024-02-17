@@ -25,8 +25,10 @@ import "@fontsource/rubik";
 import "@fontsource/tenor-sans";
 import "glightbox/dist/css/glightbox.css";
 import "./style.css";
+import "@unocss/reset/tailwind.css";
+// eslint-disable-next-line import/no-unresolved
+import "virtual:uno.css";
 
-// import "@unocss/reset/tailwind.css";
 import Tres from "@tresjs/core";
 import { tsParticles } from "@tsparticles/engine";
 import { loadBigCirclesPreset } from "@tsparticles/preset-big-circles";
@@ -45,19 +47,19 @@ import { loadStarsPreset } from "@tsparticles/preset-stars";
 import { loadTrianglesPreset } from "@tsparticles/preset-triangles";
 import { createHead } from "@unhead/vue";
 import { Head } from "@unhead/vue/components";
-// import initUnocssRuntime from "@unocss/runtime";
+import initUnocssRuntime from "@unocss/runtime";
 import { watchOnce } from "@vueuse/core";
 import { createPinia, storeToRefs } from "pinia";
 import { createApp } from "vue";
 import VueGtag from "vue-gtag";
 import VueYandexMetrika from "vue3-yandex-metrika";
 
-// import unocssConfig from "~/uno.config";
+import unocssConfig from "~/uno.config";
+
 import App from "./App.vue";
 import VParticles from "./components/VParticles.vue";
 import router from "./router";
 import dataStore from "./stores/data";
-
 // eslint-disable-next-line no-console
 console.info(
   "👨‍🚀",
@@ -81,10 +83,11 @@ loadSnowPreset(tsParticles);
 loadSquaresPreset(tsParticles);
 loadStarsPreset(tsParticles);
 loadTrianglesPreset(tsParticles);
-// initUnocssRuntime({
-//   autoPrefix: true,
-//   defaults: unocssConfig,
-// });
+initUnocssRuntime({
+  autoPrefix: true,
+  defaults: unocssConfig,
+  bypassDefined: true,
+});
 const app = createApp(App);
 app.use(createPinia());
 const { flatTree, settings } = storeToRefs(dataStore());

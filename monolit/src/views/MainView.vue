@@ -92,7 +92,7 @@ watch(
         block: "start",
         inline: "nearest",
       });
-    });
+    }, 1000);
   },
 );
 </script>
