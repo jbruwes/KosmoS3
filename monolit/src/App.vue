@@ -86,9 +86,9 @@ v-head(v-if="selectedObject")
             path(:d="mdi.mdiClose")
         .grid.w-full.flex-auto
           .hero.overflow-x-hidden
-            .prose.prose-sm(
+            .prose.text-sm(
               :class="the?.responsive ? 'container' : 'w-full max-w-none'",
-              class="md:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl"
+              class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
             )
               component(v-if="the", :is="theTemplate", :the="the", :mdi="mdi")
 </template>

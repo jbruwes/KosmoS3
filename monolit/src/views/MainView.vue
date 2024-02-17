@@ -11,9 +11,9 @@
     :data-theme="the.theme"
   )
     .hero-overlay(v-if="the.overlay")
-    .prose.prose-sm(
+    .prose.text-sm(
       :class="the?.responsive ? 'container' : 'w-full max-w-none'",
-      class="md:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl"
+      class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
     )
       component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
 </template>
@@ -55,44 +55,40 @@ const scrollToElementCurrent = useArrayFind(
   itemRefs,
   ({ id }) => id === get(selectedObject, "id"),
 );
-watch(
+const scrollToElement = computed(
   () => get(scrollToElementCurrent) ?? get(scrollToElementFirst),
-  (value) => {
-    setTimeout(() => {
-      GLightbox({
-        touchNavigation: true,
-        loop: true,
-        autoplayVideos: true,
-        zoomable: false,
-        selector: [
-          '$=".apng"',
-          '$=".avif"',
-          '$=".gif"',
-          '$=".jpg"',
-          '$=".jpeg"',
-          '$=".jfif"',
-          '$=".pjpeg"',
-          '$=".pjp"',
-          '$=".png"',
-          '$=".svg"',
-          '$=".webp"',
-          '^="https://www.youtube.com/embed/"',
-          '^="https://www.youtube.com/watch?v="',
-          '^="https://www.youtu.be/embed/"',
-          '^="https://www.youtu.be/watch?v="',
-          '^="https://www.youtube-nocookie.com/embed/"',
-          '^="https://www.youtube-nocookie.com/watch?v="',
-          '^="https://vimeo.com/"',
-        ]
-          .map((el) => `a[href${el}]`)
-          .join(),
-      });
-      value?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-        inline: "nearest",
-      });
-    }, 1000);
-  },
 );
+watch(scrollToElement, (value) => {
+  setTimeout(() => {
+    value?.scrollIntoView({ behavior: "smooth" });
+  }, 500);
+  GLightbox({
+    touchNavigation: true,
+    loop: true,
+    autoplayVideos: true,
+    zoomable: false,
+    selector: [
+      '$=".apng"',
+      '$=".avif"',
+      '$=".gif"',
+      '$=".jpg"',
+      '$=".jpeg"',
+      '$=".jfif"',
+      '$=".pjpeg"',
+      '$=".pjp"',
+      '$=".png"',
+      '$=".svg"',
+      '$=".webp"',
+      '^="https://www.youtube.com/embed/"',
+      '^="https://www.youtube.com/watch?v="',
+      '^="https://www.youtu.be/embed/"',
+      '^="https://www.youtu.be/watch?v="',
+      '^="https://www.youtube-nocookie.com/embed/"',
+      '^="https://www.youtube-nocookie.com/watch?v="',
+      '^="https://vimeo.com/"',
+    ]
+      .map((el) => `a[href${el}]`)
+      .join(),
+  });
+});
 </script>
