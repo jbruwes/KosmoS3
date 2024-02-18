@@ -30,21 +30,6 @@ import "@unocss/reset/tailwind.css";
 import "virtual:uno.css";
 
 import Tres from "@tresjs/core";
-import { tsParticles } from "@tsparticles/engine";
-import { loadBigCirclesPreset } from "@tsparticles/preset-big-circles";
-import { loadBubblesPreset } from "@tsparticles/preset-bubbles";
-import { loadConfettiPreset } from "@tsparticles/preset-confetti";
-import { loadFirePreset } from "@tsparticles/preset-fire";
-import { loadFireflyPreset } from "@tsparticles/preset-firefly";
-import { loadFireworksPreset } from "@tsparticles/preset-fireworks";
-import { loadFountainPreset } from "@tsparticles/preset-fountain";
-import { loadHyperspacePreset } from "@tsparticles/preset-hyperspace";
-import { loadLinksPreset } from "@tsparticles/preset-links";
-import { loadSeaAnemonePreset } from "@tsparticles/preset-sea-anemone";
-import { loadSnowPreset } from "@tsparticles/preset-snow";
-import { loadSquaresPreset } from "@tsparticles/preset-squares";
-import { loadStarsPreset } from "@tsparticles/preset-stars";
-import { loadTrianglesPreset } from "@tsparticles/preset-triangles";
 import { createHead } from "@unhead/vue";
 import { Head } from "@unhead/vue/components";
 import initUnocssRuntime from "@unocss/runtime";
@@ -57,7 +42,6 @@ import VueYandexMetrika from "vue3-yandex-metrika";
 import unocssConfig from "~/uno.config";
 
 import App from "./App.vue";
-import VParticles from "./components/VParticles.vue";
 import router from "./router";
 import dataStore from "./stores/data";
 // eslint-disable-next-line no-console
@@ -68,21 +52,6 @@ console.info(
   `ver:${__APP_VERSION__}`,
   "https://kosmos3.ru",
 );
-tsParticles.init();
-loadBigCirclesPreset(tsParticles);
-loadBubblesPreset(tsParticles);
-loadConfettiPreset(tsParticles);
-loadFirePreset(tsParticles);
-loadFireflyPreset(tsParticles);
-loadFireworksPreset(tsParticles);
-loadFountainPreset(tsParticles);
-loadHyperspacePreset(tsParticles);
-loadLinksPreset(tsParticles);
-loadSeaAnemonePreset(tsParticles);
-loadSnowPreset(tsParticles);
-loadSquaresPreset(tsParticles);
-loadStarsPreset(tsParticles);
-loadTrianglesPreset(tsParticles);
 initUnocssRuntime({
   autoPrefix: true,
   defaults: unocssConfig,
@@ -95,7 +64,6 @@ app.use(router);
 app.use(createHead());
 app.use(Tres);
 app.component("VHead", Head);
-app.component("VParticles", VParticles);
 app.mount("#app");
 watchOnce(flatTree, (value) => {
   value.forEach(({ path, id: name, loc }) => {

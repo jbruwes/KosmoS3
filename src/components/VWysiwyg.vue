@@ -397,17 +397,6 @@ const options = reactive([
     label: "Hero",
     value: `
 <!--*
-    * При необходимости контейнер транспаранта с подложкой можно заменить на контейнер транспаранта с системой частиц
-    *
-    * @param {string} [class="hero"] - {@link https://daisyui.com/components/hero/ Транспарант}
-    * @param {string} [class="shadow-2xl"] - {@link https://tailwindcss.com/docs/box-shadow Тень}
-    * @param {string} [class="rounded-box"] - {@link https://daisyui.com/docs/utilities/#-1 Округлые края}
-    * @param {string} [class="min-h-[80dvh]"] - {@link https://tailwindcss.com/docs/min-height min-height: 80dvh;}
-    * @param {string} [class="min-w-[15rem]"] - {@link https://tailwindcss.com/docs/min-width min-width: 15rem;}
-    * @param {string} [effect="bigCircles"] - {@link https://github.com/tsparticles/presets?tab=readme-ov-file#big-circles Эффект}
-    *-->
-<!--v-particles class="hero shadow-2xl rounded-box min-h-[80dvh] min-w-[15rem]" effect="bigCircles"-->
-<!--*
     * Контейнер транспаранта
     *
     * @param {string} [class="col"] - {@link https://quasar.dev/layout/grid/column Колонка}
@@ -511,8 +500,7 @@ const options = reactive([
             </div>
         </div>
     </div>
-</div>
-<!--/v-particles-->`,
+</div>`,
   },
   {
     label: "Hero Slider",
