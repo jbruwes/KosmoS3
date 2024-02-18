@@ -40,6 +40,7 @@ export default defineStore("app", () => {
       ctx.data = [
         ...new Set([
           rootFileName,
+          "robots.txt",
           ...Object.values(ctx.data).map(({ file }) => file),
           ...ctx.data[rootFileName].css,
         ]),

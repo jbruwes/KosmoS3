@@ -81,31 +81,6 @@ div
 </template>
 
 <script setup>
-import "@fontsource/arsenal";
-import "@fontsource/bad-script";
-import "@fontsource/caveat";
-import "@fontsource/comfortaa";
-import "@fontsource/cormorant-garamond";
-import "@fontsource/cormorant-infant";
-import "@fontsource/cormorant-sc";
-import "@fontsource/cormorant-unicase";
-import "@fontsource/cormorant";
-import "@fontsource/jura";
-import "@fontsource/marck-script";
-import "@fontsource/montserrat";
-import "@fontsource/montserrat-alternates";
-import "@fontsource/open-sans-condensed";
-import "@fontsource/open-sans";
-import "@fontsource/oswald";
-import "@fontsource/pattaya";
-import "@fontsource/poiret-one";
-import "@fontsource/roboto-condensed";
-import "@fontsource/roboto-mono";
-import "@fontsource/roboto-slab";
-import "@fontsource/roboto";
-import "@fontsource/rubik-mono-one";
-import "@fontsource/rubik";
-import "@fontsource/tenor-sans";
 import "daisyui/dist/full.css";
 
 import {
@@ -123,6 +98,7 @@ import { onMounted, reactive, ref, watch } from "vue";
 
 import storeApp from "@/stores/app";
 import storeS3 from "@/stores/s3";
+import { fonts } from "~/uno.config";
 
 const template = ref(false);
 const routerLink = ref(false);
@@ -308,31 +284,7 @@ const editorTlb = reactive([
         "times_new_roman",
         "verdana",
 
-        "arsenal",
-        "bad_script",
-        "caveat",
-        "comfortaa",
-        "cormorant_garamond",
-        "cormorant_infant",
-        "cormorant_sc",
-        "cormorant_unicase",
-        "cormorant",
-        "jura",
-        "marck_script",
-        "montserrat",
-        "montserrat_alternates",
-        "open_sans_condensed",
-        "open_sans",
-        "oswald",
-        "pattaya",
-        "poiret_one",
-        "roboto_condensed",
-        "roboto_mono",
-        "roboto_slab",
-        "roboto",
-        "rubik_mono_one",
-        "rubik",
-        "tenor_sans",
+        ...Object.keys(fonts),
       ],
     },
     "removeFormat",
@@ -351,31 +303,7 @@ const editorFnt = reactive({
   times_new_roman: "Times New Roman",
   verdana: "Verdana",
 
-  arsenal: "Arsenal",
-  bad_script: "Bad Script",
-  caveat: "Caveat",
-  comfortaa: "Comfortaa",
-  cormorant_garamond: "Cormorant Garamond",
-  cormorant_infant: "Cormorant Infant",
-  cormorant_sc: "Cormorant SC",
-  cormorant_unicase: "Cormorant Unicase",
-  cormorant: "Cormorant",
-  jura: "Jura",
-  marck_script: "Marck Script",
-  montserrat: "Montserrat",
-  montserrat_alternates: "Montserrat Alternates",
-  open_sans_condensed: "Open Sans Condensed",
-  open_sans: "Open Sans",
-  oswald: "Oswald",
-  pattaya: "Pattaya",
-  poiret_one: "Poiret One",
-  roboto_condensed: "Roboto Condensed",
-  roboto_mono: "Roboto Mono",
-  roboto_slab: "Roboto Slab",
-  roboto: "Roboto",
-  rubik_mono_one: "Rubik Mono One",
-  rubik: "Rubik",
-  tenor_sans: "Tenor Sans",
+  ...fonts,
 });
 onMounted(() => {
   const { theme } = get(selectedObject) ?? {};
