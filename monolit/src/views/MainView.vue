@@ -6,7 +6,7 @@
   ref="itemRefs",
   class="min-h-[100dvh]"
 )
-  .hero.overflow-x-hidden(
+  .hero.overflow-hidden(
     :style="the.image && the.background ? { backgroundImage: `url(${the.image})` } : {}",
     :data-theme="the.theme"
   )

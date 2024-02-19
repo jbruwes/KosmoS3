@@ -20,7 +20,7 @@ div
     persistent,
     @show="showDialog"
   )
-    q-card.column
+    q-card.column.w-full
       q-card-section.row.q-pb-none.items-center
         .text-h6 Выбор компонента для вставки
         q-space
@@ -34,13 +34,13 @@ div
           emit-value,
           map-options
         )
-      q-card-section.col.column
-        q-card.col.column(flat, bordered)
-          q-card-section.col.column
+      q-card-section.col.column.w-full
+        q-card.col.column.w-full(flat, bordered)
+          q-card-section.col.column.w-full
             // eslint-disable vue/no-v-html
-            .col.prose.column.q-pa-xl.max-w-full.items-center.justify-center(
+            .col.prose.column.q-pa-xl.w-full.max-w-none.overflow-auto(
               ref="modalRef",
-              class="*:min-h-fit",
+              class="[&>*]:m-auto [&>*]:!min-h-fit [&>*]:min-w-fit",
               v-html="model"
             )
             // eslint-enable vue/no-v-html
@@ -327,16 +327,16 @@ const options = reactive([
 <!--*
     * Контейнер транспаранта
     *
-    * @param {string} [class="col"] - {@link https://quasar.dev/layout/grid/column Колонка}
     * @param {string} [class="hero"] - {@link https://daisyui.com/components/hero/ Транспарант}
     * @param {string} [class="shadow-2xl"] - {@link https://tailwindcss.com/docs/box-shadow Тень}
     * @param {string} [class="rounded-box"] - {@link https://daisyui.com/docs/utilities/#-1 Округлые края}
+    * @param {string} [class="flex-auto"] - {@link https://tailwindcss.com/docs/flex#auto flex: 1 1 auto;}
     * @param {string} [class="min-h-[80dvh]"] - {@link https://tailwindcss.com/docs/min-height min-height: 80dvh;}
     * @param {string} [class="min-w-[15rem]"] - {@link https://tailwindcss.com/docs/min-width min-width: 15rem;}
     * @param {string} [class="bg-neutral-content"] - {@link https://daisyui.com/docs/colors/ Подложка нейтрального цвета}
     * @param {string} style - {@link https://developer.mozilla.org/ru/docs/Web/CSS/background-image Изображение подложки}
     *-->
-<div class="col hero shadow-2xl rounded-box min-h-[80dvh] min-w-[15rem] bg-neutral-content" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
+<div class="hero shadow-2xl rounded-box flex-auto min-h-[80dvh] bg-neutral-content" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
     <!--*
         * При необходимости можно включить оверлей
         *
@@ -516,13 +516,14 @@ const options = reactive([
     * @param {string} [class="not-prose"] - {@link https://tailwindcss.com/docs/typography-plugin#undoing-typography-styles Не использовать типографику}
     * @param {string} [class="shadow-2xl"] - {@link https://tailwindcss.com/docs/box-shadow Тень}
     * @param {string} [class="rounded-box"] - {@link https://daisyui.com/docs/utilities/#-1 Округлые края}
+    * @param {string} [class="m-auto"] - {@link https://tailwindcss.com/docs/margin margin: auto;}
     * @param {string} [class="w-60"] - {@link https://tailwindcss.com/docs/width width: 15rem; /* 240px */}
     * @param {string} [class="md:w-64"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 768px)} { {@link https://tailwindcss.com/docs/width width: 16rem; /* 256px */} }
     * @param {string} [class="lg:w-72"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1024px)} { {@link https://tailwindcss.com/docs/width width: 18rem; /* 288px */} }
     * @param {string} [class="xl:w-80"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1280px)} { {@link https://tailwindcss.com/docs/width width: 20rem; /* 320px */} }
     * @param {string} [class="2xl:w-96"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1536px)} { {@link https://tailwindcss.com/docs/width width: 24rem; /* 384px */} }
     *-->
-<div class="not-prose shadow-2xl rounded-box w-60 md:w-64 lg:w-72 xl:w-80 2xl:w-96">
+<div class="not-prose shadow-2xl rounded-box m-auto w-60 md:w-64 lg:w-72 xl:w-80 2xl:w-96">
     <!--*
         * Контейнер основной карточки
         *

@@ -125,7 +125,6 @@ const router = useRouter();
 const $q = useQuasar();
 const { state } = storeToRefs(storeApp());
 const { S3, bucket, wendpoint } = storeToRefs(storeS3());
-set(S3, null);
 set(bucket, "");
 set(wendpoint, "");
 get(state).rightDrawer = null;

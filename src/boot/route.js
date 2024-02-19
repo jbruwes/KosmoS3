@@ -1,4 +1,4 @@
-import { get } from "@vueuse/core";
+import { isDefined, set } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import storeApp from "@/stores/app";
@@ -16,10 +16,11 @@ export default ({ router }) => {
 
   router.beforeEach(({ path }, from, next) => {
     if (
-      (get(S3) && !privateTo.includes(path)) ||
-      (!get(S3) && !publicTo.includes(path))
+      (isDefined(S3) && !privateTo.includes(path)) ||
+      (!isDefined(S3) && !publicTo.includes(path))
     )
       next("/");
     else next();
+    if (path === "/") set(S3, undefined);
   });
 };
