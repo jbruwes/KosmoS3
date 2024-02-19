@@ -327,6 +327,7 @@ const options = reactive([
 <!--*
     * Контейнер транспаранта
     *
+    * @param {string} [v-motion-roll-visible-bottom] - {@link https://motion.vueuse.org/features/presets Анимация}
     * @param {string} [class="hero"] - {@link https://daisyui.com/components/hero/ Транспарант}
     * @param {string} [class="shadow-2xl"] - {@link https://tailwindcss.com/docs/box-shadow Тень}
     * @param {string} [class="rounded-box"] - {@link https://daisyui.com/docs/utilities/#-1 Округлые края}
@@ -336,7 +337,7 @@ const options = reactive([
     * @param {string} [class="bg-neutral-content"] - {@link https://daisyui.com/docs/colors/ Подложка нейтрального цвета}
     * @param {string} style - {@link https://developer.mozilla.org/ru/docs/Web/CSS/background-image Изображение подложки}
     *-->
-<div class="hero shadow-2xl rounded-box flex-auto min-h-[80dvh] bg-neutral-content" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
+<div v-motion-roll-visible-bottom class="hero shadow-2xl rounded-box flex-auto min-h-[80dvh] bg-neutral-content" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
     <!--*
         * При необходимости можно включить оверлей
         *
@@ -513,6 +514,7 @@ const options = reactive([
 <!--*
     * Внешний контейнер для отображения тени
     *
+    * @param {string} [v-motion-roll-visible-bottom] - {@link https://motion.vueuse.org/features/presets Анимация}
     * @param {string} [class="not-prose"] - {@link https://tailwindcss.com/docs/typography-plugin#undoing-typography-styles Не использовать типографику}
     * @param {string} [class="shadow-2xl"] - {@link https://tailwindcss.com/docs/box-shadow Тень}
     * @param {string} [class="rounded-box"] - {@link https://daisyui.com/docs/utilities/#-1 Округлые края}
@@ -523,7 +525,7 @@ const options = reactive([
     * @param {string} [class="xl:w-80"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1280px)} { {@link https://tailwindcss.com/docs/width width: 20rem; /* 320px */} }
     * @param {string} [class="2xl:w-96"] - {@link https://tailwindcss.com/docs/responsive-design @media (min-width: 1536px)} { {@link https://tailwindcss.com/docs/width width: 24rem; /* 384px */} }
     *-->
-<div class="not-prose shadow-2xl rounded-box m-auto w-60 md:w-64 lg:w-72 xl:w-80 2xl:w-96">
+<div v-motion-roll-visible-bottom class="not-prose shadow-2xl rounded-box m-auto w-60 md:w-64 lg:w-72 xl:w-80 2xl:w-96">
     <!--*
         * Контейнер основной карточки
         *
