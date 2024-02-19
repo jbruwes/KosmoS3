@@ -56,6 +56,8 @@ import { storeToRefs } from "pinia";
 
 import app from "@/stores/app";
 
-const { settings, state, themes } = storeToRefs(app());
+const storeApp = app();
+const { settings, state } = storeToRefs(storeApp);
+const { themes } = storeApp;
 get(state).rightDrawer = null;
 </script>

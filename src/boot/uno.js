@@ -3,14 +3,14 @@
 import "virtual:uno.css";
 
 import initUnocssRuntime from "@unocss/runtime";
-import { boot } from "quasar/wrappers";
 
 import unocssConfig from "~/uno.config";
 
-export default boot(() => {
+/** InitUnocssRuntime */
+export default () => {
   initUnocssRuntime({
     autoPrefix: true,
     defaults: unocssConfig,
     bypassDefined: true,
   });
-});
+};

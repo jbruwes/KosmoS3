@@ -9,6 +9,7 @@ import { createHead } from "@unhead/vue";
 import { Head } from "@unhead/vue/components";
 import initUnocssRuntime from "@unocss/runtime";
 import { watchOnce } from "@vueuse/core";
+import { MotionPlugin } from "@vueuse/motion";
 import { createPinia, storeToRefs } from "pinia";
 import { createApp } from "vue";
 import VueGtag from "vue-gtag";
@@ -38,6 +39,7 @@ const { flatTree, settings } = storeToRefs(dataStore());
 app.use(router);
 app.use(createHead());
 app.use(Tres);
+app.use(MotionPlugin);
 app.component("VHead", Head);
 app.mount("#app");
 watchOnce(flatTree, (value) => {

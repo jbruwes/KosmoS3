@@ -1,5 +1,4 @@
-import { boot } from "quasar/wrappers";
-
-export default boot(() => {
+/** Убираем лоадер */
+export default () => {
   document.getElementById("loader")?.remove();
-});
+};

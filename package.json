@@ -38,6 +38,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "@vueuse/core": "^10.7.2",
     "@vueuse/math": "^10.7.2",
+    "@vueuse/motion": "^2.0.0",
     "ace-builds": "^1.32.6",
     "autoprefixer": "^10.4.17",
     "daisyui": "^4.7.2",

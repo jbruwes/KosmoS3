@@ -205,8 +205,10 @@ import storeS3 from "@/stores/s3";
 
 const $q = useQuasar();
 const s3Store = storeS3();
-const { state, content, flatTree, selectedValue, themes, selectedObject } =
-  storeToRefs(storeApp());
+const appStore = storeApp();
+const { state, content, flatTree, selectedValue, selectedObject } =
+  storeToRefs(appStore);
+const { themes } = appStore;
 const { base } = storeToRefs(s3Store);
 const { putFile } = s3Store;
 const changefreq = reactive([
