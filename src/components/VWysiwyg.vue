@@ -354,11 +354,17 @@ const options = reactive([
         <!--*
             * Контейнер вложенной карточки
             *
+            * @param {string} to - {@link https://v3.router.vuejs.org/ru/api/#router-link Линк}
             * @param {string} [class="card"] - {@link https://daisyui.com/components/card/ Контейнер карточки}
             * @param {string} [class="glass"] - {@link https://daisyui.com/docs/utilities/#-2 Эффект матового стекла}
             * @param {string} [class="flex-auto"] - {@link https://tailwindcss.com/docs/flex#auto flex: 1 1 auto;}
+            * @param {string} [class="transition-all"] - {@link https://tailwindcss.com/docs/transition-property transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms;}
+            * @param {string} [class="duration-200"] - {@link https://tailwindcss.com/docs/transition-duration transition-duration: 200ms;}
+            * @param {string} [class="hover:-translate-y-1"] - {@link https://tailwindcss.com/docs/translate transform: translateY(-0.25rem);}
+            * @param {string} [class="!no-underline"] - {@link https://tailwindcss.com/docs/text-decoration text-decoration-line: none;}
+            *
             *-->
-        <div class="card glass flex-auto">
+        <router-link :to="\`\${the.path}\`"  class="card glass flex-auto transition-all duration-200 hover:-translate-y-1 !no-underline">
             <!--*
                 * Контейнер контента вложенной карточки
                 *
@@ -416,7 +422,7 @@ const options = reactive([
                     * @param {string} [class="overflow-hidden"] - {@link https://tailwindcss.com/docs/overflow#hiding-content-that-overflows overflow: hidden;}
                     * @param {string} [class="mb-0"] - {@link https://tailwindcss.com/docs/margin margin-bottom: 0px;}
                     *-->
-                <h1 v-if="the.name" class="text-ellipsis overflow-hidden prose-title mb-0">{{ the.name }}</h1>
+                <h1 v-if="the.name" class="text-ellipsis overflow-hidden mb-0">{{ the.name }}</h1>
                 <!--*
                     * Описание страницы
                     *
@@ -427,7 +433,7 @@ const options = reactive([
                     *-->
                 <p v-if="the.description" class="text-ellipsis overflow-hidden mb-0">{{ the.description }}</p>
             </div>
-        </div>
+        </router-link>
     </div>
 </div>`,
   },
@@ -529,11 +535,12 @@ const options = reactive([
     <!--*
         * Контейнер основной карточки
         *
+        * @param {string} to - {@link https://v3.router.vuejs.org/ru/api/#router-link Линк}
         * @param {string} [class="card"] - {@link https://daisyui.com/components/card/ Контейнер карточки}
         * @param {string} [class="card-compact"] - {@link https://daisyui.com/components/card/ Компактная карточка}
         * @param {string} [class="glass"] - {@link https://daisyui.com/docs/utilities/#-2 Эффект матового стекла}
         *-->
-    <div class="card card-compact glass">
+    <router-link :to="\`\${the.path}\`" class="card card-compact glass">
         <!--*
             * Контейнер вложенной карточки, для отображения иконки на фоне изображения
             *
@@ -570,8 +577,11 @@ const options = reactive([
                     * @param {string} [class="avatar"] - {@link https://daisyui.com/components/avatar/ Контейнер аватара}
                     * @param {string} [class="placeholder"] - {@link https://daisyui.com/components/avatar/ Для показа текста в аватаре}
                     * @param {string} [class="text-neutral"] - {@link https://daisyui.com/docs/colors/ Нейтральный цвет текста}
+                    * @param {string} [class="transition-all"] - {@link https://tailwindcss.com/docs/transition-property transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms;}
+                    * @param {string} [class="duration-200"] - {@link https://tailwindcss.com/docs/transition-duration transition-duration: 200ms;}
+                    * @param {string} [class="hover:-translate-y-1"] - {@link https://tailwindcss.com/docs/translate transform: translateY(-0.25rem);}
                     *-->
-                <div class="avatar placeholder text-neutral">
+                <div class="avatar placeholder text-neutral transition-all duration-200 hover:-translate-y-1">
                     <!--*
                         * Подложка иконки
                         *
@@ -638,7 +648,7 @@ const options = reactive([
                 *-->
             <p v-if="the.description" class="text-ellipsis overflow-hidden">{{ the.description }}</p>
         </div>
-    </div>
+    </router-link>
 </div>`,
   },
 ]);

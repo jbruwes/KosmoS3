@@ -63,7 +63,10 @@ v-head(v-if="selectedObject")
   )
 .drawer(:data-theme="settings?.theme")
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
-  .drawer-content.carousel-vertical(class="h-[100dvh]", @scroll.passive="start")
+  .drawer-content.carousel-vertical.overflow-hidden(
+    class="h-[100dvh]",
+    @scroll.passive="start"
+  )
     .navbar.bg-base-100.rounded-box.absolute.left-6.right-6.top-6.z-40.opacity-0.shadow-xl.transition-opacity.duration-1000.ease-out(
       class="!w-auto hover:opacity-100",
       :class="{ 'opacity-100': !ready }"
@@ -105,7 +108,7 @@ import {
   useTimeout,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, defineAsyncComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import app from "./stores/app";
@@ -118,7 +121,9 @@ const router = useRouter();
 const route = useRoute();
 const { flatTree, css, js, uri, script, style, settings } = storeToRefs(data());
 const the = computed(() => get(flatTree, 0));
-const theTemplate = computed(() => getTemplate(get(the)));
+const theTemplate = computed(() =>
+  defineAsyncComponent(() => getTemplate(get(the))),
+);
 const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
 const tagStyle = ref("style");
 const tagScript = ref("script");
