@@ -10,11 +10,11 @@
 
 import path from "node:path";
 
-import extractorPug from "@unocss/extractor-pug";
+// import extractorPug from "@unocss/extractor-pug";
 import { configure } from "quasar/wrappers";
-import UnoCSS from "unocss/vite";
+// import UnoCSS from "unocss/vite";
 
-import unocssConfig from "./uno.config";
+// import unocssConfig from "./uno.config";
 
 export default configure((/* ctx */) => ({
   eslint: {
@@ -32,7 +32,12 @@ export default configure((/* ctx */) => ({
   // app boot file (/src/boot)
   // --> boot files are part of "main.js"
   // https://v2.quasar.dev/quasar-cli/boot-files
-  boot: ["main", "uno", "motion", "route"],
+  boot: [
+    "main",
+    "uno",
+    // "motion",
+    "route",
+  ],
 
   // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
   css: ["app.css"],
@@ -78,12 +83,12 @@ export default configure((/* ctx */) => ({
     // polyfillModulePreload: true,
     // distDir
 
-    /** @param {object} viteConf - Объект конфигурации vite */
-    extendViteConf(viteConf) {
-      viteConf.plugins.push(
-        ...UnoCSS({ ...unocssConfig, extractors: [extractorPug()] }),
-      );
-    },
+    // /** @param {object} viteConf - Объект конфигурации vite */
+    // extendViteConf(viteConf) {
+    //   viteConf.plugins.push(
+    //     ...UnoCSS({ ...unocssConfig, extractors: [extractorPug()] }),
+    //   );
+    // },
 
     // viteVuePluginOptions: {},
 

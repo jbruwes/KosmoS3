@@ -1,10 +1,11 @@
 <template lang="pug">
-.carousel-item.overflow-hidden(
+.carousel-item(
   v-for="the in siblings",
   :id="the.id",
   :key="the.id",
   ref="itemRefs",
-  class="min-h-[100dvh]"
+  class="min-h-[100dvh]",
+  un-cloak
 )
   .hero(
     :style="the.image && the.background ? { backgroundImage: `url(${the.image})` } : {}",

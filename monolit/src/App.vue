@@ -63,7 +63,7 @@ v-head(v-if="selectedObject")
   )
 .drawer(:data-theme="settings?.theme")
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
-  .drawer-content.carousel-vertical.overflow-hidden(
+  .drawer-content.carousel-vertical.overflow-x-hidden(
     class="h-[100dvh]",
     @scroll.passive="start"
   )
@@ -83,12 +83,12 @@ v-head(v-if="selectedObject")
       :data-theme="the?.theme"
     )
       .hero-overlay(v-if="the?.overlay")
-      .flex.min-h-full.w-full.flex-col
+      .flex.size-full.flex-col
         label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
           svg.h-6.w-6
             path(:d="mdi.mdiClose")
-        .grid.w-full.flex-auto
-          .hero.overflow-x-hidden
+        .grid.flex-auto.self-stretch.overflow-x-hidden
+          .hero
             .prose.text-sm(
               :class="the?.responsive ? 'container' : 'w-full max-w-none'",
               class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
