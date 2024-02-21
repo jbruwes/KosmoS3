@@ -78,22 +78,21 @@ v-head(v-if="selectedObject")
       .mx-2.inline-block.flex-1.truncate.px-2 {{ selectedObject?.name }}
     router-view
   .drawer-side.z-50
-    .hero.min-h-full(
+    .hero.min-h-full.auto-cols-fr.overflow-x-clip(
       :style="the?.image && the?.background ? { backgroundImage: `url(${the?.image})` } : {}",
       :data-theme="the?.theme"
     )
       .hero-overlay(v-if="the?.overlay")
-      .flex.size-full.flex-col
-        label.btn.btn-square.btn-ghost.sticky.top-0.self-end(for="drawer")
-          svg.h-6.w-6
-            path(:d="mdi.mdiClose")
-        .grid.flex-auto.self-stretch.overflow-x-hidden
-          .hero
-            .prose.text-sm(
-              :class="the?.responsive ? 'container' : 'w-full max-w-none'",
-              class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
-            )
-              component(v-if="the", :is="theTemplate", :the="the", :mdi="mdi")
+      .hero-content(:class="the?.responsive ? 'container' : 'w-full'")
+        .prose.w-full.max-w-none.text-sm(
+          class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
+        )
+          component(v-if="the", :is="theTemplate", :the="the", :mdi="mdi")
+      label.btn.btn-square.btn-ghost.sticky.top-0.place-self-start.justify-self-end(
+        for="drawer"
+      )
+        svg.h-6.w-6
+          path(:d="mdi.mdiClose")
 </template>
 <script setup>
 import "daisyui/dist/full.css";

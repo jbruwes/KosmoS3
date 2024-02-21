@@ -11,7 +11,7 @@
     "format": "prettier --write \"**/*.{js,vue,css,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build:monolit": "vite build monolit --emptyOutDir --base=./",
+    "build:monolit": "vite build monolit --emptyOutDir",
     "build": "quasar build"
   },
   "dependencies": {
@@ -38,7 +38,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "@vueuse/core": "^10.8.0",
     "@vueuse/math": "^10.8.0",
-    "@vueuse/motion": "^2.0.0",
+    "@vueuse/motion": "^2.1.0",
     "ace-builds": "^1.32.6",
     "autoprefixer": "^10.4.17",
     "daisyui": "^4.7.2",
@@ -51,10 +51,10 @@
     "three": "^0.161.0",
     "to-xml": "^0.1.11",
     "unocss": "^0.58.5",
-    "vite": "^5.1.3",
+    "vite": "^5.1.4",
     "vue": "^3.4.19",
     "vue-gtag": "^2.0.1",
-    "vue-router": "^4.2.5",
+    "vue-router": "^4.3.0",
     "vue3-ace-editor": "^2.2.4",
     "vue3-sfc-loader": "^0.9.5",
     "vue3-yandex-metrika": "^0.0.4"
