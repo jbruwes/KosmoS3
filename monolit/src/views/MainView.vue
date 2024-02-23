@@ -1,22 +1,16 @@
 <template lang="pug">
-.carousel-item(
+.carousel-item.min-h-full(
   v-for="the in siblings",
   :id="the.id",
   :key="the.id",
   ref="itemRefs",
-  class="min-h-[100dvh]",
   un-cloak
 )
-  .hero(
-    :style="the.image && the.background ? { backgroundImage: `url(${the.image})` } : {}",
+  .prose.min-w-full.max-w-none.text-sm(
+    class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
     :data-theme="the.theme"
   )
-    .hero-overlay(v-if="the.overlay")
-    .prose.text-sm(
-      :class="the?.responsive ? 'container' : 'w-full max-w-none'",
-      class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
-    )
-      component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
+    component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
 </template>
 <script setup>
 import * as mdi from "@mdi/js";

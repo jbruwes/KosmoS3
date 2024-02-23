@@ -1,6 +1,6 @@
 <template lang="pug">
-v-head(v-if="selectedObject")
-  title(v-if="selectedObject.name") {{ selectedObject.name }}
+v-head(v-if="the")
+  title(v-if="the.name") {{ the.name }}
   link(
     v-for="currentCss in visibleCss",
     :key="currentCss.id",
@@ -16,36 +16,16 @@ v-head(v-if="selectedObject")
     deffer,
     :src="currentJs.url"
   )
-  meta(
-    v-if="selectedObject.description",
-    name="description",
-    :content="selectedObject.description"
-  )
-  meta(
-    v-if="selectedObject.name",
-    property="og:title",
-    :content="selectedObject.name"
-  )
-  meta(
-    v-if="selectedObject.type",
-    property="og:type",
-    :content="selectedObject.type"
-  )
+  meta(v-if="the.description", name="description", :content="the.description")
+  meta(v-if="the.name", property="og:title", :content="the.name")
+  meta(v-if="the.type", property="og:type", :content="the.type")
   meta(v-if="canonical", property="og:url", :content="canonical")
-  meta(
-    v-if="selectedObject.image",
-    property="og:image",
-    :content="selectedObject.image"
-  )
-  meta(
-    v-if="selectedObject.alt",
-    property="og:image:alt",
-    :content="selectedObject.alt"
-  )
+  meta(v-if="the.image", property="og:image", :content="the.image")
+  meta(v-if="the.alt", property="og:image:alt", :content="the.alt")
   link(
     :key="favicon",
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[selectedObject.favicon ?? 'mdiWeb']}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi[the.favicon ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
   )
   link(v-if="canonical", rel="canonical", :href="canonical")
@@ -61,36 +41,27 @@ v-head(v-if="selectedObject")
     name="google-site-verification",
     :content="settings.google"
   )
-.drawer(:data-theme="settings?.theme")
+.drawer.h-full
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
-  .drawer-content.carousel-vertical.overflow-x-hidden(
-    class="h-[100dvh]",
+  .drawer-content.flex-inline.carousel-vertical.scroll-smooth(
     @scroll.passive="start"
   )
-    .navbar.bg-base-100.rounded-box.absolute.left-6.right-6.top-6.z-40.opacity-0.shadow-xl.transition-opacity.duration-1000.ease-out(
-      class="!w-auto hover:opacity-100",
-      :class="{ 'opacity-100': !ready }"
+    .navbar(
+      v-if="settings",
+      :class="[{ 'opacity-100': !ready }, ...settings.navbar?.classes]",
+      :data-theme="settings.navbar?.theme"
     )
-      .flex-none
-        label.btn.btn-square.btn-ghost(for="drawer")
-          svg.h-6.w-6
-            path(:d="mdi.mdiMenu")
-      .mx-2.inline-block.flex-1.truncate.px-2 {{ selectedObject?.name }}
+      component(:is="theNavbar", :the="the", :mdi="mdi")
     router-view
-  .drawer-side.z-50
-    .hero.min-h-full.auto-cols-fr.overflow-x-clip(
-      :style="the?.image && the?.background ? { backgroundImage: `url(${the?.image})` } : {}",
-      :data-theme="the?.theme"
+  .drawer-side.z-50.scroll-smooth(class="!overflow-x-auto")
+    .prose.min-h-full.min-w-full.max-w-none.text-sm(
+      v-if="flatTree.length",
+      class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
+      :data-theme="flatTree[0].theme"
     )
-      .hero-overlay(v-if="the?.overlay")
-      .hero-content(:class="the?.responsive ? 'container' : 'w-full'")
-        .prose.w-full.max-w-none.text-sm(
-          class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
-        )
-          component(v-if="the", :is="theTemplate", :the="the", :mdi="mdi")
-      label.btn.btn-square.btn-ghost.sticky.top-0.place-self-start.justify-self-end(
-        for="drawer"
-      )
+      component(:is="theTemplate", :the="flatTree[0]", :mdi="mdi")
+    .pointer-events-none.sticky.left-0.top-0.flex.w-full.justify-end.p-1
+      label.btn.btn-circle.btn-ghost.pointer-events-auto(for="drawer")
         svg.h-6.w-6
           path(:d="mdi.mdiClose")
 </template>
@@ -119,16 +90,20 @@ const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const route = useRoute();
 const { flatTree, css, js, uri, script, style, settings } = storeToRefs(data());
-const the = computed(() => get(flatTree, 0));
 const theTemplate = computed(() =>
-  defineAsyncComponent(() => getTemplate(get(the))),
+  defineAsyncComponent(() => getTemplate(get(flatTree, 0))),
 );
-const selectedObject = useArrayFind(flatTree, ({ id }) => id === route.name);
+const theNavbar = computed(() =>
+  defineAsyncComponent(() =>
+    getTemplate({ id: "navbar", template: get(settings, "navbar")?.template }),
+  ),
+);
+const the = useArrayFind(flatTree, ({ id }) => id === route.name);
 const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);
 const canonical = computed(
-  () => `${get(location, "origin")}/${get(selectedObject, "urn")}`,
+  () => `${get(location, "origin")}/${get(the, "urn")}`,
 );
 /**
  * @constant {object} favicon - Ref

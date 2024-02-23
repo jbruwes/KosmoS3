@@ -260,7 +260,7 @@ const login = async () => {
     }
 };
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
 .min-w-300
   min-width: 300px !important
 </style>

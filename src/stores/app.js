@@ -95,10 +95,7 @@ export default defineStore("app", () => {
       expanded: [],
     },
   });
-  const selectedObject = useArrayFind(
-    flatTree,
-    ({ id }) => id === state.content.selected,
-  );
+  const the = useArrayFind(flatTree, ({ id }) => id === state.content.selected);
   const selectedValue = computed({
     /**
      * Считывание исходного кода из структуры данных
@@ -106,7 +103,7 @@ export default defineStore("app", () => {
      * @returns {string} - Template
      */
     get() {
-      const { template = "" } = get(selectedObject) ?? {};
+      const { template = "" } = get(the) ?? {};
       const baseUrl = `${get(base)}/`;
       return template.replace(
         /(["'(;])([^"'(;:]*?\.(?:apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)[^'")&]*(?=[^<]+?>))/gi,
@@ -121,11 +118,11 @@ export default defineStore("app", () => {
      */
     set(value) {
       const regexp = new RegExp(`^${get(base)}`);
-      get(selectedObject).template = value.replace(
+      get(the).template = value.replace(
         /[^"'(;]+?\.(?:apng|avif|gif|jpg|jpeg|jfif|pjpeg|pjp|png|svg|webp)[^'")&]*(?=[^<]+?>)/gi,
         (match) => match.replace(regexp, ""),
       );
-      get(selectedObject).lastmod = new Date().toISOString();
+      get(the).lastmod = new Date().toISOString();
     },
   });
   const sitemap = computed(() => ({
@@ -235,7 +232,7 @@ export default defineStore("app", () => {
       content,
       flatTree,
       selectedValue,
-      selectedObject,
+      the,
     },
   };
 });

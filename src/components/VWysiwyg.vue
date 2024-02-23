@@ -106,8 +106,7 @@ const $q = useQuasar();
 const store = storeS3();
 const { base } = storeToRefs(store);
 const { putFile } = store;
-const { content, flatTree, selectedObject, selectedValue } =
-  storeToRefs(storeApp());
+const { content, flatTree, the, selectedValue } = storeToRefs(storeApp());
 const inserted = ref(null);
 const insertedObject = useArrayFind(flatTree, ({ id }) => id === get(inserted));
 /**
@@ -306,18 +305,18 @@ const editorFnt = reactive({
   ...fonts,
 });
 onMounted(() => {
-  const { theme } = get(selectedObject) ?? {};
+  const { theme } = get(the) ?? {};
   get(editorRef).getContentEl().dataset.theme = theme;
 });
 watch(
-  () => get(selectedObject)?.theme,
+  () => get(the)?.theme,
   (value) => {
     get(editorRef).getContentEl().dataset.theme = value;
   },
 );
 /** ShowDialog */
 const showDialog = () => {
-  const { theme } = get(selectedObject) ?? {};
+  const { theme } = get(the) ?? {};
   get(modalRef).dataset.theme = theme;
 };
 const options = reactive([
@@ -655,7 +654,7 @@ const options = reactive([
 const [{ value }] = options;
 const model = ref(value);
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
 router-link
   color: var(--tw-prose-links)
   text-decoration: underline

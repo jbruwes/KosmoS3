@@ -2,6 +2,7 @@
 v-ace-editor(
   :value="modelValue",
   :lang="lang",
+  :options="options",
   @update:value="$emit('update:modelValue', $event)"
 )
 </template>
@@ -20,6 +21,11 @@ import {
 } from "js-beautify";
 
 const props = defineProps({
+  options: {
+    /** @returns {object} - Пустой объект по умолчанию */
+    default: () => ({}),
+    type: Object,
+  },
   lang: { default: "html", type: String },
   modelValue: { default: "", type: String },
 });

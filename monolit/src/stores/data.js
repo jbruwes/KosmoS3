@@ -26,6 +26,55 @@ export default defineStore("data", () => {
     script: pScript = "",
     settings: pSettings = {},
   } = {}) => {
+    /**
+     * Удаление лишнего из настроек
+     *
+     * @param {object} settings - Грязные настройки
+     * @returns {object} - Чистые настройки
+     */
+    const fixSettings = (settings) => {
+      const {
+        yandex,
+        metrika,
+        google,
+        analytics,
+        navbar: {
+          theme = "light",
+          classes = [
+            "bg-base-100",
+            "rounded-box",
+            "absolute",
+            "left-6",
+            "right-6",
+            "top-6",
+            "z-40",
+            "opacity-0",
+            "shadow-xl",
+            "transition-opacity",
+            "duration-1000",
+            "ease-out",
+            "!w-auto",
+            "hover:opacity-100",
+          ],
+          template = `
+<div class="flex-none">
+    <label class="btn btn-square btn-ghost" for="drawer">
+        <svg class="h-6 w-6">
+            <path :d="mdi.mdiMenu"></path>
+        </svg>
+    </label>
+</div>
+<div class="mx-2 inline-block flex-1 truncate px-2">{{ the?.name }}</div>`,
+        } = {},
+      } = settings;
+      return {
+        yandex,
+        metrika,
+        google,
+        analytics,
+        navbar: { theme, classes, template },
+      };
+    };
     let [content = {}] = pContent;
     let css = [...pCss].filter(Boolean);
     let style = pStyle;
@@ -63,8 +112,7 @@ export default defineStore("data", () => {
     content = [{ ...content, id, visible, label, template }];
     style = String(style) === style ? style : "";
     script = String(script) === script ? script : "";
-    const { yandex, metrika, google, analytics, theme = "light" } = settings;
-    settings = { yandex, metrika, google, analytics, theme };
+    settings = fixSettings(settings);
     return { content, css, style, js, script, settings };
   };
   const { data } = useFetch(
@@ -256,15 +304,12 @@ export default defineStore("data", () => {
               lastmod: undefined,
               loc: undefined,
               priority: undefined,
-              responsive: true,
               template: undefined,
               script: undefined,
               style: undefined,
               theme: "light",
               title: undefined,
               visible: true,
-              background: true,
-              overlay: false,
               edit: false,
               type: "website",
               alt: undefined,

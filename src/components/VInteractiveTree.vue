@@ -52,7 +52,7 @@ const props = defineProps({
     type: Array,
   },
 });
-const selectedObject = useArrayFind(
+const the = useArrayFind(
   () => props.list,
   ({ id }) => id === props.selected,
 );
@@ -60,13 +60,13 @@ const emits = defineEmits(["update:expanded", "update:selected"]);
 const $q = useQuasar();
 const tree = ref();
 const updateSelected = "update:selected";
-watch(selectedObject, (newVal, oldVal) => {
+watch(the, (newVal, oldVal) => {
   const lOldVal = oldVal ?? {};
   lOldVal.edit = false;
 });
 /** Добавление новой страницы */
 const newPage = () => {
-  const { parent, children, index, siblings } = get(selectedObject);
+  const { parent, children, index, siblings } = get(the);
   const id = uid();
   const visible = true;
   const page = { id, visible };
@@ -85,8 +85,7 @@ const newPage = () => {
 };
 /** Удаление текущей страницы */
 const deletePage = () => {
-  const { parent, children, prev, next, siblings, index, url } =
-    get(selectedObject);
+  const { parent, children, prev, next, siblings, index, url } = get(the);
   if (
     parent ||
     (url && !(siblings.length - 1)) ||
@@ -116,7 +115,7 @@ const deletePage = () => {
 };
 /** Перемещение страницы вверх на одну позицию */
 const upPage = () => {
-  const { index, siblings } = get(selectedObject);
+  const { index, siblings } = get(the);
   if (index)
     [siblings[index - 1], siblings[index]] = [
       siblings[index],
@@ -125,7 +124,7 @@ const upPage = () => {
 };
 /** Перемещение страницы вниз на одну позицию */
 const downPage = () => {
-  const { index, siblings } = get(selectedObject);
+  const { index, siblings } = get(the);
   if (index < siblings.length - 1)
     [siblings[index], siblings[index + 1]] = [
       siblings[index + 1],
@@ -134,7 +133,7 @@ const downPage = () => {
 };
 /** Перемещение страницы вправо на одну позицию */
 const rightPage = () => {
-  const { index, siblings, prev } = get(selectedObject);
+  const { index, siblings, prev } = get(the);
   if (prev) {
     const { children = [], id } = prev;
     prev.children = [...children, ...siblings.splice(index, 1)];
@@ -146,14 +145,14 @@ const leftPage = () => {
   const {
     index,
     parent: { index: parIndex, parent, siblings, children, id } = {},
-  } = get(selectedObject);
+  } = get(the);
   if (parent) {
     get(tree).setExpanded(id, false);
     siblings.splice(parIndex + 1, 0, ...children.splice(index, 1));
   }
 };
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
 .min-w-96
   min-width: 96px
 </style>
