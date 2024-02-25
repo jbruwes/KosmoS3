@@ -1,41 +1,28 @@
-# Quasar App (kosmos3)
+# KosmoS3
 
-A Quasar Project
+### Быстрые ссылки
 
-## Install the dependencies
-```bash
-yarn
-# or
-npm install
-```
+Скачать космос3 можно на официальном сайте - [kosmos3.ru](https://kosmos3.ru)
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
+Развернутый экземпляр космос3 - [start.kosmos3.ru](https://start.kosmos3.ru)
 
+Инструкции по настройке хранилища S3 - [kosmos3.ru/инструкции](https://kosmos3.ru/инструкции)
 
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
-```
+Страница космос3 вконтакте - [vk.com/kosmos3_ru](https://vk.com/kosmos3_ru)
 
+### Описание
 
-### Format the files
-```bash
-yarn format
-# or
-npm run format
-```
+Космос3 это система управления контентом для создания и визуального редактирования статического сайта. Как средство хранения используется хранилище типа S3, причем возможно использовать как облачного провайдера, так и локально установленное хранилище.
 
+Сам космос3 может запускаться как с любого хостинга для статических сайтов, включая то же хранилище S3, так и в качестве программы под windows, linux или mac.
 
+### Ключевые особенности
 
-### Build the app for production
-```bash
-quasar build
-```
+1. Кроме S3 не требуется никаких серверных средств;
+2. Визуальное редактирование статического сайта;
+3. Работает напрямую с хранилищем S3, а значит не требует этапа сборки и загрузки статического сайта;
+4. Чрезвычайно низкая совокупная стоимость владения сайтом.
 
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+### Лицензия
+
+AGPL-3.0 License
