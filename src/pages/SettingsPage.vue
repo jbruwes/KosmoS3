@@ -69,11 +69,11 @@ q-page.column.full-height
 import { get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
+import themes from "@/assets/themes.json";
 import VSourceCode from "@/components/VSourceCode.vue";
 import app from "@/stores/app";
 
 const storeApp = app();
 const { settings, state } = storeToRefs(storeApp);
-const { themes } = storeApp;
 get(state).rightDrawer = null;
 </script>

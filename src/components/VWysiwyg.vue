@@ -96,6 +96,7 @@ import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
 import { onMounted, reactive, ref, watch } from "vue";
 
+import mimes from "@/assets/mimes.json";
 import storeApp from "@/stores/app";
 import storeS3 from "@/stores/s3";
 import { fonts } from "~/uno.config";
@@ -132,17 +133,7 @@ const modalRef = ref();
 const putImage = async (file) => {
   try {
     const { type } = file;
-    if (
-      [
-        "image/apng",
-        "image/avif",
-        "image/gif",
-        "image/jpeg",
-        "image/png",
-        "image/svg+xml",
-        "image/webp",
-      ].includes(type)
-    ) {
+    if (mimes.includes(type)) {
       const filePath = `images/${uid()}.${mime.extension(type)}`;
       await putFile(filePath, type, file);
       get(editorRef).runCmd("insertImage", `${get(base)}/${filePath}`);

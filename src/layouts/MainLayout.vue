@@ -45,12 +45,13 @@ import { get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
+import privateItems from "@/assets/private.json";
+import publicItems from "@/assets/public.json";
 import storeApp from "@/stores/app";
 import storeS3 from "@/stores/s3";
 
 const app = storeApp();
 const { state } = storeToRefs(app);
-const { publicItems, privateItems } = app;
 const { S3 } = storeToRefs(storeS3());
 const leftDrawer = ref(false);
 const miniState = ref(true);

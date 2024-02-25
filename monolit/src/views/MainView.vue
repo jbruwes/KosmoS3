@@ -20,9 +20,9 @@ import { storeToRefs } from "pinia";
 import { computed, ref, watch, defineAsyncComponent } from "vue";
 import { useRoute } from "vue-router";
 
-import app from "../stores/app";
-import data from "../stores/data";
-
+import app from "@/stores/app";
+import data from "@/stores/data";
+import selector from "@/assets/glightbox.json";
 const { getTemplate } = app();
 const { flatTree } = storeToRefs(data());
 const route = useRoute();
@@ -66,28 +66,7 @@ watch(scrollToElement, async (value) => {
     loop: true,
     autoplayVideos: true,
     zoomable: false,
-    selector: [
-      '$=".apng"',
-      '$=".avif"',
-      '$=".gif"',
-      '$=".jpg"',
-      '$=".jpeg"',
-      '$=".jfif"',
-      '$=".pjpeg"',
-      '$=".pjp"',
-      '$=".png"',
-      '$=".svg"',
-      '$=".webp"',
-      '^="https://www.youtube.com/embed/"',
-      '^="https://www.youtube.com/watch?v="',
-      '^="https://www.youtu.be/embed/"',
-      '^="https://www.youtu.be/watch?v="',
-      '^="https://www.youtube-nocookie.com/embed/"',
-      '^="https://www.youtube-nocookie.com/watch?v="',
-      '^="https://vimeo.com/"',
-    ]
-      .map((el) => `a[href${el}]`)
-      .join(),
+    selector: selector.map((el) => `a[href${el}]`).join(),
   });
 });
 </script>

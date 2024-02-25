@@ -145,85 +145,9 @@ export default defineStore("app", () => {
     },
     { debounce: 1000, maxWait: 10000 },
   );
-  const themes = [
-    "light",
-    "dark",
-    "cupcake",
-    "bumblebee",
-    "emerald",
-    "corporate",
-    "synthwave",
-    "retro",
-    "cyberpunk",
-    "valentine",
-    "halloween",
-    "garden",
-    "forest",
-    "aqua",
-    "lofi",
-    "pastel",
-    "fantasy",
-    "wireframe",
-    "black",
-    "luxury",
-    "dracula",
-    "cmyk",
-    "autumn",
-    "business",
-    "acid",
-    "lemonade",
-    "night",
-    "coffee",
-    "winter",
-    "dim",
-    "nord",
-    "sunset",
-  ];
-  const publicItems = [
-    {
-      title: "Login",
-      icon: "login",
-      to: "/",
-    },
-    {
-      title: "About",
-      icon: "info",
-      to: "/about",
-    },
-  ];
-  const privateItems = [
-    {
-      title: "Content",
-      icon: "wysiwyg",
-      to: "/content",
-    },
-    {
-      title: "CSS",
-      icon: "css",
-      to: "/css",
-    },
-    {
-      title: "JavaScript",
-      icon: "javascript",
-      to: "/js",
-    },
-    {
-      title: "Settings",
-      icon: "settings",
-      to: "/settings",
-    },
-    {
-      title: "Logout",
-      icon: "logout",
-      to: "/",
-    },
-  ];
   return {
     settings,
-    themes,
     state,
-    publicItems,
-    privateItems,
     ...{
       script,
       js,

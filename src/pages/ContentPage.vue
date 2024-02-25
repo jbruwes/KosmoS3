@@ -39,7 +39,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
       q-card-section
         q-select(
           v-model="the.type",
-          :options="typelist",
+          :options="types",
           label="Тип содержимого страницы",
           clearable,
           hint="the.type"
@@ -171,8 +171,12 @@ import { get, isDefined, useFileDialog, watchOnce } from "@vueuse/core";
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
+import changefreq from "@/assets/changefreq.json";
+import mimes from "@/assets/mimes.json";
+import themes from "@/assets/themes.json";
+import types from "@/assets/types.json";
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 import VWysiwyg from "@/components/VWysiwyg.vue";
@@ -183,32 +187,8 @@ const $q = useQuasar();
 const s3Store = storeS3();
 const appStore = storeApp();
 const { state, content, flatTree, selectedValue, the } = storeToRefs(appStore);
-const { themes } = appStore;
 const { base } = storeToRefs(s3Store);
 const { putFile } = s3Store;
-const changefreq = reactive([
-  "always",
-  "hourly",
-  "daily",
-  "weekly",
-  "monthly",
-  "yearly",
-  "never",
-]);
-const typelist = reactive([
-  "article",
-  "book",
-  "profile",
-  "website",
-  "music.song",
-  "music.album",
-  "music.playlist",
-  "music.radio_station",
-  "video.movie",
-  "video.episode",
-  "video.tv_show",
-  "video.other",
-]);
 const icons = ref(materialIcons.icons);
 const loc = computed({
   /** @returns {string} - Постоянная ссылка */
@@ -255,17 +235,7 @@ watch(files, async (newFiles) => {
   if (file)
     try {
       const { type } = file;
-      if (
-        [
-          "image/apng",
-          "image/avif",
-          "image/gif",
-          "image/jpeg",
-          "image/png",
-          "image/svg+xml",
-          "image/webp",
-        ].includes(type)
-      ) {
+      if (mimes.includes(type)) {
         const filePath = `images/${uid()}.${mime.extension(type)}`;
         await putFile(filePath, type, file);
         get(the).image = `/${filePath}`;

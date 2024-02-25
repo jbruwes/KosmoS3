@@ -115,7 +115,7 @@ import { FetchHttpHandler } from "@smithy/fetch-http-handler";
 import { get, set, useStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 import storeApp from "@/stores/app";
@@ -134,7 +134,7 @@ const region = ref("");
 const endpoint = ref("");
 const isPwd = ref(true);
 const remember = ref(true);
-const providers = ref([
+const providers = [
   {
     label: "aws",
     regions: [
@@ -165,7 +165,10 @@ const providers = ref([
     ],
     region: "us-east-1",
     endpoint: "",
-    wendpoint: computed(() => `https://s3.${get(region)}.amazonaws.com`),
+    /** @returns {string} - Wendpoint */
+    get wendpoint() {
+      return `https://s3.${get(region)}.amazonaws.com`;
+    },
   },
   {
     label: "yandex",
@@ -174,7 +177,7 @@ const providers = ref([
     endpoint: "https://storage.yandexcloud.net",
     wendpoint: "https://website.yandexcloud.net",
   },
-]);
+];
 const provider = ref(null);
 const regions = ref([]);
 const creds = useStorage("kosmos3", []);
@@ -201,7 +204,7 @@ watch(cred, (value) => {
     set(secretAccessKey, value.secretAccessKey);
     set(
       provider,
-      get(providers).find(({ label }) => label === value.provider),
+      providers.find(({ label }) => label === value.provider),
     );
     set(region, value.region);
     set(endpoint, value.endpoint);

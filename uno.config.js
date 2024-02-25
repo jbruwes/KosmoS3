@@ -6,34 +6,10 @@ import presetWebFonts from "@unocss/preset-web-fonts";
 import transformerDirectives from "@unocss/transformer-directives";
 import transformerVariantGroup from "@unocss/transformer-variant-group";
 
+import fontArray from "./src/assets/fonts.json";
+
 export const fonts = Object.fromEntries(
-  [
-    "Arsenal",
-    "Bad Script",
-    "Caveat",
-    "Comfortaa",
-    "Cormorant Garamond",
-    "Cormorant Infant",
-    "Cormorant SC",
-    "Cormorant Unicase",
-    "Cormorant",
-    "Jura",
-    "Marck Script",
-    "Montserrat",
-    "Montserrat Alternates",
-    "Open Sans Condensed",
-    "Open Sans",
-    "Oswald",
-    "Pattaya",
-    "Poiret One",
-    "Roboto Condensed",
-    "Roboto Mono",
-    "Roboto Slab",
-    "Roboto",
-    "Rubik Mono One",
-    "Rubik",
-    "Tenor Sans",
-  ].map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
+  fontArray.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
 );
 
 export default {
