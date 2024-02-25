@@ -94,7 +94,7 @@ import {
 import * as mime from "mime-types";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
-import { onMounted, reactive, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 import mimes from "@/assets/mimes.json";
 import storeApp from "@/stores/app";
@@ -167,7 +167,7 @@ watch(files, (newFiles) => {
 });
 const e = $q.lang.editor;
 const i = $q.iconSet.editor;
-const editorDef = reactive({
+const editorDef = {
   upload: {
     tip: "Загрузка картинки",
     icon: "cloud_upload",
@@ -229,8 +229,8 @@ const editorDef = reactive({
     icon: i.code,
     htmlTip: `<span class="prose"><code>${e.code}</code></span>`,
   },
-});
-const editorTlb = reactive([
+};
+const editorTlb = [
   ["left", "center", "right", "justify"],
   ["bold", "italic", "strike", "underline", "subscript", "superscript"],
   ["token", "hr", "link", "custom_btn"],
@@ -282,8 +282,8 @@ const editorTlb = reactive([
   ["quote", "unordered", "ordered", "outdent", "indent"],
   ["undo", "redo"],
   ["upload", "template", "routerLink"],
-]);
-const editorFnt = reactive({
+];
+const editorFnt = {
   arial: "Arial",
   arial_black: "Arial Black",
   comic_sans: "Comic Sans MS",
@@ -294,7 +294,7 @@ const editorFnt = reactive({
   verdana: "Verdana",
 
   ...fonts,
-});
+};
 onMounted(() => {
   const { theme } = get(the) ?? {};
   get(editorRef).getContentEl().dataset.theme = theme;
@@ -310,7 +310,7 @@ const showDialog = () => {
   const { theme } = get(the) ?? {};
   get(modalRef).dataset.theme = theme;
 };
-const options = reactive([
+const options = [
   {
     label: "Hero",
     value: `
@@ -641,7 +641,7 @@ const options = reactive([
     </router-link>
 </div>`,
   },
-]);
+];
 const [{ value }] = options;
 const model = ref(value);
 </script>
