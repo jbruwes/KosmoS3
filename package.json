@@ -12,7 +12,8 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build:monolit": "vite build monolit --emptyOutDir",
-    "build": "quasar build"
+    "build:kosmos3": "quasar build",
+    "build": "npm run build:monolit && npm run build:kosmos3"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.521.0",
