@@ -5,7 +5,7 @@ div
     v-model="selectedValue",
     :dense="$q.screen.lt.md",
     :toolbar="editorTlb",
-    :fonts="editorFnt",
+    :fonts="fonts",
     content-class="col prose max-w-none full-width text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
     flat,
     placeholder="Добавьте контент на вашу страницу...",
@@ -263,19 +263,7 @@ const editorTlb = [
       icon: i.font,
       fixedIcon: true,
       list: "no-icons",
-      options: [
-        "default_font",
-        "arial",
-        "arial_black",
-        "comic_sans",
-        "courier_new",
-        "impact",
-        "lucida_grande",
-        "times_new_roman",
-        "verdana",
-
-        ...Object.keys(fonts),
-      ],
+      options: ["default_font", ...Object.keys(fonts)],
     },
     "removeFormat",
   ],
@@ -283,18 +271,6 @@ const editorTlb = [
   ["undo", "redo"],
   ["upload", "template", "routerLink"],
 ];
-const editorFnt = {
-  arial: "Arial",
-  arial_black: "Arial Black",
-  comic_sans: "Comic Sans MS",
-  courier_new: "Courier New",
-  impact: "Impact",
-  lucida_grande: "Lucida Grande",
-  times_new_roman: "Times New Roman",
-  verdana: "Verdana",
-
-  ...fonts,
-};
 onMounted(() => {
   const { theme } = get(the) ?? {};
   get(editorRef).getContentEl().dataset.theme = theme;
