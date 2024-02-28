@@ -53,15 +53,17 @@ v-head(v-if="the")
     )
       component(:is="theNavbar", :the="the", :mdi="mdi")
     router-view
-  .drawer-side.z-50.scroll-smooth(class="!overflow-x-auto")
-    .prose.min-h-full.min-w-full.max-w-none.text-sm(
-      v-if="flatTree.length",
-      class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
-      :data-theme="flatTree[0].theme"
-    )
-      component(:is="theTemplate", :the="flatTree[0]", :mdi="mdi")
-    .pointer-events-none.sticky.left-0.top-0.flex.w-full.justify-end.p-1
-      label.btn.btn-circle.btn-ghost.pointer-events-auto(for="drawer")
+  .drawer-side.z-50
+    .grid.size-full.overflow-x-auto.scroll-smooth
+      .prose.col-start-1.row-start-1.size-min.min-h-full.min-w-full.max-w-none.text-sm(
+        v-if="flatTree.length",
+        class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
+        :data-theme="flatTree[0].theme"
+      )
+        component(:is="theTemplate", :the="flatTree[0]", :mdi="mdi")
+      label.btn.btn-circle.btn-ghost.sticky.right-1.top-1.col-start-1.row-start-1.justify-self-end(
+        for="drawer"
+      )
         svg.h-6.w-6
           path(:d="mdi.mdiClose")
 </template>
