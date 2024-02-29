@@ -29,6 +29,14 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         )
           template(#prepend)
             q-icon(name="mdi-theme-light-dark")
+        .q-pt-md
+          q-list
+            q-item(v-ripple, tag="label")
+              q-item-section(avatar)
+                q-checkbox(v-model="the.full")
+              q-item-section
+                q-item-label Полный экран
+                q-item-label(caption) the.full
     q-separator
     q-card(v-if="the", flat)
       q-item.text-teal

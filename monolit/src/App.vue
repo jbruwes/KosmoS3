@@ -44,7 +44,8 @@ v-head(v-if="the")
 .drawer.h-full
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
   .drawer-content.flex-inline.carousel-vertical.scroll-smooth(
-    @scroll.passive="start"
+    @scroll.passive="start",
+    class="!overflow-y-auto"
   )
     .navbar(
       v-if="settings",
@@ -54,10 +55,13 @@ v-head(v-if="the")
       component(:is="theNavbar", :the="the", :mdi="mdi")
     router-view
   .drawer-side.z-50
-    .grid.size-full.overflow-x-auto.scroll-smooth
+    label.drawer-overlay(for="drawer")
+    .grid.h-full.max-w-full.overflow-x-auto.scroll-smooth(
+      v-if="flatTree.length",
+      :class="{ 'w-full': flatTree[0].full }"
+    )
       .col-start-1.row-start-1.flex
         .prose.min-w-full.max-w-none.text-sm(
-          v-if="flatTree.length",
           class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
           :data-theme="flatTree[0].theme"
         )

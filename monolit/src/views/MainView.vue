@@ -1,14 +1,16 @@
 <template lang="pug">
-.carousel-item.min-h-full(
+.carousel-item(
   v-for="the in siblings",
   :id="the.id",
   :key="the.id",
   ref="itemRefs",
+  :class="{ 'min-h-full': the.full }",
   un-cloak
 )
   .prose.min-w-full.max-w-none.text-sm(
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
-    :data-theme="the.theme"
+    :data-theme="the.theme",
+    :role="the.id === selectedObject.id || (selectedObject.id === flatTree[0].id && the.id === firstElementId) ? 'main' : undefined"
   )
     component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
 </template>
