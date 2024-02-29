@@ -293,17 +293,13 @@ const options = [
 <!--*
     * Контейнер транспаранта
     *
-    * @param {string} [v-motion-pop-visible] - {@link https://motion.vueuse.org/features/presets Анимация}
     * @param {string} [class="hero"] - {@link https://daisyui.com/components/hero/ Транспарант}
-    * @param {string} [class="shadow-2xl"] - {@link https://tailwindcss.com/docs/box-shadow Тень}
-    * @param {string} [class="rounded-box"] - {@link https://daisyui.com/docs/utilities/#-1 Округлые края}
-    * @param {string} [class="flex-auto"] - {@link https://tailwindcss.com/docs/flex#auto flex: 1 1 auto;}
-    * @param {string} [class="min-h-[80dvh]"] - {@link https://tailwindcss.com/docs/min-height min-height: 80dvh;}
-    * @param {string} [class="min-w-[15rem]"] - {@link https://tailwindcss.com/docs/min-width min-width: 15rem;}
+    * @param {string} [class="size-full"] - {@link https://tailwindcss.com/docs/size#percentage-sizes width: 100%; height: 100%;}
+    * @param {string} [class="overflow-hidden"] - {@link https://tailwindcss.com/docs/overflow#hiding-content-that-overflows overflow: hidden;}
     * @param {string} [class="bg-neutral-content"] - {@link https://daisyui.com/docs/colors/ Подложка нейтрального цвета}
     * @param {string} style - {@link https://developer.mozilla.org/ru/docs/Web/CSS/background-image Изображение подложки}
     *-->
-<div v-motion-pop-visible class="hero shadow-2xl rounded-box flex-auto min-h-[80dvh] bg-neutral-content" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
+<div class="hero size-full overflow-hidden bg-neutral-content" :style="the.image?{'background-image':\`url(\${the.image})\`}:{}">
     <!--*
         * При необходимости можно включить оверлей
         *
@@ -313,10 +309,11 @@ const options = [
     <!--*
         * Контейнер контента
         *
+        * @param {string} [v-motion-pop-visible] - {@link https://motion.vueuse.org/features/presets Анимация}
         * @param {string} [class="hero-content"] - {@link https://daisyui.com/components/hero/ Контейнер для контента}
         * @param {string} [class="w-full"] - {@link https://tailwindcss.com/docs/width width: 100%;}
         *-->
-    <div class="hero-content w-full">
+    <div v-motion-pop-visible class="hero-content w-full">
         <!--*
             * Контейнер вложенной карточки
             *
