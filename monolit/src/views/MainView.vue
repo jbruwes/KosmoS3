@@ -4,13 +4,13 @@
   :id="the.id",
   :key="the.id",
   ref="itemRefs",
-  :class="{ 'min-h-full': the.full }",
-  un-cloak
+  :class="{ 'min-h-full': the.full }"
 )
-  .prose.min-w-full.max-w-none.text-sm(
+  .prose.max-w-none.flex-auto.text-sm(
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
     :data-theme="the.theme",
-    :role="the.id === selectedObject.id || (selectedObject.id === flatTree[0].id && the.id === firstElementId) ? 'main' : undefined"
+    :role="the.id === selectedObject.id || (selectedObject.id === flatTree[0].id && the.id === firstElementId) ? 'main' : undefined",
+    un-cloak
   )
     component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
 </template>

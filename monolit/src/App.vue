@@ -41,11 +41,11 @@ v-head(v-if="the")
     name="google-site-verification",
     :content="settings.google"
   )
-.drawer.h-full
+.drawer.h-dvh
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
-  .drawer-content.flex-inline.carousel-vertical.scroll-smooth(
+  .drawer-content.snap-y.snap-mandatory.overflow-y-auto.scroll-smooth(
     @scroll.passive="start",
-    class="!overflow-y-auto"
+    un-cloak
   )
     .navbar(
       v-if="settings",
@@ -58,10 +58,10 @@ v-head(v-if="the")
     label.drawer-overlay(for="drawer")
     .grid.h-full.max-w-full.overflow-x-auto.scroll-smooth(
       v-if="flatTree.length",
-      :class="{ 'w-full': flatTree[0].full }"
+      :class="{ 'min-w-full': flatTree[0].full }"
     )
       .col-start-1.row-start-1.flex
-        .prose.min-w-full.max-w-none.text-sm(
+        .prose.max-w-none.flex-auto.text-sm(
           class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
           :data-theme="flatTree[0].theme"
         )

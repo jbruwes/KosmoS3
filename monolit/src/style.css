@@ -1,8 +1,3 @@
-html,
-body,
-#app {
-  @apply h-full;
-}
 html {
   scrollbar-gutter: auto !important;
 }
