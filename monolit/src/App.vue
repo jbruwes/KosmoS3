@@ -54,7 +54,7 @@ v-head(v-if="the")
     )
       component(:is="theNavbar", :the="the", :mdi="mdi")
     router-view
-  .drawer-side.z-50(un-cloak)
+  .drawer-side.z-50
     label.drawer-overlay(for="drawer")
     .grid.max-w-full.self-stretch.overflow-x-auto.scroll-smooth(
       v-if="flatTree.length",
