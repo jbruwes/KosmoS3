@@ -54,11 +54,11 @@ v-head(v-if="the")
     )
       component(:is="theNavbar", :the="the", :mdi="mdi")
     router-view
-  .drawer-side.z-50
+  .drawer-side.z-50(un-cloak)
     label.drawer-overlay(for="drawer")
-    .grid.h-full.max-w-full.overflow-x-auto.scroll-smooth(
+    .grid.max-w-full.self-stretch.overflow-x-auto.scroll-smooth(
       v-if="flatTree.length",
-      :class="{ 'min-w-full': flatTree[0].full }"
+      :class="{ 'justify-self-stretch': flatTree[0].full }"
     )
       .col-start-1.row-start-1.flex
         .prose.max-w-none.flex-auto.text-sm(

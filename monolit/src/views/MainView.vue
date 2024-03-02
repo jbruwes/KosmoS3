@@ -1,5 +1,5 @@
 <template lang="pug">
-.carousel-item(
+.flex.snap-start(
   v-for="the in siblings",
   :id="the.id",
   :key="the.id",
