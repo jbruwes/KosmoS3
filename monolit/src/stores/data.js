@@ -123,9 +123,12 @@ export default defineStore("data", () => {
        *
        * @param {object} ctx - Контекстный объект
        * @param {object} ctx.options - Свойства запроса
+       * @param {string} ctx.url - Урл
+       * @param {Function} ctx.cancel - Ф-ция отмены запроса
        * @returns {object} - Трансформированный контекстный объект
        */
-      beforeFetch({ options }) {
+      beforeFetch({ url, options, cancel }) {
+        if (!url) cancel();
         const ret = options;
         ret.headers = {
           ...ret.headers,

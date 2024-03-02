@@ -91,7 +91,7 @@ import {
   useFileDialog,
   watchOnce,
 } from "@vueuse/core";
-import * as mime from "mime-types";
+import mime from "mime";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
 import { onMounted, ref, watch } from "vue";
@@ -134,7 +134,7 @@ const putImage = async (file) => {
   try {
     const { type } = file;
     if (mimes.includes(type)) {
-      const filePath = `images/${uid()}.${mime.extension(type)}`;
+      const filePath = `images/${uid()}.${mime.getExtension(type)}`;
       await putFile(filePath, type, file);
       get(editorRef).runCmd("insertImage", `${get(base)}/${filePath}`);
     } else

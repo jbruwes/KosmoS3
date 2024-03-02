@@ -176,7 +176,7 @@ q-page.column.full-height
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
 import { get, isDefined, useFileDialog, watchOnce } from "@vueuse/core";
-import * as mime from "mime-types";
+import mime from "mime";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
 import { computed, ref, watch } from "vue";
@@ -244,7 +244,7 @@ watch(files, async (newFiles) => {
     try {
       const { type } = file;
       if (mimes.includes(type)) {
-        const filePath = `images/${uid()}.${mime.extension(type)}`;
+        const filePath = `images/${uid()}.${mime.getExtension(type)}`;
         await putFile(filePath, type, file);
         get(the).image = `/${filePath}`;
       } else
