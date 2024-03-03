@@ -13,8 +13,5 @@
       "vue$": ["node_modules/vue/dist/vue.runtime.esm-bundler.js"]
     }
   },
-  "exclude": ["dist", ".quasar", "node_modules"],
-  "vueCompilerOptions": {
-    "plugins": ["@vue/language-plugin-pug"]
-  }
+  "exclude": ["dist", ".quasar", "node_modules"]
 }
