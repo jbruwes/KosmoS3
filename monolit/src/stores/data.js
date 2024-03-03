@@ -232,7 +232,7 @@ export default defineStore("data", () => {
   const siblings = {
     /** @returns {Array} - Массив одноуровневых объектов */
     get() {
-      return this.parent ? this.parent?.children : this.children;
+      return this.parent ? this.parent?.children : [this];
     },
     configurable: true,
   };
