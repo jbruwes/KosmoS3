@@ -94,13 +94,13 @@ watchDeep(refs, async (value) => {
         threshold: 0,
       });
     });
-  }, 500);
-  GLightbox({
-    touchNavigation: true,
-    loop: true,
-    autoplayVideos: true,
-    zoomable: false,
-    selector: selector.map((el) => `a[href${el}]`).join(),
-  });
+    GLightbox({
+      touchNavigation: true,
+      loop: true,
+      autoplayVideos: true,
+      zoomable: false,
+      selector: selector.map((el) => `a[href${el}]`).join(),
+    });
+  }, 200);
 });
 </script>
