@@ -44,8 +44,8 @@ v-head(v-if="the")
 .drawer.h-dvh
   input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
   .drawer-content.snap-y.snap-mandatory.overflow-y-auto.scroll-smooth(
-    @scroll.passive="start",
-    un-cloak
+    un-cloak,
+    @scroll.passive="start"
   )
     .navbar(
       v-if="settings",
@@ -85,7 +85,7 @@ import {
   useTimeout,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed, ref, defineAsyncComponent } from "vue";
+import { computed, defineAsyncComponent, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import app from "./stores/app";

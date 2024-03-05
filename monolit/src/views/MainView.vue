@@ -3,7 +3,7 @@
   v-for="the in siblings",
   :id="the.id",
   :key="the.id",
-  ref="itemRefs",
+  ref="refs",
   :class="{ 'min-h-full': the.full }"
 )
   .prose.max-w-none.flex-auto.text-sm(
@@ -18,21 +18,28 @@
 import * as mdi from "@mdi/js";
 import {
   get,
+  unrefElement,
   useArrayFind,
-  useArrayMap,
   useArrayFindIndex,
+  useArrayMap,
+  useIntersectionObserver,
+  useParentElement,
+  watchDeep,
 } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, ref, watch, defineAsyncComponent } from "vue";
-import { useRoute } from "vue-router";
+import { computed, defineAsyncComponent, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
+import selector from "@/assets/glightbox.json";
 import app from "@/stores/app";
 import data from "@/stores/data";
-import selector from "@/assets/glightbox.json";
+
 const { getTemplate } = app();
 const { flatTree } = storeToRefs(data());
 const route = useRoute();
+const router = useRouter();
+const root = useParentElement();
 const selectedObjectIndex = useArrayFindIndex(
   flatTree,
   ({ id }) => id === route.name,
@@ -55,16 +62,38 @@ const theTemplateArray = useArrayMap(theTemplateEntries, ([key, value]) => [
   defineAsyncComponent(() => value),
 ]);
 const theTemplate = computed(() => Object.fromEntries(get(theTemplateArray)));
-const itemRefs = ref([]);
+const refs = ref([]);
 const scrollToElementCurrent = useArrayFind(
-  itemRefs,
+  refs,
   ({ id }) => id === get(selectedObject, "id"),
 );
-watch(scrollToElementCurrent, async (value) => {
-  console.log(Object.values(Object.fromEntries(get(theTemplateEntries))));
+watchDeep(refs, async (value) => {
   await Promise.all(Object.values(Object.fromEntries(get(theTemplateEntries))));
   setTimeout(() => {
-    value?.scrollIntoView({ behavior: "smooth" });
+    unrefElement(scrollToElementCurrent).scrollIntoView({
+      behavior: "instant",
+    });
+    /**
+     * @param {Array} entries - Массив объектов, описывающих пересечения
+     * @param {object} entries."0" - Первый и единственный объект, описывающий
+     *   пересечение
+     */
+    const onIntersectionObserver = ([
+      {
+        isIntersecting,
+        target: { id: name },
+      },
+    ]) => {
+      if (isIntersecting && name !== get(selectedObject, "id"))
+        router.push({ name });
+    };
+    value.forEach((target) => {
+      useIntersectionObserver(target, onIntersectionObserver, {
+        root,
+        rootMargin: "-1px 0px -100%",
+        threshold: 0,
+      });
+    });
   }, 500);
   GLightbox({
     touchNavigation: true,

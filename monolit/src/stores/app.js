@@ -1,4 +1,4 @@
-import * as tresjsCientos from "@tresjs/cientos";
+// import * as tresjsCientos from "@tresjs/cientos";
 import * as tresjsCore from "@tresjs/core";
 import * as vueuseComponents from "@vueuse/components";
 import * as vueuseCore from "@vueuse/core";
@@ -23,7 +23,7 @@ export default defineStore("app", () => {
         "@vueuse/math": vueuseMath,
         "@vueuse/components": vueuseComponents,
         "@tresjs/core": tresjsCore,
-        "@tresjs/cientos": tresjsCientos,
+        // "@tresjs/cientos": tresjsCientos,
       },
       /** @returns {string} - Шаблон */
       getFile: () =>
