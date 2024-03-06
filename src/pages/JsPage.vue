@@ -28,8 +28,10 @@ import { storeToRefs } from "pinia";
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 import app from "@/stores/app";
+import data from "~/monolit/src/stores/data";
 
-const { script, js, state } = storeToRefs(app());
+const { state } = storeToRefs(app());
+const { script, js } = storeToRefs(data());
 get(state).rightDrawer = null;
 /**
  * Инициализация

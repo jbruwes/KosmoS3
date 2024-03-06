@@ -107,18 +107,18 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           template(#prepend)
             q-icon.cursor-pointer(:name="the.icon ?? 'mdi-tray-arrow-up'")
               q-popup-proxy.column.items-center.justify-center(
-                v-model="data.showIconPicker"
+                v-model="iconPicker.show"
               )
                 q-input.q-ma-md(
-                  v-model="data.filter",
+                  v-model="iconPicker.filter",
                   label="Поиск...",
                   clearable,
                   dense
                 )
                 q-icon-picker(
                   v-model="the.icon",
-                  v-model:model-pagination="data.pagination",
-                  :filter="data.filter",
+                  v-model:model-pagination="iconPicker.pagination",
+                  :filter="iconPicker.filter",
                   :icons="icons",
                   tooltips,
                   dense
@@ -188,15 +188,16 @@ import types from "@/assets/types.json";
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
 import VWysiwyg from "@/components/VWysiwyg.vue";
-import storeApp from "@/stores/app";
-import storeS3 from "@/stores/s3";
+import app from "@/stores/app";
+import s3 from "@/stores/s3";
+import data from "~/monolit/src/stores/data";
 
 const $q = useQuasar();
-const s3Store = storeS3();
-const appStore = storeApp();
-const { state, content, flatTree, selectedValue, the } = storeToRefs(appStore);
-const { base } = storeToRefs(s3Store);
-const { putFile } = s3Store;
+const S3 = s3();
+const { state, selectedValue, the } = storeToRefs(app());
+const { content, flatTree } = storeToRefs(data());
+const { base } = storeToRefs(S3);
+const { putFile } = S3;
 const icons = ref(materialIcons.icons);
 const loc = computed({
   /** @returns {string} - Постоянная ссылка */
@@ -208,8 +209,8 @@ const loc = computed({
     get(the).loc = value.replace(/^\/|\/$/g, "");
   },
 });
-const data = ref({
-  showIconPicker: false,
+const iconPicker = ref({
+  show: false,
   filter: "",
   pagination: {
     itemsPerPage: 75,

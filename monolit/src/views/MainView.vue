@@ -4,6 +4,7 @@
   :id="the.id",
   :key="the.id",
   ref="refs",
+  v-intersection-observer="[onIntersectionObserver,{root,rootMargin:'-1px 0px -100%',threshold:0}]",
   :class="{ 'min-h-full': the.full }"
 )
   .prose.max-w-none.flex-auto.text-sm(
@@ -16,13 +17,13 @@
 </template>
 <script setup>
 import * as mdi from "@mdi/js";
+import { vIntersectionObserver } from "@vueuse/components";
 import {
   get,
   unrefElement,
   useArrayFind,
   useArrayFindIndex,
   useArrayMap,
-  useIntersectionObserver,
   useParentElement,
   watchDeep,
 } from "@vueuse/core";
@@ -67,33 +68,25 @@ const scrollToElementCurrent = useArrayFind(
   refs,
   ({ id }) => id === get(selectedObject, "id"),
 );
-watchDeep(refs, async (value) => {
+let pause = false;
+/**
+ * @param {Array} entries - Массив объектов, описывающих пересечения
+ * @param {object} entries."0" - Первый и единственный объект, описывающий
+ *   пересечение
+ */
+const onIntersectionObserver = ([
+  {
+    isIntersecting,
+    target: { id: name },
+  },
+]) => {
+  if (!pause && isIntersecting && name !== get(selectedObject, "id"))
+    router.push({ name });
+};
+watchDeep(refs, async () => {
+  pause = true;
   await Promise.all(Object.values(Object.fromEntries(get(theTemplateEntries))));
   setTimeout(() => {
-    unrefElement(scrollToElementCurrent).scrollIntoView({
-      behavior: "instant",
-    });
-    /**
-     * @param {Array} entries - Массив объектов, описывающих пересечения
-     * @param {object} entries."0" - Первый и единственный объект, описывающий
-     *   пересечение
-     */
-    const onIntersectionObserver = ([
-      {
-        isIntersecting,
-        target: { id: name },
-      },
-    ]) => {
-      if (isIntersecting && name !== get(selectedObject, "id"))
-        router.push({ name });
-    };
-    value.forEach((target) => {
-      useIntersectionObserver(target, onIntersectionObserver, {
-        root,
-        rootMargin: "-1px 0px -100%",
-        threshold: 0,
-      });
-    });
     GLightbox({
       touchNavigation: true,
       loop: true,
@@ -101,6 +94,10 @@ watchDeep(refs, async (value) => {
       zoomable: false,
       selector: selector.map((el) => `a[href${el}]`).join(),
     });
+    unrefElement(scrollToElementCurrent).scrollIntoView({
+      behavior: "instant",
+    });
+    pause = false;
   }, 200);
 });
 </script>

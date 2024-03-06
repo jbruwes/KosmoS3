@@ -49,8 +49,8 @@ v-head(v-if="the")
   )
     .navbar(
       v-if="settings",
-      :class="[{ 'opacity-100': !ready }, ...settings.navbar?.classes]",
-      :data-theme="settings.navbar?.theme"
+      :class="[{ 'opacity-100': !ready }, ...navbar?.classes]",
+      :data-theme="navbar?.theme"
     )
       component(:is="theNavbar", :the="the", :mdi="mdi")
     router-view
@@ -96,13 +96,19 @@ const location = useBrowserLocation();
 const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const route = useRoute();
-const { flatTree, css, js, uri, script, style, settings } = storeToRefs(data());
+const { flatTree, css, js, uri, script, style, settings, navbar } =
+  storeToRefs(data());
 const theTemplate = computed(() =>
   defineAsyncComponent(() => getTemplate(get(flatTree, 0))),
 );
 const theNavbar = computed(() =>
   defineAsyncComponent(() =>
-    getTemplate({ id: "navbar", template: get(settings, "navbar")?.template }),
+    getTemplate({
+      id: "navbar",
+      template: get(navbar)?.template,
+      script: get(navbar)?.script,
+      style: get(navbar)?.style,
+    }),
   ),
 );
 const the = useArrayFind(flatTree, ({ id }) => id === route.name);

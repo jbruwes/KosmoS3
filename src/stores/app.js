@@ -21,8 +21,7 @@ export default defineStore("app", () => {
   const { S3, base, bucket } = storeToRefs(store);
   const { putObject, headObject } = store;
   const dataStore = storeData();
-  const { uri, tree, settings, script, js, style, css, content, flatTree } =
-    storeToRefs(dataStore);
+  const { uri, tree, flatTree } = storeToRefs(dataStore);
   const { calcIndex } = dataStore;
   /**
    * Переключатель видимости правой панели
@@ -146,17 +145,8 @@ export default defineStore("app", () => {
     { debounce: 1000, maxWait: 10000 },
   );
   return {
-    settings,
     state,
-    ...{
-      script,
-      js,
-      style,
-      css,
-      content,
-      flatTree,
-      selectedValue,
-      the,
-    },
+    selectedValue,
+    the,
   };
 });

@@ -26,6 +26,19 @@ const routes = [
     ],
   },
   {
+    path: "/navbar",
+    /** @returns {object} - Модуль шаблона по умолчанию */
+    component: () => import("@/layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Navbar",
+        /** @returns {object} - Модуль страницы навбара */
+        component: () => import("@/pages/NavbarPage.vue"),
+      },
+    ],
+  },
+  {
     path: "/css",
     /** @returns {object} - Модуль шаблона по умолчанию */
     component: () => import("@/layouts/MainLayout.vue"),

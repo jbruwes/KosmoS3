@@ -47,12 +47,11 @@ import { computed, ref } from "vue";
 
 import privateItems from "@/assets/private.json";
 import publicItems from "@/assets/public.json";
-import storeApp from "@/stores/app";
-import storeS3 from "@/stores/s3";
+import app from "@/stores/app";
+import s3 from "@/stores/s3";
 
-const app = storeApp();
-const { state } = storeToRefs(app);
-const { S3 } = storeToRefs(storeS3());
+const { state } = storeToRefs(app());
+const { S3 } = storeToRefs(s3());
 const leftDrawer = ref(false);
 const miniState = ref(true);
 const items = computed(() => (get(S3) ? privateItems : publicItems));

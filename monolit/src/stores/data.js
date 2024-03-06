@@ -3,6 +3,8 @@ import { logicNot } from "@vueuse/math";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import defNavbar from "~/src/assets/navbar.json";
+
 export default defineStore("data", () => {
   const uri = ref();
   const tree = ref();
@@ -11,6 +13,7 @@ export default defineStore("data", () => {
    *
    * @param {object} tree - Структура сайта
    * @param {object} tree.content - Контент
+   * @param {object} tree.navbar - Навбар
    * @param {Array} tree.css - Ссылки на стили
    * @param {string} tree.style - Стили
    * @param {Array} tree.js - Ссылки на скрипты
@@ -20,6 +23,7 @@ export default defineStore("data", () => {
    */
   const calcIndex = ({
     content: pContent = [],
+    navbar: pNavbar = {},
     css: pCss = [],
     style: pStyle = "",
     js: pJs = [],
@@ -27,55 +31,44 @@ export default defineStore("data", () => {
     settings: pSettings = {},
   } = {}) => {
     /**
+     * Удаление лишнего из навбвра
+     *
+     * @param {object} navbar - Гразный навбар
+     * @returns {object} - Чистый навбар
+     */
+    const fixNavbar = (navbar) => {
+      const {
+        theme = defNavbar.theme,
+        classes = defNavbar.classes,
+        template = defNavbar.template,
+        script = defNavbar.script,
+        style = defNavbar.style,
+      } = navbar;
+      return {
+        theme,
+        classes,
+        template,
+        script,
+        style,
+      };
+    };
+    /**
      * Удаление лишнего из настроек
      *
      * @param {object} settings - Грязные настройки
      * @returns {object} - Чистые настройки
      */
     const fixSettings = (settings) => {
-      const {
-        yandex,
-        metrika,
-        google,
-        analytics,
-        navbar: {
-          theme = "light",
-          classes = [
-            "bg-base-100",
-            "rounded-box",
-            "absolute",
-            "left-6",
-            "right-6",
-            "top-6",
-            "z-40",
-            "opacity-0",
-            "shadow-xl",
-            "transition-opacity",
-            "duration-1000",
-            "ease-out",
-            "!w-auto",
-            "hover:opacity-100",
-          ],
-          template = `
-<div class="flex-none">
-    <label class="btn btn-square btn-ghost" for="drawer">
-        <svg class="h-6 w-6">
-            <path :d="mdi.mdiMenu"></path>
-        </svg>
-    </label>
-</div>
-<div class="mx-2 inline-block flex-1 truncate px-2">{{ the?.name }}</div>`,
-        } = {},
-      } = settings;
+      const { yandex, metrika, google, analytics } = settings;
       return {
         yandex,
         metrika,
         google,
         analytics,
-        navbar: { theme, classes, template },
       };
     };
     let [content = {}] = pContent;
+    let navbar = { ...pNavbar };
     let css = [...pCss].filter(Boolean);
     let style = pStyle;
     let js = [...pJs].filter(Boolean);
@@ -109,11 +102,12 @@ export default defineStore("data", () => {
       label = "",
       template = "",
     } = content;
+    navbar = fixNavbar(navbar);
     content = [{ ...content, id, visible, label, template }];
     style = String(style) === style ? style : "";
     script = String(script) === script ? script : "";
     settings = fixSettings(settings);
-    return { content, css, style, js, script, settings };
+    return { content, navbar, css, style, js, script, settings };
   };
   const { data } = useFetch(
     () => (isDefined(uri) ? `${get(uri)}/data.json` : undefined),
@@ -229,6 +223,7 @@ export default defineStore("data", () => {
   const js = computed(() => get(tree)?.js.map(addProperties));
   const css = computed(() => get(tree)?.css.map(addProperties));
   const content = computed(() => get(tree)?.content);
+  const navbar = computed(() => get(tree)?.navbar);
   const siblings = {
     /** @returns {Array} - Массив одноуровневых объектов */
     get() {
@@ -362,6 +357,7 @@ export default defineStore("data", () => {
     style,
     css,
     content,
+    navbar,
     flatTree,
     calcIndex,
   };

@@ -5,6 +5,11 @@
     "to": "/content"
   },
   {
+    "title": "Navbar",
+    "icon": "padding",
+    "to": "/navbar"
+  },
+  {
     "title": "CSS",
     "icon": "css",
     "to": "/css"
