@@ -42,7 +42,11 @@ v-head(v-if="the")
     :content="settings.google"
   )
 .drawer.h-dvh
-  input#drawer.drawer-toggle(v-model="drawer", type="checkbox")
+  input#drawer.drawer-toggle(
+    v-model="drawer",
+    type="checkbox",
+    aria-labelledby="#drawer"
+  )
   .drawer-content.snap-y.snap-mandatory.overflow-y-auto.scroll-smooth(
     un-cloak,
     @scroll.passive="start"

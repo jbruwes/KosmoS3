@@ -1,3 +1,8 @@
+require("@rushstack/eslint-patch/modern-module-resolution");
+
+const path = require("node:path");
+const createAliasSetting = require("@vue/eslint-config-airbnb/createAliasSetting");
+
 module.exports = {
   // https://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy
   // This option interrupts the configuration hierarchy at this file
@@ -19,7 +24,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:vue/vue3-recommended",
     "plugin:vue-pug/vue3-recommended",
-    "airbnb-base",
+    "@vue/eslint-config-airbnb",
     "plugin:jsdoc/recommended",
     "plugin:sonarjs/recommended",
     "plugin:optimize-regex/recommended",
@@ -64,13 +69,9 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
   },
   settings: {
-    "import/resolver": {
-      alias: {
-        map: [
-          ["@", "./src"],
-          ["~", "."],
-        ],
-      },
-    },
+    ...createAliasSetting({
+      "@": `${path.resolve(__dirname, "./src")}`,
+      "~": `${path.resolve(__dirname, ".")}`,
+    }),
   },
 };
