@@ -22,7 +22,9 @@ q-layout(view="hHh Lpr lff")
     :mini="miniState",
     side="left",
     @mouseover="miniState = false",
-    @mouseout="miniState = true"
+    @focus="miniState = false",
+    @mouseout="miniState = true",
+    @blur="miniState = true"
   )
     q-list
       q-item(

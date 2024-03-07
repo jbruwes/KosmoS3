@@ -32,42 +32,139 @@ import { storeToRefs } from "pinia";
 import { computed, defineAsyncComponent, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import selector from "@/assets/glightbox.json";
+import selectors from "@/assets/glightbox.json";
+/**
+ * Хранилище приложения монолит
+ *
+ * @typedef {object} appStore
+ * @property {Function} getTemplate - Функция, возвращающая Promise на
+ *   сконструированный шаблон
+ */
 import app from "@/stores/app";
+/**
+ * Хранилище данных приложения монолит
+ *
+ * @typedef {object} dataStore
+ * @property {Array} flatTree - Массив всех объектов страниц сайта
+ */
 import data from "@/stores/data";
 
-const { getTemplate } = app();
+/** @type {appStore} */
+const appStore = app();
+/** @type {appStore} */
+const { getTemplate } = appStore;
+/** @type {dataStore} */
+const dataStore = data();
+/** @type {dataStore} */
 const { flatTree } = storeToRefs(data());
+/**
+ * Текущий ройт сайта
+ *
+ * @type {route}
+ */
 const route = useRoute();
+/**
+ * Роутер сайта
+ *
+ * @type {router}
+ */
 const router = useRouter();
+/**
+ * Родительский элемент представления
+ *
+ * @type {ref}
+ */
 const root = useParentElement();
-const selectedObjectIndex = useArrayFindIndex(
-  flatTree,
-  ({ id }) => id === route.name,
-);
-const selectedObject = computed(() =>
+/**
+ * @param root0
+ * @param root0.id
+ */
+const selectedObjectIndexFn = ({ id }) => id === route.name;
+/**
+ * SelectedObjectIndex
+ *
+ * @type {computed}
+ */
+const selectedObjectIndex = useArrayFindIndex(flatTree, selectedObjectIndexFn);
+/** @returns {object} */
+const selectedObjectFn = () =>
   get(selectedObjectIndex)
     ? get(flatTree, get(selectedObjectIndex))
-    : get(flatTree, 0).children?.[0],
-);
-const siblings = computed(() => get(selectedObject)?.siblings);
-const theTemplateEntries = useArrayMap(
-  siblings,
-  ({ id, template, script, style }) => [
-    id,
-    getTemplate({ id, template, script, style }),
-  ],
-);
-const theTemplateArray = useArrayMap(theTemplateEntries, ([key, value]) => [
+    : get(flatTree, 0).children?.[0];
+/**
+ * SelectedObject
+ *
+ * @type {computed}
+ */
+const selectedObject = computed(selectedObjectFn);
+/** @returns {Array} - Родственники */
+const siblingsFn = () => get(selectedObject)?.siblings;
+/**
+ * Siblings
+ *
+ * @type {computed}
+ */
+const siblings = computed(siblingsFn);
+/**
+ * @param root0
+ * @param root0.id
+ * @param root0.template
+ * @param root0.script
+ * @param root0.style
+ */
+const theTemplateEntriesFn = ({ id, template, script, style }) => [
+  id,
+  getTemplate({ id, template, script, style }),
+];
+/**
+ * TheTemplateEntries
+ *
+ * @type {computed}
+ */
+const theTemplateEntries = useArrayMap(siblings, theTemplateEntriesFn);
+/**
+ * @param root0
+ * @param root0."0"
+ * @param root0."1"
+ */
+const theTemplateArrayFn = ([key, value]) => [
   key,
   defineAsyncComponent(() => value),
-]);
+];
+/**
+ * TheTemplateArray
+ *
+ * @type {computed}
+ */
+const theTemplateArray = useArrayMap(theTemplateEntries, theTemplateArrayFn);
+/**
+ * TheTemplate
+ *
+ * @type {computed}
+ */
 const theTemplate = computed(() => Object.fromEntries(get(theTemplateArray)));
+/**
+ * Refs
+ *
+ * @type {ref}
+ */
 const refs = ref([]);
-const scrollToElementCurrent = useArrayFind(
-  refs,
-  ({ id }) => id === get(selectedObject, "id"),
-);
+/**
+ * @param root0
+ * @param root0.id
+ */
+const scrollToElementCurrentFn = ({ id }) => id === get(selectedObject, "id");
+/**
+ * ScrollToElementCurrent
+ *
+ * @type {computed}
+ */
+const scrollToElementCurrent = useArrayFind(refs, scrollToElementCurrentFn);
+/**
+ * Pause
+ *
+ * @type {boolean}
+ */
 let pause = false;
 /**
  * @param {Array} entries - Массив объектов, описывающих пересечения
@@ -83,21 +180,33 @@ const onIntersectionObserver = ([
   if (!pause && isIntersecting && name !== get(selectedObject, "id"))
     router.push({ name });
 };
-watchDeep(refs, async () => {
+/** TouchNavigation */
+const touchNavigation = true;
+/** Loop */
+const loop = true;
+/** AutoplayVideos */
+const autoplayVideos = true;
+/** Zoomable */
+const zoomable = false;
+/** @param el */
+const hrefSelectors = (el) => `a[href${el}]`;
+/** Selector */
+const selector = selectors.map(hrefSelectors).join();
+/** Options */
+const options = { touchNavigation, loop, autoplayVideos, zoomable, selector };
+/** Скролл */
+const onRenderComplete = () => {
+  GLightbox(options);
+  unrefElement(scrollToElementCurrent).scrollIntoView({
+    behavior: "instant",
+  });
+  pause = false;
+};
+/** Когда дом изменился */
+const onChangeRefs = async () => {
   pause = true;
   await Promise.all(Object.values(Object.fromEntries(get(theTemplateEntries))));
-  setTimeout(() => {
-    GLightbox({
-      touchNavigation: true,
-      loop: true,
-      autoplayVideos: true,
-      zoomable: false,
-      selector: selector.map((el) => `a[href${el}]`).join(),
-    });
-    unrefElement(scrollToElementCurrent).scrollIntoView({
-      behavior: "instant",
-    });
-    pause = false;
-  }, 200);
-});
+  setTimeout(onRenderComplete, 200);
+};
+watchDeep(refs, onChangeRefs);
 </script>
