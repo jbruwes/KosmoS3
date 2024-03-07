@@ -28,6 +28,7 @@ module.exports = {
     "plugin:jsdoc/recommended",
     "plugin:sonarjs/recommended",
     "plugin:optimize-regex/recommended",
+    "plugin:regexp/recommended",
     "plugin:prettier/recommended",
   ],
 

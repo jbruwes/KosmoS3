@@ -16,7 +16,7 @@
     "build": "npm run build:monolit && npm run build:kosmos3"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.525.0",
+    "@aws-sdk/client-s3": "^3.529.0",
     "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
     "@quasar/extras": "^1.16.9",
@@ -72,6 +72,7 @@
     "eslint-plugin-jsdoc": "^48.2.1",
     "eslint-plugin-optimize-regex": "^1.2.1",
     "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-regexp": "^2.2.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "eslint-plugin-sonarjs": "^0.24.0",
     "eslint-plugin-vue": "^9.22.0",
