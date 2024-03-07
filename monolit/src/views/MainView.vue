@@ -45,47 +45,60 @@ import app from "@/stores/app";
  * Хранилище данных приложения монолит
  *
  * @typedef {object} dataStore
- * @property {Array} flatTree - Массив всех объектов страниц сайта
+ * @property {Array} flatTree - Общий массив всех объектов страниц сайта
  */
 import data from "@/stores/data";
 
 /** @type {appStore} */
 const appStore = app();
+
 /** @type {appStore} */
 const { getTemplate } = appStore;
+
 /** @type {dataStore} */
 const dataStore = data();
+
 /** @type {dataStore} */
 const { flatTree } = storeToRefs(data());
+
 /**
  * Текущий ройт сайта
  *
  * @type {route}
  */
 const route = useRoute();
+
 /**
  * Роутер сайта
  *
  * @type {router}
  */
 const router = useRouter();
+
 /**
  * Родительский элемент представления
  *
  * @type {ref}
  */
 const root = useParentElement();
+
 /**
- * @param root0
- * @param root0.id
+ * Функция проверки совпадения Id объекта страницы с названием роута
+ *
+ * @param {object} page - Объект страницы
+ * @param {string} page.id - Id страницы
+ * @returns {boolean} Признак совпадения с названием текущего роута
  */
 const selectedObjectIndexFn = ({ id }) => id === route.name;
+
 /**
- * SelectedObjectIndex
+ * Порядковый номер выбранной странице в общем массиве всех объектов страниц
+ * сайта
  *
  * @type {computed}
  */
 const selectedObjectIndex = useArrayFindIndex(flatTree, selectedObjectIndexFn);
+
 /** @returns {object} */
 const selectedObjectFn = () =>
   get(selectedObjectIndex)
