@@ -21,7 +21,7 @@ export default defineStore("app", () => {
   const { S3, base, bucket } = storeToRefs(store);
   const { putObject, headObject } = store;
   const dataStore = storeData();
-  const { uri, tree, pages } = storeToRefs(dataStore);
+  const { uri, tree, cmpPages } = storeToRefs(dataStore);
   const { calcIndex } = dataStore;
   /**
    * Переключатель видимости правой панели
@@ -94,7 +94,7 @@ export default defineStore("app", () => {
       expanded: [],
     },
   });
-  const the = useArrayFind(pages, ({ id }) => id === state.content.selected);
+  const the = useArrayFind(cmpPages, ({ id }) => id === state.content.selected);
   const selectedValue = computed({
     /**
      * Считывание исходного кода из структуры данных
@@ -128,7 +128,7 @@ export default defineStore("app", () => {
     "?": 'xml version="1.0" encoding="UTF-8"',
     urlset: {
       "@xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9",
-      url: get(pages).map(({ urn, lastmod, changefreq, priority }) => ({
+      url: get(cmpPages).map(({ urn, lastmod, changefreq, priority }) => ({
         loc: `https://${get(bucket)}/${urn}`,
         lastmod,
         changefreq,

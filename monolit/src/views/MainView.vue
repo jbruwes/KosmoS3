@@ -1,19 +1,19 @@
 <template lang="pug">
 .flex.snap-start(
-  v-for="the in siblings",
+  v-for="the in cmpCurrent?.siblings",
   :id="the.id",
   :key="the.id",
-  ref="refs",
-  v-intersection-observer="[onIntersectionObserver,{root,rootMargin:'-1px 0px -100%',threshold:0}]",
+  ref="refElements",
+  v-intersection-observer="cntIntersectionObserver",
   :class="{ 'min-h-full': the.full }"
 )
   .prose.max-w-none.flex-auto.text-sm(
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
     :data-theme="the.theme",
-    :role="the.id === selectedObject.id ? 'main' : undefined",
+    :role="the.id === cmpCurrent.id ? 'main' : undefined",
     un-cloak
   )
-    component(:is="theTemplate[the.id]", :the="the", :mdi="mdi")
+    component(:is="cmpTemplates[the.id]", :the="the", :mdi="mdi")
 </template>
 <script setup>
 import * as mdi from "@mdi/js";
@@ -29,40 +29,45 @@ import {
 } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, defineAsyncComponent, nextTick, ref } from "vue";
+import {
+  computed,
+  defineAsyncComponent,
+  // nextTick,
+  ref,
+} from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
 /**
  * Хранилище приложения монолит
  *
- * @typedef {object} appStore
- * @property {Function} getTemplate - Функция, возвращающая Promise на
+ * @typedef {object} strApp
+ * @property {Function} fncTemplate - Функция, возвращающая Promise на
  *   сконструированный шаблон
  */
 import app from "@/stores/app";
 /**
  * Хранилище данных приложения монолит
  *
- * @typedef {object} dataStore
- * @property {Array} pages - Общий массив всех объектов страниц сайта
+ * @typedef {object} strData
+ * @property {computed} cmpPages - Общий массив всех объектов страниц сайта
  */
 import data from "@/stores/data";
 
-/** @type {appStore} */
-const appStore = app();
+/** @type {strApp} */
+const strApp = app();
 
-/** @type {appStore} */
-const { getTemplate } = appStore;
+/** @type {strApp} */
+const { fncTemplate } = strApp;
 
-/** @type {dataStore} */
-const dataStore = data();
+/** @type {strData} */
+const strData = data();
 
-/** @type {dataStore} */
-const { pages } = storeToRefs(data());
+/** @type {strData} */
+const { cmpPages } = storeToRefs(data());
 
 /**
- * Текущий ройт сайта
+ * Текущий роут сайта
  *
  * @type {route}
  */
@@ -76,151 +81,260 @@ const route = useRoute();
 const router = useRouter();
 
 /**
- * Родительский элемент представления
- *
- * @type {ref}
- */
-const root = useParentElement();
-
-/**
  * Функция проверки совпадения Id объекта страницы с названием роута
  *
  * @param {object} page - Объект страницы
  * @param {string} page.id - Id страницы
  * @returns {boolean} Признак совпадения с названием текущего роута
  */
-const selectedObjectIndexFn = ({ id }) => id === route.name;
+const fncCurrentIndex = ({ id }) => id === route.name;
 
 /**
- * Порядковый номер выбранной странице в общем массиве всех объектов страниц
+ * Порядковый номер выбранной страницы в общем массиве всех объектов страниц
  * сайта
  *
  * @type {computed}
+ * @see {@link fncCurrentIndex} См. поисковую функцию
  */
-const selectedObjectIndex = useArrayFindIndex(pages, selectedObjectIndexFn);
+const cmpCurrentIndex = useArrayFindIndex(cmpPages, fncCurrentIndex);
 
-/** @returns {object} */
-const selectedObjectFn = () =>
-  get(selectedObjectIndex)
-    ? get(pages, get(selectedObjectIndex))
-    : get(pages, 0).children?.[0];
 /**
- * SelectedObject
+ * Функция вычисления переадрессации корневого объекта страницы на первый
+ * доступный объект страницы
+ *
+ * @returns {object} Объект страницы
+ */
+const fncCurrent = () =>
+  get(cmpCurrentIndex)
+    ? get(cmpPages, get(cmpCurrentIndex))
+    : get(cmpPages, 0).children?.[0];
+
+/**
+ * Вычисление переадресации корневого объекта страницы на первый доступный
+ * объект страницы
  *
  * @type {computed}
+ * @see {@link fncCurrent} См. функцию вычисления переадресации
  */
-const selectedObject = computed(selectedObjectFn);
-/** @returns {Array} - Родственники */
-const siblingsFn = () => get(selectedObject)?.siblings;
+const cmpCurrent = computed(fncCurrent);
+
 /**
- * Siblings
+ * Функция вычисления элементов массива с готовыми шаблонами
  *
- * @type {computed}
+ * @param {object} page - Объект страницы
+ * @param {string} page.id - Id страницы
+ * @param {string} page.template - Шаблон страницы
+ * @param {string} page.script - Скрипты страницы
+ * @param {string} page.style - Стили страницы
+ * @returns {[string, Promise]} Массив из id и готового шаблона
  */
-const siblings = computed(siblingsFn);
-/**
- * @param root0
- * @param root0.id
- * @param root0.template
- * @param root0.script
- * @param root0.style
- */
-const theTemplateEntriesFn = ({ id, template, script, style }) => [
+const fncTemplateEntries = ({ id, template, script, style }) => [
   id,
-  getTemplate({ id, template, script, style }),
+  fncTemplate({ id, template, script, style }),
 ];
+
 /**
- * TheTemplateEntries
+ * Вычисление массива готовых шаблонов по всем страницам на одном экране
  *
  * @type {computed}
+ * @see {@link fncTemplateEntries} см. функцию вычисления
  */
-const theTemplateEntries = useArrayMap(siblings, theTemplateEntriesFn);
+const cmpTemplateEntries = useArrayMap(
+  get(cmpCurrent, "siblings"),
+  fncTemplateEntries,
+);
+
 /**
- * @param root0
- * @param root0."0"
- * @param root0."1"
+ * Функция вычисления элемента массива загруженных шаблонов
+ *
+ * @param {Array} root0 - Элемент массива с готовым шаблоном
+ * @param {string} root0."0" - Id шаблона
+ * @param {Promise} root0."1" - Готовый шаблон
+ * @returns {[string, object]} Массив из id и загруженного шаблона
  */
-const theTemplateArrayFn = ([key, value]) => [
-  key,
+const fncTemplateArray = ([id, value]) => [
+  id,
   defineAsyncComponent(() => value),
 ];
+
 /**
- * TheTemplateArray
+ * Вычисление массива загруженных шаблонов
  *
  * @type {computed}
+ * @see {@link fncTemplateArray} см. функцию вычисления
  */
-const theTemplateArray = useArrayMap(theTemplateEntries, theTemplateArrayFn);
+const cmpTemplateArray = useArrayMap(cmpTemplateEntries, fncTemplateArray);
+
 /**
- * TheTemplate
+ * Функция вычисления преобразования массива загруженных шаблонов в объект
+ *
+ * @returns {object} Объект с загруженных шаблонов
+ */
+const fncTemplates = () => Object.fromEntries(get(cmpTemplateArray));
+
+/**
+ * Вычисления объекта загруженных шаблонов
  *
  * @type {computed}
+ * @see {@link fncTemplates} см. функцию вычисления
  */
-const theTemplate = computed(() => Object.fromEntries(get(theTemplateArray)));
+const cmpTemplates = computed(fncTemplates);
+
 /**
- * Refs
+ * Сдвиг области видимости
+ *
+ * @type {string}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/rootMargin} см. документацию
+ */
+const rootMargin = "-1px 0px -100%";
+
+/**
+ * Процент площади объекта, который должен попасть в область видимости
+ *
+ * @type {number}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/thresholds} см. документацию
+ */
+const threshold = 0;
+
+/**
+ * Родительский элемент представления
  *
  * @type {ref}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/root} см. документацию
  */
-const refs = ref([]);
+const root = useParentElement();
+
 /**
- * @param root0
- * @param root0.id
- */
-const scrollToElementCurrentFn = ({ id }) => id === get(selectedObject, "id");
-/**
- * ScrollToElementCurrent
+ * Параметры IntersectionObserver
  *
- * @type {computed}
+ * @type {object}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options} см. документацию
  */
-const scrollToElementCurrent = useArrayFind(refs, scrollToElementCurrentFn);
+const cntIntersectionObserverOptions = { root, rootMargin, threshold };
+
 /**
- * Pause
+ * Флаг постановки проверки пересечения страницы с облатью видимости на паузу
  *
  * @type {boolean}
  */
-let pause = false;
+let varPause = false;
+
 /**
+ * Процедура обновления роутера, если страница появилась в области видимости
+ *
  * @param {Array} entries - Массив объектов, описывающих пересечения
  * @param {object} entries."0" - Первый и единственный объект, описывающий
  *   пересечение
  */
-const onIntersectionObserver = ([
+const fncIntersectionObserver = ([
   {
     isIntersecting,
     target: { id: name },
   },
 ]) => {
-  if (!pause && isIntersecting && name !== get(selectedObject, "id"))
+  if (!varPause && isIntersecting && name !== get(cmpCurrent, "id"))
     router.push({ name });
 };
-/** TouchNavigation */
-const touchNavigation = true;
-/** Loop */
+
+/**
+ * Массив параметров для IntersectionObserver
+ *
+ * @type {Array}
+ */
+const cntIntersectionObserver = [
+  fncIntersectionObserver,
+  cntIntersectionObserverOptions,
+];
+
+/**
+ * Loop slides on end
+ *
+ * @type {boolean}
+ * @see {@link https://github.com/biati-digital/glightbox} см. документацию
+ */
 const loop = true;
-/** AutoplayVideos */
-const autoplayVideos = true;
-/** Zoomable */
+
+/**
+ * Enable or disable zoomable images you can also use data-zoomable="false" on
+ * individual nodes.
+ *
+ * @type {boolean}
+ * @see {@link https://github.com/biati-digital/glightbox} см. документацию
+ */
 const zoomable = false;
-/** @param el */
-const hrefSelectors = (el) => `a[href${el}]`;
-/** Selector */
-const selector = selectors.map(hrefSelectors).join();
-/** Options */
-const options = { touchNavigation, loop, autoplayVideos, zoomable, selector };
-/** Скролл */
-const onRenderComplete = async () => {
-  await nextTick();
-  GLightbox(options);
-  unrefElement(scrollToElementCurrent).scrollIntoView({
+
+/**
+ * Функция преобразования в селектор для href
+ *
+ * @param {string} el - Селектор
+ * @returns {string} Преобразованный селектор
+ */
+const fncSelectors = (el) => `a[href${el}]`;
+
+/**
+ * Name of the selector for example '.glightbox' or 'data-glightbox' or
+ * '*[data-glightbox]'
+ *
+ * @type {string}
+ * @see {@link https://github.com/biati-digital/glightbox} см. документацию
+ */
+const selector = selectors.map(fncSelectors).join();
+
+/**
+ * Набор параметров для лайтбокса
+ *
+ * @type {object}
+ * @see {@link https://github.com/biati-digital/glightbox} см. документацию
+ */
+const cntGLightboxOptions = { loop, zoomable, selector };
+
+/**
+ * Массив страниц, отображаемых на экране
+ *
+ * @type {ref}
+ */
+const refElements = ref([]);
+
+/**
+ * Функция поиска элемента соответствующего текущему объекту страницы
+ *
+ * @param {ref} element - Элемент
+ * @param {string} element.id - Id элемента
+ * @returns {boolean} Признак совпадения id
+ */
+const fncCurrentElement = ({ id }) => id === get(cmpCurrent, "id");
+
+/**
+ * Вычисление текущего элемента, соответствующего текущему объекту страницы
+ *
+ * @type {computed}
+ * @see {@link fncCurrentElement} см. поисковую функцию
+ */
+const cmpCurrentElement = useArrayFind(refElements, fncCurrentElement);
+
+/**
+ * Процедура инициализации, прописывает лайтбокс и прокручивает текущую страницу
+ * в область видимости
+ */
+const fncInit = () => {
+  // await nextTick();
+  GLightbox(cntGLightboxOptions);
+  unrefElement(cmpCurrentElement).scrollIntoView({
     behavior: "instant",
   });
-  pause = false;
+  varPause = false;
 };
-/** Когда дом изменился */
-const onChangeRefs = async () => {
-  pause = true;
-  await Promise.all(Object.values(Object.fromEntries(get(theTemplateEntries))));
-  setTimeout(onRenderComplete, 200);
+
+/**
+ * Процедура, вызываемая при изменении состава страниц на экране. Ждет загрузку
+ * страниц, ждет 200ms задержки по умолчанию для defineAsyncComponent и
+ * запускает процедуру инициализации
+ */
+const fncWatchRefElements = async () => {
+  varPause = true;
+  await Promise.all(Object.values(Object.fromEntries(get(cmpTemplateEntries))));
+  setTimeout(fncInit, 500);
 };
-watchDeep(refs, onChangeRefs);
+
+watchDeep(refElements, fncWatchRefElements);
 </script>

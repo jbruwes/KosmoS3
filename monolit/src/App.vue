@@ -61,15 +61,15 @@ v-head(v-if="the")
   .drawer-side.z-50
     label.drawer-overlay(for="drawer")
     .grid.max-w-full.self-stretch.overflow-x-auto.scroll-smooth(
-      v-if="pages.length",
-      :class="{ 'justify-self-stretch': pages[0].full }"
+      v-if="cmpPages.length",
+      :class="{ 'justify-self-stretch': cmpPages[0].full }"
     )
       .col-start-1.row-start-1.flex
         .prose.max-w-none.flex-auto.text-sm(
           class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
-          :data-theme="pages[0].theme"
+          :data-theme="cmpPages[0].theme"
         )
-          component(:is="theTemplate", :the="pages[0]", :mdi="mdi")
+          component(:is="theTemplate", :the="cmpPages[0]", :mdi="mdi")
       label.btn.btn-circle.btn-ghost.sticky.right-1.top-1.col-start-1.row-start-1.justify-self-end(
         for="drawer"
       )
@@ -95,19 +95,19 @@ import { useRoute, useRouter } from "vue-router";
 import app from "./stores/app";
 import data from "./stores/data";
 
-const { getTemplate } = app();
+const { fncTemplate } = app();
 const location = useBrowserLocation();
 const { ready, start } = useTimeout(1000, { controls: true });
 const router = useRouter();
 const route = useRoute();
-const { pages, css, js, uri, script, style, settings, navbar } =
+const { cmpPages, css, js, uri, script, style, settings, navbar } =
   storeToRefs(data());
 const theTemplate = computed(() =>
-  defineAsyncComponent(() => getTemplate(get(pages, 0))),
+  defineAsyncComponent(() => fncTemplate(get(cmpPages, 0))),
 );
 const theNavbar = computed(() =>
   defineAsyncComponent(() =>
-    getTemplate({
+    fncTemplate({
       id: "navbar",
       template: get(navbar)?.template,
       script: get(navbar)?.script,
@@ -115,7 +115,7 @@ const theNavbar = computed(() =>
     }),
   ),
 );
-const the = useArrayFind(pages, ({ id }) => id === route.name);
+const the = useArrayFind(cmpPages, ({ id }) => id === route.name);
 const tagStyle = ref("style");
 const tagScript = ref("script");
 const drawer = ref(false);

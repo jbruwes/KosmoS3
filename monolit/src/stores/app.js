@@ -8,7 +8,6 @@ import * as vue from "vue";
 import * as vueRouter from "vue-router";
 import { loadModule } from "vue3-sfc-loader";
 
-/** Функция подстановки стилей в секцию <head> */
 const { useStyleTag } = vueuseCore;
 
 /** Модули, передаваемые шаблону */
@@ -39,21 +38,21 @@ const log = (type, ...args) => {
  * @param {object} the - Текущий объект
  * @returns {object} Шаблон
  */
-const getTemplate = (the) => {
+const fncTemplate = (the) => {
   /** Константа со скриптами */
-  const scriptSetup = `<script setup>const props=defineProps(["the","mdi"]);${the.script ?? ""}</script>`;
+  const cntScript = `<script setup>const props=defineProps(["the","mdi"]);${the.script ?? ""}</script>`;
 
   /** Константа с шаблоном */
-  const template = `<template>${the.template ?? ""}</template>`;
+  const cntTemplate = `<template>${the.template ?? ""}</template>`;
   /** Константа со стилями */
-  const styleScoped = `<style scoped>${the.style ?? ""}</style>`;
+  const cntStyle = `<style scoped>${the.style ?? ""}</style>`;
 
   /**
    * Функция получения файла шаблона
    *
    * @returns {string} Шаблон
    */
-  const getFile = () => `${scriptSetup}${template}${styleScoped}`;
+  const getFile = () => `${cntScript}${cntTemplate}${cntStyle}`;
 
   /**
    * Процедура добавления стилей
@@ -65,23 +64,23 @@ const getTemplate = (the) => {
   };
 
   /** Виртуальный путь до модуля */
-  const path = `/${the.id}.vue`;
+  const cntPath = `/${the.id}.vue`;
 
   /** Параметры загрузки модуля */
-  const options = { moduleCache, getFile, addStyle, log };
+  const cntOptions = { moduleCache, getFile, addStyle, log };
 
-  return loadModule(path, options);
+  return loadModule(cntPath, cntOptions);
 };
 
 /** Id хранилища */
-const id = "app";
+const cntId = "app";
 
 /**
  * Функция, возвращающая объект хранилища
  *
  * @returns {object} Объект хранилища
  */
-const storeSetup = () => ({ getTemplate });
+const fncStoreSetup = () => ({ fncTemplate });
 
 /** Хранилище приложения монолит */
-export default defineStore(id, storeSetup);
+export default defineStore(cntId, fncStoreSetup);

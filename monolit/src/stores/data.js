@@ -278,7 +278,7 @@ export default defineStore("data", () => {
     },
     configurable: true,
   };
-  const pages = computed(() =>
+  const cmpPages = computed(() =>
     isDefined(content)
       ? (function getMembers(members, pParent) {
           const parent = {
@@ -342,10 +342,10 @@ export default defineStore("data", () => {
   );
   const altogether = {
     /** @returns {Array} - Все вместе */
-    get: () => pages,
+    get: () => cmpPages,
     configurable: true,
   };
-  get(pages).forEach((element) => {
+  get(cmpPages).forEach((element) => {
     Object.defineProperty(element, "altogether", altogether);
   });
   return {
@@ -358,7 +358,7 @@ export default defineStore("data", () => {
     css,
     content,
     navbar,
-    pages,
+    cmpPages,
     calcIndex,
   };
 });

@@ -35,14 +35,14 @@ initUnocssRuntime({
 });
 const app = createApp(App);
 app.use(createPinia());
-const { pages, settings } = storeToRefs(dataStore());
+const { cmpPages, settings } = storeToRefs(dataStore());
 app.use(router);
 app.use(createHead());
 app.use(Tres);
 app.use(MotionPlugin);
 app.component("VHead", Head);
 app.mount("#app");
-watchOnce(pages, (value) => {
+watchOnce(cmpPages, (value) => {
   value.forEach(({ path, id: name, loc }) => {
     router.addRoute({
       name,
