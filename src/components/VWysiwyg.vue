@@ -110,9 +110,9 @@ const S3 = s3();
 const { base } = storeToRefs(S3);
 const { putFile } = S3;
 const { the, selectedValue } = storeToRefs(app());
-const { flatTree, content } = storeToRefs(data());
+const { pages, content } = storeToRefs(data());
 const inserted = ref(null);
-const insertedObject = useArrayFind(flatTree, ({ id }) => id === get(inserted));
+const insertedObject = useArrayFind(pages, ({ id }) => id === get(inserted));
 /**
  * Инициализация
  *

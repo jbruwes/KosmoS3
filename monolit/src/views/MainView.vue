@@ -29,7 +29,7 @@ import {
 } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, defineAsyncComponent, ref } from "vue";
+import { computed, defineAsyncComponent, nextTick, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
@@ -45,7 +45,7 @@ import app from "@/stores/app";
  * Хранилище данных приложения монолит
  *
  * @typedef {object} dataStore
- * @property {Array} flatTree - Общий массив всех объектов страниц сайта
+ * @property {Array} pages - Общий массив всех объектов страниц сайта
  */
 import data from "@/stores/data";
 
@@ -59,7 +59,7 @@ const { getTemplate } = appStore;
 const dataStore = data();
 
 /** @type {dataStore} */
-const { flatTree } = storeToRefs(data());
+const { pages } = storeToRefs(data());
 
 /**
  * Текущий ройт сайта
@@ -97,13 +97,13 @@ const selectedObjectIndexFn = ({ id }) => id === route.name;
  *
  * @type {computed}
  */
-const selectedObjectIndex = useArrayFindIndex(flatTree, selectedObjectIndexFn);
+const selectedObjectIndex = useArrayFindIndex(pages, selectedObjectIndexFn);
 
 /** @returns {object} */
 const selectedObjectFn = () =>
   get(selectedObjectIndex)
-    ? get(flatTree, get(selectedObjectIndex))
-    : get(flatTree, 0).children?.[0];
+    ? get(pages, get(selectedObjectIndex))
+    : get(pages, 0).children?.[0];
 /**
  * SelectedObject
  *
@@ -208,7 +208,8 @@ const selector = selectors.map(hrefSelectors).join();
 /** Options */
 const options = { touchNavigation, loop, autoplayVideos, zoomable, selector };
 /** Скролл */
-const onRenderComplete = () => {
+const onRenderComplete = async () => {
+  await nextTick();
   GLightbox(options);
   unrefElement(scrollToElementCurrent).scrollIntoView({
     behavior: "instant",

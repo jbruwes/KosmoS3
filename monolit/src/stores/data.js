@@ -278,7 +278,7 @@ export default defineStore("data", () => {
     },
     configurable: true,
   };
-  const flatTree = computed(() =>
+  const pages = computed(() =>
     isDefined(content)
       ? (function getMembers(members, pParent) {
           const parent = {
@@ -342,10 +342,10 @@ export default defineStore("data", () => {
   );
   const altogether = {
     /** @returns {Array} - Все вместе */
-    get: () => flatTree,
+    get: () => pages,
     configurable: true,
   };
-  get(flatTree).forEach((element) => {
+  get(pages).forEach((element) => {
     Object.defineProperty(element, "altogether", altogether);
   });
   return {
@@ -358,7 +358,7 @@ export default defineStore("data", () => {
     css,
     content,
     navbar,
-    flatTree,
+    pages,
     calcIndex,
   };
 });

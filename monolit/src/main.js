@@ -35,14 +35,14 @@ initUnocssRuntime({
 });
 const app = createApp(App);
 app.use(createPinia());
-const { flatTree, settings } = storeToRefs(dataStore());
+const { pages, settings } = storeToRefs(dataStore());
 app.use(router);
 app.use(createHead());
 app.use(Tres);
 app.use(MotionPlugin);
 app.component("VHead", Head);
 app.mount("#app");
-watchOnce(flatTree, (value) => {
+watchOnce(pages, (value) => {
   value.forEach(({ path, id: name, loc }) => {
     router.addRoute({
       name,
