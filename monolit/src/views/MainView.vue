@@ -10,10 +10,14 @@
   .prose.max-w-none.flex-auto.text-sm(
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
     :data-theme="the.theme",
-    :role="the.id === cmpCurrent.id ? 'main' : undefined",
-    un-cloak
+    :role="the.id === cmpCurrent.id ? 'main' : undefined"
   )
-    component(:is="cmpTemplates[the.id]", :the="the", :mdi="mdi")
+    component(
+      :is="cmpTemplates[the.id]",
+      :the="the",
+      :mdi="mdi",
+      @vue:mounted="cmpMounted[the.id].resolve()"
+    )
 </template>
 <script setup>
 import * as mdi from "@mdi/js";
@@ -23,18 +27,12 @@ import {
   unrefElement,
   useArrayFind,
   useArrayFindIndex,
-  useArrayMap,
   useParentElement,
   watchDeep,
 } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import {
-  computed,
-  defineAsyncComponent,
-  // nextTick,
-  ref,
-} from "vue";
+import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
@@ -119,6 +117,29 @@ const fncCurrent = () =>
 const cmpCurrent = computed(fncCurrent);
 
 /**
+ * Функция вычисления элемента с промисом
+ *
+ * @param {object} page - Объект страницы
+ * @param {string} page.id - Id страницы
+ * @returns {[
+ *   string,
+ *   { promise: Promise; resolve: Function; reject: Function },
+ * ]}
+ *   Идентифицированный элемент с промисом
+ */
+const fncMounted = ({ id }) => [id, Promise.withResolvers()];
+
+/**
+ * Вычисление идентифицированного объекта промисов
+ *
+ * @type {computed}
+ * @see {@link fncMounted} см. ф-цию вычисления
+ */
+const cmpMounted = computed(() =>
+  Object.fromEntries(get(cmpCurrent, "siblings").map(fncMounted)),
+);
+
+/**
  * Функция вычисления элементов массива с готовыми шаблонами
  *
  * @param {object} page - Объект страницы
@@ -126,7 +147,7 @@ const cmpCurrent = computed(fncCurrent);
  * @param {string} page.template - Шаблон страницы
  * @param {string} page.script - Скрипты страницы
  * @param {string} page.style - Стили страницы
- * @returns {[string, Promise]} Массив из id и готового шаблона
+ * @returns {[string, object]} Массив из id и готового шаблона
  */
 const fncTemplateEntries = ({ id, template, script, style }) => [
   id,
@@ -134,43 +155,13 @@ const fncTemplateEntries = ({ id, template, script, style }) => [
 ];
 
 /**
- * Вычисление массива готовых шаблонов по всем страницам на одном экране
- *
- * @type {computed}
- * @see {@link fncTemplateEntries} см. функцию вычисления
- */
-const cmpTemplateEntries = useArrayMap(
-  get(cmpCurrent, "siblings"),
-  fncTemplateEntries,
-);
-
-/**
- * Функция вычисления элемента массива загруженных шаблонов
- *
- * @param {Array} root0 - Элемент массива с готовым шаблоном
- * @param {string} root0."0" - Id шаблона
- * @param {Promise} root0."1" - Готовый шаблон
- * @returns {[string, object]} Массив из id и загруженного шаблона
- */
-const fncTemplateArray = ([id, value]) => [
-  id,
-  defineAsyncComponent(() => value),
-];
-
-/**
- * Вычисление массива загруженных шаблонов
- *
- * @type {computed}
- * @see {@link fncTemplateArray} см. функцию вычисления
- */
-const cmpTemplateArray = useArrayMap(cmpTemplateEntries, fncTemplateArray);
-
-/**
  * Функция вычисления преобразования массива загруженных шаблонов в объект
  *
  * @returns {object} Объект с загруженных шаблонов
+ * @see {@link fncTemplateEntries} см. функцию вычисления
  */
-const fncTemplates = () => Object.fromEntries(get(cmpTemplateArray));
+const fncTemplates = () =>
+  Object.fromEntries(get(cmpCurrent, "siblings").map(fncTemplateEntries));
 
 /**
  * Вычисления объекта загруженных шаблонов
@@ -313,27 +304,23 @@ const fncCurrentElement = ({ id }) => id === get(cmpCurrent, "id");
 const cmpCurrentElement = useArrayFind(refElements, fncCurrentElement);
 
 /**
- * Процедура инициализации, прописывает лайтбокс и прокручивает текущую страницу
- * в область видимости
+ * Функция получения промиса из объекта
+ *
+ * @param {object} PromiseWithResolvers - Объект, содержащий промис
+ * @param {Promise} PromiseWithResolvers.promise - Промис
+ * @returns {Promise} Промис
  */
-const fncInit = () => {
-  // await nextTick();
+const getPromise = ({ promise }) => promise;
+
+/** Процедура, вызываемая при изменении состава страниц на экране */
+const fncWatchRefElements = async () => {
+  varPause = true;
+  await Promise.all(Object.values(get(cmpMounted)).map(getPromise));
   GLightbox(cntGLightboxOptions);
   unrefElement(cmpCurrentElement).scrollIntoView({
     behavior: "instant",
   });
   varPause = false;
-};
-
-/**
- * Процедура, вызываемая при изменении состава страниц на экране. Ждет загрузку
- * страниц, ждет 200ms задержки по умолчанию для defineAsyncComponent и
- * запускает процедуру инициализации
- */
-const fncWatchRefElements = async () => {
-  varPause = true;
-  await Promise.all(Object.values(Object.fromEntries(get(cmpTemplateEntries))));
-  setTimeout(fncInit, 500);
 };
 
 watchDeep(refElements, fncWatchRefElements);

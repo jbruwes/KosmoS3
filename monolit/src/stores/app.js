@@ -8,6 +8,7 @@ import * as vue from "vue";
 import * as vueRouter from "vue-router";
 import { loadModule } from "vue3-sfc-loader";
 
+const { defineAsyncComponent } = vue;
 const { useStyleTag } = vueuseCore;
 
 /** Модули, передаваемые шаблону */
@@ -33,6 +34,13 @@ const log = (type, ...args) => {
 };
 
 /**
+ * Задержка рендеригна шаблона
+ *
+ * @type {number}
+ */
+const delay = 0;
+
+/**
  * Функция, возвращающая Promise на сконструированный шаблон
  *
  * @param {object} the - Текущий объект
@@ -44,6 +52,7 @@ const fncTemplate = (the) => {
 
   /** Константа с шаблоном */
   const cntTemplate = `<template>${the.template ?? ""}</template>`;
+
   /** Константа со стилями */
   const cntStyle = `<style scoped>${the.style ?? ""}</style>`;
 
@@ -69,7 +78,17 @@ const fncTemplate = (the) => {
   /** Параметры загрузки модуля */
   const cntOptions = { moduleCache, getFile, addStyle, log };
 
-  return loadModule(cntPath, cntOptions);
+  /**
+   * Загрузчик шаблона
+   *
+   * @returns {Promise} Промис
+   */
+  const loader = () => loadModule(cntPath, cntOptions);
+
+  /** Объект свойств загрузки компонента */
+  const cntSource = { loader, delay };
+
+  return defineAsyncComponent(cntSource);
 };
 
 /** Id хранилища */

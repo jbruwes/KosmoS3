@@ -48,7 +48,6 @@ v-head(v-if="the")
     aria-labelledby="#drawer"
   )
   .drawer-content.snap-y.snap-mandatory.overflow-y-auto.scroll-smooth(
-    un-cloak,
     @scroll.passive="start"
   )
     .navbar(
@@ -89,7 +88,7 @@ import {
   useTimeout,
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed, defineAsyncComponent, ref } from "vue";
+import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import app from "./stores/app";
@@ -102,18 +101,14 @@ const router = useRouter();
 const route = useRoute();
 const { cmpPages, css, js, uri, script, style, settings, navbar } =
   storeToRefs(data());
-const theTemplate = computed(() =>
-  defineAsyncComponent(() => fncTemplate(get(cmpPages, 0))),
-);
+const theTemplate = computed(() => fncTemplate(get(cmpPages, 0)));
 const theNavbar = computed(() =>
-  defineAsyncComponent(() =>
-    fncTemplate({
-      id: "navbar",
-      template: get(navbar)?.template,
-      script: get(navbar)?.script,
-      style: get(navbar)?.style,
-    }),
-  ),
+  fncTemplate({
+    id: "navbar",
+    template: get(navbar)?.template,
+    script: get(navbar)?.script,
+    style: get(navbar)?.style,
+  }),
 );
 const the = useArrayFind(cmpPages, ({ id }) => id === route.name);
 const tagStyle = ref("style");
