@@ -1,6 +1,7 @@
 <template lang="pug">
 .flex.snap-start(
   v-for="the in cmpCurrent?.siblings",
+  v-cloak,
   :id="the.id",
   :key="the.id",
   ref="refElements",
@@ -32,7 +33,7 @@ import {
 } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
@@ -316,10 +317,12 @@ const getPromise = ({ promise }) => promise;
 const fncWatchRefElements = async () => {
   varPause = true;
   await Promise.all(Object.values(get(cmpMounted)).map(getPromise));
+  await nextTick();
   GLightbox(cntGLightboxOptions);
   unrefElement(cmpCurrentElement).scrollIntoView({
     behavior: "instant",
   });
+  await nextTick();
   varPause = false;
 };
 
