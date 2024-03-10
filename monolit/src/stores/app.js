@@ -69,30 +69,26 @@ const fncTemplate = (the) => {
    * @param {string} style - Стили
    */
   const addStyle = (style) => {
-    useStyleTag(style, { id: `style_${the.id}` });
+    /**
+     * Id стиля
+     *
+     * @type {string}
+     */
+    const id = `style_${the.id}`;
+
+    useStyleTag(style, { id });
   };
-
-  /** Виртуальный путь до модуля */
-  const cntPath = `/${the.id}.vue`;
-
-  /** Параметры загрузки модуля */
-  const cntOptions = { moduleCache, getFile, addStyle, log };
 
   /**
    * Загрузчик шаблона
    *
    * @returns {Promise} Промис
    */
-  const loader = () => loadModule(cntPath, cntOptions);
+  const loader = () =>
+    loadModule(`/${the.id}.vue`, { moduleCache, getFile, addStyle, log });
 
-  /** Объект свойств загрузки компонента */
-  const cntSource = { loader, delay };
-
-  return defineAsyncComponent(cntSource);
+  return defineAsyncComponent({ loader, delay });
 };
-
-/** Id хранилища */
-const cntId = "app";
 
 /**
  * Функция, возвращающая объект хранилища
@@ -102,4 +98,4 @@ const cntId = "app";
 const fncStoreSetup = () => ({ fncTemplate });
 
 /** Хранилище приложения монолит */
-export default defineStore(cntId, fncStoreSetup);
+export default defineStore("app", fncStoreSetup);

@@ -5,7 +5,7 @@
   :id="the.id",
   :key="the.id",
   ref="refElements",
-  v-intersection-observer="cntIntersectionObserver",
+  v-intersection-observer="[fncIntersectionObserver,{root,rootMargin,threshold}]",
   :class="{ 'min-h-full': the.full }"
 )
   .prose.max-w-none.flex-auto.text-sm(
@@ -197,14 +197,6 @@ const threshold = 0;
 const root = useParentElement();
 
 /**
- * Параметры IntersectionObserver
- *
- * @type {object}
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options} см. документацию
- */
-const cntIntersectionObserverOptions = { root, rootMargin, threshold };
-
-/**
  * Флаг постановки проверки пересечения страницы с облатью видимости на паузу
  *
  * @type {boolean}
@@ -227,16 +219,6 @@ const fncIntersectionObserver = ([
   if (!varPause && isIntersecting && name !== get(cmpCurrent, "id"))
     router.push({ name });
 };
-
-/**
- * Массив параметров для IntersectionObserver
- *
- * @type {Array}
- */
-const cntIntersectionObserver = [
-  fncIntersectionObserver,
-  cntIntersectionObserverOptions,
-];
 
 /**
  * Loop slides on end
@@ -271,14 +253,6 @@ const fncSelectors = (el) => `a[href${el}]`;
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
 const selector = selectors.map(fncSelectors).join();
-
-/**
- * Набор параметров для лайтбокса
- *
- * @type {object}
- * @see {@link https://github.com/biati-digital/glightbox} см. документацию
- */
-const cntGLightboxOptions = { loop, zoomable, selector };
 
 /**
  * Массив страниц, отображаемых на экране
@@ -318,7 +292,7 @@ const fncWatchRefElements = async () => {
   varPause = true;
   await Promise.all(Object.values(get(cmpMounted)).map(getPromise));
   await nextTick();
-  GLightbox(cntGLightboxOptions);
+  GLightbox({ loop, zoomable, selector });
   unrefElement(cmpCurrentElement).scrollIntoView({
     behavior: "instant",
   });

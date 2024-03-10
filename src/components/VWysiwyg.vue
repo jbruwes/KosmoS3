@@ -293,7 +293,7 @@ const [{ value }] = templates;
 const model = ref(value);
 </script>
 <style lang="sass" scoped>
-router-link
+:deep(router-link)
   color: var(--tw-prose-links)
   text-decoration: underline
   font-weight: 500
