@@ -178,7 +178,7 @@ const cmpTemplates = computed(fncTemplates);
  * @type {string}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/rootMargin} см. документацию
  */
-const rootMargin = "-0.1% 0px -99.9%";
+const rootMargin = "-1% 0px -99%";
 
 /**
  * Процент площади объекта, который должен попасть в область видимости

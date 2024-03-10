@@ -1,7 +1,6 @@
 {
   "theme": "light",
   "classes": [
-    "bg-base-100",
     "rounded-box",
     "absolute",
     "left-6",
@@ -16,7 +15,7 @@
     "!w-auto",
     "hover:opacity-100"
   ],
-  "template": "<div class=\"flex-none\"><label class=\"btn btn-square btn-ghost\" for=\"drawer\"><svg class=\"h-6 w-6\"><path :d=\"mdi.mdiMenu\"></path></svg></label></div><div class=\"mx-2 inline-block flex-1 truncate px-2\">{{ the?.name }}</div>",
-  "script": "",
+  "template": "<div class=\"flex-none\"><label class=\"btn btn-square btn-ghost\" for=\"drawer\"><svg class=\"h-6 w-6\"><path :d=\"mdi.mdiMenu\"></path></svg></label></div><div class=\"flex-1 truncate\"><svg class=\"h-6 w-6 mx-1\"><path :d=\"mdi[`${the.favicon??'mdiWeb'}`]\"></path></svg>{{ the?.name }}</div><div class=\"flex-none\"><button class=\"btn btn-square btn-ghost\" @click=\"speak\"><svg class=\"h-6 w-6\"><path :d=\"mdi.mdiVolumeHigh\"></path></svg></button></div>",
+  "script": "import{useSpeechSynthesis,useNavigatorLanguage}from\"@vueuse/core\";const{language:lang}=useNavigatorLanguage();const{speak}=useSpeechSynthesis(()=>props.the.description,{lang});",
   "style": ""
 }

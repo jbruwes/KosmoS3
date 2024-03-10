@@ -258,7 +258,7 @@ export default defineStore("data", () => {
     /** @returns {string} - Путь до рекомендованный */
     get() {
       return (
-        (this.loc ? encodeURI(this.loc?.replace(" ", "_")) : this.loc) ??
+        (this.loc ? encodeURI(this.loc?.replace(" ", "_")) : this.loc) ||
         this.path
       );
     },
@@ -267,7 +267,7 @@ export default defineStore("data", () => {
   const name = {
     /** @returns {string} - Вычисленное название страницы */
     get() {
-      return this.title ?? this.label;
+      return this.title || this.label;
     },
     configurable: true,
   };
