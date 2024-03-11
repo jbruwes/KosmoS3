@@ -13,7 +13,7 @@ export default configure(() => ({
       "~": __dirname,
     },
     vueRouterMode: "history",
-    polyfillModulePreload: true,
+    // polyfillModulePreload: true,
     vitePlugins: [
       [
         "vite-plugin-checker",
@@ -25,6 +25,7 @@ export default configure(() => ({
         { server: false },
       ],
     ],
+    minify: "terser",
   },
   devServer: { open: true },
   framework: {

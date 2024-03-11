@@ -40,6 +40,9 @@ export default defineStore("data", () => {
       const {
         theme = defNavbar.theme,
         classes = defNavbar.classes,
+        scroll: {
+          classes: scrollClasses = defNavbar.scroll.classes,
+        } = defNavbar.scroll,
         template = defNavbar.template,
         script = defNavbar.script,
         style = defNavbar.style,
@@ -47,6 +50,7 @@ export default defineStore("data", () => {
       return {
         theme,
         classes,
+        scroll: { classes: scrollClasses },
         template,
         script,
         style,

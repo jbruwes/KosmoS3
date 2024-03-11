@@ -24,6 +24,23 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         hide-dropdown-icon,
         label="Классы навигатора"
       )
+      q-select(
+        v-model.trim="navbar.scroll.classes",
+        multiple,
+        use-chips,
+        use-input,
+        new-value-mode="add",
+        stack-label,
+        hide-dropdown-icon,
+        label="Скролл классы"
+      )
+      q-btn.full-width.q-ma-md(
+        outline,
+        rounded,
+        color="primary",
+        icon="sync",
+        @click="fncResetNavbar"
+      ) Сброс параметров
 q-page.column.full-height
   q-tabs.text-grey(
     v-model="navbarTabs",
@@ -48,14 +65,45 @@ q-page.column.full-height
 <script setup>
 import { get, useStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
+import { useQuasar } from "quasar";
 
+import defNavbar from "@/assets/navbar.json";
 import themes from "@/assets/themes.json";
 import VSourceCode from "@/components/VSourceCode.vue";
 import app from "@/stores/app";
 import data from "~/monolit/src/stores/data";
 
+const $q = useQuasar();
 const { state } = storeToRefs(app());
 const { navbar } = storeToRefs(data());
 const navbarTabs = useStorage("navbar-tabs", "template");
 get(state).rightDrawer = true;
+
+/** Сброс параметров навбара */
+const fncResetNavbar = () => {
+  $q.dialog({
+    title: "Сброс навбара",
+    message: "Выбор сбрасываемых параметров:",
+    options: {
+      type: "checkbox",
+      model: [],
+      items: [
+        { label: "Шаблон", value: "template" },
+        { label: "Скрипты", value: "script" },
+        { label: "Стили", value: "style" },
+        { label: "Тема", value: "theme" },
+        { label: "Классы", value: "classes" },
+        { label: "Скролл классы", value: "scrollClasses" },
+      ],
+    },
+    cancel: true,
+    persistent: true,
+  }).onOk((value) => {
+    value.forEach((element) => {
+      if (element !== "scrollClasses")
+        get(navbar)[element] = defNavbar[element];
+      else get(navbar).scroll.classes = defNavbar.scroll.classes;
+    });
+  });
+};
 </script>

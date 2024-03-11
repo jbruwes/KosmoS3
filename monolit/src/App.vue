@@ -50,12 +50,12 @@ v-head(v-if="the")
   .drawer-content.snap-y.snap-mandatory.overflow-y-auto.scroll-smooth(
     @scroll.passive="start"
   )
-    .navbar(
-      v-if="settings",
-      :class="[{ 'opacity-100': !ready }, ...navbar?.classes]",
+    div(
+      :class="[...(ready ? [] : navbar?.scroll?.classes), ...navbar?.classes]",
       :data-theme="navbar?.theme"
     )
-      component(:is="theNavbar", :the="the", :mdi="mdi")
+      .navbar
+        component(:is="theNavbar", :the="the", :mdi="mdi")
     router-view
   .drawer-side.z-50
     label.drawer-overlay(for="drawer")
