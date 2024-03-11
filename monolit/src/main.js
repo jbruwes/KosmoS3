@@ -6,6 +6,7 @@ import "virtual:uno.css";
 
 import Tres from "@tresjs/core";
 import { createHead } from "@unhead/vue";
+// eslint-disable-next-line import/no-unresolved
 import { Head } from "@unhead/vue/components";
 import initUnocssRuntime from "@unocss/runtime";
 import { watchOnce } from "@vueuse/core";

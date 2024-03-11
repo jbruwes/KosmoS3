@@ -3,17 +3,25 @@ q-page.q-pa-xl
   q-timeline(layout="comfortable", side="left")
     q-timeline-entry(title="Homepage", icon="rocket_launch")
       template(#subtitle)
-        a(href="https://kosmos3.ru", target="_blank") kosmos3.ru
+        a(
+          href="https://kosmos3.ru",
+          target="_blank",
+          rel="noopener noreferrer"
+        ) kosmos3.ru
     q-timeline-entry(title="Repository", icon="share")
       template(#subtitle)
-        a(href="https://github.com/jbruwes/kosmos3", target="_blank") github.com/jbruwes/kosmos3
+        a(
+          href="https://github.com/jbruwes/kosmos3",
+          target="_blank",
+          rel="noopener noreferrer"
+        ) github.com/jbruwes/kosmos3
   q-separator
   h3(style="text-align: center") GNU AFFERO GENERAL PUBLIC LICENSE
   p(style="text-align: center") Version 3, 19 November 2007
   p
     | Copyright &copy; 2007 Free Software Foundation,
     | Inc. &lt;
-    a(href="https://fsf.org/", target="_blank") https://fsf.org/
+    a(href="https://fsf.org/", target="_blank", rel="noopener noreferrer") https://fsf.org/
     | &gt;
     br
     | Everyone is permitted to copy and distribute verbatim copies
@@ -651,6 +659,10 @@ q-page.q-pa-xl
     | if any, to sign a &quot;copyright disclaimer&quot; for the program, if necessary.
     | For more information on this, and how to apply and follow the GNU AGPL, see
     | &lt;
-    a(href="https://www.gnu.org/licenses/", target="_blank") https://www.gnu.org/licenses/
+    a(
+      href="https://www.gnu.org/licenses/",
+      target="_blank",
+      rel="noopener noreferrer"
+    ) https://www.gnu.org/licenses/
     | &gt;.
 </template>
