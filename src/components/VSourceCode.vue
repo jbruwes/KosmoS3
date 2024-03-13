@@ -1,5 +1,6 @@
 <template lang="pug">
 v-ace-editor(
+  ref="editorRef",
   :value="modelValue",
   :lang="lang",
   :options="options",
@@ -11,8 +12,8 @@ v-ace-editor(
 // eslint-disable-next-line simple-import-sort/imports
 import { VAceEditor } from "vue3-ace-editor";
 import "ace-builds/esm-resolver";
-import { onMounted } from "vue";
-
+import { onMounted, ref } from "vue";
+import { get } from "@vueuse/core";
 import { js, css, html } from "js-beautify";
 
 const { options, lang, modelValue } = defineProps({
@@ -41,7 +42,9 @@ const beautify = (value) => {
   }
   emits("update:modelValue", code);
 };
+const editorRef = ref();
 onMounted(() => {
   if (modelValue) beautify(modelValue);
+  get(editorRef).focus();
 });
 </script>

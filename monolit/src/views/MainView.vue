@@ -32,7 +32,7 @@ import {
 } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, onUpdated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
@@ -306,7 +306,7 @@ const cmpCurrentElement = useArrayFind(refElements, fncCurrentElement);
 const getPromise = ({ promise }) => promise;
 
 /** Процедура, вызываемая при изменении состава страниц на экране */
-const fncWatchRefElements = async () => {
+const fncUpdated = async () => {
   varPause = true;
   await Promise.all(Object.values(get(cmpMounted)).map(getPromise));
   GLightbox({ loop, zoomable, selector });
@@ -316,5 +316,5 @@ const fncWatchRefElements = async () => {
   varPause = false;
 };
 
-watch(refElements, fncWatchRefElements, { deep: true });
+onUpdated(fncUpdated);
 </script>

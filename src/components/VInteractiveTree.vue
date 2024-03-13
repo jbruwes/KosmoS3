@@ -52,7 +52,10 @@ const { selected, type, expanded, nodes, list } = defineProps({
     type: Array,
   },
 });
-const the = useArrayFind(list, ({ id }) => id === selected);
+const the = useArrayFind(
+  () => list,
+  ({ id }) => id === selected,
+);
 const emits = defineEmits(["update:expanded", "update:selected"]);
 const $q = useQuasar();
 const tree = ref();

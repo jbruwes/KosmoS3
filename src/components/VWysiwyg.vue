@@ -268,8 +268,8 @@ const editorTlb = [
   ["upload", "template", "routerLink"],
 ];
 onMounted(() => {
-  const { theme } = get(the) ?? {};
-  get(editorRef).getContentEl().dataset.theme = theme;
+  get(editorRef).getContentEl().dataset.theme = get(the, "theme");
+  get(editorRef).focus();
 });
 watch(
   () => get(the)?.theme,
