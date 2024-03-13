@@ -14,7 +14,7 @@
     "hover:opacity-100"
   ],
   "scroll": { "classes": ["opacity-100"] },
-  "template": "<div class=\"flex-none\"><label class=\"btn btn-square btn-ghost\" for=\"drawer\"><svg class=\"h-6 w-6\"><path :d=\"mdi.mdiMenu\"></path></svg></label></div><div class=\"flex-1 truncate\"><svg class=\"h-6 w-6 mx-1\"><path :d=\"mdi[`${the.favicon??'mdiWeb'}`]\"></path></svg>{{ the?.name }}</div><div class=\"flex-none\"><button class=\"btn btn-square btn-ghost\" @click=\"speak\"><svg class=\"h-6 w-6\"><path :d=\"mdi.mdiVolumeHigh\"></path></svg></button></div>",
+  "template": "<div class=\"flex-none\"><label class=\"btn btn-square btn-ghost\" for=\"drawer\"><svg class=\"fill-current h-6 w-6\"><path :d=\"mdi.mdiMenu\"></path></svg></label></div><div class=\"flex-1 truncate\"><svg class=\"fill-current h-6 w-6 mx-1\"><path :d=\"mdi[`${the.favicon??'mdiWeb'}`]\"></path></svg>{{ the?.name }}</div><div class=\"flex-none\"><button class=\"btn btn-square btn-ghost\" @click=\"speak\"><svg class=\"fill-current h-6 w-6\"><path :d=\"mdi.mdiVolumeHigh\"></path></svg></button></div>",
   "script": "import{useSpeechSynthesis,useNavigatorLanguage}from\"@vueuse/core\";const{language:lang}=useNavigatorLanguage();const{speak}=useSpeechSynthesis(()=>the.description,{lang});",
   "style": ""
 }
