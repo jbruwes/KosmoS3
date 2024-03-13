@@ -48,7 +48,7 @@ const delay = 0;
  */
 const fncTemplate = (the) => {
   /** Константа со скриптами */
-  const cntScript = `<script setup>const props=defineProps(["the","mdi"]);${the.script ?? ""}</script>`;
+  const cntScript = `<script setup>const{the,mdi}=defineProps(["the","mdi"]);${the.script ?? ""}</script>`;
 
   /** Константа с шаблоном */
   const cntTemplate = `<template>${the.template ?? ""}</template>`;

@@ -12,7 +12,7 @@ v-ace-editor(
 import { VAceEditor } from "vue3-ace-editor";
 import "ace-builds/esm-resolver";
 import { onMounted } from "vue";
-import { get, watchOnce } from "@vueuse/core";
+import { get } from "@vueuse/core";
 
 import {
   js_beautify as jsBeautify,
@@ -46,12 +46,6 @@ const beautify = (value) => {
   }
   emits("update:modelValue", code);
 };
-watchOnce(
-  () => props.modelValue,
-  (value, oldValue) => {
-    if (!oldValue && value) beautify(value);
-  },
-);
 onMounted(() => {
   if (get(props.modelValue)) beautify(get(props.modelValue));
 });

@@ -22,8 +22,9 @@ q-page.column.full-height
       )
 </template>
 <script setup>
-import { get, isDefined, watchOnce } from "@vueuse/core";
+import { get, isDefined } from "@vueuse/core";
 import { storeToRefs } from "pinia";
+import { watch } from "vue";
 
 import VInteractiveTree from "@/components/VInteractiveTree.vue";
 import VSourceCode from "@/components/VSourceCode.vue";
@@ -46,5 +47,5 @@ const init = ([{ id }]) => {
   if (!selected) get(state).js.selected = id;
 };
 if (isDefined(js)) init(get(js));
-else watchOnce(js, init);
+else watch(js, init, { once: true });
 </script>

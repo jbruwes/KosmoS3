@@ -1,6 +1,6 @@
 <template lang="pug">
 .flex.snap-start(
-  v-for="the in cmpCurrent?.siblings",
+  v-for="the in cmpSiblings",
   v-cloak,
   :id="the.id",
   :key="the.id",
@@ -29,11 +29,10 @@ import {
   useArrayFind,
   useArrayFindIndex,
   useParentElement,
-  watchDeep,
 } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, nextTick, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
@@ -118,6 +117,25 @@ const fncCurrent = () =>
 const cmpCurrent = computed(fncCurrent);
 
 /**
+ * Функция фильтрации станиц по признаку видимости
+ *
+ * @param {object} page - Объект страницы
+ * @param {boolean} page.visible - Флаг видимости
+ * @returns {boolean} Флаг видимости
+ */
+const fncSiblings = ({ visible }) => visible;
+
+/**
+ * Вычисление массива объектов страниц с одинаковым предком
+ *
+ * @type {computed}
+ * @see {@link fncSiblings} см. ф-цию фильтрации
+ */
+const cmpSiblings = computed(() =>
+  get(cmpCurrent, "siblings").filter(fncSiblings),
+);
+
+/**
  * Функция вычисления элемента с промисом
  *
  * @param {object} page - Объект страницы
@@ -137,7 +155,7 @@ const fncMounted = ({ id }) => [id, Promise.withResolvers()];
  * @see {@link fncMounted} см. ф-цию вычисления
  */
 const cmpMounted = computed(() =>
-  Object.fromEntries(get(cmpCurrent, "siblings").map(fncMounted)),
+  Object.fromEntries(get(cmpSiblings).map(fncMounted)),
 );
 
 /**
@@ -162,7 +180,7 @@ const fncTemplateEntries = ({ id, template, script, style }) => [
  * @see {@link fncTemplateEntries} см. функцию вычисления
  */
 const fncTemplates = () =>
-  Object.fromEntries(get(cmpCurrent, "siblings").map(fncTemplateEntries));
+  Object.fromEntries(get(cmpSiblings).map(fncTemplateEntries));
 
 /**
  * Вычисления объекта загруженных шаблонов
@@ -291,14 +309,12 @@ const getPromise = ({ promise }) => promise;
 const fncWatchRefElements = async () => {
   varPause = true;
   await Promise.all(Object.values(get(cmpMounted)).map(getPromise));
-  await nextTick();
   GLightbox({ loop, zoomable, selector });
   unrefElement(cmpCurrentElement).scrollIntoView({
     behavior: "instant",
   });
-  await nextTick();
   varPause = false;
 };
 
-watchDeep(refElements, fncWatchRefElements);
+watch(refElements, fncWatchRefElements, { deep: true });
 </script>

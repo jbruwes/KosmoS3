@@ -9,10 +9,9 @@ import { createHead } from "@unhead/vue";
 // eslint-disable-next-line import/no-unresolved
 import { Head } from "@unhead/vue/components";
 import initUnocssRuntime from "@unocss/runtime";
-import { watchOnce } from "@vueuse/core";
 import { MotionPlugin } from "@vueuse/motion";
 import { createPinia, storeToRefs } from "pinia";
-import { createApp } from "vue";
+import { createApp, watch } from "vue";
 import VueGtag from "vue-gtag";
 import VueYandexMetrika from "vue3-yandex-metrika";
 
@@ -43,38 +42,46 @@ app.use(Tres);
 app.use(MotionPlugin);
 app.component("VHead", Head);
 app.mount("#app");
-watchOnce(cmpPages, (value) => {
-  value.forEach(({ path, id: name, loc }) => {
+watch(
+  cmpPages,
+  (value) => {
+    value.forEach(({ path, id: name, loc }) => {
+      router.addRoute({
+        name,
+        path: `/${path}`,
+        ...(loc && { alias: `/${encodeURI(loc.replace(" ", "_"))}` }),
+        /** @returns {object} - MainView */
+        component: () => import("./views/MainView.vue"),
+      });
+    });
     router.addRoute({
-      name,
-      path: `/${path}`,
-      ...(loc && { alias: `/${encodeURI(loc.replace(" ", "_"))}` }),
-      /** @returns {object} - MainView */
-      component: () => import("./views/MainView.vue"),
+      path: "/:catchAll(.*)*",
+      /** @returns {object} - Страница ошибки */
+      component: () => import("./views/NotFoundView.vue"),
     });
-  });
-  router.addRoute({
-    path: "/:catchAll(.*)*",
-    /** @returns {object} - Страница ошибки */
-    component: () => import("./views/NotFoundView.vue"),
-  });
-  router.replace(router.currentRoute.value.fullPath);
-});
-watchOnce(settings, ({ metrika, analytics }) => {
-  if (metrika)
-    app.use(VueYandexMetrika, {
-      id: metrika,
-      router,
-      env: "production",
-    });
-  if (analytics)
-    app.use(
-      VueGtag,
-      {
-        config: {
-          id: analytics,
+    router.replace(router.currentRoute.value.fullPath);
+  },
+  { once: true },
+);
+watch(
+  settings,
+  ({ metrika, analytics }) => {
+    if (metrika)
+      app.use(VueYandexMetrika, {
+        id: metrika,
+        router,
+        env: "production",
+      });
+    if (analytics)
+      app.use(
+        VueGtag,
+        {
+          config: {
+            id: analytics,
+          },
         },
-      },
-      router,
-    );
-});
+        router,
+      );
+  },
+  { once: true },
+);

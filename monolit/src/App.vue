@@ -51,7 +51,7 @@ v-head(v-if="the")
     @scroll.passive="start"
   )
     div(
-      :class="[...(ready ? [] : navbar?.scroll?.classes), ...navbar?.classes]",
+      :class="[...(ready ? [] : navbar?.scroll?.classes ?? []), ...(navbar?.classes ?? [])]",
       :data-theme="navbar?.theme"
     )
       .navbar
@@ -81,6 +81,7 @@ import "daisyui/dist/full.css";
 import * as mdi from "@mdi/js";
 import {
   get,
+  isDefined,
   set,
   useArrayFilter,
   useArrayFind,
@@ -103,12 +104,14 @@ const { cmpPages, css, js, uri, script, style, settings, navbar } =
   storeToRefs(data());
 const theTemplate = computed(() => fncTemplate(get(cmpPages, 0)));
 const theNavbar = computed(() =>
-  fncTemplate({
-    id: "navbar",
-    template: get(navbar)?.template,
-    script: get(navbar)?.script,
-    style: get(navbar)?.style,
-  }),
+  isDefined(navbar)
+    ? fncTemplate({
+        id: "navbar",
+        template: get(navbar, "template"),
+        script: get(navbar, "script"),
+        style: get(navbar, "style"),
+      })
+    : undefined,
 );
 const the = useArrayFind(cmpPages, ({ id }) => id === route.name);
 const tagStyle = ref("style");

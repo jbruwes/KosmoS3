@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from "node:url";
 
 import { templateCompilerOptions } from "@tresjs/core";
 import extractorPug from "@unocss/extractor-pug";
-import legacy from "@vitejs/plugin-legacy";
+// import legacy from "@vitejs/plugin-legacy";
 import vue from "@vitejs/plugin-vue";
 // eslint-disable-next-line import/no-unresolved
 import UnoCSS from "unocss/vite";
@@ -16,9 +16,9 @@ export default {
       ...templateCompilerOptions,
     }),
     UnoCSS({ ...unocssConfig, extractors: [extractorPug()] }),
-    legacy({
-      modernPolyfills: ["es.promise.with-resolvers"],
-    }),
+    // legacy({
+    //   modernPolyfills: ["es.promise.with-resolvers"],
+    // }),
   ],
   resolve: {
     alias: {
@@ -39,9 +39,7 @@ export default {
          * @returns {string} - Вендор
          */
         manualChunks: (id) =>
-          id.includes("node_modules")
-            ? id.split("node_modules/")[1].split("/")[0]
-            : "",
+          id.split("node_modules/")?.[1]?.split("/")[0] ?? "",
       },
     },
   },

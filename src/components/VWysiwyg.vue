@@ -83,14 +83,7 @@ div
 <script setup>
 import "daisyui/dist/full.css";
 
-import {
-  get,
-  isDefined,
-  set,
-  useArrayFind,
-  useFileDialog,
-  watchOnce,
-} from "@vueuse/core";
+import { get, isDefined, set, useArrayFind, useFileDialog } from "@vueuse/core";
 import mime from "mime";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
@@ -123,7 +116,7 @@ const init = ([{ id }]) => {
   set(inserted, id);
 };
 if (isDefined(content)) init(get(content));
-else watchOnce(content, init);
+else watch(content, init, { once: true });
 const editorRef = ref();
 const modalRef = ref();
 /**

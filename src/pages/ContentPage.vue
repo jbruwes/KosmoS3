@@ -165,17 +165,17 @@ q-page.column.full-height
   q-separator
   q-tab-panels.full-width.col(v-model="state.content.tab")
     q-tab-panel.column(name="wysiwyg")
-      v-wysiwyg.full-width.col.column
+      v-wysiwyg.full-width.col.column(:key="the.id")
     q-tab-panel.column(name="template")
-      v-source-code.col(v-model="selectedValue")
+      v-source-code.col(:key="the.id", v-model="selectedValue")
     q-tab-panel.column(name="script")
-      v-source-code.col(v-model="the.script", lang="javascript")
+      v-source-code.col(:key="the.id", v-model="the.script", lang="javascript")
     q-tab-panel.column(name="style")
-      v-source-code.col(v-model="the.style", lang="css")
+      v-source-code.col(:key="the.id", v-model="the.style", lang="css")
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
-import { get, isDefined, useFileDialog, watchOnce } from "@vueuse/core";
+import { get, isDefined, useFileDialog } from "@vueuse/core";
 import mime from "mime";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
@@ -232,7 +232,7 @@ const init = ([{ id }]) => {
   if (!selected) get(state).content.selected = id;
 };
 if (isDefined(content)) init(get(content));
-else watchOnce(content, init);
+else watch(content, init, { once: true });
 const { files, open } = useFileDialog({
   multiple: false,
   accept: "image/*",
