@@ -64,6 +64,7 @@ q-page.column.full-height
 </template>
 <script setup>
 import { get, useStorage } from "@vueuse/core";
+import { css, html, js } from "js-beautify";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 
@@ -100,9 +101,22 @@ const fncResetNavbar = () => {
     persistent: true,
   }).onOk((value) => {
     value.forEach((element) => {
-      if (element !== "scrollClasses")
-        get(navbar)[element] = defNavbar[element];
-      else get(navbar).scroll.classes = defNavbar.scroll.classes;
+      switch (element) {
+        case "template":
+          get(navbar)[element] = html(defNavbar[element]);
+          break;
+        case "script":
+          get(navbar)[element] = js(defNavbar[element]);
+          break;
+        case "style":
+          get(navbar)[element] = css(defNavbar[element]);
+          break;
+        case "scrollClasses":
+          get(navbar).scroll.classes = defNavbar.scroll.classes;
+          break;
+        default:
+          get(navbar)[element] = defNavbar[element];
+      }
     });
   });
 };

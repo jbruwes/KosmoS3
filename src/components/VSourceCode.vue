@@ -12,15 +12,10 @@ v-ace-editor(
 import { VAceEditor } from "vue3-ace-editor";
 import "ace-builds/esm-resolver";
 import { onMounted } from "vue";
-import { get } from "@vueuse/core";
 
-import {
-  js_beautify as jsBeautify,
-  css_beautify as cssBeautify,
-  html_beautify as htmlBeautify,
-} from "js-beautify";
+import { js, css, html } from "js-beautify";
 
-const props = defineProps({
+const { options, lang, modelValue } = defineProps({
   options: {
     /** @returns {object} - Пустой объект по умолчанию */
     default: () => ({}),
@@ -33,20 +28,20 @@ const emits = defineEmits(["update:modelValue"]);
 /** @param {string} value - Исходный код */
 const beautify = (value) => {
   let code;
-  switch (props.lang) {
+  switch (lang) {
     case "javascript":
-      code = jsBeautify(value);
+      code = js(value);
       break;
     case "css":
-      code = cssBeautify(value);
+      code = css(value);
       break;
     default:
-      code = htmlBeautify(value);
+      code = html(value);
       break;
   }
   emits("update:modelValue", code);
 };
 onMounted(() => {
-  if (get(props.modelValue)) beautify(get(props.modelValue));
+  if (modelValue) beautify(modelValue);
 });
 </script>

@@ -51,16 +51,16 @@ v-head(v-if="the")
     @scroll.passive="start"
   )
     div(
+      v-if="cmpPages?.[0]?.visible",
       :class="[...(ready ? [] : navbar?.scroll?.classes ?? []), ...(navbar?.classes ?? [])]",
       :data-theme="navbar?.theme"
     )
       .navbar
         component(:is="theNavbar", :the="the", :mdi="mdi")
     router-view
-  .drawer-side.z-50
+  .drawer-side.z-50(v-if="cmpPages?.[0]?.visible")
     label.drawer-overlay(for="drawer")
     .grid.max-w-full.self-stretch.overflow-x-auto.scroll-smooth(
-      v-if="cmpPages.length",
       :class="{ 'justify-self-stretch': cmpPages[0].full }"
     )
       .col-start-1.row-start-1.flex
