@@ -85,7 +85,12 @@ const fncTemplate = (the) => {
    * @returns {Promise} Промис
    */
   const loader = () =>
-    loadModule(`/${the.id}.vue`, { moduleCache, getFile, addStyle, log });
+    loadModule(`${the.path && the.path !== "/" ? "/" : ""}${the.path}/@.vue`, {
+      moduleCache,
+      getFile,
+      addStyle,
+      log,
+    });
 
   return defineAsyncComponent({ loader, delay });
 };

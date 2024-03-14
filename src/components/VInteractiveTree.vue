@@ -37,7 +37,7 @@ import { get, useArrayFind } from "@vueuse/core";
 import { uid, useQuasar } from "quasar";
 import { ref, watch } from "vue";
 
-const { selected, type, expanded, nodes, list } = defineProps({
+const props = defineProps({
   selected: { default: "", type: String },
   type: { default: "text", type: String },
   expanded: {
@@ -53,8 +53,8 @@ const { selected, type, expanded, nodes, list } = defineProps({
   },
 });
 const the = useArrayFind(
-  () => list,
-  ({ id }) => id === selected,
+  () => props.list,
+  ({ id }) => id === props.selected,
 );
 const emits = defineEmits(["update:expanded", "update:selected"]);
 const $q = useQuasar();

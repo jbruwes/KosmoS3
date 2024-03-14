@@ -1,6 +1,6 @@
 <template lang="pug">
 .flex.snap-start(
-  v-for="the in cmpSiblings",
+  v-for="the in cmpSiblingsFilter",
   v-cloak,
   :id="the.id",
   :key="the.id",
@@ -17,7 +17,7 @@
       :is="cmpTemplates[the.id]",
       :the="the",
       :mdi="mdi",
-      @vue:mounted="cmpMounted[the.id].resolve()"
+      @vue:mounted="cmpResolve[the.id]"
     )
 </template>
 <script setup>
@@ -26,13 +26,16 @@ import { vIntersectionObserver } from "@vueuse/components";
 import {
   get,
   unrefElement,
+  useArrayFilter,
   useArrayFind,
   useArrayFindIndex,
+  useArrayMap,
   useParentElement,
+  watchTriggerable,
 } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, onUpdated, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
@@ -117,46 +120,118 @@ const fncCurrent = () =>
 const cmpCurrent = computed(fncCurrent);
 
 /**
+ * Функция вычисления массива объектов страниц с одинаковым предком
+ *
+ * @returns {Array} Массив объектов страниц с одинаковым предком
+ */
+const fncSiblings = () => get(cmpCurrent, "siblings");
+
+/**
+ * Вычисление массива объектов страниц с одинаковым предком
+ *
+ * @see {@link fncSiblings} см. ф-цию получения массива, просто геттер утрачивает реактивность
+ */
+const cmpSiblings = computed(fncSiblings);
+
+/**
  * Функция фильтрации станиц по признаку видимости
  *
  * @param {object} page - Объект страницы
  * @param {boolean} page.visible - Флаг видимости
  * @returns {boolean} Флаг видимости
  */
-const fncSiblings = ({ visible }) => visible;
+const fncSiblingsFilter = ({ visible }) => visible;
 
 /**
- * Вычисление массива объектов страниц с одинаковым предком
+ * Вычисление массива видимых объектов страниц с одинаковым предком
  *
  * @type {computed}
- * @see {@link fncSiblings} см. ф-цию фильтрации
+ * @see {@link fncSiblingsFilter} см. ф-цию фильтрации
  */
-const cmpSiblings = computed(() =>
-  get(cmpCurrent, "siblings").filter(fncSiblings),
-);
+const cmpSiblingsFilter = useArrayFilter(cmpSiblings, fncSiblingsFilter);
 
 /**
- * Функция вычисления элемента с промисом
+ * Функция вычисления элемента с промисом и ресолверами
  *
  * @param {object} page - Объект страницы
  * @param {string} page.id - Id страницы
- * @returns {[
- *   string,
- *   { promise: Promise; resolve: Function; reject: Function },
- * ]}
- *   Идентифицированный элемент с промисом
+ * @returns {{
+ *   id: string;
+ *   promise: Promise;
+ *   resolve: Function;
+ *   reject: Function;
+ * }}
+ *   Идентифицированный элемент массива с промисом и ресолверами
  */
-const fncMounted = ({ id }) => [id, Promise.withResolvers()];
+const fncMountedPromisesWithResolvers = ({ id }) => ({
+  id,
+  ...Promise.withResolvers(),
+});
+
+/**
+ * Вычисление массива промисов с ресолверами
+ *
+ * @returns {Array} Массив промисов с ресолверами
+ * @see {@link fncMountedPromisesWithResolvers} см. ф-цию вычисления
+ */
+const cmpMountedPromisesWithResolvers = useArrayMap(
+  cmpSiblingsFilter,
+  fncMountedPromisesWithResolvers,
+);
+
+/**
+ * Функция вычисления промиса
+ *
+ * @param {Array} entry - Идентифицированный элемент массива промисов с
+ * @param {Promise} entry.promise - Промис
+ * @returns {Promise} - Промис
+ */
+const fncMountedPromises = ({ promise }) => promise;
+
+/**
+ * Вычисление плоского массива промисов
+ *
+ * @see {@link fncMountedPromises} См. ф-цию вычисления
+ */
+const cmpMountedPromises = useArrayMap(
+  cmpMountedPromisesWithResolvers,
+  fncMountedPromises,
+);
+
+/**
+ * Функция вычисления идентифицированного массива ресолверов
+ *
+ * @param {object} entry - Идентифицированный объеккт промиса с ресолверами
+ * @param {string} entry.id - Id
+ * @param {Function} entry.resolve - Ресолвер
+ * @returns {[string, Function]} - Массив ресолвера с идентификацией
+ */
+const fncMountedResolvers = ({ id, resolve }) => [id, resolve];
+
+/**
+ * Вычисление идентифицированного массива ресолверов
+ *
+ * @see {@link fncMountedResolvers} - см. ф-цию вычисления
+ */
+const cmpMountedResolvers = useArrayMap(
+  cmpMountedPromisesWithResolvers,
+  fncMountedResolvers,
+);
+
+/**
+ * Функция вычисления идентифицированного объекта промисов
+ *
+ * @returns {object} Идентифицированный объекта промисов
+ */
+const fncResolve = () => Object.fromEntries(get(cmpMountedResolvers));
 
 /**
  * Вычисление идентифицированного объекта промисов
  *
  * @type {computed}
- * @see {@link fncMounted} см. ф-цию вычисления
+ * @see {@link fncResolve} см. ф-цию вычисления
  */
-const cmpMounted = computed(() =>
-  Object.fromEntries(get(cmpSiblings).map(fncMounted)),
-);
+const cmpResolve = computed(fncResolve);
 
 /**
  * Функция вычисления элементов массива с готовыми шаблонами
@@ -166,24 +241,31 @@ const cmpMounted = computed(() =>
  * @param {string} page.template - Шаблон страницы
  * @param {string} page.script - Скрипты страницы
  * @param {string} page.style - Стили страницы
+ * @param {string} page.path - Путь до страницы
  * @returns {[string, object]} Массив из id и готового шаблона
  */
-const fncTemplateEntries = ({ id, template, script, style }) => [
+const fncTemplateEntries = ({ id, template, script, style, path }) => [
   id,
-  fncTemplate({ id, template, script, style }),
+  fncTemplate({ id, template, script, style, path }),
 ];
+
+/**
+ * Вычисление массива загруженных шаблонов
+ *
+ * @type {computed}
+ * @see {@link fncTemplateEntries} см. функцию вычисления
+ */
+const cmpTemplateEntries = useArrayMap(cmpSiblingsFilter, fncTemplateEntries);
 
 /**
  * Функция вычисления преобразования массива загруженных шаблонов в объект
  *
  * @returns {object} Объект с загруженных шаблонов
- * @see {@link fncTemplateEntries} см. функцию вычисления
  */
-const fncTemplates = () =>
-  Object.fromEntries(get(cmpSiblings).map(fncTemplateEntries));
+const fncTemplates = () => Object.fromEntries(get(cmpTemplateEntries));
 
 /**
- * Вычисления объекта загруженных шаблонов
+ * Вычисление объекта загруженных шаблонов
  *
  * @type {computed}
  * @see {@link fncTemplates} см. функцию вычисления
@@ -297,18 +379,13 @@ const fncCurrentElement = ({ id }) => id === get(cmpCurrent, "id");
 const cmpCurrentElement = useArrayFind(refElements, fncCurrentElement);
 
 /**
- * Функция получения промиса из объекта
+ * Процедура, вызываемая при изменении состава страниц на экране
  *
- * @param {object} PromiseWithResolvers - Объект, содержащий промис
- * @param {Promise} PromiseWithResolvers.promise - Промис
- * @returns {Promise} Промис
+ * @param {Array} value Массив промисов
  */
-const getPromise = ({ promise }) => promise;
-
-/** Процедура, вызываемая при изменении состава страниц на экране */
-const fncUpdated = async () => {
+const fncUpdated = async (value) => {
   varPause = true;
-  await Promise.all(Object.values(get(cmpMounted)).map(getPromise));
+  await Promise.all(value);
   GLightbox({ loop, zoomable, selector });
   unrefElement(cmpCurrentElement).scrollIntoView({
     behavior: "instant",
@@ -316,5 +393,11 @@ const fncUpdated = async () => {
   varPause = false;
 };
 
-onUpdated(fncUpdated);
+/** Процедура, запускающая при монтировании отслеживание состояния страниц */
+const fncOnMounted = () => {
+  const { trigger } = watchTriggerable(cmpMountedPromises, fncUpdated);
+  trigger();
+};
+
+onMounted(fncOnMounted);
 </script>

@@ -167,11 +167,15 @@ q-page.column.full-height
     q-tab-panel.column(name="wysiwyg")
       v-wysiwyg.full-width.col.column(:key="the.id")
     q-tab-panel.column(name="template")
-      v-source-code.col(:key="the.id", v-model="selectedValue")
+      v-source-code.col(:key="the?.id", v-model="selectedValue")
     q-tab-panel.column(name="script")
-      v-source-code.col(:key="the.id", v-model="the.script", lang="javascript")
+      v-source-code.col(
+        :key="the?.id",
+        v-model="the.script",
+        lang="javascript"
+      )
     q-tab-panel.column(name="style")
-      v-source-code.col(:key="the.id", v-model="the.style", lang="css")
+      v-source-code.col(:key="the?.id", v-model="the.style", lang="css")
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
