@@ -236,18 +236,10 @@ const cmpResolve = computed(fncResolve);
 /**
  * Функция вычисления элементов массива с готовыми шаблонами
  *
- * @param {object} page - Объект страницы
- * @param {string} page.id - Id страницы
- * @param {string} page.template - Шаблон страницы
- * @param {string} page.script - Скрипты страницы
- * @param {string} page.style - Стили страницы
- * @param {string} page.path - Путь до страницы
+ * @param {object} the - Объект страницы
  * @returns {[string, object]} Массив из id и готового шаблона
  */
-const fncTemplateEntries = ({ id, template, script, style, path }) => [
-  id,
-  fncTemplate({ id, template, script, style, path }),
-];
+const fncTemplateEntries = (the) => [the.id, fncTemplate(the)];
 
 /**
  * Вычисление массива загруженных шаблонов

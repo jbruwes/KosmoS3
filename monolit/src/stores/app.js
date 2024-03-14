@@ -43,18 +43,23 @@ const delay = 0;
 /**
  * Функция, возвращающая Promise на сконструированный шаблон
  *
- * @param {object} the - Текущий объект
+ * @param {object} page - Объект страницы
+ * @param {string} page.id - Id страницы
+ * @param {string} page.template - Шаблон страницы
+ * @param {string} page.script - Скрипты страницы
+ * @param {string} page.style - Стили страницы
+ * @param {string} page.path - Путь до страницы
  * @returns {object} Шаблон
  */
-const fncTemplate = (the) => {
+const fncTemplate = ({ id, template, script, style, path }) => {
   /** Константа со скриптами */
-  const cntScript = `<script setup>const{the,mdi}=defineProps(["the","mdi"]);${the.script ?? ""}</script>`;
+  const cntScript = `<script setup>const{the,mdi}=defineProps(["the","mdi"]);${script ?? ""}</script>`;
 
   /** Константа с шаблоном */
-  const cntTemplate = `<template>${the.template ?? ""}</template>`;
+  const cntTemplate = `<template>${template ?? ""}</template>`;
 
   /** Константа со стилями */
-  const cntStyle = `<style scoped>${the.style ?? ""}</style>`;
+  const cntStyle = `<style scoped>${style ?? ""}</style>`;
 
   /**
    * Функция получения файла шаблона
@@ -66,17 +71,10 @@ const fncTemplate = (the) => {
   /**
    * Процедура добавления стилей
    *
-   * @param {string} style - Стили
+   * @param {string} styles - Стили
    */
-  const addStyle = (style) => {
-    /**
-     * Id стиля
-     *
-     * @type {string}
-     */
-    const id = `style_${the.id}`;
-
-    useStyleTag(style, { id });
+  const addStyle = (styles) => {
+    useStyleTag(styles, { id: `style_${id}` });
   };
 
   /**
@@ -85,7 +83,7 @@ const fncTemplate = (the) => {
    * @returns {Promise} Промис
    */
   const loader = () =>
-    loadModule(`${the.path && the.path !== "/" ? "/" : ""}${the.path}/@.vue`, {
+    loadModule(`${path && path !== "/" ? "/" : ""}${path}/@.vue`, {
       moduleCache,
       getFile,
       addStyle,
