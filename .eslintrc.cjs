@@ -29,7 +29,7 @@ module.exports = {
     "plugin:sonarjs/recommended",
     "plugin:optimize-regex/recommended",
     "plugin:regexp/recommended",
-    "plugin:prettier/recommended",
+    "@vue/eslint-config-prettier",
   ],
 
   plugins: ["simple-import-sort"],
