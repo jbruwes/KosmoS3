@@ -3,7 +3,6 @@ import path from "node:path";
 import { configure } from "quasar/wrappers";
 
 export default configure(() => ({
-  preFetch: true,
   boot: ["main", "uno", "route"],
   css: ["app.css"],
   extras: ["mdi-v6", "roboto-font", "material-icons"],
