@@ -83,7 +83,7 @@ const fncTemplate = ({ id, template, script, style, path }) => {
    * @returns {Promise} Промис
    */
   const loader = () =>
-    loadModule(`${path && path !== "/" ? "/" : ""}${path}/@.vue`, {
+    loadModule(`${["", "/"].includes(path) ? "" : "/"}${path}/@.vue`, {
       moduleCache,
       getFile,
       addStyle,

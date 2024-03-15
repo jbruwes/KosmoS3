@@ -165,7 +165,7 @@ q-page.column.full-height
   q-separator
   q-tab-panels.full-width.col(v-model="state.content.tab")
     q-tab-panel.column(name="wysiwyg")
-      v-wysiwyg.full-width.col.column(:key="the.id")
+      v-wysiwyg.full-width.col.column(:key="the?.id")
     q-tab-panel.column(name="template")
       v-source-code.col(:key="the?.id", v-model="selectedValue")
     q-tab-panel.column(name="script")
