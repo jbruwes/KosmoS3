@@ -252,9 +252,7 @@ export default defineStore("data", () => {
     /** @returns {string} - Путь до объекта */
     get() {
       return this.branch
-        .map(
-          ({ label, id }) => encodeURIComponent(label?.replace(" ", "_")) || id,
-        )
+        .map(({ label }) => encodeURIComponent(label?.replace(" ", "_")))
         .slice(1)
         .join("/");
     },
@@ -273,7 +271,7 @@ export default defineStore("data", () => {
   const name = {
     /** @returns {string} - Вычисленное название страницы */
     get() {
-      return this.title || this.label || this.id;
+      return this.title || this.label;
     },
     configurable: true,
   };
