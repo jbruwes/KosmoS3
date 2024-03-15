@@ -31,11 +31,10 @@ import {
   useArrayFindIndex,
   useArrayMap,
   useParentElement,
-  watchTriggerable,
 } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
@@ -296,6 +295,13 @@ const root = useParentElement();
 let varPause = false;
 
 /**
+ * Флаг условия изменения роута
+ *
+ * @type {boolean}
+ */
+let varPush = false;
+
+/**
  * Процедура обновления роутера, если страница появилась в области видимости
  *
  * @param {Array} entries - Массив объектов, описывающих пересечения
@@ -308,8 +314,10 @@ const fncIntersectionObserver = ([
     target: { id: name },
   },
 ]) => {
-  if (!varPause && isIntersecting && name !== get(cmpCurrent, "id"))
+  if (!varPause && isIntersecting && name !== get(cmpCurrent, "id")) {
+    varPush = true;
     router.push({ name });
+  }
 };
 
 /**
@@ -375,21 +383,25 @@ const cmpCurrentElement = useArrayFind(refElements, fncCurrentElement);
  *
  * @param {Array} value Массив промисов
  */
-const fncUpdated = async (value) => {
-  varPause = true;
+const fncPromises = async (value) => {
   await Promise.all(value);
   GLightbox({ loop, zoomable, selector });
-  unrefElement(cmpCurrentElement).scrollIntoView({
-    behavior: "instant",
-  });
-  varPause = false;
 };
 
-/** Процедура, запускающая при монтировании отслеживание состояния страниц */
-const fncOnMounted = () => {
-  const { trigger } = watchTriggerable(cmpMountedPromises, fncUpdated);
-  trigger();
+/** Процедура, вызываемая при изменении роута */
+const fncRoute = async () => {
+  if (!varPush) {
+    await Promise.all(get(cmpMountedPromises));
+    varPause = true;
+    unrefElement(cmpCurrentElement).scrollIntoView({
+      behavior: "instant",
+    });
+    varPause = false;
+  } else varPush = false;
 };
 
-onMounted(fncOnMounted);
+watch(cmpMountedPromises, fncPromises);
+watch(route, fncRoute);
+fncPromises(get(cmpMountedPromises));
+fncRoute();
 </script>

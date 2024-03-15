@@ -34,6 +34,7 @@ initUnocssRuntime({
   bypassDefined: true,
 });
 const app = createApp(App);
+app.config.globalProperties.document = document;
 app.use(createPinia());
 const { cmpPages, settings } = storeToRefs(dataStore());
 app.use(router);
