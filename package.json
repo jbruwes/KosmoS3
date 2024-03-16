@@ -25,7 +25,7 @@
     "@smithy/fetch-http-handler": "^2.5.0",
     "@tresjs/cientos": "^3.8.0",
     "@tresjs/core": "^3.7.0",
-    "@unhead/vue": "^1.8.18",
+    "@unhead/vue": "^1.8.20",
     "@unocss/extractor-pug": "^0.58.6",
     "@unocss/preset-attributify": "^0.58.6",
     "@unocss/preset-tagify": "^0.58.6",
