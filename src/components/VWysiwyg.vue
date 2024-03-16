@@ -87,7 +87,7 @@ import { get, isDefined, set, useArrayFind, useFileDialog } from "@vueuse/core";
 import mime from "mime";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, watchEffect } from "vue";
 
 import mimes from "@/assets/mimes.json";
 import templates from "@/assets/templates.json";
@@ -268,14 +268,13 @@ const editorTlb = [
   ["upload", "template", "routerLink"],
 ];
 onMounted(() => {
-  get(editorRef).getContentEl().dataset.theme = get(the, "theme");
   get(editorRef).focus();
 });
-watch(
-  () => get(the)?.theme,
-  (value) => {
-    get(editorRef).getContentEl().dataset.theme = value;
+watchEffect(
+  () => {
+    get(editorRef).getContentEl().dataset.theme = get(the)?.theme;
   },
+  { flush: "post" },
 );
 /** ShowDialog */
 const showDialog = () => {

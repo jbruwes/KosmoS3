@@ -1,6 +1,6 @@
 <template lang="pug">
 v-head(v-if="the")
-  title(v-if="the.name") {{ the.name }}
+  title {{ the.name ?? " " }}
   link(
     v-for="currentCss in visibleCss",
     :key="currentCss.id",
@@ -58,7 +58,7 @@ v-head(v-if="the")
       .navbar
         component(:is="theNavbar", :the="the", :mdi="mdi")
     router-view
-  .drawer-side.z-50(v-if="cmpPages?.[0]?.visible")
+  .drawer-side(v-if="cmpPages?.[0]?.visible")
     label.drawer-overlay(for="drawer")
     .grid.max-w-full.self-stretch.overflow-x-auto.scroll-smooth(
       :class="{ 'justify-self-stretch': cmpPages[0].full }"
