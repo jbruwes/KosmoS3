@@ -28,7 +28,7 @@ const moduleCache = {
  * @param {string} type - Тип записи
  * @param {...any} args - Содержимое записи
  */
-const log = (type, ...args) => {
+const log = (type = "log", ...args) => {
   // eslint-disable-next-line no-console
   console[type](...args);
 };
@@ -51,15 +51,21 @@ const delay = 0;
  * @param {string} page.path - Путь до страницы
  * @returns {object} Шаблон
  */
-const fncTemplate = ({ id, template, script, style, path }) => {
+const fncTemplate = ({
+  id = crypto.randomUUID(),
+  template = "",
+  script = "",
+  style = "",
+  path = "",
+} = {}) => {
   /** Константа со скриптами */
-  const cntScript = `<script setup>const{the,mdi}=defineProps(["the","mdi"]);${script ?? ""}</script>`;
+  const cntScript = `<script setup>const{the,mdi}=defineProps(["the","mdi"]);${script}</script>`;
 
   /** Константа с шаблоном */
-  const cntTemplate = `<template>${template ?? ""}</template>`;
+  const cntTemplate = `<template>${template}</template>`;
 
   /** Константа со стилями */
-  const cntStyle = `<style scoped>${style ?? ""}</style>`;
+  const cntStyle = `<style scoped>${style}</style>`;
 
   /**
    * Функция получения файла шаблона
@@ -73,7 +79,7 @@ const fncTemplate = ({ id, template, script, style, path }) => {
    *
    * @param {string} styles - Стили
    */
-  const addStyle = (styles) => {
+  const addStyle = (styles = "") => {
     useStyleTag(styles, { id: `style_${id}` });
   };
 
@@ -83,7 +89,7 @@ const fncTemplate = ({ id, template, script, style, path }) => {
    * @returns {Promise} Промис
    */
   const loader = () =>
-    loadModule(`${["", "/"].includes(path) ? "" : "/"}${path}/@.vue`, {
+    loadModule(`${["", "/"].includes(path) ? "" : "/"}${path}/view.vue`, {
       moduleCache,
       getFile,
       addStyle,

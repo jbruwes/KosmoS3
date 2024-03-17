@@ -2,22 +2,22 @@
 .flex.snap-start(
   v-for="the in cmpSiblingsFilter",
   v-cloak,
-  :id="the.id",
-  :key="the.id",
+  :id="the?.id",
+  :key="the?.id",
   ref="refElements",
   v-intersection-observer="[fncIntersectionObserver,{root,rootMargin,threshold}]",
-  :class="{ 'min-h-full': the.full }"
+  :class="{ 'min-h-full': the?.full }"
 )
   .prose.max-w-none.flex-auto.text-sm(
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
-    :data-theme="the.theme",
-    :role="the.id === cmpCurrent.id ? 'main' : undefined"
+    :data-theme="the?.theme",
+    :role="the?.id === cmpCurrent?.id ? 'main' : null"
   )
     component(
-      :is="cmpTemplates[the.id]",
+      :is="cmpTemplates?.[the?.id]",
       :the="the",
       :mdi="mdi",
-      @vue:mounted="cmpResolve[the.id]"
+      @vue:mounted="cmpResolve?.[the?.id]"
     )
 </template>
 <script setup>
@@ -34,7 +34,7 @@ import {
 } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
@@ -64,7 +64,7 @@ const { fncTemplate } = strApp;
 const strData = data();
 
 /** @type {strData} */
-const { cmpPages } = storeToRefs(data());
+const { cmpPages } = storeToRefs(strData);
 
 /**
  * Текущий роут сайта
@@ -87,7 +87,8 @@ const router = useRouter();
  * @param {string} page.id - Id страницы
  * @returns {boolean} Признак совпадения с названием текущего роута
  */
-const fncCurrentIndex = ({ id }) => id === route.name;
+const fncCurrentIndex = ({ id = crypto.randomUUID() } = {}) =>
+  id === route.name;
 
 /**
  * Порядковый номер выбранной страницы в общем массиве всех объектов страниц
@@ -107,7 +108,7 @@ const cmpCurrentIndex = useArrayFindIndex(cmpPages, fncCurrentIndex);
 const fncCurrent = () =>
   get(cmpCurrentIndex)
     ? get(cmpPages, get(cmpCurrentIndex))
-    : get(cmpPages, 0).children?.[0];
+    : get(cmpPages, 0)?.children?.[0];
 
 /**
  * Вычисление переадресации корневого объекта страницы на первый доступный
@@ -139,7 +140,7 @@ const cmpSiblings = computed(fncSiblings);
  * @param {boolean} page.visible - Флаг видимости
  * @returns {boolean} Флаг видимости
  */
-const fncSiblingsFilter = ({ visible }) => visible;
+const fncSiblingsFilter = ({ visible = true } = {}) => visible;
 
 /**
  * Вычисление массива видимых объектов страниц с одинаковым предком
@@ -162,7 +163,9 @@ const cmpSiblingsFilter = useArrayFilter(cmpSiblings, fncSiblingsFilter);
  * }}
  *   Идентифицированный элемент массива с промисом и ресолверами
  */
-const fncMountedPromisesWithResolvers = ({ id }) => ({
+const fncMountedPromisesWithResolvers = ({
+  id = crypto.randomUUID(),
+} = {}) => ({
   id,
   ...Promise.withResolvers(),
 });
@@ -185,7 +188,7 @@ const cmpMountedPromisesWithResolvers = useArrayMap(
  * @param {Promise} entry.promise - Промис
  * @returns {Promise} - Промис
  */
-const fncMountedPromises = ({ promise }) => promise;
+const fncMountedPromises = ({ promise = null } = {}) => promise;
 
 /**
  * Вычисление плоского массива промисов
@@ -205,7 +208,10 @@ const cmpMountedPromises = useArrayMap(
  * @param {Function} entry.resolve - Ресолвер
  * @returns {[string, Function]} - Массив ресолвера с идентификацией
  */
-const fncMountedResolvers = ({ id, resolve }) => [id, resolve];
+const fncMountedResolvers = ({
+  id = crypto.randomUUID(),
+  resolve = null,
+} = {}) => [id, resolve];
 
 /**
  * Вычисление идентифицированного массива ресолверов
@@ -238,7 +244,7 @@ const cmpResolve = computed(fncResolve);
  * @param {object} the - Объект страницы
  * @returns {[string, object]} Массив из id и готового шаблона
  */
-const fncTemplateEntries = (the) => [the.id, fncTemplate(the)];
+const fncTemplateEntries = (the = {}) => [the?.id, fncTemplate(the)];
 
 /**
  * Вычисление массива загруженных шаблонов
@@ -310,13 +316,13 @@ let varPush = false;
  */
 const fncIntersectionObserver = ([
   {
-    isIntersecting,
-    target: { id: name },
-  },
-]) => {
+    isIntersecting = false,
+    target: { id: name = crypto.randomUUID() } = {},
+  } = {},
+] = []) => {
   if (!varPause && isIntersecting && name !== get(cmpCurrent, "id")) {
     varPush = true;
-    router.push({ name });
+    router?.push({ name });
   }
 };
 
@@ -343,7 +349,7 @@ const zoomable = false;
  * @param {string} el - Селектор
  * @returns {string} Преобразованный селектор
  */
-const fncSelectors = (el) => `a[href${el}]`;
+const fncSelectors = (el = '=""') => `a[href${el}]`;
 
 /**
  * Name of the selector for example '.glightbox' or 'data-glightbox' or
@@ -368,7 +374,8 @@ const refElements = ref([]);
  * @param {string} element.id - Id элемента
  * @returns {boolean} Признак совпадения id
  */
-const fncCurrentElement = ({ id }) => id === get(cmpCurrent, "id");
+const fncCurrentElement = ({ id = crypto.randomUUID() } = {}) =>
+  id === get(cmpCurrent, "id");
 
 /**
  * Вычисление текущего элемента, соответствующего текущему объекту страницы
@@ -378,13 +385,9 @@ const fncCurrentElement = ({ id }) => id === get(cmpCurrent, "id");
  */
 const cmpCurrentElement = useArrayFind(refElements, fncCurrentElement);
 
-/**
- * Процедура, вызываемая при изменении состава страниц на экране
- *
- * @param {Array} value Массив промисов
- */
-const fncPromises = async (value) => {
-  await Promise.all(value);
+/** Процедура, вызываемая при изменении состава страниц на экране */
+const fncPromises = async () => {
+  await Promise.all(get(cmpMountedPromises));
   GLightbox({ loop, zoomable, selector });
 };
 
@@ -400,8 +403,7 @@ const fncRoute = async () => {
   } else varPush = false;
 };
 
-watch(cmpMountedPromises, fncPromises);
+watchEffect(fncPromises);
 watch(route, fncRoute);
-fncPromises(get(cmpMountedPromises));
 fncRoute();
 </script>

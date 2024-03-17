@@ -87,7 +87,7 @@ import { get, isDefined, set, useArrayFind, useFileDialog } from "@vueuse/core";
 import mime from "mime";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
-import { onMounted, ref, watch, watchEffect } from "vue";
+import { onMounted, ref, watch, watchPostEffect } from "vue";
 
 import mimes from "@/assets/mimes.json";
 import templates from "@/assets/templates.json";
@@ -270,12 +270,9 @@ const editorTlb = [
 onMounted(() => {
   get(editorRef).focus();
 });
-watchEffect(
-  () => {
-    get(editorRef).getContentEl().dataset.theme = get(the)?.theme;
-  },
-  { flush: "post" },
-);
+watchPostEffect(() => {
+  get(editorRef).getContentEl().dataset.theme = get(the)?.theme;
+});
 /** ShowDialog */
 const showDialog = () => {
   const { theme } = get(the) ?? {};

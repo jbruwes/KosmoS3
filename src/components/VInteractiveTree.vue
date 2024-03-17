@@ -60,8 +60,8 @@ const emits = defineEmits(["update:expanded", "update:selected"]);
 const $q = useQuasar();
 const tree = ref();
 const updateSelected = "update:selected";
-watch(the, (newVal, oldVal) => {
-  const lOldVal = oldVal ?? {};
+watch(the, (newVal, oldVal = {}) => {
+  const lOldVal = oldVal;
   lOldVal.edit = false;
 });
 /** Добавление новой страницы */

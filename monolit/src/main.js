@@ -37,12 +37,6 @@ const app = createApp(App);
 app.config.globalProperties.document = document;
 app.use(createPinia());
 const { cmpPages, settings } = storeToRefs(dataStore());
-app.use(router);
-app.use(createHead());
-app.use(Tres);
-app.use(MotionPlugin);
-app.component("VHead", Head);
-app.mount("#app");
 watch(
   cmpPages,
   (value) => {
@@ -86,3 +80,9 @@ watch(
   },
   { once: true },
 );
+app.use(router);
+app.use(createHead());
+app.use(Tres);
+app.use(MotionPlugin);
+app.component("VHead", Head);
+app.mount("#app");
