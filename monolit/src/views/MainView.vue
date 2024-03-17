@@ -8,7 +8,7 @@
   v-intersection-observer="[fncIntersectionObserver,{root,rootMargin,threshold}]",
   :class="{ 'min-h-full': the?.full }"
 )
-  .prose.max-w-none.flex-auto.text-sm(
+  .prose.w-full.max-w-none.flex-auto.text-sm(
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
     :data-theme="the?.theme",
     :role="the?.id === cmpCurrent?.id ? 'main' : null"
@@ -88,7 +88,7 @@ const router = useRouter();
  * @returns {boolean} Признак совпадения с названием текущего роута
  */
 const fncCurrentIndex = ({ id = crypto.randomUUID() } = {}) =>
-  id === route.name;
+  id === route?.name;
 
 /**
  * Порядковый номер выбранной страницы в общем массиве всех объектов страниц
@@ -358,7 +358,7 @@ const fncSelectors = (el = '=""') => `a[href${el}]`;
  * @type {string}
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
-const selector = selectors.map(fncSelectors).join();
+const selector = selectors?.map(fncSelectors)?.join();
 
 /**
  * Массив страниц, отображаемых на экране
@@ -396,7 +396,7 @@ const fncRoute = async () => {
   if (!varPush) {
     await Promise.all(get(cmpMountedPromises));
     varPause = true;
-    unrefElement(cmpCurrentElement).scrollIntoView({
+    unrefElement(cmpCurrentElement)?.scrollIntoView({
       behavior: "instant",
     });
     varPause = false;
@@ -404,6 +404,5 @@ const fncRoute = async () => {
 };
 
 watchEffect(fncPromises);
-watch(route, fncRoute);
-fncRoute();
+watch(route, fncRoute, { immediate: true });
 </script>

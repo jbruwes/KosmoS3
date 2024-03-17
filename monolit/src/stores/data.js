@@ -224,8 +224,8 @@ export default defineStore("data", () => {
     Object.defineProperties(element, { index, prev, next });
     return element;
   };
-  const js = computed(() => get(tree)?.js.map(addProperties));
-  const css = computed(() => get(tree)?.css.map(addProperties));
+  const js = computed(() => get(tree)?.js?.map(addProperties) ?? []);
+  const css = computed(() => get(tree)?.css?.map(addProperties) ?? []);
   const content = computed(() => get(tree)?.content);
   const navbar = computed(() => get(tree)?.navbar);
   const siblings = {
