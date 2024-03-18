@@ -37,6 +37,18 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
               q-item-section
                 q-item-label Полный экран
                 q-item-label(caption) the.full
+            q-item(v-ripple, tag="label")
+              q-item-section(avatar)
+                q-checkbox(v-model="the.setup")
+              q-item-section
+                q-item-label script setup
+                q-item-label(caption) the.setup
+            q-item(v-ripple, tag="label")
+              q-item-section(avatar)
+                q-checkbox(v-model="the.scoped")
+              q-item-section
+                q-item-label style scoped
+                q-item-label(caption) the.scoped
     q-separator
     q-card(v-if="the", flat)
       q-item.text-teal
@@ -160,8 +172,8 @@ q-page.column.full-height
   )
     q-tab(name="wysiwyg", label="wysiwyg")
     q-tab(name="template", label="template")
-    q-tab(name="script", label="script setup")
-    q-tab(name="style", label="style scoped")
+    q-tab(name="script", :label="`script${the.setup ? ' setup' : ''}`")
+    q-tab(name="style", :label="`style${the.scoped ? ' scoped' : ''}`")
   q-separator
   q-tab-panels.full-width.col(v-model="state.content.tab")
     q-tab-panel.column(name="wysiwyg")

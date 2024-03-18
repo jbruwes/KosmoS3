@@ -1,4 +1,11 @@
-import { get, isDefined, set, useFetch, whenever } from "@vueuse/core";
+import {
+  get,
+  isDefined,
+  set,
+  useArrayMap,
+  useFetch,
+  whenever,
+} from "@vueuse/core";
 import { logicNot } from "@vueuse/math";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
@@ -7,7 +14,68 @@ import defNavbar from "~/src/assets/navbar.json";
 
 export default defineStore("data", () => {
   const uri = ref();
+
   const tree = ref();
+
+  /**
+   * Удаление лишнего из настроек
+   *
+   * @param {object} settings - Грязные настройки
+   * @param {string} settings.yandex - Яндекс
+   * @param {string} settings.metrika - Метрика
+   * @param {string} settings.google - Гугл
+   * @param {string} settings.analytics - Аналитика
+   * @param settings.landing
+   * @returns {object} - Чистые настройки
+   */
+  const fixSettings = ({
+    yandex = "",
+    metrika = "",
+    google = "",
+    analytics = "",
+    landing = true,
+  } = {}) => ({
+    yandex,
+    metrika,
+    google,
+    analytics,
+    landing,
+  });
+
+  /**
+   * Удаление лишнего из навбвра
+   *
+   * @param {object} navbar - Гразный навбар
+   * @param {string} navbar.theme
+   * @param {Array} navbar.classes
+   * @param {Array} navbar.scrollClasses
+   * @param {string} navbar.template
+   * @param {string} navbar.script
+   * @param {string} navbar.style
+   * @param {boolean} navbar.setup
+   * @param {boolean} navbar.scoped
+   * @returns {object} - Чистый навбар
+   */
+  const fixNavbar = ({
+    theme = defNavbar.theme,
+    classes = defNavbar.classes,
+    scrollClasses = defNavbar.scrollClasses,
+    template = defNavbar.template,
+    script = defNavbar.script,
+    style = defNavbar.style,
+    setup = defNavbar.setup,
+    scoped = defNavbar.scoped,
+  } = {}) => ({
+    theme,
+    classes,
+    scrollClasses,
+    template,
+    script,
+    style,
+    setup,
+    scoped,
+  });
+
   /**
    * Проверка структуры сайта
    *
@@ -30,47 +98,6 @@ export default defineStore("data", () => {
     script: pScript = "",
     settings: pSettings = {},
   } = {}) => {
-    /**
-     * Удаление лишнего из навбвра
-     *
-     * @param {object} navbar - Гразный навбар
-     * @returns {object} - Чистый навбар
-     */
-    const fixNavbar = (navbar) => {
-      const {
-        theme = defNavbar.theme,
-        classes = defNavbar.classes,
-        scroll: {
-          classes: scrollClasses = defNavbar.scroll.classes,
-        } = defNavbar.scroll,
-        template = defNavbar.template,
-        script = defNavbar.script,
-        style = defNavbar.style,
-      } = navbar;
-      return {
-        theme,
-        classes,
-        scroll: { classes: scrollClasses },
-        template,
-        script,
-        style,
-      };
-    };
-    /**
-     * Удаление лишнего из настроек
-     *
-     * @param {object} settings - Грязные настройки
-     * @returns {object} - Чистые настройки
-     */
-    const fixSettings = (settings) => {
-      const { yandex, metrika, google, analytics } = settings;
-      return {
-        yandex,
-        metrika,
-        google,
-        analytics,
-      };
-    };
     let [content = {}] = pContent;
     let navbar = { ...pNavbar };
     let css = [...pCss].filter(Boolean);
@@ -226,7 +253,7 @@ export default defineStore("data", () => {
   };
   const js = computed(() => get(tree)?.js?.map(addProperties) ?? []);
   const css = computed(() => get(tree)?.css?.map(addProperties) ?? []);
-  const content = computed(() => get(tree)?.content);
+  const content = computed(() => get(tree)?.content ?? []);
   const navbar = computed(() => get(tree)?.navbar);
   const siblings = {
     /** @returns {Array} - Массив одноуровневых объектов */
@@ -284,76 +311,81 @@ export default defineStore("data", () => {
     },
     configurable: true,
   };
-  const cmpPages = computed(() =>
-    isDefined(content)
-      ? (function getMembers(members, pParent) {
-          const parent = {
-            /** @returns {object} - Родительский объект */
-            get() {
-              return pParent;
-            },
-            configurable: true,
-          };
-          return members.reduce((accumulator, current) => {
-            const lCurrent = current;
-            const referen = {
-              changefreq: undefined,
-              children: [],
-              description: undefined,
-              icon: undefined,
-              id: crypto.randomUUID(),
-              image: undefined,
-              keywords: undefined,
-              label: "",
-              lastmod: undefined,
-              loc: undefined,
-              priority: undefined,
-              template: undefined,
-              script: undefined,
-              style: undefined,
-              theme: "light",
-              title: undefined,
-              visible: true,
-              edit: false,
-              type: "website",
-              alt: undefined,
-              full: true,
-            };
-            Object.keys(current).forEach((key) => {
-              if (!Object.keys(referen).includes(key)) delete lCurrent[key];
-            });
-            Object.entries(referen)
-              .filter(([, value]) => value !== undefined)
-              .forEach(([key, value]) => {
-                if (current[key] === undefined) lCurrent[key] = value;
-              });
-            Object.defineProperties(current, {
-              parent,
-              siblings,
-              branch,
-              path,
-              index,
-              prev,
-              next,
-              name,
-              urn,
-              favicon,
-            });
-            return current.children?.length
-              ? [...accumulator, ...getMembers(current.children, current)]
-              : accumulator;
-          }, members);
-        })(get(content))
-      : [],
+
+  const cmpPrePages = computed(() =>
+    (function getMembers(members, pParent) {
+      const parent = {
+        /** @returns {object} - Родительский объект */
+        get() {
+          return pParent;
+        },
+        configurable: true,
+      };
+      return members.reduce((accumulator, current) => {
+        const lCurrent = current;
+        const referen = {
+          changefreq: undefined,
+          children: [],
+          description: undefined,
+          icon: undefined,
+          id: crypto.randomUUID(),
+          image: undefined,
+          keywords: undefined,
+          label: "",
+          lastmod: undefined,
+          loc: undefined,
+          priority: undefined,
+          template: undefined,
+          script: undefined,
+          style: undefined,
+          theme: "light",
+          title: undefined,
+          visible: true,
+          edit: false,
+          type: "website",
+          alt: undefined,
+          full: true,
+          setup: true,
+          scoped: true,
+        };
+        Object.keys(current).forEach((key) => {
+          if (!Object.keys(referen).includes(key)) delete lCurrent[key];
+        });
+        Object.entries(referen)
+          .filter(([, value]) => value !== undefined)
+          .forEach(([key, value]) => {
+            if (current[key] === undefined) lCurrent[key] = value;
+          });
+        Object.defineProperties(current, {
+          parent,
+          siblings,
+          branch,
+          path,
+          index,
+          prev,
+          next,
+          name,
+          urn,
+          favicon,
+        });
+        return current.children?.length
+          ? [...accumulator, ...getMembers(current.children, current)]
+          : accumulator;
+      }, members);
+    })(get(content)),
   );
-  const altogether = {
+
+  const pages = {
     /** @returns {Array} - Все вместе */
-    get: () => cmpPages,
+    get: () => get(cmpPrePages),
     configurable: true,
   };
-  get(cmpPages).forEach((element) => {
-    Object.defineProperty(element, "altogether", altogether);
+
+  const cmpPages = useArrayMap(cmpPrePages, (value) => {
+    Object.defineProperty(value, "pages", pages);
+    return value;
   });
+
   return {
     tree,
     uri,

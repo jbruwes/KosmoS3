@@ -14,6 +14,18 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
       )
         template(#prepend)
           q-icon(name="mdi-theme-light-dark")
+      .q-pt-md
+        q-list
+          q-item(v-ripple, tag="label")
+            q-item-section(avatar)
+              q-checkbox(v-model="navbar.setup")
+            q-item-section
+              q-item-label script setup
+          q-item(v-ripple, tag="label")
+            q-item-section(avatar)
+              q-checkbox(v-model="navbar.scoped")
+            q-item-section
+              q-item-label style scoped
       q-select(
         v-model.trim="navbar.classes",
         multiple,
@@ -25,7 +37,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         label="Классы навигатора"
       )
       q-select(
-        v-model.trim="navbar.scroll.classes",
+        v-model.trim="navbar.scrollClasses",
         multiple,
         use-chips,
         use-input,
@@ -51,8 +63,8 @@ q-page.column.full-height
     narrow-indicator
   )
     q-tab(name="template", label="template")
-    q-tab(name="script", label="script setup")
-    q-tab(name="style", label="style scoped")
+    q-tab(name="script", :label="`script${navbar.setup ? ' setup' : ''}`")
+    q-tab(name="style", :label="`style${navbar.scoped ? ' scoped' : ''}`")
   q-separator
   q-tab-panels.full-width.col(v-model="navbarTabs")
     q-tab-panel.column(name="template")
@@ -110,9 +122,6 @@ const fncResetNavbar = () => {
           break;
         case "style":
           get(navbar)[element] = css(defNavbar[element]);
-          break;
-        case "scrollClasses":
-          get(navbar).scroll.classes = defNavbar.scroll.classes;
           break;
         default:
           get(navbar)[element] = defNavbar[element];

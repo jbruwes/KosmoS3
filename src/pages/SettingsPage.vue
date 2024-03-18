@@ -37,6 +37,16 @@ q-page.column.full-height
       )
         template(#prepend)
           q-icon(name="mdi-google-analytics")
+    q-card-section
+      .text-h6 НАСТРОЙКИ САЙТА
+    q-separator
+    q-card-section
+      q-list
+        q-item(v-ripple, tag="label")
+          q-item-section(avatar)
+            q-checkbox(v-model="settings.landing")
+          q-item-section
+            q-item-label В виде лендинга
 </template>
 <script setup>
 import { get } from "@vueuse/core";

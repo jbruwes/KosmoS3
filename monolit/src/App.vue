@@ -56,7 +56,7 @@ v-head
   )
     .z-40(
       v-if="cmpPages?.[0]?.visible",
-      :class="[...(ready ? [] : navbar?.scroll?.classes ?? []), ...(navbar?.classes ?? [])]",
+      :class="[...(ready ? [] : navbar?.scrollClasses ?? []), ...(navbar?.classes ?? [])]",
       :data-theme="navbar?.theme"
     )
       .navbar
@@ -163,6 +163,8 @@ const fncNavbar = () =>
     template: get(navbar, "template"),
     script: get(navbar, "script"),
     style: get(navbar, "style"),
+    setup: get(navbar, "setup"),
+    scoped: get(navbar, "scoped"),
     path: "/",
   });
 

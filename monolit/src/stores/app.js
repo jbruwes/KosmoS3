@@ -49,6 +49,8 @@ const delay = 0;
  * @param {string} page.script - Скрипты страницы
  * @param {string} page.style - Стили страницы
  * @param {string} page.path - Путь до страницы
+ * @param {boolean} page.setup - Тип скриптов
+ * @param {boolean} page.scoped - Тип стилей
  * @returns {object} Шаблон
  */
 const fncTemplate = ({
@@ -57,15 +59,21 @@ const fncTemplate = ({
   script = "",
   style = "",
   path = "",
+  setup = true,
+  scoped = true,
 } = {}) => {
   /** Константа со скриптами */
-  const cntScript = script ? `<script setup>${script}</script>` : script;
+  const cntScript = script
+    ? `<script${setup ? " setup" : ""}>${script}</script>`
+    : script;
 
   /** Константа с шаблоном */
   const cntTemplate = template ? `<template>${template}</template>` : template;
 
   /** Константа со стилями */
-  const cntStyle = style ? `<style scoped>${style}</style>` : style;
+  const cntStyle = style
+    ? `<style${scoped ? " scoped" : ""}>${style}</style>`
+    : style;
 
   /**
    * Функция получения файла шаблона
