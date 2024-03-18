@@ -80,7 +80,6 @@ v-head
           path(:d="mdi?.mdiClose")
 </template>
 <script setup>
-import * as mdi from "@mdi/js";
 import {
   get,
   isDefined,

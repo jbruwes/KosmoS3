@@ -59,13 +59,13 @@ const fncTemplate = ({
   path = "",
 } = {}) => {
   /** Константа со скриптами */
-  const cntScript = `<script setup>const{the,mdi}=defineProps(["the","mdi"]);${script}</script>`;
+  const cntScript = script ? `<script setup>${script}</script>` : script;
 
   /** Константа с шаблоном */
-  const cntTemplate = `<template>${template}</template>`;
+  const cntTemplate = template ? `<template>${template}</template>` : template;
 
   /** Константа со стилями */
-  const cntStyle = `<style scoped>${style}</style>`;
+  const cntStyle = style ? `<style scoped>${style}</style>` : style;
 
   /**
    * Функция получения файла шаблона

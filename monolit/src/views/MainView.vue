@@ -16,12 +16,10 @@
     component(
       :is="cmpTemplates?.[the?.id]",
       :the="the",
-      :mdi="mdi",
       @vue:mounted="cmpResolve?.[the?.id]"
     )
 </template>
 <script setup>
-import * as mdi from "@mdi/js";
 import { vIntersectionObserver } from "@vueuse/components";
 import {
   get,

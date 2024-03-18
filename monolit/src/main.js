@@ -5,6 +5,7 @@ import "daisyui/dist/full.css";
 // eslint-disable-next-line import/no-unresolved
 import "virtual:uno.css";
 
+import * as mdi from "@mdi/js";
 import Tres from "@tresjs/core";
 import { createHead } from "@unhead/vue";
 // eslint-disable-next-line import/no-unresolved
@@ -35,7 +36,7 @@ initUnocssRuntime({
   bypassDefined: true,
 });
 const app = createApp(App);
-app.config.globalProperties.document = document;
+app.config.globalProperties.mdi = mdi;
 app.use(createPinia());
 const { cmpPages, settings } = storeToRefs(dataStore());
 watch(
