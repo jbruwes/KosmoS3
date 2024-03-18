@@ -11,17 +11,17 @@ import { createHead } from "@unhead/vue";
 // eslint-disable-next-line import/no-unresolved
 import { Head } from "@unhead/vue/components";
 import initUnocssRuntime from "@unocss/runtime";
+import { get } from "@vueuse/core";
 import { MotionPlugin } from "@vueuse/motion";
 import { createPinia, storeToRefs } from "pinia";
 import { createApp, watch } from "vue";
 import VueGtag from "vue-gtag";
 import VueYandexMetrika from "vue3-yandex-metrika";
 
+import App from "@/App.vue";
+import router from "@/router";
+import dataStore from "@/stores/data";
 import unocssConfig from "~/uno.config";
-
-import App from "./App.vue";
-import router from "./router";
-import dataStore from "./stores/data";
 // eslint-disable-next-line no-console
 console.info(
   "👨‍🚀",
@@ -48,13 +48,18 @@ watch(
         path: `/${path}`,
         ...(loc && { alias: `/${encodeURI(loc.replace(" ", "_"))}` }),
         /** @returns {object} - MainView */
-        component: () => import("./views/MainView.vue"),
+        component: () =>
+          import(
+            get(settings, "landing")
+              ? "@/views/MultiView.vue"
+              : "@/views/SingleView.vue"
+          ),
       });
     });
     router.addRoute({
       path: "/:catchAll(.*)*",
       /** @returns {object} - Страница ошибки */
-      component: () => import("./views/NotFoundView.vue"),
+      component: () => import("@/views/NotFoundView.vue"),
     });
     router.replace(router.currentRoute.value.fullPath);
   },

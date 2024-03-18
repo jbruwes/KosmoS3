@@ -1,7 +1,6 @@
 <template lang="pug">
 .flex.snap-start(
   v-for="the in cmpSiblingsFilter",
-  v-cloak,
   :id="the?.id",
   :key="the?.id",
   ref="refElements",
@@ -9,6 +8,7 @@
   :class="{ 'min-h-full': the?.full }"
 )
   .prose.w-full.max-w-none.flex-auto.text-sm(
+    v-cloak,
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
     :data-theme="the?.theme",
     :role="the?.id === cmpCurrent?.id ? 'main' : null"

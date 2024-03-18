@@ -1,6 +1,6 @@
 <template lang="pug">
 v-head
-  title {{ cmpThe?.name ?? " " }}
+  title(v-if="cmpThe?.name") {{ cmpThe?.name }}
   link(
     v-for="currentCss in cmpVisibleCss",
     :key="currentCss?.id",
