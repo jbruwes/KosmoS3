@@ -1,14 +1,14 @@
 <template lang="pug">
-.flex.snap-start(:id="the?.id", :class="{ 'min-h-full': the?.full }")
+.flex.snap-start(:id="cmpThe?.id", :class="{ 'min-h-full': cmpThe?.full }")
   .prose.w-full.max-w-none.flex-auto.text-sm(
     v-cloak,
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
-    :data-theme="the?.theme",
+    :data-theme="cmpThe?.theme",
     role="main"
   )
     component(
       :is="cmpTheTemplate",
-      :the="the",
+      :the="cmpThe",
       @vue:mounted="GLightbox({ loop, zoomable, selector })"
     )
 </template>
@@ -82,12 +82,12 @@ const fncCurrentIndex = ({ id = crypto.randomUUID() } = {}) =>
 const cmpCurrentIndex = useArrayFindIndex(cmpPages, fncCurrentIndex);
 
 /**
- * Функция вычисления переадрессации корневого объекта страницы на первый
+ * Функция вычисления переадресации корневого объекта страницы на первый
  * доступный объект страницы
  *
  * @returns {object} Объект страницы
  */
-const fncCurrent = () =>
+const fncThe = () =>
   get(cmpCurrentIndex)
     ? get(cmpPages, get(cmpCurrentIndex))
     : get(cmpPages, 0)?.children?.[0];
@@ -97,22 +97,22 @@ const fncCurrent = () =>
  * объект страницы
  *
  * @type {computed}
- * @see {@link fncCurrent} См. функцию вычисления переадресации
+ * @see {@link fncThe} См. функцию вычисления переадресации
  */
-const the = computed(fncCurrent);
+const cmpThe = computed(fncThe);
 
 /**
- * Функция вычисления преобразования массива загруженных шаблонов в объект
+ * Функция вычисления преобразования загруженного шаблонов в объект
  *
  * @returns {object} Объект с загруженных шаблонов
  */
-const fncTheTemplate = () => fncTemplate(get(the));
+const fncTheTemplate = () => fncTemplate(get(cmpThe));
 
 /**
  * Вычисление объекта загруженных шаблонов
  *
  * @type {computed}
- * @see {@link fncTemplates} см. функцию вычисления
+ * @see {@link fncTheTemplate} см. функцию вычисления
  */
 const cmpTheTemplate = computed(fncTheTemplate);
 

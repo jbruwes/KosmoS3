@@ -11,7 +11,7 @@
     v-cloak,
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
     :data-theme="the?.theme",
-    :role="the?.id === cmpCurrent?.id ? 'main' : null"
+    :role="the?.id === cmpThe?.id ? 'main' : null"
   )
     component(
       :is="cmpTemplates?.[the?.id]",
@@ -103,7 +103,7 @@ const cmpCurrentIndex = useArrayFindIndex(cmpPages, fncCurrentIndex);
  *
  * @returns {object} Объект страницы
  */
-const fncCurrent = () =>
+const fncThe = () =>
   get(cmpCurrentIndex)
     ? get(cmpPages, get(cmpCurrentIndex))
     : get(cmpPages, 0)?.children?.[0];
@@ -113,16 +113,16 @@ const fncCurrent = () =>
  * объект страницы
  *
  * @type {computed}
- * @see {@link fncCurrent} См. функцию вычисления переадресации
+ * @see {@link fncThe} См. функцию вычисления переадресации
  */
-const cmpCurrent = computed(fncCurrent);
+const cmpThe = computed(fncThe);
 
 /**
  * Функция вычисления массива объектов страниц с одинаковым предком
  *
  * @returns {Array} Массив объектов страниц с одинаковым предком
  */
-const fncSiblings = () => get(cmpCurrent, "siblings");
+const fncSiblings = () => get(cmpThe, "siblings");
 
 /**
  * Вычисление массива объектов страниц с одинаковым предком
@@ -318,7 +318,7 @@ const fncIntersectionObserver = ([
     target: { id: name = crypto.randomUUID() } = {},
   } = {},
 ] = []) => {
-  if (!varPause && isIntersecting && name !== get(cmpCurrent, "id")) {
+  if (!varPause && isIntersecting && name !== get(cmpThe, "id")) {
     varPush = true;
     router?.push({ name });
   }
@@ -373,7 +373,7 @@ const refElements = ref([]);
  * @returns {boolean} Признак совпадения id
  */
 const fncCurrentElement = ({ id = crypto.randomUUID() } = {}) =>
-  id === get(cmpCurrent, "id");
+  id === get(cmpThe, "id");
 
 /**
  * Вычисление текущего элемента, соответствующего текущему объекту страницы
