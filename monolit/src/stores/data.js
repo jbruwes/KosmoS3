@@ -25,7 +25,7 @@ export default defineStore("data", () => {
    * @param {string} settings.metrika - Метрика
    * @param {string} settings.google - Гугл
    * @param {string} settings.analytics - Аналитика
-   * @param settings.landing
+   * @param {boolean} settings.landing - Вид отображения страниц сайта
    * @returns {object} - Чистые настройки
    */
   const fixSettings = ({
@@ -45,15 +45,16 @@ export default defineStore("data", () => {
   /**
    * Удаление лишнего из навбвра
    *
-   * @param {object} navbar - Гразный навбар
-   * @param {string} navbar.theme
-   * @param {Array} navbar.classes
-   * @param {Array} navbar.scrollClasses
-   * @param {string} navbar.template
-   * @param {string} navbar.script
-   * @param {string} navbar.style
-   * @param {boolean} navbar.setup
-   * @param {boolean} navbar.scoped
+   * @param {object} navbar - Навбар на проверку
+   * @param {string} navbar.theme - Тема
+   * @param {Array} navbar.classes - Классы
+   * @param {Array} navbar.scrollClasses - Классы, добавляемые при прокрутке
+   *   страницы
+   * @param {string} navbar.template - Шаблон
+   * @param {string} navbar.script - Скрипты
+   * @param {string} navbar.style - Стили
+   * @param {boolean} navbar.setup - Тип скриптов
+   * @param {boolean} navbar.scoped - Тип стилей
    * @returns {object} - Чистый навбар
    */
   const fixNavbar = ({
