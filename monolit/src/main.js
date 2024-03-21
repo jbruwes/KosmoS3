@@ -83,9 +83,11 @@ const fncImportMainView = () =>
  * @param root0.path
  * @param root0.id
  * @param root0.loc
+ * @param root0._
  */
 const fncEachPage = ({
-  path = "",
+  path: pPath = "",
+  _: path = `/${pPath}`,
   id: name = crypto.randomUUID(),
   loc = "",
 } = {}) => {
@@ -98,7 +100,7 @@ const fncEachPage = ({
 
   router.addRoute({
     name,
-    path: `/${path}`,
+    path,
     ...(loc && { alias }),
     component: fncImportMainView,
   });
