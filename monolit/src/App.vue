@@ -9,7 +9,7 @@ v-head
     :href="currentCss?.url"
   )
   component(
-    :is="tagScript",
+    :is="'script'",
     v-for="currentJs in cmpVisibleJs",
     :key="currentJs?.id",
     crossorigin,
@@ -33,8 +33,8 @@ v-head
     type="image/svg+xml"
   )
   link(v-if="cmpCanonical", rel="canonical", :href="cmpCanonical")
-  component(:is="refStyle", v-if="style") {{ style }}
-  component(:is="refScript", v-if="script") {{ `try{${script}\n}catch(e){console.error(\`\${e.name}: \${e.message}\`)}` }}
+  component(:is="'style'", v-if="style") {{ style }}
+  component(:is="'script'", v-if="script") {{ `try{${script}\n}catch(e){console.error(\`\${e.name}: \${e.message}\`)}` }}
   meta(
     v-if="settings?.yandex",
     name="yandex-verification",
@@ -55,24 +55,24 @@ v-head
     @scroll.passive="start"
   )
     .z-40(
-      v-if="cmpPages?.[0]?.visible",
+      v-if="pages?.[0]?.visible",
       :class="[...(ready ? [] : navbar?.scrollClasses ?? []), ...(navbar?.classes ?? [])]",
       :data-theme="navbar?.theme"
     )
       .navbar
         component(:is="cmpNavbar", :the="cmpThe", :mdi="mdi")
     router-view
-  .drawer-side.z-50(v-if="cmpPages?.[0]?.visible")
+  .drawer-side.z-50(v-if="pages?.[0]?.visible")
     label.drawer-overlay(for="drawer")
     .grid.max-w-full.self-stretch.overflow-x-auto.scroll-smooth(
-      :class="{ 'justify-self-stretch': cmpPages?.[0]?.full }"
+      :class="{ 'justify-self-stretch': pages?.[0]?.full }"
     )
       .col-start-1.row-start-1.flex
         .prose.w-full.max-w-none.flex-auto.text-sm(
           class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
-          :data-theme="cmpPages?.[0]?.theme"
+          :data-theme="pages?.[0]?.theme"
         )
-          component(:is="cmpRootTemplate", :the="cmpPages?.[0]", :mdi="mdi")
+          component(:is="cmpRootTemplate", :the="pages?.[0]", :mdi="mdi")
       label.btn.btn-circle.btn-ghost.sticky.right-1.top-1.col-start-1.row-start-1.justify-self-end(
         for="drawer"
       )
@@ -80,6 +80,14 @@ v-head
           path(:d="mdi?.mdiClose")
 </template>
 <script setup>
+/**
+ * Реактивный setTimeout
+ *
+ * @typedef {object} useTimeout
+ * @property {computed} ready - Флаг готовности
+ * @property {Function} start - Ф-ция запуска
+ * @see {@link https://vueuse.org/shared/useTimeout/}
+ */
 import {
   get,
   isDefined,
@@ -97,15 +105,22 @@ import { useRoute, useRouter } from "vue-router";
  * Хранилище приложения монолит
  *
  * @typedef {object} strApp
- * @property {Function} fncTemplate - Функция, возвращающая Promise на
- *   сконструированный шаблон
+ * @property {Function} fncTemplate - Функция, возвращающая сконструированный
+ *   шаблон
  */
 import app from "@/stores/app";
 /**
  * Хранилище данных приложения монолит
  *
  * @typedef {object} strData
- * @property {computed} cmpPages - Общий массив всех объектов страниц сайта
+ * @property {computed} pages - Общий массив всех объектов страниц сайта
+ * @property {computed} css - Массив ссылок на стили
+ * @property {computed} js - Массив ссылок на скрипты
+ * @property {ref} uri - Путь до data.json
+ * @property {computed} script - Глобальный скрипт
+ * @property {computed} style - Глобальные стили
+ * @property {computed} settings - Настройки
+ * @property {computed} navbar - Навбар
  */
 import data from "@/stores/data";
 
@@ -119,13 +134,17 @@ const { fncTemplate } = strApp;
 const strData = data();
 
 /** @type {strData} */
-const { cmpPages, css, js, uri, script, style, settings, navbar } =
+const { pages, css, js, uri, script, style, settings, navbar } =
   storeToRefs(strData);
 
-/** RefLocation */
+/**
+ * Reactive browser location
+ *
+ * @see {@link https://vueuse.org/core/useBrowserLocation/} - см. документацию
+ */
 const refLocation = useBrowserLocation();
 
-/** { ready, start } */
+/** @type {useTimeout} */
 const { ready, start } = useTimeout(1000, { controls: true });
 
 /**
@@ -143,18 +162,25 @@ const route = useRoute();
 const router = useRouter();
 
 /**
- * FncRootTemplate
+ * Ф-ция вычисления готового шаблона корневой страницы
  *
+ * @type {Function}
  * @returns {object} - Готовый шаблон корневой страницы
  */
-const fncRootTemplate = () => fncTemplate(get(cmpPages, 0));
+const fncRootTemplate = () => fncTemplate(get(pages, 0));
 
-/** CmpRootTemplate */
+/**
+ * Вычисление шаблона корневой страницы
+ *
+ * @type {computed}
+ * @see {@link fncRootTemplate} - см. ф-цию вычисления
+ */
 const cmpRootTemplate = computed(fncRootTemplate);
 
 /**
- * FncNavbar
+ * Ф-ция вычисления готового шаблона навбара
  *
+ * @type {Function}
  * @returns {object} - Готовый шаблон навбара
  */
 const fncNavbar = () =>
@@ -168,62 +194,98 @@ const fncNavbar = () =>
     path: "/",
   });
 
-/** CmpNavbar */
+/**
+ * Вычисление навбара
+ *
+ * @type {computed}
+ * @see {@link fncNavbar} - см. ф-цию вычисления
+ */
 const cmpNavbar = computed(fncNavbar);
 
 /**
- * @param root0
- * @param root0.id
+ * Функция проверки совпадения Id объекта страницы с названием роута
+ *
+ * @type {Function}
+ * @param {object} page - Объект страницы
+ * @param {string} page.id - Id страницы
+ * @returns {boolean} Признак совпадения с названием текущего роута
  */
 const fncThe = ({ id = crypto.randomUUID() } = {}) => id === route?.name;
 
-/** CmpThe */
-const cmpThe = useArrayFind(cmpPages, fncThe);
+/**
+ * Поиск текущего объекта страницы
+ *
+ * @type {computed}
+ */
+const cmpThe = useArrayFind(pages, fncThe);
 
-/** RefStyle */
-const refStyle = ref("style");
-
-/** RefScript */
-const refScript = ref("script");
-
-/** RefDrawer */
+/**
+ * Ссылка на переключатель панели
+ *
+ * @type {ref}
+ */
 const refDrawer = ref(false);
 
-/** FncCanonical */
+/**
+ * Ф-ция вычисления канонического пути
+ *
+ * @type {Function}
+ * @returns {string} - Канонический путь
+ */
 const fncCanonical = () =>
   isDefined(cmpThe)
     ? `${get(refLocation, "origin")}/${get(cmpThe, "urn")}`
     : "";
 
-/** CmpCanonical */
+/**
+ * Вычисление канонического пути
+ *
+ * @type {computed}
+ */
 const cmpCanonical = computed(fncCanonical);
 
 /**
- * @constant {object} favicon - Ref
- * @type {string} favicon.value - Уникальный ключ для favicon. Иначе иконка
- *   динамически не обновляется в chrome при смене страницы
+ * Уникальный ключ для favicon. Иначе иконка динамически не обновляется в chrome
+ * при смене страницы
+ *
+ * @type {ref}
  */
 const refFavicon = ref(crypto.randomUUID());
 
 /**
- * @param root0
- * @param root0.visible
- * @param root0.url
+ * Функция фильтрации видимости ссылок
+ *
+ * @type {Function}
+ * @param {object} link - Объект ссылки
+ * @param {boolean} link.visible - Признак использования
+ * @param {string} link.url - Урл
+ * @returns {boolean} - Флаг использования ссылки
  */
 const fncVisible = ({ visible = true, url = "" } = {}) => visible && url;
 
-/** CmpVisibleJs */
+/**
+ * Фильтр глобальных скриптов по видимости
+ *
+ * @type {computed}
+ */
 const cmpVisibleJs = useArrayFilter(js, fncVisible);
 
-/** CmpVisibleCss */
+/**
+ * Фильтр глобальных стилей по видимости
+ *
+ * @type {computed}
+ */
 const cmpVisibleCss = useArrayFilter(css, fncVisible);
 
-/** FncRouterBeforeEach */
+/**
+ * Функция, зарывающая левую панель перед каждым переходом на новую ссылку
+ *
+ * @type {Function}
+ */
 const fncRouterBeforeEach = () => {
   set(refDrawer, false);
 };
 
 router.beforeEach(fncRouterBeforeEach);
-
 set(uri, "");
 </script>

@@ -24,15 +24,15 @@ import selectors from "@/assets/glightbox.json";
  * Хранилище приложения монолит
  *
  * @typedef {object} strApp
- * @property {Function} fncTemplate - Функция, возвращающая Promise на
- *   сконструированный шаблон
+ * @property {Function} fncTemplate - Функция, возвращающая сконструированный
+ *   шаблон
  */
 import app from "@/stores/app";
 /**
  * Хранилище данных приложения монолит
  *
  * @typedef {object} strData
- * @property {computed} cmpPages - Общий массив всех объектов страниц сайта
+ * @property {computed} pages - Общий массив всех объектов страниц сайта
  */
 import data from "@/stores/data";
 
@@ -46,7 +46,7 @@ const { fncTemplate } = strApp;
 const strData = data();
 
 /** @type {strData} */
-const { cmpPages } = storeToRefs(strData);
+const { pages } = storeToRefs(strData);
 
 /**
  * Текущий роут сайта
@@ -65,6 +65,7 @@ const router = useRouter();
 /**
  * Функция проверки совпадения Id объекта страницы с названием роута
  *
+ * @type {Function}
  * @param {object} page - Объект страницы
  * @param {string} page.id - Id страницы
  * @returns {boolean} Признак совпадения с названием текущего роута
@@ -79,18 +80,19 @@ const fncCurrentIndex = ({ id = crypto.randomUUID() } = {}) =>
  * @type {computed}
  * @see {@link fncCurrentIndex} См. поисковую функцию
  */
-const cmpCurrentIndex = useArrayFindIndex(cmpPages, fncCurrentIndex);
+const cmpCurrentIndex = useArrayFindIndex(pages, fncCurrentIndex);
 
 /**
  * Функция вычисления переадресации корневого объекта страницы на первый
  * доступный объект страницы
  *
+ * @type {Function}
  * @returns {object} Объект страницы
  */
 const fncThe = () =>
   get(cmpCurrentIndex)
-    ? get(cmpPages, get(cmpCurrentIndex))
-    : get(cmpPages, 0)?.children?.[0];
+    ? get(pages, get(cmpCurrentIndex))
+    : get(pages, 0)?.children?.[0];
 
 /**
  * Вычисление переадресации корневого объекта страницы на первый доступный
@@ -104,6 +106,7 @@ const cmpThe = computed(fncThe);
 /**
  * Функция вычисления преобразования загруженного шаблонов в объект
  *
+ * @type {Function}
  * @returns {object} Объект с загруженных шаблонов
  */
 const fncTheTemplate = () => fncTemplate(get(cmpThe));
@@ -136,6 +139,7 @@ const zoomable = false;
 /**
  * Функция преобразования в селектор для href
  *
+ * @type {Function}
  * @param {string} el - Селектор
  * @returns {string} Преобразованный селектор
  */

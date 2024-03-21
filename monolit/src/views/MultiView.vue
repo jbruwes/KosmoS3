@@ -48,7 +48,7 @@ import app from "@/stores/app";
  * Хранилище данных приложения монолит
  *
  * @typedef {object} strData
- * @property {computed} cmpPages - Общий массив всех объектов страниц сайта
+ * @property {computed} pages - Общий массив всех объектов страниц сайта
  */
 import data from "@/stores/data";
 
@@ -62,7 +62,7 @@ const { fncTemplate } = strApp;
 const strData = data();
 
 /** @type {strData} */
-const { cmpPages } = storeToRefs(strData);
+const { pages } = storeToRefs(strData);
 
 /**
  * Текущий роут сайта
@@ -81,6 +81,7 @@ const router = useRouter();
 /**
  * Функция проверки совпадения Id объекта страницы с названием роута
  *
+ * @type {Function}
  * @param {object} page - Объект страницы
  * @param {string} page.id - Id страницы
  * @returns {boolean} Признак совпадения с названием текущего роута
@@ -95,18 +96,19 @@ const fncCurrentIndex = ({ id = crypto.randomUUID() } = {}) =>
  * @type {computed}
  * @see {@link fncCurrentIndex} См. поисковую функцию
  */
-const cmpCurrentIndex = useArrayFindIndex(cmpPages, fncCurrentIndex);
+const cmpCurrentIndex = useArrayFindIndex(pages, fncCurrentIndex);
 
 /**
  * Функция вычисления переадрессации корневого объекта страницы на первый
  * доступный объект страницы
  *
+ * @type {Function}
  * @returns {object} Объект страницы
  */
 const fncThe = () =>
   get(cmpCurrentIndex)
-    ? get(cmpPages, get(cmpCurrentIndex))
-    : get(cmpPages, 0)?.children?.[0];
+    ? get(pages, get(cmpCurrentIndex))
+    : get(pages, 0)?.children?.[0];
 
 /**
  * Вычисление переадресации корневого объекта страницы на первый доступный
@@ -120,6 +122,7 @@ const cmpThe = computed(fncThe);
 /**
  * Функция вычисления массива объектов страниц с одинаковым предком
  *
+ * @type {Function}
  * @returns {Array} Массив объектов страниц с одинаковым предком
  */
 const fncSiblings = () => get(cmpThe, "siblings");
@@ -127,6 +130,7 @@ const fncSiblings = () => get(cmpThe, "siblings");
 /**
  * Вычисление массива объектов страниц с одинаковым предком
  *
+ * @type {computed}
  * @see {@link fncSiblings} см. ф-цию получения массива, просто геттер утрачивает реактивность
  */
 const cmpSiblings = computed(fncSiblings);
@@ -134,6 +138,7 @@ const cmpSiblings = computed(fncSiblings);
 /**
  * Функция фильтрации станиц по признаку видимости
  *
+ * @type {Function}
  * @param {object} page - Объект страницы
  * @param {boolean} page.visible - Флаг видимости
  * @returns {boolean} Флаг видимости
@@ -151,6 +156,7 @@ const cmpSiblingsFilter = useArrayFilter(cmpSiblings, fncSiblingsFilter);
 /**
  * Функция вычисления элемента с промисом и ресолверами
  *
+ * @type {Function}
  * @param {object} page - Объект страницы
  * @param {string} page.id - Id страницы
  * @returns {{
@@ -182,6 +188,7 @@ const cmpMountedPromisesWithResolvers = useArrayMap(
 /**
  * Функция вычисления промиса
  *
+ * @type {Function}
  * @param {Array} entry - Идентифицированный элемент массива промисов с
  * @param {Promise} entry.promise - Промис
  * @returns {Promise} - Промис
@@ -201,6 +208,7 @@ const cmpMountedPromises = useArrayMap(
 /**
  * Функция вычисления идентифицированного массива ресолверов
  *
+ * @type {Function}
  * @param {object} entry - Идентифицированный объеккт промиса с ресолверами
  * @param {string} entry.id - Id
  * @param {Function} entry.resolve - Ресолвер
@@ -214,6 +222,7 @@ const fncMountedResolvers = ({
 /**
  * Вычисление идентифицированного массива ресолверов
  *
+ * @type {computed}
  * @see {@link fncMountedResolvers} - см. ф-цию вычисления
  */
 const cmpMountedResolvers = useArrayMap(
@@ -224,6 +233,7 @@ const cmpMountedResolvers = useArrayMap(
 /**
  * Функция вычисления идентифицированного объекта промисов
  *
+ * @type {Function}
  * @returns {object} Идентифицированный объекта промисов
  */
 const fncResolve = () => Object.fromEntries(get(cmpMountedResolvers));
@@ -239,6 +249,7 @@ const cmpResolve = computed(fncResolve);
 /**
  * Функция вычисления элементов массива с готовыми шаблонами
  *
+ * @type {Function}
  * @param {object} the - Объект страницы
  * @returns {[string, object]} Массив из id и готового шаблона
  */
@@ -255,6 +266,7 @@ const cmpTemplateEntries = useArrayMap(cmpSiblingsFilter, fncTemplateEntries);
 /**
  * Функция вычисления преобразования массива загруженных шаблонов в объект
  *
+ * @type {Function}
  * @returns {object} Объект с загруженных шаблонов
  */
 const fncTemplates = () => Object.fromEntries(get(cmpTemplateEntries));
@@ -308,6 +320,7 @@ let varPush = false;
 /**
  * Процедура обновления роутера, если страница появилась в области видимости
  *
+ * @type {Function}
  * @param {Array} entries - Массив объектов, описывающих пересечения
  * @param {object} entries."0" - Первый и единственный объект, описывающий
  *   пересечение
@@ -344,6 +357,7 @@ const zoomable = false;
 /**
  * Функция преобразования в селектор для href
  *
+ * @type {Function}
  * @param {string} el - Селектор
  * @returns {string} Преобразованный селектор
  */
@@ -368,6 +382,7 @@ const refElements = ref([]);
 /**
  * Функция поиска элемента соответствующего текущему объекту страницы
  *
+ * @type {Function}
  * @param {ref} element - Элемент
  * @param {string} element.id - Id элемента
  * @returns {boolean} Признак совпадения id
@@ -383,13 +398,21 @@ const fncCurrentElement = ({ id = crypto.randomUUID() } = {}) =>
  */
 const cmpCurrentElement = useArrayFind(refElements, fncCurrentElement);
 
-/** Процедура, вызываемая при изменении состава страниц на экране */
+/**
+ * Процедура, вызываемая при изменении состава страниц на экране
+ *
+ * @type {Function}
+ */
 const fncPromises = async () => {
   await Promise.all(get(cmpMountedPromises));
   GLightbox({ loop, zoomable, selector });
 };
 
-/** Процедура, вызываемая при изменении роута */
+/**
+ * Процедура, вызываемая при изменении роута
+ *
+ * @type {Function}
+ */
 const fncRoute = async () => {
   if (!varPush) {
     await Promise.all(get(cmpMountedPromises));

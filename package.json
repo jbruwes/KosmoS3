@@ -1,8 +1,8 @@
 {
-  "name": "kosmos3",
+  "name": "vues3",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "kosmos3",
+  "productName": "vues3",
   "author": "Jerry Bruwes <jbruwes@gmail.com>",
   "type": "module",
   "private": true,

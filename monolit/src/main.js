@@ -20,73 +20,140 @@ import VueYandexMetrika from "vue3-yandex-metrika";
 
 import App from "@/App.vue";
 import router from "@/router";
-import dataStore from "@/stores/data";
-import unocssConfig from "~/uno.config";
+/**
+ * Хранилище данных приложения монолит
+ *
+ * @typedef {object} strData
+ * @property {object} pages - Общий массив всех объектов страниц сайта
+ * @property {object} settings - Настройки
+ */
+import data from "@/stores/data";
+import defaults from "~/uno.config";
+
 // eslint-disable-next-line no-console
 console.info(
   "👨‍🚀",
-  "The kosmos3 framework",
+  "The vues3 framework",
   /* global __APP_VERSION__ */
   `ver:${__APP_VERSION__}`,
-  "https://kosmos3.ru",
+  "https://vues3.ru",
 );
-initUnocssRuntime({
-  autoPrefix: true,
-  defaults: unocssConfig,
-  bypassDefined: true,
-});
+
+/**
+ * Enable css property auto prefixer
+ *
+ * @type {boolean}
+ */
+const autoPrefix = true;
+
+/**
+ * When enabled, UnoCSS will look for the existing selectors defined in the
+ * stylesheet and bypass them. This is useful when using the runtime alongwith
+ * the build-time UnoCSS.
+ *
+ * @type {boolean}
+ */
+const bypassDefined = true;
+
+initUnocssRuntime({ autoPrefix, defaults, bypassDefined });
 const app = createApp(App);
 app.config.globalProperties.mdi = mdi;
 app.use(createPinia());
-const { cmpPages, settings } = storeToRefs(dataStore());
-watch(
-  cmpPages,
-  (value) => {
-    value.forEach(({ path, id: name, loc }) => {
-      router.addRoute({
-        name,
-        path: `/${path}`,
-        ...(loc && { alias: `/${encodeURI(loc.replace(" ", "_"))}` }),
-        /** @returns {object} - MainView */
-        component: () =>
-          import(
-            get(settings, "landing")
-              ? "@/views/MultiView.vue"
-              : "@/views/SingleView.vue"
-          ),
-      });
+
+/** @type {strData} */
+const strData = data();
+
+/** @type {strData} */
+const { pages, settings } = storeToRefs(strData);
+
+/**
+ * FncImportMainView
+ *
+ * @returns {object} - MainView
+ */
+const fncImportMainView = () =>
+  import(
+    get(settings, "landing")
+      ? "@/views/MultiView.vue"
+      : "@/views/SingleView.vue"
+  );
+
+/**
+ * @param root0
+ * @param root0.path
+ * @param root0.id
+ * @param root0.loc
+ */
+const fncEachPage = ({ path, id: name, loc }) => {
+  router.addRoute({
+    name,
+    path: `/${path}`,
+    ...(loc && { alias: `/${encodeURI(loc.replace(" ", "_"))}` }),
+    component: fncImportMainView,
+  });
+};
+
+/**
+ * @type {Function}
+ * @returns {object} - Страница ошибки
+ */
+const fncImportNotFoundView = () => import("@/views/NotFoundView.vue");
+
+/**
+ * Ф-ция наполнения роутера
+ *
+ * @type {Function}
+ * @param {object} value - Объект страницы
+ */
+const fncPages = (value) => {
+  value.forEach(fncEachPage);
+
+  /**
+   * Все неучтенные пути
+   *
+   * @type {string}
+   */
+  const path = "/:catchAll(.*)*";
+  /**
+   * Функция динамического импорта компонента
+   *
+   * @type {Function}
+   */
+  const component = fncImportNotFoundView;
+
+  router.addRoute({ path, component });
+  router.replace(router.currentRoute.value.fullPath);
+};
+
+/**
+ * Ф-ция подключения метрики и/или аналитики
+ *
+ * @type {Function}
+ * @param {object} settings - Объект с настройками
+ * @param {string} settings.metrika - Id метрики
+ * @param {string} settings.analytics - Id аналитики
+ */
+const fncSettings = ({ metrika, analytics }) => {
+  if (metrika)
+    app.use(VueYandexMetrika, {
+      id: metrika,
+      router,
+      env: "production",
     });
-    router.addRoute({
-      path: "/:catchAll(.*)*",
-      /** @returns {object} - Страница ошибки */
-      component: () => import("@/views/NotFoundView.vue"),
-    });
-    router.replace(router.currentRoute.value.fullPath);
-  },
-  { once: true },
-);
-watch(
-  settings,
-  ({ metrika, analytics }) => {
-    if (metrika)
-      app.use(VueYandexMetrika, {
-        id: metrika,
-        router,
-        env: "production",
-      });
-    if (analytics)
-      app.use(
-        VueGtag,
-        {
-          config: {
-            id: analytics,
-          },
+  if (analytics)
+    app.use(
+      VueGtag,
+      {
+        config: {
+          id: analytics,
         },
-        router,
-      );
-  },
-  { once: true },
-);
+      },
+      router,
+    );
+};
+
+watch(pages, fncPages, { once: true });
+watch(settings, fncSettings, { once: true });
 app.use(router);
 app.use(createHead());
 app.use(Tres);

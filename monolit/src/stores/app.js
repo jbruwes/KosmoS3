@@ -25,6 +25,7 @@ const moduleCache = {
 /**
  * Процедура логирования ошибок
  *
+ * @type {Function}
  * @param {string} type - Тип записи
  * @param {...any} args - Содержимое записи
  */
@@ -43,6 +44,7 @@ const delay = 0;
 /**
  * Функция, возвращающая Promise на сконструированный шаблон
  *
+ * @type {Function}
  * @param {object} page - Объект страницы
  * @param {string} page.id - Id страницы
  * @param {string} page.template - Шаблон страницы
@@ -78,6 +80,7 @@ const fncTemplate = ({
   /**
    * Функция получения файла шаблона
    *
+   * @type {Function}
    * @returns {string} Шаблон
    */
   const getFile = () => `${cntScript}${cntTemplate}${cntStyle}`;
@@ -85,6 +88,7 @@ const fncTemplate = ({
   /**
    * Процедура добавления стилей
    *
+   * @type {Function}
    * @param {string} styles - Стили
    */
   const addStyle = (styles = "") => {
@@ -94,6 +98,7 @@ const fncTemplate = ({
   /**
    * Загрузчик шаблона
    *
+   * @type {Function}
    * @returns {Promise} Промис
    */
   const loader = () =>
@@ -110,6 +115,7 @@ const fncTemplate = ({
 /**
  * Функция, возвращающая объект хранилища
  *
+ * @type {Function}
  * @returns {object} Объект хранилища
  */
 const fncStoreSetup = () => ({ fncTemplate });

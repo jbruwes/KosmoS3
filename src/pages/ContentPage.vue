@@ -11,7 +11,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         v-model:selected="state.content.selected",
         v-model:expanded="state.content.expanded",
         :nodes="content",
-        :list="cmpPages"
+        :list="pages"
       )
     q-separator
     q-card(v-if="the", flat)
@@ -211,7 +211,7 @@ import data from "~/monolit/src/stores/data";
 const $q = useQuasar();
 const S3 = s3();
 const { state, selectedValue, the } = storeToRefs(app());
-const { content, cmpPages } = storeToRefs(data());
+const { content, pages } = storeToRefs(data());
 const { base } = storeToRefs(S3);
 const { putFile } = S3;
 const icons = ref(materialIcons.icons);

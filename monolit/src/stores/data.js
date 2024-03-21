@@ -376,14 +376,14 @@ export default defineStore("data", () => {
     })(get(content)),
   );
 
-  const pages = {
-    /** @returns {Array} - Все вместе */
-    get: () => get(cmpPrePages),
-    configurable: true,
-  };
+  /** @returns {Array} - Все вместе */
+  const fncPages = () => get(cmpPrePages);
 
-  const cmpPages = useArrayMap(cmpPrePages, (value) => {
-    Object.defineProperty(value, "pages", pages);
+  const pages = useArrayMap(cmpPrePages, (value) => {
+    Object.defineProperty(value, "pages", {
+      get: fncPages,
+      configurable: true,
+    });
     return value;
   });
 
@@ -397,7 +397,7 @@ export default defineStore("data", () => {
     css,
     content,
     navbar,
-    cmpPages,
+    pages,
     calcIndex,
   };
 });
