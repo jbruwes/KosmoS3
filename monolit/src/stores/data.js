@@ -17,6 +17,8 @@ export default defineStore("data", () => {
 
   const tree = ref();
 
+  const configurable = true;
+
   /**
    * Удаление лишнего из настроек
    *
@@ -219,21 +221,21 @@ export default defineStore("data", () => {
     get() {
       return this.siblings.findIndex(({ id }) => this.id === id);
     },
-    configurable: true,
+    configurable,
   };
   const prev = {
     /** @returns {Array} - Массив одноуровневых объектов */
     get() {
       return this.siblings[this.index - 1];
     },
-    configurable: true,
+    configurable,
   };
   const next = {
     /** @returns {Array} - Массив одноуровневых объектов */
     get() {
       return this.siblings[this.index + 1];
     },
-    configurable: true,
+    configurable,
   };
   /**
    * @param {object} element - Объект для добавления новых свойств
@@ -247,7 +249,7 @@ export default defineStore("data", () => {
       get() {
         return array;
       },
-      configurable: true,
+      configurable,
     });
     Object.defineProperties(element, { index, prev, next });
     return element;
@@ -261,7 +263,7 @@ export default defineStore("data", () => {
     get() {
       return this.parent ? this.parent?.children : [this];
     },
-    configurable: true,
+    configurable,
   };
   const branch = {
     /** @returns {Array} - Массив родительских объектов */
@@ -274,7 +276,7 @@ export default defineStore("data", () => {
       }
       return ret;
     },
-    configurable: true,
+    configurable,
   };
   const path = {
     /** @returns {string} - Путь до объекта */
@@ -286,7 +288,7 @@ export default defineStore("data", () => {
         .slice(1)
         .join("/");
     },
-    configurable: true,
+    configurable,
   };
   const urn = {
     /** @returns {string} - Путь до рекомендованный */
@@ -296,21 +298,21 @@ export default defineStore("data", () => {
         this.path
       );
     },
-    configurable: true,
+    configurable,
   };
   const name = {
     /** @returns {string} - Вычисленное название страницы */
     get() {
       return this.title || this.label;
     },
-    configurable: true,
+    configurable,
   };
   const favicon = {
     /** @returns {string} - Вычисленное название иконки */
     get() {
       return this.icon?.replace(/-./g, (x) => x[1].toUpperCase());
     },
-    configurable: true,
+    configurable,
   };
 
   const cmpPrePages = computed(() =>
@@ -320,7 +322,7 @@ export default defineStore("data", () => {
         get() {
           return pParent;
         },
-        configurable: true,
+        configurable,
       };
       return members.reduce((accumulator, current) => {
         const lCurrent = current;
@@ -380,10 +382,7 @@ export default defineStore("data", () => {
   const fncPages = () => get(cmpPrePages);
 
   const pages = useArrayMap(cmpPrePages, (value) => {
-    Object.defineProperty(value, "pages", {
-      get: fncPages,
-      configurable: true,
-    });
+    Object.defineProperty(value, "pages", { get: fncPages, configurable });
     return value;
   });
 

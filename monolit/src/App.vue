@@ -134,8 +134,69 @@ const { fncTemplate } = strApp;
 const strData = data();
 
 /** @type {strData} */
-const { pages, css, js, uri, script, style, settings, navbar } =
-  storeToRefs(strData);
+const { navbar } = storeToRefs(strData);
+
+/**
+ * Ф-ция вычисления готового шаблона навбара
+ *
+ * @type {Function}
+ * @returns {object} - Готовый шаблон навбара
+ */
+const fncNavbar = () => {
+  /**
+   * Id навбара
+   *
+   * @type {string}
+   */
+  const id = crypto.randomUUID();
+
+  /**
+   * Шаблон навбара
+   *
+   * @type {string}
+   */
+  const template = get(navbar, "template");
+
+  /**
+   * Срипты навбара
+   *
+   * @type {string}
+   */
+  const script = get(navbar, "script");
+
+  /**
+   * Стили навбара
+   *
+   * @type {string}
+   */
+  const style = get(navbar, "style");
+
+  /**
+   * Тип скриптов навбара
+   *
+   * @type {boolean}
+   */
+  const setup = get(navbar, "setup");
+
+  /**
+   * Тип стилей навбара
+   *
+   * @type {boolean}
+   */
+  const scoped = get(navbar, "scoped");
+
+  /**
+   * Путь готового шаблона навбара
+   *
+   * @type {string}
+   */
+  const path = "/";
+
+  return fncTemplate({ id, template, script, style, setup, scoped, path });
+};
+
+/** @type {strData} */
+const { pages, css, js, uri, script, style, settings } = storeToRefs(strData);
 
 /**
  * Reactive browser location
@@ -144,8 +205,15 @@ const { pages, css, js, uri, script, style, settings, navbar } =
  */
 const refLocation = useBrowserLocation();
 
+/**
+ * Expose more controls
+ *
+ * @type {boolean}
+ */
+const controls = true;
+
 /** @type {useTimeout} */
-const { ready, start } = useTimeout(1000, { controls: true });
+const { ready, start } = useTimeout(1000, { controls });
 
 /**
  * Текущий роут сайта
@@ -176,23 +244,6 @@ const fncRootTemplate = () => fncTemplate(get(pages, 0));
  * @see {@link fncRootTemplate} - см. ф-цию вычисления
  */
 const cmpRootTemplate = computed(fncRootTemplate);
-
-/**
- * Ф-ция вычисления готового шаблона навбара
- *
- * @type {Function}
- * @returns {object} - Готовый шаблон навбара
- */
-const fncNavbar = () =>
-  fncTemplate({
-    id: "navbar",
-    template: get(navbar, "template"),
-    script: get(navbar, "script"),
-    style: get(navbar, "style"),
-    setup: get(navbar, "setup"),
-    scoped: get(navbar, "scoped"),
-    path: "/",
-  });
 
 /**
  * Вычисление навбара

@@ -2,7 +2,7 @@
   "name": "vues3",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "vues3",
+  "productName": "Vue.S3",
   "author": "Jerry Bruwes <jbruwes@gmail.com>",
   "type": "module",
   "private": true,

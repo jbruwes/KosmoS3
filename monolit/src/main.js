@@ -84,11 +84,22 @@ const fncImportMainView = () =>
  * @param root0.id
  * @param root0.loc
  */
-const fncEachPage = ({ path, id: name, loc }) => {
+const fncEachPage = ({
+  path = "",
+  id: name = crypto.randomUUID(),
+  loc = "",
+} = {}) => {
+  /**
+   * Подготовленный алиас
+   *
+   * @type {string}
+   */
+  const alias = `/${encodeURI(loc?.replace(" ", "_"))}`;
+
   router.addRoute({
     name,
     path: `/${path}`,
-    ...(loc && { alias: `/${encodeURI(loc.replace(" ", "_"))}` }),
+    ...(loc && { alias }),
     component: fncImportMainView,
   });
 };
@@ -125,6 +136,9 @@ const fncPages = (value) => {
   router.replace(router.currentRoute.value.fullPath);
 };
 
+/** @type {string} */
+const env = "production";
+
 /**
  * Ф-ция подключения метрики и/или аналитики
  *
@@ -134,26 +148,29 @@ const fncPages = (value) => {
  * @param {string} settings.analytics - Id аналитики
  */
 const fncSettings = ({ metrika, analytics }) => {
-  if (metrika)
-    app.use(VueYandexMetrika, {
-      id: metrika,
-      router,
-      env: "production",
-    });
-  if (analytics)
-    app.use(
-      VueGtag,
-      {
-        config: {
-          id: analytics,
-        },
-      },
-      router,
-    );
+  if (metrika) {
+    /** @type {string} */
+    const id = metrika;
+    app.use(VueYandexMetrika, { id, router, env });
+  }
+  if (analytics) {
+    /** @type {string} */
+    const id = analytics;
+    /** @type {{ string }} */
+    const config = { id };
+    app.use(VueGtag, { config }, router);
+  }
 };
 
-watch(pages, fncPages, { once: true });
-watch(settings, fncSettings, { once: true });
+/**
+ * Запуск вотчера единожды
+ *
+ * @type {boolean}
+ */
+const once = true;
+
+watch(pages, fncPages, { once });
+watch(settings, fncSettings, { once });
 app.use(router);
 app.use(createHead());
 app.use(Tres);
