@@ -61,108 +61,14 @@ app.config.globalProperties.mdi = mdi;
 app.use(createPinia());
 
 /** @type {strData} */
-const strData = data();
-
-/** @type {strData} */
-const { pages, settings } = storeToRefs(strData);
+const { pages, settings } = storeToRefs(data());
 
 /**
- * FncImportMainView
+ * Перевод яндекс метрики в продуктовый режим
  *
- * @returns {object} - MainView
+ * @type {string}
  */
-const fncImportMainView = () =>
-  import(
-    get(settings, "landing")
-      ? "@/views/MultiView.vue"
-      : "@/views/SingleView.vue"
-  );
-
-/**
- * @param root0
- * @param root0.path
- * @param root0.id
- * @param root0.loc
- * @param root0._
- */
-const fncEachPage = ({
-  path: pPath = "",
-  _: path = `/${pPath}`,
-  id: name = crypto.randomUUID(),
-  loc = "",
-} = {}) => {
-  /**
-   * Подготовленный алиас
-   *
-   * @type {string}
-   */
-  const alias = `/${encodeURI(loc?.replace(" ", "_"))}`;
-
-  router.addRoute({
-    name,
-    path,
-    ...(loc && { alias }),
-    component: fncImportMainView,
-  });
-};
-
-/**
- * @type {Function}
- * @returns {object} - Страница ошибки
- */
-const fncImportNotFoundView = () => import("@/views/NotFoundView.vue");
-
-/**
- * Ф-ция наполнения роутера
- *
- * @type {Function}
- * @param {object} value - Объект страницы
- */
-const fncPages = (value) => {
-  value.forEach(fncEachPage);
-
-  /**
-   * Все неучтенные пути
-   *
-   * @type {string}
-   */
-  const path = "/:catchAll(.*)*";
-  /**
-   * Функция динамического импорта компонента
-   *
-   * @type {Function}
-   */
-  const component = fncImportNotFoundView;
-
-  router.addRoute({ path, component });
-  router.replace(router.currentRoute.value.fullPath);
-};
-
-/** @type {string} */
 const env = "production";
-
-/**
- * Ф-ция подключения метрики и/или аналитики
- *
- * @type {Function}
- * @param {object} settings - Объект с настройками
- * @param {string} settings.metrika - Id метрики
- * @param {string} settings.analytics - Id аналитики
- */
-const fncSettings = ({ metrika, analytics }) => {
-  if (metrika) {
-    /** @type {string} */
-    const id = metrika;
-    app.use(VueYandexMetrika, { id, router, env });
-  }
-  if (analytics) {
-    /** @type {string} */
-    const id = analytics;
-    /** @type {{ string }} */
-    const config = { id };
-    app.use(VueGtag, { config }, router);
-  }
-};
 
 /**
  * Запуск вотчера единожды
@@ -171,8 +77,94 @@ const fncSettings = ({ metrika, analytics }) => {
  */
 const once = true;
 
-watch(pages, fncPages, { once });
-watch(settings, fncSettings, { once });
+watch(
+  pages,
+  (value) => {
+    (() => {
+      /**
+       * Функция динамического импорта компонента
+       *
+       * @type {Function}
+       * @returns {object} - Страница ошибки
+       */
+      const component = () =>
+        import(
+          get(settings, "landing")
+            ? "@/views/MultiView.vue"
+            : "@/views/SingleView.vue"
+        );
+      value.forEach(
+        ({
+          path: pPath = "",
+          _: path = `/${pPath}`,
+          id: name = crypto.randomUUID(),
+          loc = "",
+        } = {}) => {
+          /**
+           * Подготовленный алиас
+           *
+           * @type {string}
+           */
+          const alias = `/${encodeURI(loc?.replace(" ", "_"))}`;
+
+          router.addRoute({ name, path, ...(loc && { alias }), component });
+        },
+      );
+    })();
+
+    /**
+     * Все неучтенные пути
+     *
+     * @type {string}
+     */
+    const path = "/:catchAll(.*)*";
+
+    /**
+     * Функция динамического импорта компонента
+     *
+     * @type {Function}
+     * @returns {object} - Страница ошибки
+     */
+    const component = () => import("@/views/NotFoundView.vue");
+
+    router.addRoute({ path, component });
+    router.replace(router.currentRoute.value.fullPath);
+  },
+  { once },
+);
+watch(
+  settings,
+  ({ metrika, analytics }) => {
+    if (metrika) {
+      /**
+       * Id метрики
+       *
+       * @type {string}
+       */
+      const id = metrika;
+
+      app.use(VueYandexMetrika, { id, router, env });
+    }
+    if (analytics) {
+      /**
+       * Id аналитики
+       *
+       * @type {string}
+       */
+      const id = analytics;
+
+      /**
+       * Подготовленный конфиг
+       *
+       * @type {{ string }}
+       */
+      const config = { id };
+
+      app.use(VueGtag, { config }, router);
+    }
+  },
+  { once },
+);
 app.use(router);
 app.use(createHead());
 app.use(Tres);

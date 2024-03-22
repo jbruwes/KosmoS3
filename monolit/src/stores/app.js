@@ -11,7 +11,11 @@ import { loadModule } from "vue3-sfc-loader";
 const { defineAsyncComponent } = vue;
 const { useStyleTag } = vueuseCore;
 
-/** Модули, передаваемые шаблону */
+/**
+ * Модули, передаваемые шаблону
+ *
+ * @type {object}
+ */
 const moduleCache = {
   vue,
   "vue-router": vueRouter,
@@ -64,15 +68,27 @@ const fncTemplate = ({
   setup = true,
   scoped = true,
 } = {}) => {
-  /** Константа со скриптами */
+  /**
+   * Константа со скриптами
+   *
+   * @type {string}
+   */
   const cntScript = script
     ? `<script${setup ? " setup" : ""}>${script}</script>`
     : script;
 
-  /** Константа с шаблоном */
+  /**
+   * Константа с шаблоном
+   *
+   * @type {string}
+   */
   const cntTemplate = template ? `<template>${template}</template>` : template;
 
-  /** Константа со стилями */
+  /**
+   * Константа со стилями
+   *
+   * @type {string}
+   */
   const cntStyle = style
     ? `<style${scoped ? " scoped" : ""}>${style}</style>`
     : style;
@@ -112,13 +128,4 @@ const fncTemplate = ({
   return defineAsyncComponent({ loader, delay });
 };
 
-/**
- * Функция, возвращающая объект хранилища
- *
- * @type {Function}
- * @returns {object} Объект хранилища
- */
-const fncStoreSetup = () => ({ fncTemplate });
-
-/** Хранилище приложения монолит */
-export default defineStore("app", fncStoreSetup);
+export default defineStore("app", () => ({ fncTemplate }));

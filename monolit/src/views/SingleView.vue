@@ -37,16 +37,10 @@ import app from "@/stores/app";
 import data from "@/stores/data";
 
 /** @type {strApp} */
-const strApp = app();
-
-/** @type {strApp} */
-const { fncTemplate } = strApp;
+const { fncTemplate } = app();
 
 /** @type {strData} */
-const strData = data();
-
-/** @type {strData} */
-const { pages } = storeToRefs(strData);
+const { pages } = storeToRefs(data());
 
 /**
  * Текущий роут сайта
@@ -63,61 +57,34 @@ const route = useRoute();
 const router = useRouter();
 
 /**
- * Функция проверки совпадения Id объекта страницы с названием роута
- *
- * @type {Function}
- * @param {object} page - Объект страницы
- * @param {string} page.id - Id страницы
- * @returns {boolean} Признак совпадения с названием текущего роута
- */
-const fncCurrentIndex = ({ id = crypto.randomUUID() } = {}) =>
-  id === route?.name;
-
-/**
  * Порядковый номер выбранной страницы в общем массиве всех объектов страниц
  * сайта
  *
  * @type {computed}
- * @see {@link fncCurrentIndex} См. поисковую функцию
  */
-const cmpCurrentIndex = useArrayFindIndex(pages, fncCurrentIndex);
-
-/**
- * Функция вычисления переадресации корневого объекта страницы на первый
- * доступный объект страницы
- *
- * @type {Function}
- * @returns {object} Объект страницы
- */
-const fncThe = () =>
-  get(cmpCurrentIndex)
-    ? get(pages, get(cmpCurrentIndex))
-    : get(pages, 0)?.children?.[0];
+const cmpCurrentIndex = useArrayFindIndex(
+  pages,
+  ({ id = crypto.randomUUID() } = {}) => id === route?.name,
+);
 
 /**
  * Вычисление переадресации корневого объекта страницы на первый доступный
  * объект страницы
  *
  * @type {computed}
- * @see {@link fncThe} См. функцию вычисления переадресации
  */
-const cmpThe = computed(fncThe);
-
-/**
- * Функция вычисления преобразования загруженного шаблонов в объект
- *
- * @type {Function}
- * @returns {object} Объект с загруженных шаблонов
- */
-const fncTheTemplate = () => fncTemplate(get(cmpThe));
+const cmpThe = computed(() =>
+  get(cmpCurrentIndex)
+    ? get(pages, get(cmpCurrentIndex))
+    : get(pages, 0)?.children?.[0],
+);
 
 /**
  * Вычисление объекта загруженных шаблонов
  *
  * @type {computed}
- * @see {@link fncTheTemplate} см. функцию вычисления
  */
-const cmpTheTemplate = computed(fncTheTemplate);
+const cmpTheTemplate = computed(() => fncTemplate(get(cmpThe)));
 
 /**
  * Loop slides on end
@@ -137,20 +104,11 @@ const loop = true;
 const zoomable = false;
 
 /**
- * Функция преобразования в селектор для href
- *
- * @type {Function}
- * @param {string} el - Селектор
- * @returns {string} Преобразованный селектор
- */
-const fncSelectors = (el = '=""') => `a[href${el}]`;
-
-/**
  * Name of the selector for example '.glightbox' or 'data-glightbox' or
  * '*[data-glightbox]'
  *
  * @type {string}
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
-const selector = selectors?.map(fncSelectors)?.join();
+const selector = selectors?.map((el = '=""') => `a[href${el}]`)?.join();
 </script>

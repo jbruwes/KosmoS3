@@ -125,24 +125,17 @@ import app from "@/stores/app";
 import data from "@/stores/data";
 
 /** @type {strApp} */
-const strApp = app();
-
-/** @type {strApp} */
-const { fncTemplate } = strApp;
+const { fncTemplate } = app();
 
 /** @type {strData} */
-const strData = data();
-
-/** @type {strData} */
-const { navbar } = storeToRefs(strData);
+const { navbar } = storeToRefs(data());
 
 /**
- * Ф-ция вычисления готового шаблона навбара
+ * Вычисление навбара
  *
- * @type {Function}
- * @returns {object} - Готовый шаблон навбара
+ * @type {computed}
  */
-const fncNavbar = () => {
+const cmpNavbar = computed(() => {
   /**
    * Id навбара
    *
@@ -193,10 +186,10 @@ const fncNavbar = () => {
   const path = "/";
 
   return fncTemplate({ id, template, script, style, setup, scoped, path });
-};
+});
 
 /** @type {strData} */
-const { pages, css, js, uri, script, style, settings } = storeToRefs(strData);
+const { pages, css, js, uri, script, style, settings } = storeToRefs(data());
 
 /**
  * Reactive browser location
@@ -230,45 +223,21 @@ const route = useRoute();
 const router = useRouter();
 
 /**
- * Ф-ция вычисления готового шаблона корневой страницы
- *
- * @type {Function}
- * @returns {object} - Готовый шаблон корневой страницы
- */
-const fncRootTemplate = () => fncTemplate(get(pages, 0));
-
-/**
  * Вычисление шаблона корневой страницы
  *
  * @type {computed}
- * @see {@link fncRootTemplate} - см. ф-цию вычисления
  */
-const cmpRootTemplate = computed(fncRootTemplate);
-
-/**
- * Вычисление навбара
- *
- * @type {computed}
- * @see {@link fncNavbar} - см. ф-цию вычисления
- */
-const cmpNavbar = computed(fncNavbar);
-
-/**
- * Функция проверки совпадения Id объекта страницы с названием роута
- *
- * @type {Function}
- * @param {object} page - Объект страницы
- * @param {string} page.id - Id страницы
- * @returns {boolean} Признак совпадения с названием текущего роута
- */
-const fncThe = ({ id = crypto.randomUUID() } = {}) => id === route?.name;
+const cmpRootTemplate = computed(() => fncTemplate(get(pages, 0)));
 
 /**
  * Поиск текущего объекта страницы
  *
  * @type {computed}
  */
-const cmpThe = useArrayFind(pages, fncThe);
+const cmpThe = useArrayFind(
+  pages,
+  ({ id = crypto.randomUUID() } = {}) => id === route?.name,
+);
 
 /**
  * Ссылка на переключатель панели
@@ -278,22 +247,15 @@ const cmpThe = useArrayFind(pages, fncThe);
 const refDrawer = ref(false);
 
 /**
- * Ф-ция вычисления канонического пути
- *
- * @type {Function}
- * @returns {string} - Канонический путь
- */
-const fncCanonical = () =>
-  isDefined(cmpThe)
-    ? `${get(refLocation, "origin")}/${get(cmpThe, "urn")}`
-    : "";
-
-/**
  * Вычисление канонического пути
  *
  * @type {computed}
  */
-const cmpCanonical = computed(fncCanonical);
+const cmpCanonical = computed(() =>
+  isDefined(cmpThe)
+    ? `${get(refLocation, "origin")}/${get(cmpThe, "urn")}`
+    : "",
+);
 
 /**
  * Уникальный ключ для favicon. Иначе иконка динамически не обновляется в chrome
@@ -304,39 +266,27 @@ const cmpCanonical = computed(fncCanonical);
 const refFavicon = ref(crypto.randomUUID());
 
 /**
- * Функция фильтрации видимости ссылок
- *
- * @type {Function}
- * @param {object} link - Объект ссылки
- * @param {boolean} link.visible - Признак использования
- * @param {string} link.url - Урл
- * @returns {boolean} - Флаг использования ссылки
- */
-const fncVisible = ({ visible = true, url = "" } = {}) => visible && url;
-
-/**
  * Фильтр глобальных скриптов по видимости
  *
  * @type {computed}
  */
-const cmpVisibleJs = useArrayFilter(js, fncVisible);
+const cmpVisibleJs = useArrayFilter(
+  js,
+  ({ visible = true, url = "" } = {}) => visible && url,
+);
 
 /**
  * Фильтр глобальных стилей по видимости
  *
  * @type {computed}
  */
-const cmpVisibleCss = useArrayFilter(css, fncVisible);
+const cmpVisibleCss = useArrayFilter(
+  css,
+  ({ visible = true, url = "" } = {}) => visible && url,
+);
 
-/**
- * Функция, зарывающая левую панель перед каждым переходом на новую ссылку
- *
- * @type {Function}
- */
-const fncRouterBeforeEach = () => {
+router.beforeEach(() => {
   set(refDrawer, false);
-};
-
-router.beforeEach(fncRouterBeforeEach);
+});
 set(uri, "");
 </script>
