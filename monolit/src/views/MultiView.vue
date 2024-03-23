@@ -16,20 +16,12 @@
     component(
       :is="cmpTemplates?.[the?.id]",
       :the="the",
-      @vue:mounted="cmpResolve?.[the?.id]"
+      @vue:mounted="cmpResolve?.[the?.id]?.resolve"
     )
 </template>
 <script setup>
 import { vIntersectionObserver } from "@vueuse/components";
-import {
-  get,
-  unrefElement,
-  useArrayFilter,
-  useArrayFind,
-  useArrayFindIndex,
-  useArrayMap,
-  useParentElement,
-} from "@vueuse/core";
+import { useParentElement } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
 import { computed, ref, watch, watchEffect } from "vue";
@@ -73,76 +65,26 @@ const route = useRoute();
 const router = useRouter();
 
 /**
- * Порядковый номер выбранной страницы в общем массиве всех объектов страниц
- * сайта
- *
- * @type {computed}
- */
-const cmpCurrentIndex = useArrayFindIndex(
-  pages,
-  ({ id = crypto.randomUUID() } = {}) => id === route?.name,
-);
-
-/**
  * Вычисление переадресации корневого объекта страницы на первый доступный
  * объект страницы
  *
  * @type {computed}
  */
-const cmpThe = computed(() =>
-  get(cmpCurrentIndex)
-    ? get(pages, get(cmpCurrentIndex))
-    : get(pages, 0)?.children?.[0],
-);
-
-/**
- * Вычисление массива объектов страниц с одинаковым предком
- *
- * @type {computed}
- */
-const cmpSiblings = computed(() => get(cmpThe, "siblings"));
+const cmpThe = computed(() => {
+  const index = pages?.value?.findIndex(
+    ({ id = crypto.randomUUID() } = {}) => id === route?.name,
+  );
+  const ret = pages?.value?.[index];
+  return index ? ret : ret?.children?.[0];
+});
 
 /**
  * Вычисление массива видимых объектов страниц с одинаковым предком
  *
  * @type {computed}
  */
-const cmpSiblingsFilter = useArrayFilter(
-  cmpSiblings,
-  ({ visible = true } = {}) => visible,
-);
-
-/**
- * Вычисление массива промисов с ресолверами
- *
- * @returns {Array} Массив промисов с ресолверами
- */
-const cmpMountedPromisesWithResolvers = useArrayMap(
-  cmpSiblingsFilter,
-  ({ id = crypto.randomUUID() } = {}) => ({
-    id,
-    ...Promise.withResolvers(),
-  }),
-);
-
-/**
- * Вычисление плоского массива промисов
- *
- * @type {computed}
- */
-const cmpMountedPromises = useArrayMap(
-  cmpMountedPromisesWithResolvers,
-  ({ promise = null } = {}) => promise,
-);
-
-/**
- * Вычисление идентифицированного массива ресолверов
- *
- * @type {computed}
- */
-const cmpMountedResolvers = useArrayMap(
-  cmpMountedPromisesWithResolvers,
-  ({ id = crypto.randomUUID(), resolve = null } = {}) => [id, resolve],
+const cmpSiblingsFilter = computed(() =>
+  cmpThe?.value?.siblings?.filter(({ visible = true } = {}) => visible),
 );
 
 /**
@@ -150,17 +92,23 @@ const cmpMountedResolvers = useArrayMap(
  *
  * @type {computed}
  */
-const cmpResolve = computed(() => Object.fromEntries(get(cmpMountedResolvers)));
+const cmpResolve = computed(() =>
+  Object.fromEntries(
+    cmpSiblingsFilter?.value?.map(({ id = crypto.randomUUID() } = {}) => [
+      id,
+      Promise.withResolvers(),
+    ]),
+  ),
+);
 
 /**
- * Вычисление массива загруженных шаблонов
+ * Вычисление плоского массива промисов
  *
  * @type {computed}
  */
-const cmpTemplateEntries = useArrayMap(cmpSiblingsFilter, (the = {}) => [
-  the?.id,
-  fncTemplate(the),
-]);
+const cmpMountedPromises = computed(() =>
+  Object.values(cmpResolve?.value)?.map(({ promise = null } = {}) => promise),
+);
 
 /**
  * Вычисление объекта загруженных шаблонов
@@ -168,7 +116,9 @@ const cmpTemplateEntries = useArrayMap(cmpSiblingsFilter, (the = {}) => [
  * @type {computed}
  */
 const cmpTemplates = computed(() =>
-  Object.fromEntries(get(cmpTemplateEntries)),
+  Object.fromEntries(
+    cmpSiblingsFilter?.value?.map((the = {}) => [the?.id, fncTemplate(the)]),
+  ),
 );
 
 /**
@@ -223,7 +173,7 @@ const fncIntersectionObserver = ([
     target: { id: name = crypto.randomUUID() } = {},
   } = {},
 ] = []) => {
-  if (!varPause && isIntersecting && name !== get(cmpThe, "id")) {
+  if (!varPause && isIntersecting && name !== cmpThe?.value?.id) {
     varPush = true;
     router?.push({ name });
   }
@@ -267,9 +217,10 @@ const refElements = ref([]);
  *
  * @type {computed}
  */
-const cmpCurrentElement = useArrayFind(
-  refElements,
-  ({ id = crypto.randomUUID() } = {}) => id === get(cmpThe, "id"),
+const cmpCurrentElement = computed(() =>
+  refElements?.value?.find(
+    ({ id = crypto.randomUUID() } = {}) => id === cmpThe?.value?.id,
+  ),
 );
 
 /**
@@ -287,16 +238,16 @@ const immediate = true;
 const behavior = "instant";
 
 watchEffect(async () => {
-  await Promise.all(get(cmpMountedPromises));
+  await Promise.all(cmpMountedPromises?.value);
   GLightbox({ loop, zoomable, selector });
 });
 watch(
   route,
   async () => {
     if (!varPush) {
-      await Promise.all(get(cmpMountedPromises));
+      await Promise.all(cmpMountedPromises?.value);
       varPause = true;
-      unrefElement(cmpCurrentElement)?.scrollIntoView({ behavior });
+      cmpCurrentElement?.value?.scrollIntoView({ behavior });
       varPause = false;
     } else varPush = false;
   },

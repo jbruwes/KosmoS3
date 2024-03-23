@@ -11,7 +11,6 @@ import { createHead } from "@unhead/vue";
 // eslint-disable-next-line import/no-unresolved
 import { Head } from "@unhead/vue/components";
 import initUnocssRuntime from "@unocss/runtime";
-import { get } from "@vueuse/core";
 import { MotionPlugin } from "@vueuse/motion";
 import { createPinia, storeToRefs } from "pinia";
 import { createApp, watch } from "vue";
@@ -89,7 +88,7 @@ watch(
        */
       const component = () =>
         import(
-          get(settings, "landing")
+          settings?.value?.landing
             ? "@/views/MultiView.vue"
             : "@/views/SingleView.vue"
         );

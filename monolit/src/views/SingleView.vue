@@ -13,7 +13,6 @@
     )
 </template>
 <script setup>
-import { get, useArrayFindIndex } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
@@ -57,34 +56,25 @@ const route = useRoute();
 const router = useRouter();
 
 /**
- * Порядковый номер выбранной страницы в общем массиве всех объектов страниц
- * сайта
- *
- * @type {computed}
- */
-const cmpCurrentIndex = useArrayFindIndex(
-  pages,
-  ({ id = crypto.randomUUID() } = {}) => id === route?.name,
-);
-
-/**
  * Вычисление переадресации корневого объекта страницы на первый доступный
  * объект страницы
  *
  * @type {computed}
  */
-const cmpThe = computed(() =>
-  get(cmpCurrentIndex)
-    ? get(pages, get(cmpCurrentIndex))
-    : get(pages, 0)?.children?.[0],
-);
+const cmpThe = computed(() => {
+  const index = pages?.value?.findIndex(
+    ({ id = crypto.randomUUID() } = {}) => id === route?.name,
+  );
+  const ret = pages?.value?.[index];
+  return index ? ret : ret?.children?.[0];
+});
 
 /**
  * Вычисление объекта загруженных шаблонов
  *
  * @type {computed}
  */
-const cmpTheTemplate = computed(() => fncTemplate(get(cmpThe)));
+const cmpTheTemplate = computed(() => fncTemplate(cmpThe?.value));
 
 /**
  * Loop slides on end

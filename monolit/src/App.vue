@@ -88,15 +88,7 @@ v-head
  * @property {Function} start - Ф-ция запуска
  * @see {@link https://vueuse.org/shared/useTimeout/}
  */
-import {
-  get,
-  isDefined,
-  set,
-  useArrayFilter,
-  useArrayFind,
-  useBrowserLocation,
-  useTimeout,
-} from "@vueuse/core";
+import { useTimeout } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -148,35 +140,35 @@ const cmpNavbar = computed(() => {
    *
    * @type {string}
    */
-  const template = get(navbar, "template");
+  const template = navbar?.value?.template;
 
   /**
    * Срипты навбара
    *
    * @type {string}
    */
-  const script = get(navbar, "script");
+  const script = navbar?.value?.script;
 
   /**
    * Стили навбара
    *
    * @type {string}
    */
-  const style = get(navbar, "style");
+  const style = navbar?.value?.style;
 
   /**
    * Тип скриптов навбара
    *
    * @type {boolean}
    */
-  const setup = get(navbar, "setup");
+  const setup = navbar?.value?.setup;
 
   /**
    * Тип стилей навбара
    *
    * @type {boolean}
    */
-  const scoped = get(navbar, "scoped");
+  const scoped = navbar?.value?.scoped;
 
   /**
    * Путь готового шаблона навбара
@@ -190,13 +182,6 @@ const cmpNavbar = computed(() => {
 
 /** @type {strData} */
 const { pages, css, js, uri, script, style, settings } = storeToRefs(data());
-
-/**
- * Reactive browser location
- *
- * @see {@link https://vueuse.org/core/useBrowserLocation/} - см. документацию
- */
-const refLocation = useBrowserLocation();
 
 /**
  * Expose more controls
@@ -227,16 +212,15 @@ const router = useRouter();
  *
  * @type {computed}
  */
-const cmpRootTemplate = computed(() => fncTemplate(get(pages, 0)));
+const cmpRootTemplate = computed(() => fncTemplate(pages?.value?.[0]));
 
 /**
  * Поиск текущего объекта страницы
  *
  * @type {computed}
  */
-const cmpThe = useArrayFind(
-  pages,
-  ({ id = crypto.randomUUID() } = {}) => id === route?.name,
+const cmpThe = computed(() =>
+  pages?.value?.find(({ id = crypto.randomUUID() } = {}) => id === route?.name),
 );
 
 /**
@@ -252,9 +236,7 @@ const refDrawer = ref(false);
  * @type {computed}
  */
 const cmpCanonical = computed(() =>
-  isDefined(cmpThe)
-    ? `${get(refLocation, "origin")}/${get(cmpThe, "urn")}`
-    : "",
+  cmpThe?.value?.urn ? `${window?.location?.origin}/${cmpThe?.value?.urn}` : "",
 );
 
 /**
@@ -270,9 +252,8 @@ const refFavicon = ref(crypto.randomUUID());
  *
  * @type {computed}
  */
-const cmpVisibleJs = useArrayFilter(
-  js,
-  ({ visible = true, url = "" } = {}) => visible && url,
+const cmpVisibleJs = computed(() =>
+  js?.value?.filter(({ visible = true, url = "" } = {}) => visible && url),
 );
 
 /**
@@ -280,13 +261,12 @@ const cmpVisibleJs = useArrayFilter(
  *
  * @type {computed}
  */
-const cmpVisibleCss = useArrayFilter(
-  css,
-  ({ visible = true, url = "" } = {}) => visible && url,
+const cmpVisibleCss = computed(() =>
+  css?.value?.filter(({ visible = true, url = "" } = {}) => visible && url),
 );
 
 router.beforeEach(() => {
-  set(refDrawer, false);
+  refDrawer.value = false;
 });
-set(uri, "");
+uri.value = "";
 </script>

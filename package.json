@@ -16,7 +16,7 @@
     "build": "npm run build:monolit && npm run build:kosmos3"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.537.0",
+    "@aws-sdk/client-s3": "^3.540.0",
     "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
     "@quasar/extras": "^1.16.9",
@@ -55,7 +55,7 @@
     "three": "^0.162.0",
     "to-xml": "^0.1.11",
     "unocss": "^0.58.6",
-    "vite": "^5.2.3",
+    "vite": "^5.2.4",
     "vue": "^3.4.21",
     "vue-gtag": "^2.0.1",
     "vue-router": "^4.3.0",
