@@ -236,7 +236,9 @@ const refDrawer = ref(false);
  * @type {computed}
  */
 const cmpCanonical = computed(() =>
-  cmpThe?.value?.urn ? `${window?.location?.origin}/${cmpThe?.value?.urn}` : "",
+  cmpThe?.value?.urn !== null
+    ? `${window?.location?.origin}/${cmpThe?.value?.urn}`
+    : "",
 );
 
 /**

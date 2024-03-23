@@ -22,7 +22,6 @@ export default defineStore("app", () => {
   const { putObject, headObject } = store;
   const dataStore = storeData();
   const { uri, tree, pages } = storeToRefs(dataStore);
-  const { calcIndex } = dataStore;
   /**
    * Переключатель видимости правой панели
    *
@@ -70,11 +69,7 @@ export default defineStore("app", () => {
     tree,
     (value, oldValue) => {
       if (value && oldValue)
-        putObject(
-          "data.json",
-          "application/json",
-          JSON.stringify(calcIndex(value)),
-        );
+        putObject("data.json", "application/json", JSON.stringify(value));
     },
     { deep: true, debounce: 1000, maxWait: 10000 },
   );

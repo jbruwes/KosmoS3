@@ -1,9 +1,9 @@
-import { isDefined, useArrayMap, useFetch, whenever } from "@vueuse/core";
+import { useFetch, whenever } from "@vueuse/core";
 import { logicNot } from "@vueuse/math";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import defNavbar from "~/src/assets/navbar.json";
+import Navbar from "~/src/assets/navbar.json";
 
 /**
  * Путь, по которому происходит загрузка data.json
@@ -16,131 +16,8 @@ const tree = ref();
 
 const configurable = true;
 
-/**
- * Удаление лишнего из настроек
- *
- * @param {object} settings - Грязные настройки
- * @param {string} settings.yandex - Яндекс
- * @param {string} settings.metrika - Метрика
- * @param {string} settings.google - Гугл
- * @param {string} settings.analytics - Аналитика
- * @param {boolean} settings.landing - Вид отображения страниц сайта
- * @returns {object} - Чистые настройки
- */
-const fixSettings = ({
-  yandex = "",
-  metrika = "",
-  google = "",
-  analytics = "",
-  landing = true,
-} = {}) => ({
-  yandex,
-  metrika,
-  google,
-  analytics,
-  landing,
-});
-
-/**
- * Удаление лишнего из навбвра
- *
- * @param {object} navbar - Навбар на проверку
- * @param {string} navbar.theme - Тема
- * @param {Array} navbar.classes - Классы
- * @param {Array} navbar.scrollClasses - Классы, добавляемые при прокрутке
- *   страницы
- * @param {string} navbar.template - Шаблон
- * @param {string} navbar.script - Скрипты
- * @param {string} navbar.style - Стили
- * @param {boolean} navbar.setup - Тип скриптов
- * @param {boolean} navbar.scoped - Тип стилей
- * @returns {object} - Чистый навбар
- */
-const fixNavbar = ({
-  theme = defNavbar.theme,
-  classes = defNavbar.classes,
-  scrollClasses = defNavbar.scrollClasses,
-  template = defNavbar.template,
-  script = defNavbar.script,
-  style = defNavbar.style,
-  setup = defNavbar.setup,
-  scoped = defNavbar.scoped,
-} = {}) => ({
-  theme,
-  classes,
-  scrollClasses,
-  template,
-  script,
-  style,
-  setup,
-  scoped,
-});
-
-/**
- * Проверка структуры сайта
- *
- * @param {object} tree - Структура сайта
- * @param {object} tree.content - Контент
- * @param {object} tree.navbar - Навбар
- * @param {Array} tree.css - Ссылки на стили
- * @param {string} tree.style - Стили
- * @param {Array} tree.js - Ссылки на скрипты
- * @param {string} tree.script - Скрипт
- * @param {object} tree.settings - Настройки
- * @returns {object} - Структура сайта
- */
-const calcIndex = ({
-  content: pContent = [],
-  navbar: pNavbar = {},
-  css: pCss = [],
-  style: pStyle = "",
-  js: pJs = [],
-  script: pScript = "",
-  settings: pSettings = {},
-} = {}) => {
-  let [content = {}] = pContent;
-  let navbar = { ...pNavbar };
-  let css = [...pCss].filter(Boolean);
-  let style = pStyle;
-  let js = [...pJs].filter(Boolean);
-  let script = pScript;
-  let settings = { ...pSettings };
-  css = Array.isArray(css)
-    ? css
-        .map(({ id = crypto.randomUUID(), url = "", visible = true }) => ({
-          id,
-          url,
-          visible,
-        }))
-        .filter(({ url }) => url)
-    : [];
-  if (!css.length)
-    css.push({ id: crypto.randomUUID(), url: "", visible: true });
-  js = Array.isArray(js)
-    ? js
-        .map(({ id = crypto.randomUUID(), url = "", visible = true }) => ({
-          id,
-          url,
-          visible,
-        }))
-        .filter(({ url }) => url)
-    : [];
-  if (!js.length) js.push({ id: crypto.randomUUID(), url: "", visible: true });
-  const {
-    id = crypto.randomUUID(),
-    visible = true,
-    label = "",
-    template = "",
-  } = content;
-  navbar = fixNavbar(navbar);
-  content = [{ ...content, id, visible, label, template }];
-  style = String(style) === style ? style : "";
-  script = String(script) === script ? script : "";
-  settings = fixSettings(settings);
-  return { content, navbar, css, style, js, script, settings };
-};
 const { data } = useFetch(
-  () => (isDefined(uri) ? `${uri?.value}/data.json` : undefined),
+  () => (uri?.value !== null ? `${uri?.value}/data.json` : null),
   {
     /**
      * Добавляем no-cache
@@ -167,7 +44,92 @@ const { data } = useFetch(
      * @returns {object} - Трансформированный контекстный объект
      */
     afterFetch(ctx) {
-      ctx.data = calcIndex(ctx.data);
+      /** @type {object} */
+      let { data: { navbar = {} } = {} } = ctx;
+
+      navbar = (({
+        theme = Navbar.theme,
+        classes = Navbar.classes,
+        scrollClasses = Navbar.scrollClasses,
+        template = Navbar.template,
+        script = Navbar.script,
+        style = Navbar.style,
+        setup = Navbar.setup,
+        scoped = Navbar.scoped,
+      }) => ({
+        theme,
+        classes,
+        scrollClasses,
+        template,
+        script,
+        style,
+        setup,
+        scoped,
+      }))({ ...navbar });
+
+      /** @type {Array} */
+      let { data: { content = [] } = {} } = ctx;
+
+      content = (([
+        { id = crypto.randomUUID(), visible = true, label = "", template = "" },
+      ]) => [{ ...(content?.[0] ?? {}), id, visible, label, template }])([
+        ...content,
+      ]);
+      let {
+        data: { settings = {} },
+      } = ctx;
+      settings = (({
+        yandex = "",
+        metrika = "",
+        google = "",
+        analytics = "",
+        landing = true,
+      }) => ({
+        yandex,
+        metrika,
+        google,
+        analytics,
+        landing,
+      }))({ ...settings });
+
+      /** @type {string} */
+      let { data: { style = "" } = {} } = ctx;
+
+      style = String(style) === style ? style : "";
+
+      /** @type {string} */
+      let { data: { script = "" } = {} } = ctx;
+
+      script = String(script) === script ? script : "";
+
+      /** @type {Array} */
+      let { data: { css = [] } = {} } = ctx;
+
+      css = [...css]
+        .filter(Boolean)
+        .map(({ id = crypto.randomUUID(), url = "", visible = true }) => ({
+          id,
+          url,
+          visible,
+        }))
+        .filter(({ url }) => url);
+      if (!css.length)
+        css = [{ id: crypto.randomUUID(), url: "", visible: true }];
+
+      /** @type {Array} */
+      let { data: { js = [] } = {} } = ctx;
+
+      js = [...js]
+        .filter(Boolean)
+        .map(({ id = crypto.randomUUID(), url = "", visible = true }) => ({
+          id,
+          url,
+          visible,
+        }))
+        .filter(({ url }) => url);
+      if (!js.length)
+        js = [{ id: crypto.randomUUID(), url: "", visible: true }];
+      ctx.data = { navbar, content, settings, style, script, css, js };
       return ctx;
     },
     refetch: true,
@@ -193,7 +155,7 @@ const script = computed({
    * @param {string} value Скрипт
    */
   set(value) {
-    if (isDefined(tree)) tree.value.script = value;
+    if (tree?.value) tree.value.script = value;
   },
 });
 const style = computed({
@@ -209,7 +171,7 @@ const style = computed({
    * @param {string} value Стили
    */
   set(value) {
-    if (isDefined(tree)) tree.value.style = value;
+    if (tree?.value) tree.value.style = value;
   },
 });
 const index = {
@@ -374,11 +336,13 @@ const cmpPrePages = computed(() =>
   })(content?.value),
 );
 
-const pages = useArrayMap(cmpPrePages, (value) => {
+const pages = computed(() => {
   /** @returns {Array} - Все вместе */
   const get = () => cmpPrePages?.value;
-  Object.defineProperty(value, "pages", { get, configurable });
-  return value;
+  return cmpPrePages?.value?.map((value) => {
+    Object.defineProperty(value, "pages", { get, configurable });
+    return value;
+  });
 });
 
 export default defineStore("data", () => ({
@@ -392,5 +356,4 @@ export default defineStore("data", () => ({
   content,
   navbar,
   pages,
-  calcIndex,
 }));
