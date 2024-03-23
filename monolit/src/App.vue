@@ -34,7 +34,7 @@ v-head
   )
   link(v-if="cmpCanonical", rel="canonical", :href="cmpCanonical")
   component(:is="'style'", v-if="style") {{ style }}
-  component(:is="'script'", v-if="script") {{ `try{${script}\n}catch(e){console.error(\`\${e.name}: \${e.message}\`)}` }}
+  component(:is="'script'", v-if="script") {{ script }}
   meta(
     v-if="settings?.yandex",
     name="yandex-verification",

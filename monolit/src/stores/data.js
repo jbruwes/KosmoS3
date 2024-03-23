@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import Navbar from "~/src/assets/navbar.json";
+import Page from "~/src/assets/page.json";
 
 /**
  * Путь, по которому происходит загрузка data.json
@@ -15,6 +16,8 @@ const uri = ref();
 const tree = ref();
 
 const configurable = true;
+const writable = true;
+const enumerable = true;
 
 const { data } = useFetch(
   () => (uri?.value !== null ? `${uri?.value}/data.json` : null),
@@ -141,39 +144,8 @@ whenever(data, (value) => {
 whenever(logicNot(uri), () => {
   tree.value = undefined;
 });
-const settings = computed(() => tree?.value?.settings);
-const script = computed({
-  /**
-   * Чтение скрипта
-   *
-   * @returns {string} Скрипт
-   */
-  get: () => tree?.value?.script,
-  /**
-   * Запись скрипта
-   *
-   * @param {string} value Скрипт
-   */
-  set(value) {
-    if (tree?.value) tree.value.script = value;
-  },
-});
-const style = computed({
-  /**
-   * Чтение стилей
-   *
-   * @returns {string} Стили
-   */
-  get: () => tree?.value?.style,
-  /**
-   * Запись стилей
-   *
-   * @param {string} value Стили
-   */
-  set(value) {
-    if (tree?.value) tree.value.style = value;
-  },
-});
+const settings = computed(() => tree?.value?.settings ?? {});
+
 const index = {
   /** @returns {number} - Позиция в массиве одноуровневых объектов */
   get() {
@@ -215,7 +187,7 @@ const addProperties = (element, i, array) => {
 const js = computed(() => tree?.value?.js?.map(addProperties) ?? []);
 const css = computed(() => tree?.value?.css?.map(addProperties) ?? []);
 const content = computed(() => tree?.value?.content ?? []);
-const navbar = computed(() => tree?.value?.navbar);
+const navbar = computed(() => tree?.value?.navbar ?? {});
 const siblings = {
   /** @returns {Array} - Массив одноуровневых объектов */
   get() {
@@ -283,40 +255,20 @@ const cmpPrePages = computed(() =>
       configurable,
     };
     return members.reduce((accumulator, current) => {
-      const lCurrent = current;
-      const referen = {
-        changefreq: undefined,
-        children: [],
-        description: undefined,
-        icon: undefined,
-        id: crypto.randomUUID(),
-        image: undefined,
-        keywords: undefined,
-        label: "",
-        lastmod: undefined,
-        loc: undefined,
-        priority: undefined,
-        template: undefined,
-        script: undefined,
-        style: undefined,
-        theme: "light",
-        title: undefined,
-        visible: true,
-        edit: false,
-        type: "website",
-        alt: undefined,
-        full: true,
-        setup: true,
-        scoped: true,
-      };
+      Page.id = crypto.randomUUID();
       Object.keys(current).forEach((key) => {
-        if (!Object.keys(referen).includes(key)) delete lCurrent[key];
+        if (!Object.keys(Page).includes(key))
+          Object.defineProperty(current, key, {});
       });
-      Object.entries(referen)
-        .filter(([, value]) => value !== undefined)
-        .forEach(([key, value]) => {
-          if (current[key] === undefined) lCurrent[key] = value;
-        });
+      Object.entries(Page).forEach(([key, value]) => {
+        if (current[key] === undefined)
+          Object.defineProperty(current, key, {
+            value,
+            writable,
+            configurable,
+            enumerable,
+          });
+      });
       Object.defineProperties(current, {
         parent,
         siblings,
@@ -329,8 +281,8 @@ const cmpPrePages = computed(() =>
         urn,
         favicon,
       });
-      return current.children?.length
-        ? [...accumulator, ...getMembers(current.children, current)]
+      return current?.children?.length
+        ? [...accumulator, ...getMembers(current?.children, current)]
         : accumulator;
     }, members);
   })(content?.value),
@@ -343,6 +295,43 @@ const pages = computed(() => {
     Object.defineProperty(value, "pages", { get, configurable });
     return value;
   });
+});
+
+const script = computed({
+  /**
+   * Чтение скрипта
+   *
+   * @returns {string} Скрипт
+   */
+  get() {
+    return tree?.value?.script;
+  },
+  /**
+   * Запись скрипта
+   *
+   * @param {string} value Скрипт
+   */
+  set(value) {
+    if (tree?.value) tree.value.script = value;
+  },
+});
+const style = computed({
+  /**
+   * Чтение стилей
+   *
+   * @returns {string} Стили
+   */
+  get() {
+    return tree?.value?.style;
+  },
+  /**
+   * Запись стилей
+   *
+   * @param {string} value Стили
+   */
+  set(value) {
+    if (tree?.value) tree.value.style = value;
+  },
 });
 
 export default defineStore("data", () => ({
