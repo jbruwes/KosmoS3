@@ -247,7 +247,7 @@ const canonical = computed(() =>
  *
  * @type {ref}
  */
-const favicon = ref(crypto?.randomUUID());
+const favicon = crypto?.randomUUID();
 
 /**
  * Фильтр глобальных скриптов по видимости

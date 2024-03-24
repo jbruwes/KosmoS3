@@ -80,7 +80,7 @@ import { css, html, js } from "js-beautify";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 
-import defNavbar from "@/assets/navbar.json";
+import Navbar from "@/assets/navbar.json";
 import themes from "@/assets/themes.json";
 import VSourceCode from "@/components/VSourceCode.vue";
 import app from "@/stores/app";
@@ -115,16 +115,16 @@ const fncResetNavbar = () => {
     value.forEach((element) => {
       switch (element) {
         case "template":
-          get(navbar)[element] = html(defNavbar[element]);
+          navbar.value[element] = html(Navbar?.[element]?.value);
           break;
         case "script":
-          get(navbar)[element] = js(defNavbar[element]);
+          navbar.value[element] = js(Navbar?.[element]?.value);
           break;
         case "style":
-          get(navbar)[element] = css(defNavbar[element]);
+          navbar.value[element] = css(Navbar?.[element]?.value);
           break;
         default:
-          get(navbar)[element] = defNavbar[element];
+          navbar.value[element] = Navbar?.[element]?.value;
       }
     });
   });

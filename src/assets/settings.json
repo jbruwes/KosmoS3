@@ -1,7 +1,7 @@
 {
-  "yandex": null,
-  "metrika": null,
-  "google": null,
-  "analytics": null,
-  "landing": true
+  "yandex": { "type": "String", "value": null },
+  "metrika": { "type": "String", "value": null },
+  "google": { "type": "String", "value": null },
+  "analytics": { "type": "String", "value": null },
+  "landing": { "type": "Boolean", "value": true }
 }

@@ -3,6 +3,7 @@ import { logicNot } from "@vueuse/math";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import Data from "~/src/assets/data.json";
 import Navbar from "~/src/assets/navbar.json";
 import Page from "~/src/assets/page.json";
 import Settings from "~/src/assets/settings.json";
@@ -31,94 +32,84 @@ const fixer = (obj = {}, def = {}) => {
     if (!Object?.keys(def)?.includes(key))
       Object?.defineProperty(obj, key, { configurable });
   });
-  Object?.entries(def)?.forEach(([key = null, value = null] = []) => {
-    if (
-      !obj?.[key] &&
-      (!def?.[key]?.constructor ||
-        obj?.[key]?.constructor !== def?.[key]?.constructor)
-    )
-      Object?.defineProperty(obj, key, {
-        value,
-        writable,
-        configurable,
-        enumerable,
-      });
-  });
+  Object?.entries(def)?.forEach(
+    ([key = null, { type = null, value = null } = {}] = []) => {
+      if (obj?.[key]?.constructor?.name !== type && obj?.[key] !== value)
+        Object?.defineProperty(obj, key, {
+          value,
+          writable,
+          configurable,
+          enumerable,
+        });
+    },
+  );
 };
+
+/**
+ * Добавляем no-cache
+ *
+ * @param {object} ctx - Контекстный объект
+ * @param {object} ctx.options - Свойства запроса
+ * @param {string} ctx.url - Урл
+ * @param {Function} ctx.cancel - Ф-ция отмены запроса
+ * @returns {object} - Трансформированный контекстный объект
+ */
+const beforeFetch = ({ url, options, cancel }) => {
+  if (!url) cancel();
+  const ret = options;
+  ret.headers = {
+    ...ret.headers,
+    "cache-control": "no-cache",
+  };
+  return { ret };
+};
+
+/**
+ * Преводим в массив
+ *
+ * @param {object} ctx - Контекстный объект
+ * @returns {object} - Трансформированный контекстный объект
+ */
+const afterFetch = (ctx) => {
+  const { data = {} } = ctx;
+  fixer(data, Data);
+  const {
+    navbar = {},
+    content = [],
+    settings = {},
+    style = "",
+    script = "",
+  } = data;
+  let { css = [], js = [] } = data;
+  fixer(navbar, Navbar);
+  fixer(settings, Settings);
+  css = css
+    .filter(({ constructor = null } = {}) => constructor === Object)
+    .map(({ id = crypto.randomUUID(), url = "", visible = true } = {}) => ({
+      id,
+      url,
+      visible,
+    }))
+    .filter(({ url }) => url);
+  if (!css.length) css = [{ id: crypto.randomUUID(), url: "", visible: true }];
+  js = js
+    .filter(({ constructor = null } = {}) => constructor === Object)
+    .map(({ id = crypto.randomUUID(), url = "", visible = true } = {}) => ({
+      id,
+      url,
+      visible,
+    }))
+    .filter(({ url }) => url);
+  if (!js.length) js = [{ id: crypto.randomUUID(), url: "", visible: true }];
+  ctx.data = { navbar, content, settings, style, script, css, js };
+  return ctx;
+};
+
+const refetch = true;
 
 const { data } = useFetch(
   () => (uri?.value !== null ? `${uri?.value}/data.json` : null),
-  {
-    /**
-     * Добавляем no-cache
-     *
-     * @param {object} ctx - Контекстный объект
-     * @param {object} ctx.options - Свойства запроса
-     * @param {string} ctx.url - Урл
-     * @param {Function} ctx.cancel - Ф-ция отмены запроса
-     * @returns {object} - Трансформированный контекстный объект
-     */
-    beforeFetch({ url, options, cancel }) {
-      if (!url) cancel();
-      const ret = options;
-      ret.headers = {
-        ...ret.headers,
-        "cache-control": "no-cache",
-      };
-      return { ret };
-    },
-    /**
-     * Преводим в массив
-     *
-     * @param {object} ctx - Контекстный объект
-     * @returns {object} - Трансформированный контекстный объект
-     */
-    afterFetch(ctx) {
-      let {
-        data: {
-          navbar = {},
-          content = [],
-          settings = {},
-          style = "",
-          script = "",
-          css = [],
-          js = [],
-        } = {},
-      } = ctx;
-      navbar = navbar?.constructor === Object ? navbar : {};
-      content = content?.constructor === Array ? content : [];
-      settings = settings?.constructor === Object ? settings : {};
-      style = style?.constructor === String ? style : "";
-      script = script?.constructor === String ? script : "";
-      css = css?.constructor === Array ? css : [];
-      js = js?.constructor === Array ? js : [];
-      fixer(navbar, Navbar);
-      fixer(settings, Settings);
-      css = css
-        .filter(({ constructor = null } = {}) => constructor === Object)
-        .map(({ id = crypto.randomUUID(), url = "", visible = true } = {}) => ({
-          id,
-          url,
-          visible,
-        }))
-        .filter(({ url }) => url);
-      if (!css.length)
-        css = [{ id: crypto.randomUUID(), url: "", visible: true }];
-      js = js
-        .filter(({ constructor = null } = {}) => constructor === Object)
-        .map(({ id = crypto.randomUUID(), url = "", visible = true } = {}) => ({
-          id,
-          url,
-          visible,
-        }))
-        .filter(({ url }) => url);
-      if (!js.length)
-        js = [{ id: crypto.randomUUID(), url: "", visible: true }];
-      ctx.data = { navbar, content, settings, style, script, css, js };
-      return ctx;
-    },
-    refetch: true,
-  },
+  { beforeFetch, afterFetch, refetch },
 ).json();
 whenever(data, (value) => {
   tree.value = value;
@@ -225,6 +216,8 @@ const favicon = {
   configurable,
 };
 
+const type = "String";
+
 /**
  * Рекурсивная функция рассчета массива страниц
  *
@@ -235,7 +228,7 @@ const favicon = {
  */
 const getPages = (pages = [], parent = {}) =>
   pages?.reduce((accumulator = [], value = {}) => {
-    const id = crypto?.randomUUID();
+    const id = { value: crypto?.randomUUID(), type };
     fixer(value, { id, ...Page });
     Object?.defineProperties(value, {
       parent,
