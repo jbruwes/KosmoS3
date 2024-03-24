@@ -1,22 +1,22 @@
 <template lang="pug">
 .flex.snap-start(
-  v-for="the in cmpSiblingsFilter",
-  :id="the?.id",
-  :key="the?.id",
-  ref="refElements",
-  v-intersection-observer="[fncIntersectionObserver,{root,rootMargin,threshold}]",
-  :class="{ 'min-h-full': the?.full }"
+  v-for="a in siblings",
+  :id="a?.id",
+  :key="a?.id",
+  ref="refs",
+  v-intersection-observer="[callback,{root,rootMargin,threshold}]",
+  :class="{ 'min-h-full': a?.full }"
 )
   .prose.w-full.max-w-none.flex-auto.text-sm(
     v-cloak,
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
-    :data-theme="the?.theme",
-    :role="the?.id === cmpThe?.id ? 'main' : null"
+    :data-theme="a?.theme",
+    :role="a?.id === the?.id ? 'main' : null"
   )
     component(
-      :is="cmpTemplates?.[the?.id]",
-      :the="the",
-      @vue:mounted="cmpResolve?.[the?.id]?.resolve"
+      :is="templates?.[a?.id]",
+      :the="a",
+      @vue:mounted="promises?.[a?.id]?.resolve"
     )
 </template>
 <script setup>
@@ -24,7 +24,7 @@ import { vIntersectionObserver } from "@vueuse/components";
 import { useParentElement } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, ref, watch, watchEffect } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
@@ -65,14 +65,14 @@ const route = useRoute();
 const router = useRouter();
 
 /**
- * Вычисление переадресации корневого объекта страницы на первый доступный
- * объект страницы
+ * Вычисление текущего объекта с учетом переадресации корневого объекта страницы
+ * на первый доступный объект страницы
  *
  * @type {computed}
  */
-const cmpThe = computed(() => {
+const the = computed(() => {
   const index = pages?.value?.findIndex(
-    ({ id = crypto.randomUUID() } = {}) => id === route?.name,
+    ({ id = crypto?.randomUUID() } = {}) => id === route?.name,
   );
   const ret = pages?.value?.[index];
   return index ? ret : ret?.children?.[0];
@@ -83,8 +83,8 @@ const cmpThe = computed(() => {
  *
  * @type {computed}
  */
-const cmpSiblingsFilter = computed(() =>
-  cmpThe?.value?.siblings?.filter(({ visible = true } = {}) => visible),
+const siblings = computed(() =>
+  the?.value?.siblings?.filter(({ visible = true } = {}) => visible),
 );
 
 /**
@@ -92,9 +92,9 @@ const cmpSiblingsFilter = computed(() =>
  *
  * @type {computed}
  */
-const cmpResolve = computed(() =>
+const promises = computed(() =>
   Object.fromEntries(
-    cmpSiblingsFilter?.value?.map(({ id = crypto.randomUUID() } = {}) => [
+    siblings?.value?.map(({ id = crypto?.randomUUID() } = {}) => [
       id,
       Promise.withResolvers(),
     ]),
@@ -102,22 +102,13 @@ const cmpResolve = computed(() =>
 );
 
 /**
- * Вычисление плоского массива промисов
+ * Вычисление массива загруженных шаблонов
  *
  * @type {computed}
  */
-const cmpMountedPromises = computed(() =>
-  Object.values(cmpResolve?.value)?.map(({ promise = null } = {}) => promise),
-);
-
-/**
- * Вычисление объекта загруженных шаблонов
- *
- * @type {computed}
- */
-const cmpTemplates = computed(() =>
-  Object.fromEntries(
-    cmpSiblingsFilter?.value?.map((the = {}) => [the?.id, fncTemplate(the)]),
+const templates = computed(() =>
+  Object?.fromEntries(
+    siblings?.value?.map((a = {}) => [a?.id, fncTemplate(a)]),
   ),
 );
 
@@ -150,14 +141,14 @@ const root = useParentElement();
  *
  * @type {boolean}
  */
-let varPause = false;
+let pause = false;
 
 /**
  * Флаг условия изменения роута
  *
  * @type {boolean}
  */
-let varPush = false;
+let push = false;
 
 /**
  * Процедура обновления роутера, если страница появилась в области видимости
@@ -167,14 +158,14 @@ let varPush = false;
  * @param {object} entries."0" - Первый и единственный объект, описывающий
  *   пересечение
  */
-const fncIntersectionObserver = ([
+const callback = ([
   {
     isIntersecting = false,
-    target: { id: name = crypto.randomUUID() } = {},
+    target: { id: name = crypto?.randomUUID() } = {},
   } = {},
 ] = []) => {
-  if (!varPause && isIntersecting && name !== cmpThe?.value?.id) {
-    varPush = true;
+  if (!pause && isIntersecting && name !== the?.value?.id) {
+    push = true;
     router?.push({ name });
   }
 };
@@ -210,18 +201,7 @@ const selector = selectors?.map((el = '=""') => `a[href${el}]`)?.join();
  *
  * @type {ref}
  */
-const refElements = ref([]);
-
-/**
- * Вычисление текущего элемента, соответствующего текущему объекту страницы
- *
- * @type {computed}
- */
-const cmpCurrentElement = computed(() =>
-  refElements?.value?.find(
-    ({ id = crypto.randomUUID() } = {}) => id === cmpThe?.value?.id,
-  ),
-);
+const refs = ref([]);
 
 /**
  * Немедленное срабатывание смотрителя
@@ -237,19 +217,37 @@ const immediate = true;
  */
 const behavior = "instant";
 
-watchEffect(async () => {
-  await Promise.all(cmpMountedPromises?.value);
-  GLightbox({ loop, zoomable, selector });
-});
+/**
+ * Процедура ожидания загрузки страниц
+ *
+ * @type {Function}
+ */
+const all = async () => {
+  await Promise?.all(
+    Object?.values(promises?.value)?.map(({ promise = null } = {}) => promise),
+  );
+};
+
+watch(
+  siblings,
+  async () => {
+    await all();
+    GLightbox({ loop, zoomable, selector });
+  },
+  { immediate },
+);
+
 watch(
   route,
   async () => {
-    if (!varPush) {
-      await Promise.all(cmpMountedPromises?.value);
-      varPause = true;
-      cmpCurrentElement?.value?.scrollIntoView({ behavior });
-      varPause = false;
-    } else varPush = false;
+    if (!push) {
+      await all();
+      pause = true;
+      refs?.value
+        ?.find(({ id = crypto?.randomUUID() } = {}) => id === the?.value?.id)
+        ?.scrollIntoView({ behavior });
+      pause = false;
+    } else push = false;
   },
   { immediate },
 );

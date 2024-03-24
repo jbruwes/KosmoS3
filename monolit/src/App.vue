@@ -1,38 +1,38 @@
 <template lang="pug">
 v-head
-  title {{ cmpThe?.name || " " }}
+  title {{ the?.name || " " }}
   link(
-    v-for="currentCss in cmpVisibleCss",
-    :key="currentCss?.id",
+    v-for="a in theCSS",
+    :key="a?.id",
     crossorigin,
     rel="stylesheet",
-    :href="currentCss?.url"
+    :href="a?.url"
   )
   component(
     :is="'script'",
-    v-for="currentJs in cmpVisibleJs",
-    :key="currentJs?.id",
+    v-for="a in theJS",
+    :key="a?.id",
     crossorigin,
     deffer,
-    :src="currentJs?.url"
+    :src="a?.url"
   )
   meta(
-    v-if="cmpThe?.description",
+    v-if="the?.description",
     name="description",
-    :content="cmpThe?.description"
+    :content="the?.description"
   )
-  meta(v-if="cmpThe?.name", property="og:title", :content="cmpThe?.name")
-  meta(v-if="cmpThe?.type", property="og:type", :content="cmpThe?.type")
-  meta(v-if="cmpCanonical", property="og:url", :content="cmpCanonical")
-  meta(v-if="cmpThe?.image", property="og:image", :content="cmpThe?.image")
-  meta(v-if="cmpThe?.alt", property="og:image:alt", :content="cmpThe?.alt")
+  meta(v-if="the?.name", property="og:title", :content="the?.name")
+  meta(v-if="the?.type", property="og:type", :content="the?.type")
+  meta(v-if="canonical", property="og:url", :content="canonical")
+  meta(v-if="the?.image", property="og:image", :content="the?.image")
+  meta(v-if="the?.alt", property="og:image:alt", :content="the?.alt")
   link(
-    :key="refFavicon",
+    :key="favicon",
     rel="icon",
-    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi?.[cmpThe?.favicon ?? 'mdiWeb']}'/></svg>`",
+    :href="`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='${mdi?.[the?.favicon ?? 'mdiWeb']}'/></svg>`",
     type="image/svg+xml"
   )
-  link(v-if="cmpCanonical", rel="canonical", :href="cmpCanonical")
+  link(v-if="canonical", rel="canonical", :href="canonical")
   component(:is="'style'", v-if="style") {{ style }}
   component(:is="'script'", v-if="script") {{ script }}
   meta(
@@ -47,7 +47,7 @@ v-head
   )
 .drawer.h-dvh
   input#drawer.drawer-toggle(
-    v-model="refDrawer",
+    v-model="drawer",
     type="checkbox",
     aria-labelledby="#drawer"
   )
@@ -60,7 +60,7 @@ v-head
       :data-theme="navbar?.theme"
     )
       .navbar
-        component(:is="cmpNavbar", :the="cmpThe", :mdi="mdi")
+        component(:is="navigator", :the="the")
     router-view
   .drawer-side.z-50(v-if="pages?.[0]?.visible")
     label.drawer-overlay(for="drawer")
@@ -72,7 +72,7 @@ v-head
           class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
           :data-theme="pages?.[0]?.theme"
         )
-          component(:is="cmpRootTemplate", :the="pages?.[0]", :mdi="mdi")
+          component(:is="root", :the="pages?.[0]")
       label.btn.btn-circle.btn-ghost.sticky.right-1.top-1.col-start-1.row-start-1.justify-self-end(
         for="drawer"
       )
@@ -127,13 +127,13 @@ const { navbar } = storeToRefs(data());
  *
  * @type {computed}
  */
-const cmpNavbar = computed(() => {
+const navigator = computed(() => {
   /**
    * Id навбара
    *
    * @type {string}
    */
-  const id = crypto.randomUUID();
+  const id = crypto?.randomUUID();
 
   /**
    * Шаблон навбара
@@ -212,14 +212,14 @@ const router = useRouter();
  *
  * @type {computed}
  */
-const cmpRootTemplate = computed(() => fncTemplate(pages?.value?.[0]));
+const root = computed(() => fncTemplate(pages?.value?.[0]));
 
 /**
  * Поиск текущего объекта страницы
  *
  * @type {computed}
  */
-const cmpThe = computed(() =>
+const the = computed(() =>
   pages?.value?.find(({ id = crypto.randomUUID() } = {}) => id === route?.name),
 );
 
@@ -228,16 +228,16 @@ const cmpThe = computed(() =>
  *
  * @type {ref}
  */
-const refDrawer = ref(false);
+const drawer = ref(false);
 
 /**
  * Вычисление канонического пути
  *
  * @type {computed}
  */
-const cmpCanonical = computed(() =>
-  cmpThe?.value?.urn !== null
-    ? `${window?.location?.origin}/${cmpThe?.value?.urn}`
+const canonical = computed(() =>
+  the?.value?.urn !== null
+    ? `${window?.location?.origin}/${the?.value?.urn}`
     : "",
 );
 
@@ -247,14 +247,14 @@ const cmpCanonical = computed(() =>
  *
  * @type {ref}
  */
-const refFavicon = ref(crypto.randomUUID());
+const favicon = ref(crypto?.randomUUID());
 
 /**
  * Фильтр глобальных скриптов по видимости
  *
  * @type {computed}
  */
-const cmpVisibleJs = computed(() =>
+const theJS = computed(() =>
   js?.value?.filter(({ visible = true, url = "" } = {}) => visible && url),
 );
 
@@ -263,12 +263,12 @@ const cmpVisibleJs = computed(() =>
  *
  * @type {computed}
  */
-const cmpVisibleCss = computed(() =>
+const theCSS = computed(() =>
   css?.value?.filter(({ visible = true, url = "" } = {}) => visible && url),
 );
 
 router.beforeEach(() => {
-  refDrawer.value = false;
+  drawer.value = false;
 });
 uri.value = "";
 </script>

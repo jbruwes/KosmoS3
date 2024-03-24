@@ -5,6 +5,7 @@ import { computed, ref } from "vue";
 
 import Navbar from "~/src/assets/navbar.json";
 import Page from "~/src/assets/page.json";
+import Settings from "~/src/assets/settings.json";
 
 /**
  * Путь, по которому происходит загрузка data.json
@@ -18,6 +19,32 @@ const tree = ref();
 const configurable = true;
 const writable = true;
 const enumerable = true;
+
+/**
+ * Приведение структуры объекта в соответствие с дефолтным
+ *
+ * @param {object} obj - Объект
+ * @param {object} def - Эталонный объект
+ */
+const fixer = (obj = {}, def = {}) => {
+  Object?.keys(obj)?.forEach((key) => {
+    if (!Object?.keys(def)?.includes(key))
+      Object?.defineProperty(obj, key, { configurable });
+  });
+  Object?.entries(def)?.forEach(([key = null, value = null] = []) => {
+    if (
+      !obj?.[key] &&
+      (!def?.[key]?.constructor ||
+        obj?.[key]?.constructor !== def?.[key]?.constructor)
+    )
+      Object?.defineProperty(obj, key, {
+        value,
+        writable,
+        configurable,
+        enumerable,
+      });
+  });
+};
 
 const { data } = useFetch(
   () => (uri?.value !== null ? `${uri?.value}/data.json` : null),
@@ -47,70 +74,29 @@ const { data } = useFetch(
      * @returns {object} - Трансформированный контекстный объект
      */
     afterFetch(ctx) {
-      /** @type {object} */
-      let { data: { navbar = {} } = {} } = ctx;
-
-      navbar = (({
-        theme = Navbar.theme,
-        classes = Navbar.classes,
-        scrollClasses = Navbar.scrollClasses,
-        template = Navbar.template,
-        script = Navbar.script,
-        style = Navbar.style,
-        setup = Navbar.setup,
-        scoped = Navbar.scoped,
-      }) => ({
-        theme,
-        classes,
-        scrollClasses,
-        template,
-        script,
-        style,
-        setup,
-        scoped,
-      }))({ ...navbar });
-
-      /** @type {Array} */
-      let { data: { content = [] } = {} } = ctx;
-
-      content = (([
-        { id = crypto.randomUUID(), visible = true, label = "", template = "" },
-      ]) => [{ ...(content?.[0] ?? {}), id, visible, label, template }])([
-        ...content,
-      ]);
       let {
-        data: { settings = {} },
+        data: {
+          navbar = {},
+          content = [],
+          settings = {},
+          style = "",
+          script = "",
+          css = [],
+          js = [],
+        } = {},
       } = ctx;
-      settings = (({
-        yandex = "",
-        metrika = "",
-        google = "",
-        analytics = "",
-        landing = true,
-      }) => ({
-        yandex,
-        metrika,
-        google,
-        analytics,
-        landing,
-      }))({ ...settings });
-
-      /** @type {string} */
-      let { data: { style = "" } = {} } = ctx;
-
-      style = String(style) === style ? style : "";
-
-      /** @type {string} */
-      let { data: { script = "" } = {} } = ctx;
-
-      script = String(script) === script ? script : "";
-
-      /** @type {Array} */
-      let { data: { css = [] } = {} } = ctx;
-
-      css = [...css]
-        .filter(Boolean)
-        .map(({ id = crypto.randomUUID(), url = "", visible = true }) => ({
+      navbar = navbar?.constructor === Object ? navbar : {};
+      content = content?.constructor === Array ? content : [];
+      settings = settings?.constructor === Object ? settings : {};
+      style = style?.constructor === String ? style : "";
+      script = script?.constructor === String ? script : "";
+      css = css?.constructor === Array ? css : [];
+      js = js?.constructor === Array ? js : [];
+      fixer(navbar, Navbar);
+      fixer(settings, Settings);
+      css = css
+        .filter(({ constructor = null } = {}) => constructor === Object)
+        .map(({ id = crypto.randomUUID(), url = "", visible = true } = {}) => ({
           id,
           url,
           visible,
@@ -118,13 +104,9 @@ const { data } = useFetch(
         .filter(({ url }) => url);
       if (!css.length)
         css = [{ id: crypto.randomUUID(), url: "", visible: true }];
-
-      /** @type {Array} */
-      let { data: { js = [] } = {} } = ctx;
-
-      js = [...js]
-        .filter(Boolean)
-        .map(({ id = crypto.randomUUID(), url = "", visible = true }) => ({
+      js = js
+        .filter(({ constructor = null } = {}) => constructor === Object)
+        .map(({ id = crypto.randomUUID(), url = "", visible = true } = {}) => ({
           id,
           url,
           visible,
@@ -149,36 +131,33 @@ const settings = computed(() => tree?.value?.settings ?? {});
 const index = {
   /** @returns {number} - Позиция в массиве одноуровневых объектов */
   get() {
-    return this.siblings.findIndex(({ id }) => this.id === id);
+    return this?.siblings?.findIndex(({ id } = {}) => this?.id === id);
   },
   configurable,
 };
 const prev = {
   /** @returns {Array} - Массив одноуровневых объектов */
   get() {
-    return this.siblings[this.index - 1];
+    return this?.siblings?.[this.index - 1];
   },
   configurable,
 };
 const next = {
   /** @returns {Array} - Массив одноуровневых объектов */
   get() {
-    return this.siblings[this.index + 1];
+    return this?.siblings?.[this.index + 1];
   },
   configurable,
 };
 /**
  * @param {object} element - Объект для добавления новых свойств
  * @param {number} i - Порядковый номер в массиве
- * @param {Array} array - Исходный массив
+ * @param {Array} value - Исходный массив
  * @returns {object} - Объект с новыми свойствами
  */
-const addProperties = (element, i, array) => {
-  Object.defineProperty(element, "siblings", {
-    /** @returns {Array} - Массив одноуровневых объектов */
-    get() {
-      return array;
-    },
+const addProperties = (element, i, value = []) => {
+  Object?.defineProperty(element, "siblings", {
+    value,
     configurable,
   });
   Object.defineProperties(element, { index, prev, next });
@@ -191,7 +170,7 @@ const navbar = computed(() => tree?.value?.navbar ?? {});
 const siblings = {
   /** @returns {Array} - Массив одноуровневых объектов */
   get() {
-    return this.parent ? this.parent?.children : [this];
+    return this?.parent ? this?.parent?.children : [this];
   },
   configurable,
 };
@@ -201,7 +180,7 @@ const branch = {
     const ret = [this];
     let { parent } = this;
     while (parent) {
-      ret.unshift(parent);
+      ret?.unshift(parent);
       ({ parent } = parent);
     }
     return ret;
@@ -211,12 +190,13 @@ const branch = {
 const path = {
   /** @returns {string} - Путь до объекта */
   get() {
-    return this.branch
-      .map(
-        ({ label, id }) => encodeURIComponent(label?.replace(" ", "_")) || id,
+    return this?.branch
+      ?.map(
+        ({ label, id } = {}) =>
+          encodeURIComponent(label?.replace(" ", "_") ?? "") || id,
       )
-      .slice(1)
-      .join("/");
+      ?.slice(1)
+      ?.join("/");
   },
   configurable,
 };
@@ -224,8 +204,8 @@ const urn = {
   /** @returns {string} - Путь до рекомендованный */
   get() {
     return (
-      (this.loc ? encodeURI(this.loc?.replace(" ", "_")) : this.loc) ||
-      this.path
+      (this?.loc ? encodeURI(this?.loc?.replace(" ", "_") ?? "") : this?.loc) ||
+      this?.path
     );
   },
   configurable,
@@ -233,69 +213,60 @@ const urn = {
 const name = {
   /** @returns {string} - Вычисленное название страницы */
   get() {
-    return this.title || this.label;
+    return this?.title ?? this?.label ?? "";
   },
   configurable,
 };
 const favicon = {
   /** @returns {string} - Вычисленное название иконки */
   get() {
-    return this.icon?.replace(/-./g, (x) => x[1].toUpperCase());
+    return this?.icon?.replace(/-./g, (x = []) => x?.[1]?.toUpperCase());
   },
   configurable,
 };
 
-const cmpPrePages = computed(() =>
-  (function getMembers(members, pParent) {
-    const parent = {
-      /** @returns {object} - Родительский объект */
-      get() {
-        return pParent;
-      },
-      configurable,
-    };
-    return members.reduce((accumulator, current) => {
-      Page.id = crypto.randomUUID();
-      Object.keys(current).forEach((key) => {
-        if (!Object.keys(Page).includes(key))
-          Object.defineProperty(current, key, {});
-      });
-      Object.entries(Page).forEach(([key, value]) => {
-        if (current[key] === undefined)
-          Object.defineProperty(current, key, {
-            value,
-            writable,
-            configurable,
-            enumerable,
-          });
-      });
-      Object.defineProperties(current, {
-        parent,
-        siblings,
-        branch,
-        path,
-        index,
-        prev,
-        next,
-        name,
-        urn,
-        favicon,
-      });
-      return current?.children?.length
-        ? [...accumulator, ...getMembers(current?.children, current)]
-        : accumulator;
-    }, members);
-  })(content?.value),
-);
+/**
+ * Рекурсивная функция рассчета массива страниц
+ *
+ * @type {Function}
+ * @param {Array} pages - Элементы массива страниц
+ * @param {object} parent - Родительский объект
+ * @returns {Array} - Аддитивный массив страниц
+ */
+const getPages = (pages = [], parent = {}) =>
+  pages?.reduce((accumulator = [], value = {}) => {
+    const id = crypto?.randomUUID();
+    fixer(value, { id, ...Page });
+    Object?.defineProperties(value, {
+      parent,
+      siblings,
+      branch,
+      path,
+      index,
+      prev,
+      next,
+      name,
+      urn,
+      favicon,
+    });
+    return value?.children?.length
+      ? [...accumulator, ...getPages(value?.children, { value, configurable })]
+      : accumulator;
+  }, pages);
 
-const pages = computed(() => {
-  /** @returns {Array} - Все вместе */
-  const get = () => cmpPrePages?.value;
-  return cmpPrePages?.value?.map((value) => {
-    Object.defineProperty(value, "pages", { get, configurable });
+/**
+ * Функция для вызова рассчета массива страниц
+ *
+ * @returns {Array} - Страницы
+ */
+const get = () => getPages(content?.value);
+
+const pages = computed(() =>
+  get()?.map((value = {}) => {
+    Object?.defineProperty(value, "pages", { get, configurable });
     return value;
-  });
-});
+  }),
+);
 
 const script = computed({
   /**

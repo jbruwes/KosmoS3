@@ -96,7 +96,7 @@ watch(
         ({
           path: pPath = "",
           _: path = `/${pPath}`,
-          id: name = crypto.randomUUID(),
+          id: name = crypto?.randomUUID(),
           loc = "",
         } = {}) => {
           /**
@@ -104,7 +104,7 @@ watch(
            *
            * @type {string}
            */
-          const alias = `/${encodeURI(loc?.replace(" ", "_"))}`;
+          const alias = `/${encodeURI(loc?.replace(" ", "_") ?? "")}`;
 
           router.addRoute({ name, path, ...(loc && { alias }), component });
         },

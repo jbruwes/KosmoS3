@@ -1,14 +1,14 @@
 <template lang="pug">
-.flex.snap-start(:id="cmpThe?.id", :class="{ 'min-h-full': cmpThe?.full }")
+.flex.snap-start(:id="the?.id", :class="{ 'min-h-full': the?.full }")
   .prose.w-full.max-w-none.flex-auto.text-sm(
     v-cloak,
     class="md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
-    :data-theme="cmpThe?.theme",
+    :data-theme="the?.theme",
     role="main"
   )
     component(
-      :is="cmpTheTemplate",
-      :the="cmpThe",
+      :is="template",
+      :the="the",
       @vue:mounted="GLightbox({ loop, zoomable, selector })"
     )
 </template>
@@ -61,9 +61,9 @@ const router = useRouter();
  *
  * @type {computed}
  */
-const cmpThe = computed(() => {
+const the = computed(() => {
   const index = pages?.value?.findIndex(
-    ({ id = crypto.randomUUID() } = {}) => id === route?.name,
+    ({ id = crypto?.randomUUID() } = {}) => id === route?.name,
   );
   const ret = pages?.value?.[index];
   return index ? ret : ret?.children?.[0];
@@ -74,7 +74,7 @@ const cmpThe = computed(() => {
  *
  * @type {computed}
  */
-const cmpTheTemplate = computed(() => fncTemplate(cmpThe?.value));
+const template = computed(() => fncTemplate(the?.value));
 
 /**
  * Loop slides on end
