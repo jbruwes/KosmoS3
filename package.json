@@ -77,7 +77,7 @@
     "eslint-plugin-sonarjs": "^0.24.0",
     "eslint-plugin-vue-pug": "^0.6.2",
     "postcss": "^8.4.38",
-    "prettier-plugin-css-order": "^2.0.1",
+    "prettier-plugin-css-order": "^2.1.0",
     "prettier-plugin-organize-attributes": "^1.0.0",
     "prettier-plugin-tailwindcss": "^0.5.12",
     "pug": "^3.0.2",
