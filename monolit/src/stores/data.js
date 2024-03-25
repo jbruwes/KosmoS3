@@ -92,9 +92,7 @@ const index = {
    * @returns {number} - Позиция в соседних объектах
    */
   get() {
-    return this?.siblings?.findIndex(
-      ({ id = crypto?.randomUUID() } = {}) => this?.id === id,
-    );
+    return this?.siblings?.findIndex(({ id = "" } = {}) => this?.id === id);
   },
   configurable,
 };
@@ -197,7 +195,7 @@ const path = {
   get() {
     return this?.branch
       ?.map(
-        ({ label = "", id = crypto?.randomUUID() } = {}) =>
+        ({ label = "", id = "" } = {}) =>
           encodeURIComponent(label?.replace(" ", "_") ?? "") || id,
       )
       ?.slice(1)

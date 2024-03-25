@@ -63,7 +63,7 @@ const router = useRouter();
  */
 const the = computed(() => {
   const index = pages?.value?.findIndex(
-    ({ id = crypto?.randomUUID() } = {}) => id === route?.name,
+    ({ id = "" } = {}) => id === route?.name,
   );
   const ret = pages?.value?.[index];
   return index ? ret : ret?.children?.[0];

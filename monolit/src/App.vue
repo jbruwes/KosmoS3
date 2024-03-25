@@ -220,7 +220,7 @@ const root = computed(() => fncTemplate(pages?.value?.[0]));
  * @type {computed}
  */
 const the = computed(() =>
-  pages?.value?.find(({ id = crypto.randomUUID() } = {}) => id === route?.name),
+  pages?.value?.find(({ id = "" } = {}) => id === route?.name),
 );
 
 /**

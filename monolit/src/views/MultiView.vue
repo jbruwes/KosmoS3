@@ -72,7 +72,7 @@ const router = useRouter();
  */
 const the = computed(() => {
   const index = pages?.value?.findIndex(
-    ({ id = crypto?.randomUUID() } = {}) => id === route?.name,
+    ({ id = "" } = {}) => id === route?.name,
   );
   const ret = pages?.value?.[index];
   return index ? ret : ret?.children?.[0];
@@ -94,10 +94,7 @@ const siblings = computed(() =>
  */
 const promises = computed(() =>
   Object.fromEntries(
-    siblings?.value?.map(({ id = crypto?.randomUUID() } = {}) => [
-      id,
-      Promise.withResolvers(),
-    ]),
+    siblings?.value?.map(({ id = "" } = {}) => [id, Promise.withResolvers()]),
   ),
 );
 
@@ -159,10 +156,7 @@ let push = false;
  *   пересечение
  */
 const callback = ([
-  {
-    isIntersecting = false,
-    target: { id: name = crypto?.randomUUID() } = {},
-  } = {},
+  { isIntersecting = false, target: { id: name = "" } = {} } = {},
 ] = []) => {
   if (!pause && isIntersecting && name !== the?.value?.id) {
     push = true;
@@ -244,7 +238,7 @@ watch(
       await all();
       pause = true;
       refs?.value
-        ?.find(({ id = crypto?.randomUUID() } = {}) => id === the?.value?.id)
+        ?.find(({ id = "" } = {}) => id === the?.value?.id)
         ?.scrollIntoView({ behavior });
       pause = false;
     } else push = false;

@@ -96,7 +96,7 @@ watch(
         ({
           path: pPath = "",
           _: path = `/${pPath}`,
-          id: name = crypto?.randomUUID(),
+          id: name = "",
           loc = "",
         } = {}) => {
           /**

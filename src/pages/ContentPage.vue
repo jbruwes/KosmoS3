@@ -240,7 +240,7 @@ get(state).rightDrawer = true;
  * @param {Array} content - Дерево контента
  * @param {object} content."0" - Корневой элемент
  */
-const init = ([{ id = crypto?.randomUUID() } = {}] = []) => {
+const init = ([{ id = "" } = {}] = []) => {
   const {
     content: { expanded, selected },
   } = get(state);

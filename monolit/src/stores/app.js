@@ -60,7 +60,7 @@ const delay = 0;
  * @returns {object} Шаблон
  */
 const fncTemplate = ({
-  id = crypto.randomUUID(),
+  id = "",
   template = "",
   script = "",
   style = "",
