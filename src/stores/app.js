@@ -21,7 +21,7 @@ export default defineStore("app", () => {
   const { S3, base, bucket } = storeToRefs(store);
   const { putObject, headObject } = store;
   const dataStore = storeData();
-  const { uri, tree, pages } = storeToRefs(dataStore);
+  const { uri, $, pages } = storeToRefs(dataStore);
   /**
    * Переключатель видимости правой панели
    *
@@ -66,7 +66,7 @@ export default defineStore("app", () => {
     }, Promise.resolve());
   });
   watchDebounced(
-    tree,
+    $,
     (value, oldValue) => {
       if (value && oldValue)
         putObject("data.json", "application/json", JSON.stringify(value));

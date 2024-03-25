@@ -1,6 +1,6 @@
-import { syncRef, useFetch } from "@vueuse/core";
+import { useFetch } from "@vueuse/core";
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, watchEffect } from "vue";
 
 import Data from "~/src/assets/data.json";
 import Navbar from "~/src/assets/navbar.json";
@@ -342,16 +342,18 @@ const getPages = (pages = [], parent = {}) =>
       : accumulator;
   }, pages);
 
-const tree = ref();
+const $ = ref();
 
-syncRef(data, tree);
+watchEffect(() => {
+  $.value = data?.value;
+});
 
 /**
  * Функция для вызова рассчета массива страниц
  *
  * @returns {Array} - Страницы
  */
-const get = () => getPages(tree?.value?.content);
+const get = () => getPages($?.value?.content);
 
 const pages = computed(() =>
   get()?.map((value = {}) => {
@@ -375,15 +377,15 @@ const addProperties = (element, i, value = []) => {
   return element;
 };
 
-const js = computed(() => tree?.value?.js?.map(addProperties) ?? []);
+const js = computed(() => $?.value?.js?.map(addProperties) ?? []);
 
-const css = computed(() => tree?.value?.css?.map(addProperties) ?? []);
+const css = computed(() => $?.value?.css?.map(addProperties) ?? []);
 
-const navbar = computed(() => tree?.value?.navbar ?? {});
+const navbar = computed(() => $?.value?.navbar ?? {});
 
-const content = computed(() => tree?.value?.content ?? []);
+const content = computed(() => $?.value?.content ?? []);
 
-const settings = computed(() => tree?.value?.settings ?? {});
+const settings = computed(() => $?.value?.settings ?? {});
 
 const script = computed({
   /**
@@ -392,7 +394,7 @@ const script = computed({
    * @returns {string} Скрипт
    */
   get() {
-    return tree?.value?.script;
+    return $?.value?.script;
   },
   /**
    * Запись скрипта
@@ -400,7 +402,7 @@ const script = computed({
    * @param {string} value Скрипт
    */
   set(value) {
-    if (tree?.value) tree.value.script = value;
+    if ($?.value) $.value.script = value;
   },
 });
 const style = computed({
@@ -410,7 +412,7 @@ const style = computed({
    * @returns {string} Стили
    */
   get() {
-    return tree?.value?.style;
+    return $?.value?.style;
   },
   /**
    * Запись стилей
@@ -418,12 +420,12 @@ const style = computed({
    * @param {string} value Стили
    */
   set(value) {
-    if (tree?.value) tree.value.style = value;
+    if ($?.value) $.value.style = value;
   },
 });
 
 export default defineStore("data", () => ({
-  tree,
+  $,
   uri,
   settings,
   script,
