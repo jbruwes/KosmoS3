@@ -3,7 +3,7 @@ div
   q-editor.col.column.full-width(
     ref="editorRef",
     v-model="selectedValue",
-    :dense="$q.screen.lt.md",
+    :dense="$q?.screen?.lt?.md",
     :toolbar="editorTlb",
     :fonts="fonts",
     content-class="col prose max-w-none full-width text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl",
@@ -76,17 +76,17 @@ div
           v-close-popup,
           flat,
           label="Ok",
-          @click="editorRef.runCmd('insertHTML', `<router-link to='/${insertedObject.path}'>${insertedObject.label}</router-link>`)"
+          @click="editorRef.runCmd('insertHTML', `<router-link to='/${insertedObject?.path}'>${insertedObject?.label}</router-link>`)"
         )
 </template>
 
 <script setup>
 import "daisyui/dist/full.css";
 
-import { get, isDefined, set, useArrayFind, useFileDialog } from "@vueuse/core";
+import { useArrayFind, useFileDialog } from "@vueuse/core";
 import mime from "mime";
 import { storeToRefs } from "pinia";
-import { uid, useQuasar } from "quasar";
+import { useQuasar } from "quasar";
 import { onMounted, ref, watch, watchPostEffect } from "vue";
 
 import mimes from "@/assets/mimes.json";
@@ -105,18 +105,22 @@ const { putFile } = S3;
 const { the, selectedValue } = storeToRefs(app());
 const { pages, content } = storeToRefs(data());
 const inserted = ref(null);
-const insertedObject = useArrayFind(pages, ({ id }) => id === get(inserted));
+const insertedObject = useArrayFind(
+  pages,
+  ({ id = "" } = {}) => id === inserted?.value,
+);
 /**
  * Инициализация
  *
  * @param {Array} content - Дерево контента
  * @param {object} content."0" - Корневой элемент
  */
-const init = ([{ id }]) => {
-  set(inserted, id);
+const init = ([{ id = "" } = {}] = []) => {
+  inserted.value = id;
 };
-if (isDefined(content)) init(get(content));
-else watch(content, init, { once: true });
+const once = true;
+if (content?.value !== null) init(content?.value);
+else watch(content, init, { once });
 const editorRef = ref();
 const modalRef = ref();
 /**
@@ -129,17 +133,17 @@ const modalRef = ref();
 const putImage = async (file) => {
   try {
     const { type } = file;
-    if (mimes.includes(type)) {
-      const filePath = `images/${uid()}.${mime.getExtension(type)}`;
+    if (mimes?.includes(type)) {
+      const filePath = `images/${crypto?.randomUUID()}.${mime?.getExtension(type)}`;
       await putFile(filePath, type, file);
-      get(editorRef).runCmd("insertImage", `${get(base)}/${filePath}`);
+      editorRef?.value?.runCmd("insertImage", `${base?.value}/${filePath}`);
     } else
       throw new Error(
         "Тип графического файла не подходит для использования в сети интернет",
       );
   } catch (err) {
     const { message } = err;
-    $q.notify({ message });
+    $q?.notify({ message });
   }
 };
 /** @param {object} evt - Объект события */
@@ -151,18 +155,19 @@ const capture = (evt) => {
     window?.clipboardData ||
     {};
   const lFiles = [...files];
-  if (lFiles.length) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    lFiles.forEach(putImage);
+  if (lFiles?.length) {
+    evt?.preventDefault();
+    evt?.stopPropagation();
+    lFiles?.forEach(putImage);
   }
 };
-const { files, open } = useFileDialog({ accept: "image/*" });
+const accept = "image/*";
+const { files, open } = useFileDialog({ accept });
 watch(files, (newFiles) => {
-  [...newFiles].forEach(putImage);
+  [...newFiles]?.forEach(putImage);
 });
-const e = $q.lang.editor;
-const i = $q.iconSet.editor;
+const e = $q?.lang?.editor;
+const i = $q?.iconSet?.editor;
 const editorDef = {
   upload: {
     tip: "Загрузка картинки",
@@ -174,7 +179,7 @@ const editorDef = {
     icon: "dashboard",
     /** Открытие модального окна */
     handler() {
-      set(template, true);
+      template.value = true;
     },
   },
   routerLink: {
@@ -182,7 +187,7 @@ const editorDef = {
     icon: "share",
     /** Открытие модального окна */
     handler() {
-      set(routerLink, true);
+      routerLink.value = true;
     },
   },
   h1: {
@@ -268,15 +273,15 @@ const editorTlb = [
   ["upload", "template", "routerLink"],
 ];
 onMounted(() => {
-  get(editorRef).focus();
+  editorRef?.value?.focus();
 });
 watchPostEffect(() => {
-  get(editorRef).getContentEl().dataset.theme = get(the)?.theme;
+  editorRef.value.getContentEl().dataset.theme = the?.value?.theme;
 });
 /** ShowDialog */
 const showDialog = () => {
-  const { theme } = get(the) ?? {};
-  get(modalRef).dataset.theme = theme;
+  const { theme } = the?.value ?? {};
+  modalRef.value.dataset.theme = theme;
 };
 const [{ value }] = templates;
 const model = ref(value);

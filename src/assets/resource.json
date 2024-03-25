@@ -1,0 +1,4 @@
+{
+  "url": { "type": "String", "value": "" },
+  "visible": { "type": "Boolean", "value": true }
+}

@@ -117,7 +117,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           hint="the.icon"
         )
           template(#prepend)
-            q-icon.cursor-pointer(:name="the.icon ?? 'mdi-tray-arrow-up'")
+            q-icon.cursor-pointer(:name="the?.icon ?? 'mdi-tray-arrow-up'")
               q-popup-proxy.column.items-center.justify-center(
                 v-model="iconPicker.show"
               )
@@ -130,7 +130,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
                 q-icon-picker(
                   v-model="the.icon",
                   v-model:model-pagination="iconPicker.pagination",
-                  :filter="iconPicker.filter",
+                  :filter="iconPicker?.filter",
                   :icons="icons",
                   tooltips,
                   dense
@@ -143,8 +143,8 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           hint="the.alt"
         )
         q-img.q-mt-md.rounded-borders(
-          v-if="the.image",
-          :src="`${base}${the.image}`",
+          v-if="the?.image",
+          :src="`${base}${the?.image}`",
           :ratio="16 / 9"
         )
           q-btn.all-pointer-events.absolute(
@@ -155,10 +155,10 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
             text-color="black",
             dense,
             style="top: 8px; right: 8px",
-            @click="delete the.image"
+            @click="delete the?.image"
           )
           .absolute-bottom.text-center the.image
-        q-img.q-mt-md.rounded-borders(v-if="!the.image", :ratio="16 / 9")
+        q-img.q-mt-md.rounded-borders(v-if="!the?.image", :ratio="16 / 9")
           .absolute-full.flex-center.flex
             q-btn(label="Загрузить картинку", color="primary", @click="open")
 q-page.column.full-height
@@ -172,8 +172,8 @@ q-page.column.full-height
   )
     q-tab(name="wysiwyg", label="wysiwyg")
     q-tab(name="template", label="template")
-    q-tab(name="script", :label="`script${the.setup ? ' setup' : ''}`")
-    q-tab(name="style", :label="`style${the.scoped ? ' scoped' : ''}`")
+    q-tab(name="script", :label="`script${the?.setup ? ' setup' : ''}`")
+    q-tab(name="style", :label="`style${the?.scoped ? ' scoped' : ''}`")
   q-separator
   q-tab-panels.full-width.col(v-model="state.content.tab")
     q-tab-panel.column(name="wysiwyg")
@@ -240,7 +240,7 @@ get(state).rightDrawer = true;
  * @param {Array} content - Дерево контента
  * @param {object} content."0" - Корневой элемент
  */
-const init = ([{ id }]) => {
+const init = ([{ id = crypto?.randomUUID() } = {}] = []) => {
   const {
     content: { expanded, selected },
   } = get(state);

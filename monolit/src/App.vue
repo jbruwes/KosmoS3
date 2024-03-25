@@ -250,22 +250,28 @@ const canonical = computed(() =>
 const favicon = crypto?.randomUUID();
 
 /**
+ * Ф-ция проверки ресурса
+ *
+ * @param {object} resource - Объект ресурса
+ * @param {boolean} resource.visible - Признак использования
+ * @param {string} resource.url - Ссылка на ресурс
+ * @returns {boolean} - Флаг проверки ресурса
+ */
+const alive = ({ visible = true, url = "" } = {}) => visible && url;
+
+/**
  * Фильтр глобальных скриптов по видимости
  *
  * @type {computed}
  */
-const theJS = computed(() =>
-  js?.value?.filter(({ visible = true, url = "" } = {}) => visible && url),
-);
+const theJS = computed(() => js?.value?.filter(alive));
 
 /**
  * Фильтр глобальных стилей по видимости
  *
  * @type {computed}
  */
-const theCSS = computed(() =>
-  css?.value?.filter(({ visible = true, url = "" } = {}) => visible && url),
-);
+const theCSS = computed(() => css?.value?.filter(alive));
 
 router.beforeEach(() => {
   drawer.value = false;
