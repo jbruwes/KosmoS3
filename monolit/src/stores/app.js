@@ -33,9 +33,9 @@ const moduleCache = {
  * @param {string} type - Тип записи
  * @param {...any} args - Содержимое записи
  */
-const log = (type = "log", ...args) => {
+const log = (type = "", ...args) => {
   // eslint-disable-next-line no-console
-  console[type](...args);
+  console?.[type]?.(...args);
 };
 
 /**

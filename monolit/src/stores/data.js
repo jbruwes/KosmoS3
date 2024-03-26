@@ -16,14 +16,6 @@ import Settings from "~/src/assets/settings.json";
 const uri = ref();
 
 /**
- * Равен true только в том случае, если тип этого дескриптора свойства может
- * быть изменён и если свойство может быть удалено из содержащего его объекта.
- *
- * @type {boolean}
- */
-const configurable = true;
-
-/**
  * Равен true только в том случае, если значение, ассоциированное со свойством,
  * может быть изменено с помощью оператора присваивания.
  *
@@ -60,8 +52,7 @@ const deep = true;
  */
 const fixer = (def = {}, obj = {}) => {
   Object?.keys(obj)?.forEach((key) => {
-    if (!Object?.keys(def)?.includes(key))
-      Object?.defineProperty(obj, key, { configurable });
+    if (!Object?.keys(def)?.includes(key)) Object?.defineProperty(obj, key, {});
   });
   Object?.entries(def)?.forEach(
     ([key = "", { type = "", value = null } = {}] = []) => {
@@ -69,7 +60,6 @@ const fixer = (def = {}, obj = {}) => {
         Object?.defineProperty(obj, key, {
           value,
           writable,
-          configurable,
           enumerable,
         });
     },
@@ -98,7 +88,6 @@ const index = {
   get() {
     return this?.siblings?.findIndex(({ id = "" } = {}) => this?.id === id);
   },
-  configurable,
 };
 
 /**
@@ -115,7 +104,6 @@ const prev = {
   get() {
     return this?.siblings?.[this.index - 1] ?? null;
   },
-  configurable,
 };
 
 /**
@@ -132,7 +120,6 @@ const next = {
   get() {
     return this?.siblings?.[this.index + 1] ?? null;
   },
-  configurable,
 };
 
 /**
@@ -149,7 +136,6 @@ const siblings = {
   get() {
     return this?.parent ? this?.parent?.children : [this];
   },
-  configurable,
 };
 
 /**
@@ -182,7 +168,6 @@ const branch = {
     } while (parent);
     return ret;
   },
-  configurable,
 };
 
 /**
@@ -205,7 +190,6 @@ const path = {
       ?.slice(1)
       ?.join("/");
   },
-  configurable,
 };
 
 const urn = {
@@ -215,7 +199,6 @@ const urn = {
       (this?.loc && encodeURI(this?.loc?.replace(" ", "_") ?? "")) || this?.path
     );
   },
-  configurable,
 };
 
 const name = {
@@ -223,7 +206,6 @@ const name = {
   get() {
     return this?.title ?? this?.label ?? "";
   },
-  configurable,
 };
 
 const favicon = {
@@ -231,7 +213,6 @@ const favicon = {
   get() {
     return this?.icon?.replace(/-./g, (x = []) => x?.[1]?.toUpperCase());
   },
-  configurable,
 };
 
 const id = {
@@ -287,6 +268,7 @@ const fixData = (value = {}) => {
 /**
  * Добавляем no-cache
  *
+ * @type {Function}
  * @param {object} ctx - Контекстный объект
  * @param {object} ctx.options - Свойства запроса
  * @param {string} ctx.url - Урл
@@ -306,6 +288,7 @@ const beforeFetch = ({ url, options, cancel }) => {
 /**
  * Преводим в массив
  *
+ * @type {Function}
  * @param {object} ctx - Контекстный объект
  * @returns {object} - Трансформированный контекстный объект
  */
@@ -328,11 +311,26 @@ const { data } = useFetch(
  *
  * @type {Function}
  * @param {Array} pages - Элементы массива страниц
- * @param {object} parent - Родительский объект
  * @returns {Array} - Аддитивный массив страниц
  */
-const getPages = (pages = [], parent = {}) =>
-  pages?.reduce((accumulator = [], value = {}) => {
+const getPages = (pages = []) =>
+  pages?.reduce(
+    (accumulator = [], value = {}) => [
+      ...accumulator,
+      ...getPages(value?.children),
+    ],
+    pages,
+  );
+
+/**
+ * Рекурсивная функция коррекции страниц
+ *
+ * @type {Function}
+ * @param {Array} pages - Элементы массива страниц
+ * @param {object} parent - Родительский объект
+ */
+const fixContent = (pages = [], parent = {}) =>
+  pages?.forEach((value = {}) => {
     fixer(page, value);
     Object?.defineProperties(value, {
       parent,
@@ -346,10 +344,8 @@ const getPages = (pages = [], parent = {}) =>
       urn,
       favicon,
     });
-    return value?.children?.length
-      ? [...accumulator, ...getPages(value?.children, { value, configurable })]
-      : accumulator;
-  }, pages);
+    fixContent(value?.children, { value });
+  });
 
 const $ = reactive(fixData());
 
@@ -362,18 +358,18 @@ const get = () => getPages($?.content);
 
 const pages = computed(() =>
   get()?.map((value = {}) => {
-    Object?.defineProperty(value, "pages", { get, configurable });
+    Object?.defineProperty(value, "pages", { get });
     return value;
   }),
 );
 
-/** @param {Array} value - Исходный массив */
+/**
+ * @type {Function}
+ * @param {Array} value - Исходный массив
+ */
 const addProperties = (value = []) => {
   value?.forEach((element) => {
-    Object?.defineProperty(element, "siblings", {
-      value,
-      configurable,
-    });
+    Object?.defineProperty(element, "siblings", { value });
     Object?.defineProperties(element, { index, prev, next });
   });
 };
@@ -384,6 +380,7 @@ watch(data, (value) => {
   });
 });
 
+watch(() => $?.content, fixContent, { deep });
 watch(() => $?.css, addProperties, { deep });
 watch(() => $?.js, addProperties, { deep });
 
