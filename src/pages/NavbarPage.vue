@@ -8,7 +8,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         q-item-label Настройки панели навигации
     q-card-section
       q-select(
-        v-model="navbar.theme",
+        v-model="$.navbar.theme",
         label="Цветовая тема",
         :options="themes"
       )
@@ -18,16 +18,16 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         q-list
           q-item(v-ripple, tag="label")
             q-item-section(avatar)
-              q-checkbox(v-model="navbar.setup")
+              q-checkbox(v-model="$.navbar.setup")
             q-item-section
               q-item-label script setup
           q-item(v-ripple, tag="label")
             q-item-section(avatar)
-              q-checkbox(v-model="navbar.scoped")
+              q-checkbox(v-model="$.navbar.scoped")
             q-item-section
               q-item-label style scoped
       q-select(
-        v-model.trim="navbar.classes",
+        v-model.trim="$.navbar.classes",
         multiple,
         use-chips,
         use-input,
@@ -37,7 +37,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
         label="Классы навигатора"
       )
       q-select(
-        v-model.trim="navbar.scrollClasses",
+        v-model.trim="$.navbar.scrollClasses",
         multiple,
         use-chips,
         use-input,
@@ -63,16 +63,16 @@ q-page.column.full-height
     narrow-indicator
   )
     q-tab(name="template", label="template")
-    q-tab(name="script", :label="`script${navbar.setup ? ' setup' : ''}`")
-    q-tab(name="style", :label="`style${navbar.scoped ? ' scoped' : ''}`")
+    q-tab(name="script", :label="`script${$?.navbar?.setup ? ' setup' : ''}`")
+    q-tab(name="style", :label="`style${$?.navbar?.scoped ? ' scoped' : ''}`")
   q-separator
   q-tab-panels.full-width.col(v-model="navbarTabs")
     q-tab-panel.column(name="template")
-      v-source-code.col(v-model="navbar.template")
+      v-source-code.col(v-model="$.navbar.template")
     q-tab-panel.column(name="script")
-      v-source-code.col(v-model="navbar.script", lang="javascript")
+      v-source-code.col(v-model="$.navbar.script", lang="javascript")
     q-tab-panel.column(name="style")
-      v-source-code.col(v-model="navbar.style", lang="css")
+      v-source-code.col(v-model="$.navbar.style", lang="css")
 </template>
 <script setup>
 import { get, useStorage } from "@vueuse/core";
@@ -80,7 +80,7 @@ import { css, html, js } from "js-beautify";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 
-import Navbar from "@/assets/navbar.json";
+import navbar from "@/assets/navbar.json";
 import themes from "@/assets/themes.json";
 import VSourceCode from "@/components/VSourceCode.vue";
 import app from "@/stores/app";
@@ -88,7 +88,7 @@ import data from "~/monolit/src/stores/data";
 
 const $q = useQuasar();
 const { state } = storeToRefs(app());
-const { navbar } = storeToRefs(data());
+const { $ } = data();
 const navbarTabs = useStorage("navbar-tabs", "template");
 get(state).rightDrawer = true;
 
@@ -115,16 +115,16 @@ const fncResetNavbar = () => {
     value.forEach((element) => {
       switch (element) {
         case "template":
-          navbar.value[element] = html(Navbar?.[element]?.value);
+          $.navbar[element] = html(navbar?.[element]?.value);
           break;
         case "script":
-          navbar.value[element] = js(Navbar?.[element]?.value);
+          $.navbar[element] = js(navbar?.[element]?.value);
           break;
         case "style":
-          navbar.value[element] = css(Navbar?.[element]?.value);
+          $.navbar[element] = css(navbar?.[element]?.value);
           break;
         default:
-          navbar.value[element] = Navbar?.[element]?.value;
+          $.navbar[element] = navbar?.[element]?.value;
       }
     });
   });

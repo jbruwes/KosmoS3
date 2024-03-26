@@ -13,16 +13,16 @@ q-page.column.full-height
   q-separator
   q-tab-panels.full-width.col(v-model="state.js.tab")
     q-tab-panel.column(name="script")
-      v-source-code.col(v-model="script", lang="javascript")
+      v-source-code.col(v-model="$.script", lang="javascript")
     q-tab-panel.column(name="js")
       v-interactive-tree(
         v-model:selected="state.js.selected",
         type="url",
-        :list="js"
+        :list="$?.js"
       )
 </template>
 <script setup>
-import { get, isDefined } from "@vueuse/core";
+import { get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { watch } from "vue";
 
@@ -32,20 +32,16 @@ import app from "@/stores/app";
 import data from "~/monolit/src/stores/data";
 
 const { state } = storeToRefs(app());
-const { script, js } = storeToRefs(data());
+const { $ } = data();
 get(state).rightDrawer = null;
-/**
- * Инициализация
- *
- * @param {Array} js - Список подключаемых скриптов
- * @param {object} js."0" - Первый элемент в списке
- */
-const init = ([{ id }]) => {
-  const {
-    js: { selected },
-  } = get(state);
-  if (!selected) get(state).js.selected = id;
-};
-if (isDefined(js)) init(get(js));
-else watch(js, init, { once: true });
+watch(
+  () => $?.js,
+  ([{ id = "" } = {}] = []) => {
+    const {
+      js: { selected },
+    } = get(state);
+    if (!selected) get(state).js.selected = id;
+  },
+  { immediate: true },
+);
 </script>

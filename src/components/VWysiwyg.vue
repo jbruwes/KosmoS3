@@ -62,9 +62,9 @@ div
         q-card.col.column.full-width(flat, bordered)
           q-card-section.col.column.full-width
             q-tree.col.scroll.full-width(
-              v-if="content",
+              v-if="$?.content",
               v-model:selected="inserted",
-              :nodes="content",
+              :nodes="$?.content",
               default-expand-all,
               node-key="id",
               no-selection-unset,
@@ -103,24 +103,21 @@ const S3 = s3();
 const { base } = storeToRefs(S3);
 const { putFile } = S3;
 const { the, selectedValue } = storeToRefs(app());
-const { pages, content } = storeToRefs(data());
+const { pages } = storeToRefs(data());
+const { $ } = data();
 const inserted = ref(null);
 const insertedObject = useArrayFind(
   pages,
   ({ id = "" } = {}) => id === inserted?.value,
 );
-/**
- * Инициализация
- *
- * @param {Array} content - Дерево контента
- * @param {object} content."0" - Корневой элемент
- */
-const init = ([{ id = "" } = {}] = []) => {
-  inserted.value = id;
-};
-const once = true;
-if (content?.value !== null) init(content?.value);
-else watch(content, init, { once });
+const immediate = true;
+watch(
+  () => $?.content,
+  ([{ id = "" } = {}] = []) => {
+    inserted.value = id;
+  },
+  { immediate },
+);
 const editorRef = ref();
 const modalRef = ref();
 /**

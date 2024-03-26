@@ -33,17 +33,17 @@ v-head
     type="image/svg+xml"
   )
   link(v-if="canonical", rel="canonical", :href="canonical")
-  component(:is="'style'", v-if="style") {{ style }}
-  component(:is="'script'", v-if="script") {{ script }}
+  component(:is="'style'", v-if="$?.style") {{ $?.style }}
+  component(:is="'script'", v-if="$?.script") {{ $?.script }}
   meta(
-    v-if="settings?.yandex",
+    v-if="$?.settings?.yandex",
     name="yandex-verification",
-    :content="settings?.yandex"
+    :content="$?.settings?.yandex"
   )
   meta(
-    v-if="settings?.google",
+    v-if="$?.settings?.google",
     name="google-site-verification",
-    :content="settings?.google"
+    :content="$?.settings?.google"
   )
 .drawer.h-dvh
   input#drawer.drawer-toggle(
@@ -56,8 +56,8 @@ v-head
   )
     .z-40(
       v-if="pages?.[0]?.visible",
-      :class="[...(ready ? [] : navbar?.scrollClasses ?? []), ...(navbar?.classes ?? [])]",
-      :data-theme="navbar?.theme"
+      :class="[...(ready ? [] : $?.navbar?.scrollClasses ?? []), ...($?.navbar?.classes ?? [])]",
+      :data-theme="$?.navbar?.theme"
     )
       .navbar
         component(:is="navigator", :the="the")
@@ -106,21 +106,14 @@ import app from "@/stores/app";
  *
  * @typedef {object} strData
  * @property {computed} pages - Общий массив всех объектов страниц сайта
- * @property {computed} css - Массив ссылок на стили
- * @property {computed} js - Массив ссылок на скрипты
  * @property {ref} uri - Путь до data.json
- * @property {computed} script - Глобальный скрипт
- * @property {computed} style - Глобальные стили
- * @property {computed} settings - Настройки
- * @property {computed} navbar - Навбар
  */
 import data from "@/stores/data";
 
 /** @type {strApp} */
 const { fncTemplate } = app();
 
-/** @type {strData} */
-const { navbar } = storeToRefs(data());
+const { $ } = data();
 
 /**
  * Вычисление навбара
@@ -140,35 +133,35 @@ const navigator = computed(() => {
    *
    * @type {string}
    */
-  const template = navbar?.value?.template;
+  const template = $?.navbar?.template;
 
   /**
    * Срипты навбара
    *
    * @type {string}
    */
-  const script = navbar?.value?.script;
+  const script = $?.navbar?.script;
 
   /**
    * Стили навбара
    *
    * @type {string}
    */
-  const style = navbar?.value?.style;
+  const style = $?.navbar?.style;
 
   /**
    * Тип скриптов навбара
    *
    * @type {boolean}
    */
-  const setup = navbar?.value?.setup;
+  const setup = $?.navbar?.setup;
 
   /**
    * Тип стилей навбара
    *
    * @type {boolean}
    */
-  const scoped = navbar?.value?.scoped;
+  const scoped = $?.navbar?.scoped;
 
   /**
    * Путь готового шаблона навбара
@@ -181,7 +174,7 @@ const navigator = computed(() => {
 });
 
 /** @type {strData} */
-const { pages, css, js, uri, script, style, settings } = storeToRefs(data());
+const { pages, uri } = storeToRefs(data());
 
 /**
  * Expose more controls
@@ -235,10 +228,10 @@ const drawer = ref(false);
  *
  * @type {computed}
  */
-const canonical = computed(() =>
-  the?.value?.urn !== null
-    ? `${window?.location?.origin}/${the?.value?.urn}`
-    : "",
+const canonical = computed(
+  () =>
+    the?.value?.urn?.constructor === String &&
+    `${window?.location?.origin}/${the?.value?.urn}`,
 );
 
 /**
@@ -264,14 +257,14 @@ const alive = ({ visible = true, url = "" } = {}) => visible && url;
  *
  * @type {computed}
  */
-const theJS = computed(() => js?.value?.filter(alive));
+const theJS = computed(() => $?.js?.filter(alive));
 
 /**
  * Фильтр глобальных стилей по видимости
  *
  * @type {computed}
  */
-const theCSS = computed(() => css?.value?.filter(alive));
+const theCSS = computed(() => $?.css?.filter(alive));
 
 router.beforeEach(() => {
   drawer.value = false;

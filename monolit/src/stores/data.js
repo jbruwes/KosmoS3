@@ -1,6 +1,6 @@
 import { useFetch } from "@vueuse/core";
 import { defineStore } from "pinia";
-import { computed, ref, watchEffect } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 
 import Data from "~/src/assets/data.json";
 import Navbar from "~/src/assets/navbar.json";
@@ -49,13 +49,16 @@ const enumerable = true;
  */
 const refetch = true;
 
+const deep = true;
+
 /**
  * Приведение структуры объекта в соответствие с дефолтным
  *
- * @param {object} obj - Объект
  * @param {object} def - Эталонный объект
+ * @param {object} obj - Объект
+ * @returns {object} - Фиксированный объект
  */
-const fixer = (obj = {}, def = {}) => {
+const fixer = (def = {}, obj = {}) => {
   Object?.keys(obj)?.forEach((key) => {
     if (!Object?.keys(def)?.includes(key))
       Object?.defineProperty(obj, key, { configurable });
@@ -71,6 +74,7 @@ const fixer = (obj = {}, def = {}) => {
         });
     },
   );
+  return obj;
 };
 
 /**
@@ -165,17 +169,17 @@ const branch = {
      *
      * @type {Array}
      */
-    const ret = [this];
+    const ret = [];
     /**
      * Родительский объект
      *
      * @type {object}
      */
-    let { parent = null } = this;
-    while (parent) {
+    let parent = this;
+    do {
       ret?.unshift(parent);
       ({ parent = null } = parent);
-    }
+    } while (parent);
     return ret;
   },
   configurable,
@@ -208,8 +212,7 @@ const urn = {
   /** @returns {string} - Путь до рекомендованный */
   get() {
     return (
-      (this?.loc ? encodeURI(this?.loc?.replace(" ", "_") ?? "") : this?.loc) ||
-      this?.path
+      (this?.loc && encodeURI(this?.loc?.replace(" ", "_") ?? "")) || this?.path
     );
   },
   configurable,
@@ -229,25 +232,6 @@ const favicon = {
     return this?.icon?.replace(/-./g, (x = []) => x?.[1]?.toUpperCase());
   },
   configurable,
-};
-
-/**
- * Добавляем no-cache
- *
- * @param {object} ctx - Контекстный объект
- * @param {object} ctx.options - Свойства запроса
- * @param {string} ctx.url - Урл
- * @param {Function} ctx.cancel - Ф-ция отмены запроса
- * @returns {object} - Трансформированный контекстный объект
- */
-const beforeFetch = ({ url, options, cancel }) => {
-  if (!url) cancel();
-  const value = "no-cache";
-  Object?.defineProperty(options?.headers, "cache-control", {
-    value,
-    enumerable,
-  });
-  return { options };
 };
 
 const id = {
@@ -271,25 +255,52 @@ const page = { id, ...Page };
  *
  * @param {Array} res - Проверяемый массив
  */
-const resources = (res) => {
+const resources = (res = []) => {
   res
     .slice()
     .reverse()
     .forEach((element = {}, i = 0, array = []) => {
       if (element?.constructor !== Object) res?.splice(array.length - 1 - i, 1);
       else {
-        fixer(element, resource);
+        fixer(resource, element);
         if (!element?.url) res?.splice(array.length - 1 - i, 1);
       }
     });
-  if (!res.length)
-    res?.push(
-      Object?.fromEntries(
-        Object?.entries(resource)?.map(
-          ([key = "", { value = null } = {}] = []) => [key, value],
-        ),
-      ),
-    );
+  if (!res.length) res?.push(fixer(resource));
+};
+
+/**
+ * Исправление объекта данных
+ *
+ * @param {object} value - Объект данных
+ * @returns {object} - Исправленный объект данных
+ */
+const fixData = (value = {}) => {
+  fixer(Data, value);
+  fixer(Navbar, value?.navbar);
+  fixer(Settings, value?.settings);
+  resources(value?.css);
+  resources(value?.js);
+  return value;
+};
+
+/**
+ * Добавляем no-cache
+ *
+ * @param {object} ctx - Контекстный объект
+ * @param {object} ctx.options - Свойства запроса
+ * @param {string} ctx.url - Урл
+ * @param {Function} ctx.cancel - Ф-ция отмены запроса
+ * @returns {object} - Трансформированный контекстный объект
+ */
+const beforeFetch = ({ url, options, cancel }) => {
+  if (!url) cancel();
+  const value = "no-cache";
+  Object?.defineProperty(options?.headers, "cache-control", {
+    value,
+    enumerable,
+  });
+  return { options };
 };
 
 /**
@@ -299,19 +310,17 @@ const resources = (res) => {
  * @returns {object} - Трансформированный контекстный объект
  */
 const afterFetch = (ctx) => {
-  const { data = {} } = ctx;
-  fixer(data, Data);
-  fixer(data?.navbar, Navbar);
-  fixer(data?.settings, Settings);
-  resources(data?.css);
-  resources(data?.js);
-  ctx.data = data;
+  ctx.data = fixData(ctx?.data);
   return ctx;
 };
 
 const { data } = useFetch(
-  () => (uri?.value == null ? null : `${uri?.value}/data.json`),
-  { beforeFetch, afterFetch, refetch },
+  () => uri?.value?.constructor === String && `${uri?.value}/data.json`,
+  {
+    beforeFetch,
+    afterFetch,
+    refetch,
+  },
 ).json();
 
 /**
@@ -324,7 +333,7 @@ const { data } = useFetch(
  */
 const getPages = (pages = [], parent = {}) =>
   pages?.reduce((accumulator = [], value = {}) => {
-    fixer(value, page);
+    fixer(page, value);
     Object?.defineProperties(value, {
       parent,
       siblings,
@@ -342,18 +351,14 @@ const getPages = (pages = [], parent = {}) =>
       : accumulator;
   }, pages);
 
-const $ = ref();
-
-watchEffect(() => {
-  $.value = data?.value;
-});
+const $ = reactive(fixData());
 
 /**
  * Функция для вызова рассчета массива страниц
  *
  * @returns {Array} - Страницы
  */
-const get = () => getPages($?.value?.content);
+const get = () => getPages($?.content);
 
 const pages = computed(() =>
   get()?.map((value = {}) => {
@@ -362,77 +367,24 @@ const pages = computed(() =>
   }),
 );
 
-/**
- * @param {object} element - Объект для добавления новых свойств
- * @param {number} i - Порядковый номер в массиве
- * @param {Array} value - Исходный массив
- * @returns {object} - Объект с новыми свойствами
- */
-const addProperties = (element, i, value = []) => {
-  Object?.defineProperty(element, "siblings", {
-    value,
-    configurable,
+/** @param {Array} value - Исходный массив */
+const addProperties = (value = []) => {
+  value?.forEach((element) => {
+    Object?.defineProperty(element, "siblings", {
+      value,
+      configurable,
+    });
+    Object?.defineProperties(element, { index, prev, next });
   });
-  Object?.defineProperties(element, { index, prev, next });
-  return element;
 };
 
-const js = computed(() => $?.value?.js?.map(addProperties) ?? []);
-
-const css = computed(() => $?.value?.css?.map(addProperties) ?? []);
-
-const navbar = computed(() => $?.value?.navbar ?? {});
-
-const content = computed(() => $?.value?.content ?? []);
-
-const settings = computed(() => $?.value?.settings ?? {});
-
-const script = computed({
-  /**
-   * Чтение скрипта
-   *
-   * @returns {string} Скрипт
-   */
-  get() {
-    return $?.value?.script;
-  },
-  /**
-   * Запись скрипта
-   *
-   * @param {string} value Скрипт
-   */
-  set(value) {
-    if ($?.value) $.value.script = value;
-  },
-});
-const style = computed({
-  /**
-   * Чтение стилей
-   *
-   * @returns {string} Стили
-   */
-  get() {
-    return $?.value?.style;
-  },
-  /**
-   * Запись стилей
-   *
-   * @param {string} value Стили
-   */
-  set(value) {
-    if ($?.value) $.value.style = value;
-  },
+watch(data, (value) => {
+  Object.keys(value).forEach((key = "") => {
+    $[key] = value?.[key];
+  });
 });
 
-export default defineStore("data", () => ({
-  $,
-  uri,
-  settings,
-  script,
-  js,
-  style,
-  css,
-  content,
-  navbar,
-  pages,
-}));
+watch(() => $?.css, addProperties, { deep });
+watch(() => $?.js, addProperties, { deep });
+
+export default defineStore("data", () => ({ $, uri, pages }));

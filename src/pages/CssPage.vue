@@ -13,16 +13,16 @@ q-page.column.full-height
   q-separator
   q-tab-panels.full-width.col(v-model="state.css.tab")
     q-tab-panel.column(name="style")
-      v-source-code.col(v-model="style", lang="css")
+      v-source-code.col(v-model="$.style", lang="css")
     q-tab-panel.column(name="css")
       v-interactive-tree(
         v-model:selected="state.css.selected",
         type="url",
-        :list="css"
+        :list="$?.css"
       )
 </template>
 <script setup>
-import { get, isDefined } from "@vueuse/core";
+import { get } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { watch } from "vue";
 
@@ -32,20 +32,16 @@ import app from "@/stores/app";
 import data from "~/monolit/src/stores/data";
 
 const { state } = storeToRefs(app());
-const { style, css } = storeToRefs(data());
+const { $ } = data();
 get(state).rightDrawer = null;
-/**
- * Инициализация
- *
- * @param {Array} css - Список подключаемых стилей
- * @param {object} css."0" - Первый элемент в списке
- */
-const init = ([{ id }]) => {
-  const {
-    css: { selected },
-  } = get(state);
-  if (!selected) get(state).css.selected = id;
-};
-if (isDefined(css)) init(get(css));
-else watch(css, init, { once: true });
+watch(
+  () => $?.css,
+  ([{ id = "" } = {}] = []) => {
+    const {
+      css: { selected },
+    } = get(state);
+    if (!selected) get(state).css.selected = id;
+  },
+  { immediate: true },
+);
 </script>

@@ -94,10 +94,10 @@ export default defineStore("s3", () => {
     }
     return ret;
   };
-  const base = computed(() =>
-    isDefined(S3)
-      ? `${isDefined(wendpoint) ? get(wendpoint) : "htpps:/"}/${get(bucket)}`
-      : undefined,
+  const base = computed(
+    () =>
+      S3?.value &&
+      `${isDefined(wendpoint) ? get(wendpoint) : "htpps:/"}/${get(bucket)}`,
   );
   return {
     ...{ bucket, wendpoint, base },

@@ -10,7 +10,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
       v-interactive-tree(
         v-model:selected="state.content.selected",
         v-model:expanded="state.content.expanded",
-        :nodes="content",
+        :nodes="$?.content",
         :list="pages"
       )
     q-separator
@@ -191,7 +191,7 @@ q-page.column.full-height
 </template>
 <script setup>
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-v6";
-import { get, isDefined, useFileDialog } from "@vueuse/core";
+import { get, useFileDialog } from "@vueuse/core";
 import mime from "mime";
 import { storeToRefs } from "pinia";
 import { uid, useQuasar } from "quasar";
@@ -211,7 +211,8 @@ import data from "~/monolit/src/stores/data";
 const $q = useQuasar();
 const S3 = s3();
 const { state, selectedValue, the } = storeToRefs(app());
-const { content, pages } = storeToRefs(data());
+const { pages } = storeToRefs(data());
+const { $ } = data();
 const { base } = storeToRefs(S3);
 const { putFile } = S3;
 const icons = ref(materialIcons.icons);
@@ -234,21 +235,17 @@ const iconPicker = ref({
   },
 });
 get(state).rightDrawer = true;
-/**
- * Инициализация
- *
- * @param {Array} content - Дерево контента
- * @param {object} content."0" - Корневой элемент
- */
-const init = ([{ id = "" } = {}] = []) => {
-  const {
-    content: { expanded, selected },
-  } = get(state);
-  if (!expanded.length) get(state).content.expanded = [id];
-  if (!selected) get(state).content.selected = id;
-};
-if (isDefined(content)) init(get(content));
-else watch(content, init, { once: true });
+watch(
+  () => $?.content,
+  ([{ id = "" } = {}] = []) => {
+    const {
+      content: { expanded, selected },
+    } = get(state);
+    if (!expanded.length) get(state).content.expanded = [id];
+    if (!selected) get(state).content.selected = id;
+  },
+  { immediate: true },
+);
 const { files, open } = useFileDialog({
   multiple: false,
   accept: "image/*",

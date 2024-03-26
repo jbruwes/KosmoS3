@@ -24,7 +24,6 @@ import router from "@/router";
  *
  * @typedef {object} strData
  * @property {object} pages - Общий массив всех объектов страниц сайта
- * @property {object} settings - Настройки
  */
 import data from "@/stores/data";
 import defaults from "~/uno.config";
@@ -60,7 +59,10 @@ app.config.globalProperties.mdi = mdi;
 app.use(createPinia());
 
 /** @type {strData} */
-const { pages, settings } = storeToRefs(data());
+const { pages } = storeToRefs(data());
+
+/** @type {strData} */
+const { $ } = data();
 
 /**
  * Перевод яндекс метрики в продуктовый режим
@@ -88,7 +90,7 @@ watch(
        */
       const component = () =>
         import(
-          settings?.value?.landing
+          $?.settings?.landing
             ? "@/views/MultiView.vue"
             : "@/views/SingleView.vue"
         );
@@ -132,7 +134,7 @@ watch(
   { once },
 );
 watch(
-  settings,
+  () => $?.settings,
   ({ metrika, analytics }) => {
     if (metrika) {
       /**

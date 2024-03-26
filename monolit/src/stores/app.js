@@ -73,26 +73,21 @@ const fncTemplate = ({
    *
    * @type {string}
    */
-  const cntScript = script
-    ? `<script${setup ? " setup" : ""}>${script}</script>`
-    : script;
-
+  const cntScript =
+    script && `<script${setup ? " setup" : ""}>${script}</script>`;
   /**
    * Константа с шаблоном
    *
    * @type {string}
    */
-  const cntTemplate = template ? `<template>${template}</template>` : template;
+  const cntTemplate = template && `<template>${template}</template>`;
 
   /**
    * Константа со стилями
    *
    * @type {string}
    */
-  const cntStyle = style
-    ? `<style${scoped ? " scoped" : ""}>${style}</style>`
-    : style;
-
+  const cntStyle = style && `<style${scoped ? " scoped" : ""}>${style}</style>`;
   /**
    * Функция получения файла шаблона
    *

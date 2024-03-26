@@ -11,17 +11,16 @@ import { defineStore, storeToRefs } from "pinia";
 import { toXML } from "to-xml";
 import { computed, reactive, watch } from "vue";
 
-import storeData from "~/monolit/src/stores/data";
+import Data from "~/monolit/src/stores/data";
 
 import storeS3 from "./s3";
 
 export default defineStore("app", () => {
   const rootFileName = "index.html";
-  const store = storeS3();
-  const { S3, base, bucket } = storeToRefs(store);
-  const { putObject, headObject } = store;
-  const dataStore = storeData();
-  const { uri, $, pages } = storeToRefs(dataStore);
+  const { S3, base, bucket } = storeToRefs(storeS3());
+  const { putObject, headObject } = storeS3();
+  const { uri, pages } = storeToRefs(Data());
+  const { $ } = Data();
   /**
    * Переключатель видимости правой панели
    *
