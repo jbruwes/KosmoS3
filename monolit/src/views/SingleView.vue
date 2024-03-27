@@ -12,7 +12,7 @@
       @vue:mounted="GLightbox({ loop, zoomable, selector })"
     )
 </template>
-<script setup>
+<script setup lang="ts">
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
