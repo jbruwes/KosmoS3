@@ -342,7 +342,7 @@ const beforeFetch = ({ url = "", options = {}, cancel = null } = {}) => {
    */
   const value = "no-cache";
 
-  Object.defineProperty(options?.headers, "cache-control", {
+  Object.defineProperty(options?.headers ?? {}, "cache-control", {
     value,
     enumerable,
   });
