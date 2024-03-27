@@ -1,8 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [],
-});
+/**
+ * Объект истории
+ *
+ * @type {object}
+ */
+const history = createWebHistory(import.meta.env.BASE_URL);
 
-export default router;
+/**
+ * Роуты
+ *
+ * @type {Array}
+ */
+const routes = [];
+
+export default createRouter({ history, routes });

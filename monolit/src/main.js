@@ -19,12 +19,6 @@ import VueYandexMetrika from "vue3-yandex-metrika";
 
 import App from "@/App.vue";
 import router from "@/router";
-/**
- * Хранилище данных приложения монолит
- *
- * @typedef {object} strData
- * @property {object} pages - Общий массив всех объектов страниц сайта
- */
 import data from "@/stores/data";
 import defaults from "~/uno.config";
 
@@ -58,10 +52,10 @@ const app = createApp(App);
 app.config.globalProperties.mdi = mdi;
 app.use(createPinia());
 
-/** @type {strData} */
-const { pages } = storeToRefs(data());
+/** @type {{ pages: {}; uri: {} }} */
+const { pages, uri } = storeToRefs(data());
 
-/** @type {strData} */
+/** @type {{ $: {} }} */
 const { $ } = data();
 
 /**
@@ -94,10 +88,10 @@ watch(
             ? "@/views/MultiView.vue"
             : "@/views/SingleView.vue"
         );
-      value.forEach(
+      value?.forEach(
         ({
-          path: pPath = "",
-          _: path = `/${pPath}`,
+          path: _path = "",
+          _: path = `/${_path}`,
           id: name = "",
           loc = "",
         } = {}) => {
@@ -166,6 +160,7 @@ watch(
   },
   { once },
 );
+uri.value = "";
 app.use(router);
 app.use(createHead());
 app.use(Tres);

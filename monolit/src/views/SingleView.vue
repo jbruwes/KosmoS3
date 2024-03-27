@@ -19,26 +19,13 @@ import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
-/**
- * Хранилище приложения монолит
- *
- * @typedef {object} strApp
- * @property {Function} fncTemplate - Функция, возвращающая сконструированный
- *   шаблон
- */
 import app from "@/stores/app";
-/**
- * Хранилище данных приложения монолит
- *
- * @typedef {object} strData
- * @property {computed} pages - Общий массив всех объектов страниц сайта
- */
 import data from "@/stores/data";
 
-/** @type {strApp} */
+/** @type {{ fncTemplate: Function }} */
 const { fncTemplate } = app();
 
-/** @type {strData} */
+/** @type {{ pages: computed }} */
 const { pages } = storeToRefs(data());
 
 /**
@@ -62,10 +49,22 @@ const router = useRouter();
  * @type {computed}
  */
 const the = computed(() => {
+  /**
+   * Позиция текущей страницы в массиве страниц
+   *
+   * @type {number}
+   */
   const index = pages?.value?.findIndex(
-    ({ id = "" } = {}) => id === route?.name,
+    ({ id = "" } = {}) => id === route.name,
   );
+
+  /**
+   * Вычисленный текущий объект
+   *
+   * @type {object}
+   */
   const ret = pages?.value?.[index];
+
   return index ? ret : ret?.children?.[0];
 });
 
@@ -100,5 +99,5 @@ const zoomable = false;
  * @type {string}
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
-const selector = selectors?.map((el = '=""') => `a[href${el}]`)?.join();
+const selector = selectors?.map((el = "") => `a[href${el}]`)?.join();
 </script>

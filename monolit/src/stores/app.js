@@ -35,7 +35,7 @@ const moduleCache = {
  */
 const log = (type = "", ...args) => {
   // eslint-disable-next-line no-console
-  console?.[type]?.(...args);
+  console[type]?.(...args);
 };
 
 /**
@@ -50,6 +50,7 @@ const delay = 0;
  *
  * @type {Function}
  * @param {object} page - Объект страницы
+ * @param {string} page._ - Фейковый параметр
  * @param {string} page.id - Id страницы
  * @param {string} page.template - Шаблон страницы
  * @param {string} page.script - Скрипты страницы
@@ -60,7 +61,8 @@ const delay = 0;
  * @returns {object} Шаблон
  */
 const fncTemplate = ({
-  id = "",
+  id: _id = "",
+  _: id = `style_${_id}`,
   template = "",
   script = "",
   style = "",
@@ -103,7 +105,7 @@ const fncTemplate = ({
    * @param {string} styles - Стили
    */
   const addStyle = (styles = "") => {
-    useStyleTag(styles, { id: `style_${id}` });
+    useStyleTag(styles, { id });
   };
 
   /**

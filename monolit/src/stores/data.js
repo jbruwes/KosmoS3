@@ -41,6 +41,11 @@ const enumerable = true;
  */
 const refetch = true;
 
+/**
+ * Модификатор для вотчера, указывает на проверку всех изменений в глубину
+ *
+ * @type {boolean}
+ */
 const deep = true;
 
 /**
@@ -50,14 +55,14 @@ const deep = true;
  * @param {object} obj - Объект
  * @returns {object} - Фиксированный объект
  */
-const fixer = (def = {}, obj = {}) => {
-  Object?.keys(obj)?.forEach((key) => {
-    if (!Object?.keys(def)?.includes(key)) Object?.defineProperty(obj, key, {});
+const fix = (def = {}, obj = {}) => {
+  Object.keys(obj).forEach((key) => {
+    if (!Object.keys(def).includes(key)) Object.defineProperty(obj, key, {});
   });
-  Object?.entries(def)?.forEach(
+  Object.entries(def).forEach(
     ([key = "", { type = "", value = null } = {}] = []) => {
       if (obj?.[key]?.constructor?.name !== type && obj?.[key] !== value)
-        Object?.defineProperty(obj, key, {
+        Object.defineProperty(obj, key, {
           value,
           writable,
           enumerable,
@@ -66,13 +71,6 @@ const fixer = (def = {}, obj = {}) => {
   );
   return obj;
 };
-
-/**
- * Тип для вычисляемого id
- *
- * @type {string}
- */
-const type = "String";
 
 /**
  * Объект, на котором определяется свойство позиции в соседних объектах
@@ -123,22 +121,6 @@ const next = {
 };
 
 /**
- * Объект, на котором определяется свойство массива соседних объектов
- *
- * @type {object}
- */
-const siblings = {
-  /**
-   * Геттер массива соседних объектов
-   *
-   * @returns {Array} - Массив соседних объектов
-   */
-  get() {
-    return this?.parent ? this?.parent?.children : [this];
-  },
-};
-
-/**
  * Объект, на котором определяется свойство ветви объектов
  *
  * @type {object}
@@ -173,7 +155,7 @@ const branch = {
 /**
  * Объект, на котором определяется путь до объекта
  *
- * @type {string}
+ * @type {object}
  */
 const path = {
   /**
@@ -192,8 +174,17 @@ const path = {
   },
 };
 
+/**
+ * Объект, на котором определяется urn ресурса
+ *
+ * @type {object}
+ */
 const urn = {
-  /** @returns {string} - Путь до рекомендованный */
+  /**
+   * Геттер urn ресурса
+   *
+   * @returns {string} - Urn ресурса
+   */
   get() {
     return (
       (this?.loc && encodeURI(this?.loc?.replace(" ", "_") ?? "")) || this?.path
@@ -201,72 +192,138 @@ const urn = {
   },
 };
 
+/**
+ * Объект, на котором определяется название страницы
+ *
+ * @type {object}
+ */
 const name = {
-  /** @returns {string} - Вычисленное название страницы */
+  /**
+   * Геттер названия страницы
+   *
+   * @returns {string} - Название страницы
+   */
   get() {
     return this?.title ?? this?.label ?? "";
   },
 };
 
+/**
+ * Объект, на котором определяется фавиконка страницы
+ *
+ * @type {object}
+ */
 const favicon = {
-  /** @returns {string} - Вычисленное название иконки */
+  /**
+   * Геттер фавиконки страницы
+   *
+   * @returns {string} - Фавиконка страницы
+   */
   get() {
     return this?.icon?.replace(/-./g, (x = []) => x?.[1]?.toUpperCase());
   },
 };
 
+/**
+ * Тип для вычисляемого id
+ *
+ * @type {string}
+ */
+const type = "String";
+
+/**
+ * Объект, на котором определяется id
+ *
+ * @type {object}
+ */
 const id = {
   /**
-   * Генератор id
+   * Геттер id
    *
    * @returns {string} - Id
    */
   get value() {
-    return crypto?.randomUUID();
+    return crypto.randomUUID();
   },
   type,
 };
 
+/**
+ * Шаблон ресурса для js & css
+ *
+ * @type {object}
+ */
 const resource = { id, ...Resource };
 
-const page = { id, ...Page };
-
 /**
- * Ф-ция проверки массивов ресурсов
+ * Функция ремонта плоских массивов js & css
  *
- * @param {Array} res - Проверяемый массив
+ * @type {Function}
+ * @param {Array} value - Исходный массив
  */
-const resources = (res = []) => {
-  res
-    .slice()
-    .reverse()
-    .forEach((element = {}, i = 0, array = []) => {
-      if (element?.constructor !== Object) res?.splice(array.length - 1 - i, 1);
-      else {
-        fixer(resource, element);
-        if (!element?.url) res?.splice(array.length - 1 - i, 1);
-      }
-    });
-  if (!res.length) res?.push(fixer(resource));
+const fixPlain = (value = []) => {
+  if (!value?.length) value?.push({});
+
+  /**
+   * Объект с массивом соседей
+   *
+   * @type {object}
+   */
+  const siblings = { value };
+
+  value?.forEach((element) => {
+    fix(resource, element);
+    Object.defineProperties(element, { siblings, index, prev, next });
+  });
 };
 
 /**
- * Исправление объекта данных
+ * Объект, на котором определяется свойство массива соседних объектов
+ *
+ * @type {object}
+ */
+const siblings = {
+  /**
+   * Геттер массива соседних объектов
+   *
+   * @returns {Array} - Массив соседних объектов
+   */
+  get() {
+    return this?.parent ? this?.parent?.children : [this];
+  },
+};
+
+/**
+ * Ф-ция удаления элементов js & css не являющихся объектами
+ *
+ * @param {Array} res - Проверяемый массив
+ */
+const clean = (res = []) => {
+  res
+    ?.slice()
+    ?.reverse()
+    ?.forEach((element = {}, i = 0, array = []) => {
+      if (element?.constructor !== Object) res?.splice(array.length - 1 - i, 1);
+    });
+};
+
+/**
+ * Первый этап ремонта объекта данных
  *
  * @param {object} value - Объект данных
  * @returns {object} - Исправленный объект данных
  */
 const fixData = (value = {}) => {
-  fixer(Data, value);
-  fixer(Navbar, value?.navbar);
-  fixer(Settings, value?.settings);
-  resources(value?.css);
-  resources(value?.js);
+  fix(Data, value);
+  fix(Navbar, value?.navbar);
+  fix(Settings, value?.settings);
+  clean(value?.css);
+  clean(value?.js);
   return value;
 };
 
 /**
- * Добавляем no-cache
+ * Колбек функция, запускаемая перед запросом "data.json"
  *
  * @type {Function}
  * @param {object} ctx - Контекстный объект
@@ -275,10 +332,17 @@ const fixData = (value = {}) => {
  * @param {Function} ctx.cancel - Ф-ция отмены запроса
  * @returns {object} - Трансформированный контекстный объект
  */
-const beforeFetch = ({ url, options, cancel }) => {
-  if (!url) cancel();
+const beforeFetch = ({ url = "", options = {}, cancel = null } = {}) => {
+  if (!url) cancel?.();
+
+  /**
+   * Уровень кеширования
+   *
+   * @type {string}
+   */
   const value = "no-cache";
-  Object?.defineProperty(options?.headers, "cache-control", {
+
+  Object.defineProperty(options?.headers, "cache-control", {
     value,
     enumerable,
   });
@@ -286,7 +350,8 @@ const beforeFetch = ({ url, options, cancel }) => {
 };
 
 /**
- * Преводим в массив
+ * Колбек функция, запускаемая после запроса "data.json". В ней производится
+ * первый этап ремонта данных
  *
  * @type {Function}
  * @param {object} ctx - Контекстный объект
@@ -297,6 +362,13 @@ const afterFetch = (ctx) => {
   return ctx;
 };
 
+/**
+ * Данные, полученные из data.json
+ *
+ * @type {{
+ *   data: {};
+ * }}
+ */
 const { data } = useFetch(
   () => uri?.value?.constructor === String && `${uri?.value}/data.json`,
   {
@@ -307,7 +379,7 @@ const { data } = useFetch(
 ).json();
 
 /**
- * Рекурсивная функция рассчета массива страниц
+ * Рекурсивная функция преобразования древовидного объекта в массив страниц
  *
  * @type {Function}
  * @param {Array} pages - Элементы массива страниц
@@ -322,17 +394,20 @@ const getPages = (pages = []) =>
     pages,
   );
 
+const page = { id, ...Page };
+
 /**
- * Рекурсивная функция коррекции страниц
+ * Рекурсивная функция ремонта страниц
  *
  * @type {Function}
  * @param {Array} pages - Элементы массива страниц
  * @param {object} parent - Родительский объект
  */
-const fixContent = (pages = [], parent = {}) =>
-  pages?.forEach((value = {}) => {
-    fixer(page, value);
-    Object?.defineProperties(value, {
+const fixDeep = (pages = [], parent = null) => {
+  if (!pages?.length && !parent) pages?.push({});
+  return pages?.forEach((value = {}) => {
+    fix(page, value);
+    Object.defineProperties(value, {
       parent,
       siblings,
       branch,
@@ -344,9 +419,15 @@ const fixContent = (pages = [], parent = {}) =>
       urn,
       favicon,
     });
-    fixContent(value?.children, { value });
+    fixDeep(value?.children, { value });
   });
+};
 
+/**
+ * Главный реактивный объект данных
+ *
+ * @type {reactive}
+ */
 const $ = reactive(fixData());
 
 /**
@@ -356,32 +437,25 @@ const $ = reactive(fixData());
  */
 const get = () => getPages($?.content);
 
+/**
+ * Рассчетный массив страниц
+ *
+ * @type {computed}
+ */
 const pages = computed(() =>
   get()?.map((value = {}) => {
-    Object?.defineProperty(value, "pages", { get });
+    Object.defineProperty(value, "pages", { get });
     return value;
   }),
 );
 
-/**
- * @type {Function}
- * @param {Array} value - Исходный массив
- */
-const addProperties = (value = []) => {
-  value?.forEach((element) => {
-    Object?.defineProperty(element, "siblings", { value });
-    Object?.defineProperties(element, { index, prev, next });
-  });
-};
+export default defineStore("data", () => ({ $, uri, pages }));
 
-watch(data, (value) => {
+watch(data, (value = {}) => {
   Object.keys(value).forEach((key = "") => {
     $[key] = value?.[key];
   });
 });
-
-watch(() => $?.content, fixContent, { deep });
-watch(() => $?.css, addProperties, { deep });
-watch(() => $?.js, addProperties, { deep });
-
-export default defineStore("data", () => ({ $, uri, pages }));
+watch(() => $?.content, fixDeep, { deep });
+watch(() => $?.css, fixPlain, { deep });
+watch(() => $?.js, fixPlain, { deep });

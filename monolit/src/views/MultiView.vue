@@ -71,10 +71,21 @@ const router = useRouter();
  * @type {computed}
  */
 const the = computed(() => {
+  /**
+   * Позиция текущей страницы в массиве страниц
+   *
+   * @type {number}
+   */
   const index = pages?.value?.findIndex(
     ({ id = "" } = {}) => id === route?.name,
   );
+  /**
+   * Вычисленный текущий объект
+   *
+   * @type {object}
+   */
   const ret = pages?.value?.[index];
+
   return index ? ret : ret?.children?.[0];
 });
 
@@ -94,7 +105,8 @@ const siblings = computed(() =>
  */
 const promises = computed(() =>
   Object.fromEntries(
-    siblings?.value?.map(({ id = "" } = {}) => [id, Promise.withResolvers()]),
+    siblings?.value?.map(({ id = "" } = {}) => [id, Promise.withResolvers()]) ??
+      [],
   ),
 );
 
@@ -104,8 +116,8 @@ const promises = computed(() =>
  * @type {computed}
  */
 const templates = computed(() =>
-  Object?.fromEntries(
-    siblings?.value?.map((a = {}) => [a?.id, fncTemplate(a)]),
+  Object.fromEntries(
+    siblings?.value?.map((a = {}) => [a?.id, fncTemplate(a)]) ?? [],
   ),
 );
 
@@ -160,7 +172,7 @@ const callback = ([
 ] = []) => {
   if (!pause && isIntersecting && name !== the?.value?.id) {
     push = true;
-    router?.push({ name });
+    router.push({ name });
   }
 };
 
@@ -188,7 +200,7 @@ const zoomable = false;
  * @type {string}
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
-const selector = selectors?.map((el = '=""') => `a[href${el}]`)?.join();
+const selector = selectors?.map((el = "") => `a[href${el}]`)?.join();
 
 /**
  * Массив страниц, отображаемых на экране
@@ -217,8 +229,10 @@ const behavior = "instant";
  * @type {Function}
  */
 const all = async () => {
-  await Promise?.all(
-    Object?.values(promises?.value)?.map(({ promise = null } = {}) => promise),
+  await Promise.all(
+    Object.values(promises?.value ?? {})?.map(
+      ({ promise = null } = {}) => promise,
+    ),
   );
 };
 

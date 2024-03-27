@@ -80,39 +80,18 @@ v-head
           path(:d="mdi?.mdiClose")
 </template>
 <script setup>
-/**
- * Реактивный setTimeout
- *
- * @typedef {object} useTimeout
- * @property {computed} ready - Флаг готовности
- * @property {Function} start - Ф-ция запуска
- * @see {@link https://vueuse.org/shared/useTimeout/}
- */
 import { useTimeout } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-/**
- * Хранилище приложения монолит
- *
- * @typedef {object} strApp
- * @property {Function} fncTemplate - Функция, возвращающая сконструированный
- *   шаблон
- */
 import app from "@/stores/app";
-/**
- * Хранилище данных приложения монолит
- *
- * @typedef {object} strData
- * @property {computed} pages - Общий массив всех объектов страниц сайта
- * @property {ref} uri - Путь до data.json
- */
 import data from "@/stores/data";
 
-/** @type {strApp} */
+/** @type {{ fncTemplate: Function }} */
 const { fncTemplate } = app();
 
+/** @type {{ $: {} }} */
 const { $ } = data();
 
 /**
@@ -126,7 +105,7 @@ const navigator = computed(() => {
    *
    * @type {string}
    */
-  const id = crypto?.randomUUID();
+  const id = crypto.randomUUID();
 
   /**
    * Шаблон навбара
@@ -173,8 +152,8 @@ const navigator = computed(() => {
   return fncTemplate({ id, template, script, style, setup, scoped, path });
 });
 
-/** @type {strData} */
-const { pages, uri } = storeToRefs(data());
+/** @type {{ pages: computed }} */
+const { pages } = storeToRefs(data());
 
 /**
  * Expose more controls
@@ -231,7 +210,7 @@ const drawer = ref(false);
 const canonical = computed(
   () =>
     the?.value?.urn?.constructor === String &&
-    `${window?.location?.origin}/${the?.value?.urn}`,
+    `${window.location.origin}/${the?.value?.urn}`,
 );
 
 /**
@@ -240,7 +219,7 @@ const canonical = computed(
  *
  * @type {ref}
  */
-const favicon = crypto?.randomUUID();
+const favicon = crypto.randomUUID();
 
 /**
  * Ф-ция проверки ресурса
@@ -269,5 +248,4 @@ const theCSS = computed(() => $?.css?.filter(alive));
 router.beforeEach(() => {
   drawer.value = false;
 });
-uri.value = "";
 </script>
