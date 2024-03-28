@@ -96,7 +96,8 @@ const fncTemplate = ({
    * @type {Function}
    * @returns {string} Шаблон
    */
-  const getFile = () => `${cntScript}${cntTemplate}${cntStyle}`;
+  const getFile = () =>
+    Promise.resolve(`${cntScript}${cntTemplate}${cntStyle}`);
 
   /**
    * Процедура добавления стилей
@@ -115,7 +116,7 @@ const fncTemplate = ({
    * @returns {Promise} Промис
    */
   const loader = () =>
-    loadModule(`${["", "/"].includes(path) ? "" : "/"}${path}/view.vue`, {
+    loadModule(`${["", "~"].includes(path) ? "" : "/"}${path}/view.vue`, {
       moduleCache,
       getFile,
       addStyle,

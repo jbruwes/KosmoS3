@@ -147,7 +147,7 @@ const navigator = computed(() => {
    *
    * @type {string}
    */
-  const path = "/";
+  const path = "~";
 
   return fncTemplate({ id, template, script, style, setup, scoped, path });
 });
