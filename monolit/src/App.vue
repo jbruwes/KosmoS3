@@ -79,7 +79,7 @@ v-head
         svg.h-6.w-6
           path(:d="mdi?.mdiClose")
 </template>
-<script setup lang="ts">
+<script setup>
 import { useTimeout } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";

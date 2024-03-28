@@ -1,32 +1,43 @@
 import { fileURLToPath, URL } from "node:url";
 
 import { templateCompilerOptions } from "@tresjs/core";
+import { Extractor } from "@unocss/core";
 import extractorPug from "@unocss/extractor-pug";
 import UnoCSS from "@unocss/vite";
 // import legacy from "@vitejs/plugin-legacy";
 import vue from "@vitejs/plugin-vue";
 import { defineConfig } from "vite";
 
-import unocssConfig from "../uno.config";
-
 /**
  * Extractors are used to extract the usage of utilities from your source code
  *
- * @type {Array}
+ * @type {Extractor[]}
  * @see {@link https://unocss.dev/config/extractors} см. документацию
  */
-const extractors = [extractorPug()];
+const extractors: Array<Extractor> = [extractorPug()];
 
-// const modernPolyfills = ["es.promise.with-resolvers"];
+/**
+ * Массив с типами замещаемых полифилов
+ *
+ * @type {any[]}
+ */
+// const modernPolyfills: Array<any> = ["es.promise.with-resolvers"];
+
+/**
+ * Конфигурационный файл UnoCSS
+ *
+ * @type {string}
+ */
+const configFile: string = "../uno.config.js";
 
 /**
  * Массив плагинов для использования
  *
- * @type {Array}
+ * @type {any[]}
  */
-const plugins = [
+const plugins: Array<any> = [
   vue({ ...templateCompilerOptions }),
-  UnoCSS({ ...unocssConfig, extractors }),
+  UnoCSS({ configFile, extractors }),
   // legacy({ modernPolyfills }),
 ];
 
@@ -40,7 +51,7 @@ const plugins = [
  *
  * @type {object}
  */
-const alias = {
+const alias: object = {
   "@": fileURLToPath(new URL("./src", import.meta.url)),
   "~": fileURLToPath(new URL("..", import.meta.url)),
 };
@@ -50,7 +61,7 @@ const alias = {
  *
  * @type {object}
  */
-const resolve = { alias };
+const resolve: object = { alias };
 
 /**
  * Когда установлено в значение true, сборка будет генерировать manifest.json
@@ -60,7 +71,7 @@ const resolve = { alias };
  *
  * @type {boolean}
  */
-const manifest = true;
+const manifest: boolean = true;
 
 /**
  * По умолчанию, Vite будет очищать outDir при сборке build, если он внутри
@@ -72,7 +83,7 @@ const manifest = true;
  * @type {string}
  */
 
-const outDir = "../public/monolit";
+const outDir: string = "../public/monolit";
 
 /**
  * Разборка по вендорам. Allows the creation of custom shared common chunks.
@@ -85,7 +96,7 @@ const outDir = "../public/monolit";
  * @param {string} id - Путь до модуля
  * @returns {string} - Вендор
  */
-const manualChunks = (id = "") =>
+const manualChunks: Function = (id: string = ""): string =>
   id?.split("node_modules/")?.[1]?.split("/")?.[0] ?? "";
 
 /**
@@ -93,7 +104,7 @@ const manualChunks = (id = "") =>
  *
  * @type {object}
  */
-const output = { manualChunks };
+const output: object = { manualChunks };
 
 /**
  * Напрямую кастомизируйте основные настройки Rollup сборки. Это то же самое,
@@ -103,14 +114,14 @@ const output = { manualChunks };
  *
  * @type {object}
  */
-const rollupOptions = { output };
+const rollupOptions: object = { output };
 
 /**
  * Блок build
  *
  * @type {object}
  */
-const build = { manifest, outDir, rollupOptions };
+const build: object = { manifest, outDir, rollupOptions };
 
 /**
  * Определяет глоальную замену констант. Записи будут определяться как
@@ -118,7 +129,7 @@ const build = { manifest, outDir, rollupOptions };
  *
  * @type {object}
  */
-const define = {
+const define: object = {
   __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
 };
 

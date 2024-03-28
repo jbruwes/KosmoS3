@@ -19,7 +19,7 @@
       @vue:mounted="promises?.[a?.id]?.resolve"
     )
 </template>
-<script setup lang="ts">
+<script setup>
 import { vIntersectionObserver } from "@vueuse/components";
 import { useParentElement } from "@vueuse/core";
 import GLightbox from "glightbox";

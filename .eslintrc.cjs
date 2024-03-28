@@ -9,22 +9,13 @@ module.exports = {
   // Remove this if you have an higher level ESLint config file (it usually happens into a monorepos)
   root: true,
 
-  parserOptions: {
-    ecmaVersion: 2021, // Allows for the parsing of modern ECMAScript features
-  },
-
-  env: {
-    node: true,
-    browser: true,
-    "vue/setup-compiler-macros": true,
-  },
-
   // Rules order is important, please avoid shuffling them
   extends: [
     "eslint:recommended",
     "plugin:vue/vue3-recommended",
     "plugin:vue-pug/vue3-recommended",
-    "@vue/eslint-config-airbnb",
+    "@vue/eslint-config-airbnb-with-typescript",
+    "@vue/eslint-config-airbnb-with-typescript/allow-js-in-vue",
     "plugin:jsdoc/recommended",
     "plugin:sonarjs/recommended",
     "plugin:optimize-regex/recommended",
