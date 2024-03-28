@@ -19,9 +19,9 @@ const extractors: Array<Extractor> = [extractorPug()];
 /**
  * Массив с типами замещаемых полифилов
  *
- * @type {any[]}
+ * @type {string[]}
  */
-// const modernPolyfills: Array<any> = ["es.promise.with-resolvers"];
+// const modernPolyfills: Array<string> = ["es.promise.with-resolvers"];
 
 /**
  * Конфигурационный файл UnoCSS
