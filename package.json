@@ -44,7 +44,7 @@
     "@vueuse/core": "^10.9.0",
     "@vueuse/math": "^10.9.0",
     "@vueuse/motion": "^2.1.0",
-    "ace-builds": "^1.32.8",
+    "ace-builds": "^1.32.9",
     "autoprefixer": "^10.4.19",
     "daisyui": "^4.9.0",
     "glightbox": "^3.3.0",
