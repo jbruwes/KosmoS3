@@ -19,72 +19,65 @@
       @vue:mounted="promises?.[a?.id]?.resolve"
     )
 </template>
-<script setup>
+<script setup lang="ts">
 import { vIntersectionObserver } from "@vueuse/components";
 import { useParentElement } from "@vueuse/core";
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed, ComputedRef, Ref, ref, watch } from "vue";
+import {
+  RouteLocationNormalizedLoaded,
+  Router,
+  useRoute,
+  useRouter,
+} from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
-/**
- * Хранилище данных приложения монолит
- *
- * @typedef {object} strData
- * @property {computed} pages - Общий массив всех объектов страниц сайта
- */
 import data from "@/stores/data";
-/**
- * Хранилище приложения монолит
- *
- * @typedef {object} strApp
- * @property {Function} fncTemplate - Функция, возвращающая Promise на
- *   сконструированный шаблон
- */
 import monolit from "@/stores/monolit";
 
-/** @type {strApp} */
-const { fncTemplate } = monolit();
+/** @type {{ fncTemplate: Function }} */
+const { fncTemplate }: { fncTemplate: Function } = monolit();
 
-/** @type {strData} */
-const { pages } = storeToRefs(data());
+/** @type {{ pages: any[] }} */
+const { pages }: { pages: Ref<any[]> } = storeToRefs(data());
 
 /**
  * Текущий роут сайта
  *
- * @type {route}
+ * @type {RouteLocationNormalizedLoaded}
  */
-const route = useRoute();
+const route: RouteLocationNormalizedLoaded = useRoute();
 
 /**
  * Роутер сайта
  *
- * @type {router}
+ * @type {Router}
  */
-const router = useRouter();
+const router: Router = useRouter();
 
 /**
  * Вычисление текущего объекта с учетом переадресации корневого объекта страницы
  * на первый доступный объект страницы
  *
- * @type {computed}
+ * @type {ComputedRef<any>}
  */
-const the = computed(() => {
+const the: ComputedRef<any> = computed(() => {
   /**
    * Позиция текущей страницы в массиве страниц
    *
    * @type {number}
    */
-  const index = pages?.value?.findIndex(
+  const index: number = pages?.value?.findIndex(
     ({ id = "" } = {}) => id === route?.name,
   );
+
   /**
    * Вычисленный текущий объект
    *
-   * @type {object}
+   * @type {any}
    */
-  const ret = pages?.value?.[index];
+  const ret: any = pages?.value?.[index];
 
   return index ? ret : ret?.children?.[0];
 });
@@ -92,18 +85,18 @@ const the = computed(() => {
 /**
  * Вычисление массива видимых объектов страниц с одинаковым предком
  *
- * @type {computed}
+ * @type {ComputedRef<any[]>}
  */
-const siblings = computed(() =>
+const siblings: ComputedRef<any[]> = computed(() =>
   the?.value?.siblings?.filter(({ visible = true } = {}) => visible),
 );
 
 /**
  * Вычисление идентифицированного объекта промисов
  *
- * @type {computed}
+ * @type {ComputedRef<any[]>}
  */
-const promises = computed(() =>
+const promises: ComputedRef<any[]> = computed(() =>
   Object.fromEntries(
     siblings?.value?.map(({ id = "" } = {}) => [id, Promise.withResolvers()]) ??
       [],
@@ -113,11 +106,11 @@ const promises = computed(() =>
 /**
  * Вычисление массива загруженных шаблонов
  *
- * @type {computed}
+ * @type {ComputedRef<object[]>}
  */
-const templates = computed(() =>
+const templates: ComputedRef<object[]> = computed(() =>
   Object.fromEntries(
-    siblings?.value?.map((a = {}) => [a?.id, fncTemplate(a)]) ?? [],
+    siblings?.value?.map((a = { id: "" }) => [a?.id, fncTemplate(a)]) ?? [],
   ),
 );
 
@@ -127,7 +120,7 @@ const templates = computed(() =>
  * @type {string}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/rootMargin} см. документацию
  */
-const rootMargin = "-1% 0px -99%";
+const rootMargin: string = "-1% 0px -99%";
 
 /**
  * Процент площади объекта, который должен попасть в область видимости
@@ -135,41 +128,45 @@ const rootMargin = "-1% 0px -99%";
  * @type {number}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/thresholds} см. документацию
  */
-const threshold = 0;
+const threshold: number = 0;
 
 /**
  * Родительский элемент представления
  *
- * @type {ref}
+ * @type {Ref<HTMLElement | SVGElement | null | undefined>}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/root} см. документацию
  */
-const root = useParentElement();
+const root: Ref<HTMLElement | SVGElement | null | undefined> =
+  useParentElement();
 
 /**
  * Флаг постановки проверки пересечения страницы с облатью видимости на паузу
  *
  * @type {boolean}
  */
-let pause = false;
+let pause: boolean = false;
 
 /**
  * Флаг условия изменения роута
  *
  * @type {boolean}
  */
-let push = false;
+let push: boolean = false;
 
 /**
  * Процедура обновления роутера, если страница появилась в области видимости
  *
- * @type {Function}
+ * @type {IntersectionObserverCallback}
  * @param {Array} entries - Массив объектов, описывающих пересечения
- * @param {object} entries."0" - Первый и единственный объект, описывающий
- *   пересечение
+ * @param {IntersectionObserverEntry} entries."0" - Первый и единственный
+ *   объект, описывающий пересечение
  */
-const callback = ([
-  { isIntersecting = false, target: { id: name = "" } = {} } = {},
-] = []) => {
+const callback: IntersectionObserverCallback = ([
+  {
+    isIntersecting = false,
+    target: { id: name = "" },
+  },
+]: IntersectionObserverEntry[]) => {
   if (!pause && isIntersecting && name !== the?.value?.id) {
     push = true;
     router.push({ name });
@@ -182,7 +179,7 @@ const callback = ([
  * @type {boolean}
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
-const loop = true;
+const loop: boolean = true;
 
 /**
  * Enable or disable zoomable images you can also use data-zoomable="false" on
@@ -191,7 +188,7 @@ const loop = true;
  * @type {boolean}
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
-const zoomable = false;
+const zoomable: boolean = false;
 
 /**
  * Name of the selector for example '.glightbox' or 'data-glightbox' or
@@ -200,35 +197,35 @@ const zoomable = false;
  * @type {string}
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
-const selector = selectors?.map((el = "") => `a[href${el}]`)?.join();
+const selector: string = selectors?.map((el = "") => `a[href${el}]`)?.join();
 
 /**
  * Массив страниц, отображаемых на экране
  *
- * @type {ref}
+ * @type {Ref<any[]>}
  */
-const refs = ref([]);
+const refs: Ref<any[]> = ref([]);
 
 /**
  * Немедленное срабатывание смотрителя
  *
  * @type {boolean}
  */
-const immediate = true;
+const immediate: boolean = true;
 
 /**
  * Быстрый скролл
  *
  * @type {string}
  */
-const behavior = "instant";
+const behavior: string = "instant";
 
 /**
  * Процедура ожидания загрузки страниц
  *
  * @type {Function}
  */
-const all = async () => {
+const all: Function = async () => {
   await Promise.all(
     Object.values(promises?.value ?? {})?.map(
       ({ promise = null } = {}) => promise,
