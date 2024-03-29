@@ -433,7 +433,7 @@ const $ = reactive(fixData());
 /**
  * Функция для вызова рассчета массива страниц
  *
- * @returns {Array} - Страницы
+ * @returns {object[]} - Страницы
  */
 const get = () => getPages($?.content);
 

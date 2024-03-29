@@ -15,55 +15,48 @@
 <script setup lang="ts">
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed, ComputedRef, Ref } from "vue";
+import { RouteLocationNormalizedLoaded, useRoute } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
 import data from "@/stores/data";
 import monolit from "@/stores/monolit";
 
 /** @type {{ fncTemplate: Function }} */
-const { fncTemplate } = monolit();
+const { fncTemplate }: { fncTemplate: Function } = monolit();
 
-/** @type {{ pages: computed }} */
-const { pages } = storeToRefs(data());
+/** @type {{ pages: any[] }} */
+const { pages }: { pages: Ref<any[]> } = storeToRefs(data());
 
 /**
  * Текущий роут сайта
  *
- * @type {route}
+ * @type {RouteLocationNormalizedLoaded}
  */
-const route = useRoute();
-
-/**
- * Роутер сайта
- *
- * @type {router}
- */
-const router = useRouter();
+const route: RouteLocationNormalizedLoaded = useRoute();
 
 /**
  * Вычисление переадресации корневого объекта страницы на первый доступный
  * объект страницы
  *
- * @type {computed}
+ * @type {ComputedRef<object>}
  */
-const the = computed(() => {
+const the: ComputedRef<object> = computed(() => {
   /**
    * Позиция текущей страницы в массиве страниц
    *
    * @type {number}
    */
-  const index = pages?.value?.findIndex(
+  const index: number = pages?.value?.findIndex(
     ({ id = "" } = {}) => id === route.name,
   );
 
   /**
    * Вычисленный текущий объект
    *
-   * @type {object}
+   * @type {any}
    */
-  const ret = pages?.value?.[index];
+  const ret: any = pages?.value?.[index];
 
   return index ? ret : ret?.children?.[0];
 });
@@ -71,9 +64,9 @@ const the = computed(() => {
 /**
  * Вычисление объекта загруженных шаблонов
  *
- * @type {computed}
+ * @type {ComputedRef<object>}
  */
-const template = computed(() => fncTemplate(the?.value));
+const template: ComputedRef<object> = computed(() => fncTemplate(the?.value));
 
 /**
  * Loop slides on end
@@ -81,7 +74,7 @@ const template = computed(() => fncTemplate(the?.value));
  * @type {boolean}
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
-const loop = true;
+const loop: boolean = true;
 
 /**
  * Enable or disable zoomable images you can also use data-zoomable="false" on
@@ -90,7 +83,7 @@ const loop = true;
  * @type {boolean}
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
-const zoomable = false;
+const zoomable: boolean = false;
 
 /**
  * Name of the selector for example '.glightbox' or 'data-glightbox' or
@@ -99,5 +92,5 @@ const zoomable = false;
  * @type {string}
  * @see {@link https://github.com/biati-digital/glightbox} см. документацию
  */
-const selector = selectors?.map((el = "") => `a[href${el}]`)?.join();
+const selector: string = selectors?.map((el = "") => `a[href${el}]`)?.join();
 </script>
