@@ -4,14 +4,9 @@ const path = require("node:path");
 const createAliasSetting = require("@vue/eslint-config-airbnb/createAliasSetting");
 
 module.exports = {
-  // https://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy
-  // This option interrupts the configuration hierarchy at this file
-  // Remove this if you have an higher level ESLint config file (it usually happens into a monorepos)
-  root: true,
-
   // Rules order is important, please avoid shuffling them
   extends: [
-    "eslint:recommended",
+    // "eslint:recommended",
     "plugin:vue/vue3-recommended",
     "plugin:vue-pug/vue3-recommended",
     "@vue/eslint-config-airbnb-with-typescript",
@@ -26,16 +21,7 @@ module.exports = {
   plugins: ["simple-import-sort"],
 
   globals: {
-    ga: "readonly", // Google Analytics
-    cordova: "readonly",
-    __statics: "readonly",
-    __QUASAR_SSR__: "readonly",
-    __QUASAR_SSR_SERVER__: "readonly",
-    __QUASAR_SSR_CLIENT__: "readonly",
-    __QUASAR_SSR_PWA__: "readonly",
-    process: "readonly",
-    Capacitor: "readonly",
-    chrome: "readonly",
+    // IPage: "readonly",
   },
 
   // add your custom rules here
