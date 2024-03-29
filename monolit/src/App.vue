@@ -85,11 +85,11 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import app from "@/stores/app";
 import data from "@/stores/data";
+import monolit from "@/stores/monolit";
 
 /** @type {{ fncTemplate: Function }} */
-const { fncTemplate } = app();
+const { fncTemplate } = monolit();
 
 /** @type {{ $: {} }} */
 const { $ } = data();

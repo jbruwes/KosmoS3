@@ -12,18 +12,18 @@
       @vue:mounted="GLightbox({ loop, zoomable, selector })"
     )
 </template>
-<script setup>
+<script setup lang="ts">
 import GLightbox from "glightbox";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
-import app from "@/stores/app";
 import data from "@/stores/data";
+import monolit from "@/stores/monolit";
 
 /** @type {{ fncTemplate: Function }} */
-const { fncTemplate } = app();
+const { fncTemplate } = monolit();
 
 /** @type {{ pages: computed }} */
 const { pages } = storeToRefs(data());

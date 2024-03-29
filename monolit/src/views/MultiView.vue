@@ -29,23 +29,23 @@ import { useRoute, useRouter } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
 /**
- * Хранилище приложения монолит
- *
- * @typedef {object} strApp
- * @property {Function} fncTemplate - Функция, возвращающая Promise на
- *   сконструированный шаблон
- */
-import app from "@/stores/app";
-/**
  * Хранилище данных приложения монолит
  *
  * @typedef {object} strData
  * @property {computed} pages - Общий массив всех объектов страниц сайта
  */
 import data from "@/stores/data";
+/**
+ * Хранилище приложения монолит
+ *
+ * @typedef {object} strApp
+ * @property {Function} fncTemplate - Функция, возвращающая Promise на
+ *   сконструированный шаблон
+ */
+import monolit from "@/stores/monolit";
 
 /** @type {strApp} */
-const { fncTemplate } = app();
+const { fncTemplate } = monolit();
 
 /** @type {strData} */
 const { pages } = storeToRefs(data());

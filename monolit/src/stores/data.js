@@ -11,7 +11,7 @@ import Settings from "~/src/assets/settings.json";
 /**
  * Путь, по которому происходит загрузка data.json
  *
- * @type {ref}
+ * @type {string}
  */
 const uri = ref();
 
@@ -426,7 +426,7 @@ const fixDeep = (pages = [], parent = null) => {
 /**
  * Главный реактивный объект данных
  *
- * @type {reactive}
+ * @type {object}
  */
 const $ = reactive(fixData());
 
@@ -440,7 +440,7 @@ const get = () => getPages($?.content);
 /**
  * Рассчетный массив страниц
  *
- * @type {computed}
+ * @type {Array}
  */
 const pages = computed(() =>
   get()?.map((value = {}) => {

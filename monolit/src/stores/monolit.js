@@ -126,4 +126,4 @@ const fncTemplate = ({
   return defineAsyncComponent({ loader, delay });
 };
 
-export default defineStore("app", () => ({ fncTemplate }));
+export default defineStore("monolit", () => ({ fncTemplate }));
