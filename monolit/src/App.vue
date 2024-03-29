@@ -79,135 +79,143 @@ v-head
         svg.h-6.w-6
           path(:d="mdi?.mdiClose")
 </template>
-<script setup>
+<script setup lang="ts">
 import { useTimeout } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed, ComputedRef, Ref, ref } from "vue";
+import {
+  RouteLocationNormalizedLoaded,
+  Router,
+  useRoute,
+  useRouter,
+} from "vue-router";
 
 import data from "@/stores/data";
 import monolit from "@/stores/monolit";
 
 /** @type {{ fncTemplate: Function }} */
-const { fncTemplate } = monolit();
+const { fncTemplate }: { fncTemplate: Function } = monolit();
 
-/** @type {{ $: {} }} */
-const { $ } = data();
+/** @type {{ $: any }} */
+const { $ }: { $: any } = data();
 
 /**
  * Вычисление навбара
  *
  * @type {computed}
  */
-const navigator = computed(() => {
+const navigator: ComputedRef<object> = computed(() => {
   /**
    * Id навбара
    *
    * @type {string}
    */
-  const id = crypto.randomUUID();
+  const id: string = crypto.randomUUID();
 
   /**
    * Шаблон навбара
    *
    * @type {string}
    */
-  const template = $?.navbar?.template;
+  const template: string = $?.navbar?.template;
 
   /**
    * Срипты навбара
    *
    * @type {string}
    */
-  const script = $?.navbar?.script;
+  const script: string = $?.navbar?.script;
 
   /**
    * Стили навбара
    *
    * @type {string}
    */
-  const style = $?.navbar?.style;
+  const style: string = $?.navbar?.style;
 
   /**
    * Тип скриптов навбара
    *
    * @type {boolean}
    */
-  const setup = $?.navbar?.setup;
+  const setup: boolean = $?.navbar?.setup;
 
   /**
    * Тип стилей навбара
    *
    * @type {boolean}
    */
-  const scoped = $?.navbar?.scoped;
+  const scoped: boolean = $?.navbar?.scoped;
 
   /**
    * Путь готового шаблона навбара
    *
    * @type {string}
    */
-  const path = "~";
+  const path: string = "~";
 
   return fncTemplate({ id, template, script, style, setup, scoped, path });
 });
 
-/** @type {{ pages: computed }} */
-const { pages } = storeToRefs(data());
+/** @type {{ pages: any[] }} */
+const { pages }: { pages: Ref<any[]> } = storeToRefs(data());
 
 /**
  * Expose more controls
  *
  * @type {boolean}
  */
-const controls = true;
+const controls: boolean = true;
 
-/** @type {useTimeout} */
-const { ready, start } = useTimeout(1000, { controls });
+/** @type {{ ready: ComputedRef<boolean>; start: Function }} */
+const { ready, start }: { ready: ComputedRef<boolean>; start: Function } =
+  useTimeout(1000, { controls });
 
 /**
  * Текущий роут сайта
  *
- * @type {route}
+ * @type {RouteLocationNormalizedLoaded}
  */
-const route = useRoute();
+const route: RouteLocationNormalizedLoaded = useRoute();
 
 /**
  * Роутер сайта
  *
- * @type {router}
+ * @type {Router}
  */
-const router = useRouter();
+const router: Router = useRouter();
 
 /**
  * Вычисление шаблона корневой страницы
  *
- * @type {computed}
+ * @type {ComputedRef<object>}
  */
-const root = computed(() => fncTemplate(pages?.value?.[0]));
+const root: ComputedRef<object> = computed(() =>
+  fncTemplate(pages?.value?.[0]),
+);
 
 /**
  * Поиск текущего объекта страницы
  *
- * @type {computed}
+ * @type {ComputedRef<any>}
  */
-const the = computed(() =>
+const the: ComputedRef<any> = computed(() =>
   pages?.value?.find(({ id = "" } = {}) => id === route?.name),
 );
 
 /**
  * Ссылка на переключатель панели
  *
- * @type {ref}
+ * @type {Ref<boolean>}
  */
-const drawer = ref(false);
+const drawer: Ref<boolean> = ref(false);
 
 /**
  * Вычисление канонического пути
  *
- * @type {computed}
+ * @type {ComputedRef<string | false>}
  */
-const canonical = computed(
+const canonical: ComputedRef<string | false> = computed(
   () =>
     the?.value?.urn?.constructor === String &&
     `${window.location.origin}/${the?.value?.urn}`,
@@ -217,33 +225,40 @@ const canonical = computed(
  * Уникальный ключ для favicon. Иначе иконка динамически не обновляется в chrome
  * при смене страницы
  *
- * @type {ref}
+ * @type {string}
  */
-const favicon = crypto.randomUUID();
+const favicon: string = crypto.randomUUID();
 
 /**
  * Ф-ция проверки ресурса
  *
- * @param {object} resource - Объект ресурса
+ * @type {Function}
+ * @param {any} resource - Объект ресурса
  * @param {boolean} resource.visible - Признак использования
  * @param {string} resource.url - Ссылка на ресурс
  * @returns {boolean} - Флаг проверки ресурса
  */
-const alive = ({ visible = true, url = "" } = {}) => visible && url;
+const alive: Function = ({
+  visible = true,
+  url = "",
+}: {
+  visible: boolean;
+  url: string;
+}): boolean => !!(visible && url);
 
 /**
  * Фильтр глобальных скриптов по видимости
  *
- * @type {computed}
+ * @type {ComputedRef<any[]>}
  */
-const theJS = computed(() => $?.js?.filter(alive));
+const theJS: ComputedRef<any[]> = computed(() => $?.js?.filter(alive));
 
 /**
  * Фильтр глобальных стилей по видимости
  *
- * @type {computed}
+ * @type {ComputedRef<any[]>}
  */
-const theCSS = computed(() => $?.css?.filter(alive));
+const theCSS: ComputedRef<any[]> = computed(() => $?.css?.filter(alive));
 
 router.beforeEach(() => {
   drawer.value = false;
