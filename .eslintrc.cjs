@@ -6,7 +6,6 @@ const createAliasSetting = require("@vue/eslint-config-airbnb/createAliasSetting
 module.exports = {
   // Rules order is important, please avoid shuffling them
   extends: [
-    // "eslint:recommended",
     "plugin:vue/vue3-recommended",
     "plugin:vue-pug/vue3-recommended",
     "@vue/eslint-config-airbnb-with-typescript",
@@ -19,10 +18,6 @@ module.exports = {
   ],
 
   plugins: ["simple-import-sort"],
-
-  globals: {
-    // IPage: "readonly",
-  },
 
   // add your custom rules here
   rules: {

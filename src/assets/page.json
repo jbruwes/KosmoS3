@@ -15,7 +15,6 @@
   "theme": { "type": "String", "value": "light" },
   "title": { "type": "String", "value": null },
   "visible": { "type": "Boolean", "value": true },
-  "edit": { "type": "Boolean", "value": false },
   "type": { "type": "String", "value": "website" },
   "alt": { "type": "String", "value": null },
   "full": { "type": "Boolean", "value": true },
