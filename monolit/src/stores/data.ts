@@ -21,11 +21,35 @@ import Page from "~/src/assets/page.json";
 import Resource from "~/src/assets/resource.json";
 import Settings from "~/src/assets/settings.json";
 
+/**
+ * @typedef {object} IMap
+ * @property {string | undefined} [key: string]
+ */
+interface IMap {
+  [key: string]: string | undefined;
+}
+
+/**
+ * @typedef {object} IDefine
+ * @property {string} type
+ * @property {boolean | string | number | object | null} value
+ */
 interface IDefine {
   type: string;
   value: boolean | string | number | object | null;
 }
 
+/**
+ * @typedef {object} INavbar
+ * @property {string | null} theme
+ * @property {string[]} classes
+ * @property {string[]} scrollClasses
+ * @property {string} template
+ * @property {string} script
+ * @property {string} style
+ * @property {boolean} setup
+ * @property {boolean} scoped
+ */
 interface INavbar {
   theme: string | null;
   classes: string[];
@@ -37,7 +61,32 @@ interface INavbar {
   scoped: boolean;
 }
 
-interface IPageNative {
+/**
+ * @typedef {object} IPageEnumerable
+ * @property {string} id
+ * @property {string | null} changefreq
+ * @property {IPage[]} children
+ * @property {string | null} description
+ * @property {string | null} icon
+ * @property {string | null} image
+ * @property {string[]} keywords
+ * @property {string | null} label
+ * @property {string | null} lastmod
+ * @property {string | null} loc
+ * @property {number | null} priority
+ * @property {string} template
+ * @property {string} script
+ * @property {string} style
+ * @property {string | null} theme
+ * @property {string | null} title
+ * @property {boolean} visible
+ * @property {string | null} type
+ * @property {string | null} alt
+ * @property {boolean} full
+ * @property {boolean} setup
+ * @property {boolean} scoped
+ */
+interface IPageEnumerable {
   id: string;
   changefreq: string | null;
   children: IPage[];
@@ -62,32 +111,70 @@ interface IPageNative {
   scoped: boolean;
 }
 
-interface IPageNativePrototype {
-  id: IDefine;
-  changefreq: IDefine;
-  children: IDefine;
-  description: IDefine;
-  icon: IDefine;
-  image: IDefine;
-  keywords: IDefine;
-  label: IDefine;
-  lastmod: IDefine;
-  loc: IDefine;
-  priority: IDefine;
-  template: IDefine;
-  script: IDefine;
-  style: IDefine;
-  theme: IDefine;
-  title: IDefine;
-  visible: IDefine;
-  type: IDefine;
-  alt: IDefine;
-  full: IDefine;
-  setup: IDefine;
-  scoped: IDefine;
-}
+/**
+ * @typedef {object} IPageEnumerable
+ * @property {IDefine} id
+ * @property {IDefine} changefreq
+ * @property {IDefine} children
+ * @property {IDefine} description
+ * @property {IDefine} icon
+ * @property {IDefine} image
+ * @property {IDefine} keywords
+ * @property {IDefine} label
+ * @property {IDefine} lastmod
+ * @property {IDefine} loc
+ * @property {IDefine} priority
+ * @property {IDefine} template
+ * @property {IDefine} script
+ * @property {IDefine} style
+ * @property {IDefine} theme
+ * @property {IDefine} title
+ * @property {IDefine} visible
+ * @property {IDefine} type
+ * @property {IDefine} alt
+ * @property {IDefine} full
+ * @property {IDefine} setup
+ * @property {IDefine} scoped
+ */
+type TPageEnumerable = Record<keyof IPageEnumerable, IDefine>;
 
-interface IPageComputed {
+/**
+ * @typedef {object} IPage
+ * @property {string} id
+ * @property {string | null} changefreq
+ * @property {IPage[]} children
+ * @property {string | null} description
+ * @property {string | null} icon
+ * @property {string | null} image
+ * @property {string[]} keywords
+ * @property {string | null} label
+ * @property {string | null} lastmod
+ * @property {string | null} loc
+ * @property {number | null} priority
+ * @property {string} template
+ * @property {string} script
+ * @property {string} style
+ * @property {string | null} theme
+ * @property {string | null} title
+ * @property {boolean} visible
+ * @property {string | null} type
+ * @property {string | null} alt
+ * @property {boolean} full
+ * @property {boolean} setup
+ * @property {boolean} scoped
+ * @property {IPage | null} parent
+ * @property {IPage[]} siblings
+ * @property {IPage[]} branch
+ * @property {string} path
+ * @property {number} index
+ * @property {IPage | null} prev
+ * @property {IPage | null} next
+ * @property {string | null} name
+ * @property {string} urn
+ * @property {string | null} favicon
+ * @property {boolean} [edit]
+ */
+export interface IPage extends IPageEnumerable {
   parent: IPage | null;
   siblings: IPage[];
   branch: IPage[];
@@ -95,18 +182,20 @@ interface IPageComputed {
   index: number;
   prev: IPage | null;
   next: IPage | null;
-  name: string;
+  name: string | null;
   urn: string;
   favicon: string | null;
   edit?: boolean;
 }
 
-interface IPage extends IPageNative, IPageComputed {}
-
-interface IMap {
-  [key: string]: string | undefined;
-}
-
+/**
+ * @typedef {object} ISettings
+ * @property {string | null} yandex
+ * @property {string | null} metrika
+ * @property {string | null} google
+ * @property {string | null} analytics
+ * @property {boolean} landing
+ */
 interface ISettings {
   yandex: string | null;
   metrika: string | null;
@@ -115,18 +204,36 @@ interface ISettings {
   landing: boolean;
 }
 
+/**
+ * @typedef {object} IResource
+ * @property {string} id
+ * @property {string} url
+ * @property {boolean} visible
+ */
 interface IResource {
   id: string;
   url: string;
   visible: boolean;
 }
 
-interface IResourcePrototype {
-  id: IDefine;
-  url: IDefine;
-  visible: IDefine;
-}
+/**
+ * @typedef {object} TResource
+ * @property {IDefine} id
+ * @property {IDefine} url
+ * @property {IDefine} visible
+ */
+type TResource = Record<keyof IResource, IDefine>;
 
+/**
+ * @typedef {object} IData
+ * @property {INavbar} navbar
+ * @property {IPage[]} content
+ * @property {ISettings} settings
+ * @property {string} style
+ * @property {string} script
+ * @property {IResource[]} css
+ * @property {IResource[]} js
+ */
 interface IData {
   navbar: INavbar;
   content: IPage[];
@@ -341,10 +448,10 @@ const name: PropertyDescriptor = {
   /**
    * Геттер названия страницы
    *
-   * @returns {string} - Название страницы
+   * @returns {string | null} - Название страницы
    */
-  get(): string {
-    return (<IPage>this).title ?? (<IPage>this).label ?? "";
+  get(): string | null {
+    return (<IPage>this).title ?? (<IPage>this).label ?? null;
   },
 };
 
@@ -396,9 +503,9 @@ const id: IDefine = {
 /**
  * Прототип ресурса для js & css
  *
- * @type {IResourcePrototype}
+ * @type {TResource}
  */
-const resource: IResourcePrototype = {
+const resource: TResource = {
   id,
   ...Resource,
 };
@@ -548,9 +655,9 @@ const getPages: Function = (pages: IPage[]): IPage[] =>
 /**
  * Прототип страницы
  *
- * @type {IPageNativePrototype}
+ * @type {TPageEnumerable}
  */
-const page: IPageNativePrototype = { id, ...Page };
+const page: TPageEnumerable = { id, ...Page };
 
 /**
  * Рекурсивная функция ремонта страниц
