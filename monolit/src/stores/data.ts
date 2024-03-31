@@ -21,35 +21,35 @@ import Page from "~/src/assets/page.json";
 import Resource from "~/src/assets/resource.json";
 import Settings from "~/src/assets/settings.json";
 
-/**
- * @typedef {object} IMap
- * @property {string | undefined} [key: string]
- */
+// /**
+//  * @typedef {object} IMap
+//  * @property {string | undefined} [key: string]
+//  */
 interface IMap {
   [key: string]: string | undefined;
 }
 
-/**
- * @typedef {object} IDefine
- * @property {string} type
- * @property {boolean | string | number | object | null} value
- */
+// /**
+//  * @typedef {object} IDefine
+//  * @property {string} type
+//  * @property {boolean | string | number | object | null} value
+//  */
 interface IDefine {
   type: string;
   value: boolean | string | number | object | null;
 }
 
-/**
- * @typedef {object} INavbar
- * @property {string | null} theme
- * @property {string[]} classes
- * @property {string[]} scrollClasses
- * @property {string} template
- * @property {string} script
- * @property {string} style
- * @property {boolean} setup
- * @property {boolean} scoped
- */
+// /**
+//  * @typedef {object} INavbar
+//  * @property {string | null} theme
+//  * @property {string[]} classes
+//  * @property {string[]} scrollClasses
+//  * @property {string} template
+//  * @property {string} script
+//  * @property {string} style
+//  * @property {boolean} setup
+//  * @property {boolean} scoped
+//  */
 interface INavbar {
   theme: string | null;
   classes: string[];
@@ -61,31 +61,31 @@ interface INavbar {
   scoped: boolean;
 }
 
-/**
- * @typedef {object} IPageEnumerable
- * @property {string} id
- * @property {string | null} changefreq
- * @property {IPage[]} children
- * @property {string | null} description
- * @property {string | null} icon
- * @property {string | null} image
- * @property {string[]} keywords
- * @property {string | null} label
- * @property {string | null} lastmod
- * @property {string | null} loc
- * @property {number | null} priority
- * @property {string} template
- * @property {string} script
- * @property {string} style
- * @property {string | null} theme
- * @property {string | null} title
- * @property {boolean} visible
- * @property {string | null} type
- * @property {string | null} alt
- * @property {boolean} full
- * @property {boolean} setup
- * @property {boolean} scoped
- */
+// /**
+//  * @typedef {object} IPageEnumerable
+//  * @property {string} id
+//  * @property {string | null} changefreq
+//  * @property {IPage[]} children
+//  * @property {string | null} description
+//  * @property {string | null} icon
+//  * @property {string | null} image
+//  * @property {string[]} keywords
+//  * @property {string | null} label
+//  * @property {string | null} lastmod
+//  * @property {string | null} loc
+//  * @property {number | null} priority
+//  * @property {string} template
+//  * @property {string} script
+//  * @property {string} style
+//  * @property {string | null} theme
+//  * @property {string | null} title
+//  * @property {boolean} visible
+//  * @property {string | null} type
+//  * @property {string | null} alt
+//  * @property {boolean} full
+//  * @property {boolean} setup
+//  * @property {boolean} scoped
+//  */
 interface IPageEnumerable {
   id: string;
   changefreq: string | null;
@@ -111,69 +111,69 @@ interface IPageEnumerable {
   scoped: boolean;
 }
 
-/**
- * @typedef {object} IPageEnumerable
- * @property {IDefine} id
- * @property {IDefine} changefreq
- * @property {IDefine} children
- * @property {IDefine} description
- * @property {IDefine} icon
- * @property {IDefine} image
- * @property {IDefine} keywords
- * @property {IDefine} label
- * @property {IDefine} lastmod
- * @property {IDefine} loc
- * @property {IDefine} priority
- * @property {IDefine} template
- * @property {IDefine} script
- * @property {IDefine} style
- * @property {IDefine} theme
- * @property {IDefine} title
- * @property {IDefine} visible
- * @property {IDefine} type
- * @property {IDefine} alt
- * @property {IDefine} full
- * @property {IDefine} setup
- * @property {IDefine} scoped
- */
+// /**
+//  * @typedef {object} IPageEnumerable
+//  * @property {IDefine} id
+//  * @property {IDefine} changefreq
+//  * @property {IDefine} children
+//  * @property {IDefine} description
+//  * @property {IDefine} icon
+//  * @property {IDefine} image
+//  * @property {IDefine} keywords
+//  * @property {IDefine} label
+//  * @property {IDefine} lastmod
+//  * @property {IDefine} loc
+//  * @property {IDefine} priority
+//  * @property {IDefine} template
+//  * @property {IDefine} script
+//  * @property {IDefine} style
+//  * @property {IDefine} theme
+//  * @property {IDefine} title
+//  * @property {IDefine} visible
+//  * @property {IDefine} type
+//  * @property {IDefine} alt
+//  * @property {IDefine} full
+//  * @property {IDefine} setup
+//  * @property {IDefine} scoped
+//  */
 type TPageEnumerable = Record<keyof IPageEnumerable, IDefine>;
 
-/**
- * @typedef {object} IPage
- * @property {string} id
- * @property {string | null} changefreq
- * @property {IPage[]} children
- * @property {string | null} description
- * @property {string | null} icon
- * @property {string | null} image
- * @property {string[]} keywords
- * @property {string | null} label
- * @property {string | null} lastmod
- * @property {string | null} loc
- * @property {number | null} priority
- * @property {string} template
- * @property {string} script
- * @property {string} style
- * @property {string | null} theme
- * @property {string | null} title
- * @property {boolean} visible
- * @property {string | null} type
- * @property {string | null} alt
- * @property {boolean} full
- * @property {boolean} setup
- * @property {boolean} scoped
- * @property {IPage | null} parent
- * @property {IPage[]} siblings
- * @property {IPage[]} branch
- * @property {string} path
- * @property {number} index
- * @property {IPage | null} prev
- * @property {IPage | null} next
- * @property {string | null} name
- * @property {string} urn
- * @property {string | null} favicon
- * @property {boolean} [edit]
- */
+// /**
+//  * @typedef {object} IPage
+//  * @property {string} id
+//  * @property {string | null} changefreq
+//  * @property {IPage[]} children
+//  * @property {string | null} description
+//  * @property {string | null} icon
+//  * @property {string | null} image
+//  * @property {string[]} keywords
+//  * @property {string | null} label
+//  * @property {string | null} lastmod
+//  * @property {string | null} loc
+//  * @property {number | null} priority
+//  * @property {string} template
+//  * @property {string} script
+//  * @property {string} style
+//  * @property {string | null} theme
+//  * @property {string | null} title
+//  * @property {boolean} visible
+//  * @property {string | null} type
+//  * @property {string | null} alt
+//  * @property {boolean} full
+//  * @property {boolean} setup
+//  * @property {boolean} scoped
+//  * @property {IPage | null} parent
+//  * @property {IPage[]} siblings
+//  * @property {IPage[]} branch
+//  * @property {string} path
+//  * @property {number} index
+//  * @property {IPage | null} prev
+//  * @property {IPage | null} next
+//  * @property {string | null} name
+//  * @property {string} urn
+//  * @property {string | null} favicon
+//  * @property {boolean} [edit]
+//  */
 export interface IPage extends IPageEnumerable {
   parent: IPage | null;
   siblings: IPage[];
@@ -188,14 +188,14 @@ export interface IPage extends IPageEnumerable {
   edit?: boolean;
 }
 
-/**
- * @typedef {object} ISettings
- * @property {string | null} yandex
- * @property {string | null} metrika
- * @property {string | null} google
- * @property {string | null} analytics
- * @property {boolean} landing
- */
+// /**
+//  * @typedef {object} ISettings
+//  * @property {string | null} yandex
+//  * @property {string | null} metrika
+//  * @property {string | null} google
+//  * @property {string | null} analytics
+//  * @property {boolean} landing
+//  */
 interface ISettings {
   yandex: string | null;
   metrika: string | null;
@@ -204,36 +204,36 @@ interface ISettings {
   landing: boolean;
 }
 
-/**
- * @typedef {object} IResource
- * @property {string} id
- * @property {string} url
- * @property {boolean} visible
- */
+// /**
+//  * @typedef {object} IResource
+//  * @property {string} id
+//  * @property {string} url
+//  * @property {boolean} visible
+//  */
 interface IResource {
   id: string;
   url: string;
   visible: boolean;
 }
 
-/**
- * @typedef {object} TResource
- * @property {IDefine} id
- * @property {IDefine} url
- * @property {IDefine} visible
- */
+// /**
+//  * @typedef {object} TResource
+//  * @property {IDefine} id
+//  * @property {IDefine} url
+//  * @property {IDefine} visible
+//  */
 type TResource = Record<keyof IResource, IDefine>;
 
-/**
- * @typedef {object} IData
- * @property {INavbar} navbar
- * @property {IPage[]} content
- * @property {ISettings} settings
- * @property {string} style
- * @property {string} script
- * @property {IResource[]} css
- * @property {IResource[]} js
- */
+// /**
+//  * @typedef {object} IData
+//  * @property {INavbar} navbar
+//  * @property {IPage[]} content
+//  * @property {ISettings} settings
+//  * @property {string} style
+//  * @property {string} script
+//  * @property {IResource[]} css
+//  * @property {IResource[]} js
+//  */
 interface IData {
   navbar: INavbar;
   content: IPage[];
@@ -662,16 +662,14 @@ const page: TPageEnumerable = { id, ...Page };
 /**
  * Рекурсивная функция ремонта страниц
  *
- * @type {WatchCallback}
+ * @type {Function}
  * @param {IPage[]} pages - Элементы массива страниц
  * @param {{ value: IPage | null }} [parent] - Родительский объект
  */
-const fixDeep: WatchCallback = (
+const fixDeep: Function = (
   pages: IPage[],
   parent: { value: IPage | null } = { value: null },
-  onCleanup: (cleanupFn: () => void) => void = () => {},
 ) => {
-  onCleanup(() => {});
   if (!pages?.length && !parent.value) pages.push(fix(page, {}));
   return pages.forEach((value) => {
     fix(page, value);
@@ -687,7 +685,7 @@ const fixDeep: WatchCallback = (
       urn,
       favicon,
     });
-    fixDeep(value.children, { value }, () => {});
+    fixDeep(value.children, { value });
   });
 };
 
@@ -725,6 +723,12 @@ watch(data, (value) => {
     $[key as keyof IData] = value[key];
   });
 });
-watch(() => $?.content, fixDeep, { deep });
+watch(
+  () => $?.content,
+  (value) => {
+    fixDeep(value);
+  },
+  { deep },
+);
 watch(() => $?.css, fixPlain, { deep });
 watch(() => $?.js, fixPlain, { deep });
