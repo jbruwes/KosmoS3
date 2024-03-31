@@ -1,8 +1,8 @@
 {
-  "theme": { "type": "String", "value": "light" },
+  "theme": { "type": "String", "default": "light" },
   "classes": {
     "type": "Array",
-    "value": [
+    "default": [
       "rounded-box",
       "fixed",
       "top-6",
@@ -15,16 +15,16 @@
       "hover:opacity-100"
     ]
   },
-  "scrollClasses": { "type": "Array", "value": ["opacity-100"] },
+  "scrollClasses": { "type": "Array", "default": ["opacity-100"] },
   "template": {
     "type": "String",
-    "value": "<div class=\"flex-none\"><label class=\"btn btn-square btn-ghost\" for=\"drawer\"><svg class=\"fill-current h-6 w-6\"><path :d=\"mdi.mdiMenu\"></path></svg></label></div><div class=\"flex-1 truncate\"><svg class=\"fill-current h-6 w-6 mx-1\"><path :d=\"mdi[`${the?.favicon??'mdiWeb'}`]\"></path></svg>{{ the?.name }}</div><div v-if=\"the?.description\" class=\"flex-none\"><button class=\"btn btn-square btn-ghost\" @click=\"speak\"><svg class=\"fill-current h-6 w-6\"><path :d=\"mdi.mdiVolumeHigh\"></path></svg></button></div>"
+    "default": "<div class=\"flex-none\"><label class=\"btn btn-square btn-ghost\" for=\"drawer\"><svg class=\"fill-current h-6 w-6\"><path :d=\"mdi.mdiMenu\"></path></svg></label></div><div class=\"flex-1 truncate\"><svg class=\"fill-current h-6 w-6 mx-1\"><path :d=\"mdi[`${the?.favicon??'mdiWeb'}`]\"></path></svg>{{ the?.name }}</div><div v-if=\"the?.description\" class=\"flex-none\"><button class=\"btn btn-square btn-ghost\" @click=\"speak\"><svg class=\"fill-current h-6 w-6\"><path :d=\"mdi.mdiVolumeHigh\"></path></svg></button></div>"
   },
   "script": {
     "type": "String",
-    "value": "import{useSpeechSynthesis,useNavigatorLanguage}from\"@vueuse/core\";const{the}=defineProps([\"the\"]);const{language:lang}=useNavigatorLanguage();const{speak}=useSpeechSynthesis(()=>the?.description,{lang});"
+    "default": "import{useSpeechSynthesis,useNavigatorLanguage}from\"@vueuse/core\";const{the}=defineProps([\"the\"]);const{language:lang}=useNavigatorLanguage();const{speak}=useSpeechSynthesis(()=>the?.description,{lang});"
   },
-  "style": { "type": "String", "value": "" },
-  "setup": { "type": "Boolean", "value": true },
-  "scoped": { "type": "Boolean", "value": true }
+  "style": { "type": "String", "default": "" },
+  "setup": { "type": "Boolean", "default": true },
+  "scoped": { "type": "Boolean", "default": true }
 }

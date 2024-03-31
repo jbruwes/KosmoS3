@@ -36,7 +36,7 @@ interface IMap {
 //  */
 interface IDefine {
   type: string;
-  value: boolean | string | number | object | null;
+  default: boolean | string | number | object | null;
 }
 
 // /**
@@ -304,7 +304,7 @@ const fix: Function = (def: IDefine, obj: IMap): {} => {
   Object.keys(obj).forEach((key) => {
     if (!Object.keys(def).includes(key)) Object.defineProperty(obj, key, {});
   });
-  Object.entries(def).forEach(([key, { type, value }]) => {
+  Object.entries(def).forEach(([key, { type, default: value }]) => {
     if (obj[key]?.constructor?.name !== type && obj[key] !== value)
       Object.defineProperty(obj, key, {
         value,
@@ -493,7 +493,7 @@ const id: IDefine = {
    *
    * @returns {string} - Id
    */
-  get value(): string {
+  get default(): string {
     return crypto.randomUUID();
   },
 

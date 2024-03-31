@@ -1,9 +1,9 @@
 {
-  "navbar": { "type": "Object", "value": {} },
-  "content": { "type": "Array", "value": [] },
-  "settings": { "type": "Object", "value": {} },
-  "style": { "type": "String", "value": "" },
-  "script": { "type": "String", "value": "" },
-  "css": { "type": "Array", "value": [] },
-  "js": { "type": "Array", "value": [] }
+  "navbar": { "type": "Object", "default": {} },
+  "content": { "type": "Array", "default": [] },
+  "settings": { "type": "Object", "default": {} },
+  "style": { "type": "String", "default": "" },
+  "script": { "type": "String", "default": "" },
+  "css": { "type": "Array", "default": [] },
+  "js": { "type": "Array", "default": [] }
 }

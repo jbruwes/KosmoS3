@@ -115,16 +115,16 @@ const fncResetNavbar = () => {
     value.forEach((element) => {
       switch (element) {
         case "template":
-          $.navbar[element] = html(navbar?.[element]?.value);
+          $.navbar[element] = html(navbar?.[element]?.default);
           break;
         case "script":
-          $.navbar[element] = js(navbar?.[element]?.value);
+          $.navbar[element] = js(navbar?.[element]?.default);
           break;
         case "style":
-          $.navbar[element] = css(navbar?.[element]?.value);
+          $.navbar[element] = css(navbar?.[element]?.default);
           break;
         default:
-          $.navbar[element] = navbar?.[element]?.value;
+          $.navbar[element] = navbar?.[element]?.default;
       }
     });
   });
