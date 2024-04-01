@@ -25,6 +25,7 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
           v-model="the.theme",
           label="Цветовая тема",
           :options="themes",
+          clearable,
           hint="the.theme"
         )
           template(#prepend)

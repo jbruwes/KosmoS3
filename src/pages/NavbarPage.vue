@@ -10,7 +10,8 @@ q-drawer(v-model="state.rightDrawer", bordered, side="right")
       q-select(
         v-model="$.navbar.theme",
         label="Цветовая тема",
-        :options="themes"
+        :options="themes",
+        clearable
       )
         template(#prepend)
           q-icon(name="mdi-theme-light-dark")
