@@ -1,7 +1,0 @@
-{
-  "yandex": { "type": "String", "default": null },
-  "metrika": { "type": "String", "default": null },
-  "google": { "type": "String", "default": null },
-  "analytics": { "type": "String", "default": null },
-  "landing": { "type": "Boolean", "default": true }
-}

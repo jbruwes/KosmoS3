@@ -77,13 +77,14 @@ q-page.column.full-height
 </template>
 <script setup>
 import { get, useStorage } from "@vueuse/core";
+import Ajv from "ajv";
 import { css, html, js } from "js-beautify";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 
-import navbar from "@/assets/navbar.json";
 import themes from "@/assets/themes.json";
 import VSourceCode from "@/components/VSourceCode.vue";
+import Navbar from "@/schemas/navbar";
 import app from "@/stores/app";
 import data from "~/monolit/src/stores/data";
 
@@ -92,6 +93,23 @@ const { state } = storeToRefs(app());
 const { $ } = data();
 const navbarTabs = useStorage("navbar-tabs", "template");
 get(state).rightDrawer = true;
+
+const schemas = [Navbar];
+const useDefaults = true;
+const coerceTypes = true;
+const removeAdditional = true;
+const esm = true;
+const code = { esm };
+
+const ajv = new Ajv({
+  useDefaults,
+  coerceTypes,
+  removeAdditional,
+  schemas,
+  code,
+});
+
+const validateNavbar = ajv.getSchema("urn:jsonschema:navbar");
 
 /** Сброс параметров навбара */
 const fncResetNavbar = () => {
@@ -114,18 +132,21 @@ const fncResetNavbar = () => {
     persistent: true,
   }).onOk((value) => {
     value.forEach((element) => {
+      delete $.navbar[element];
+    });
+    validateNavbar($.navbar);
+    value.forEach((element) => {
       switch (element) {
         case "template":
-          $.navbar[element] = html(navbar?.[element]?.default);
+          $.navbar[element] = html($.navbar[element]);
           break;
         case "script":
-          $.navbar[element] = js(navbar?.[element]?.default);
+          $.navbar[element] = js($.navbar[element]);
           break;
         case "style":
-          $.navbar[element] = css(navbar?.[element]?.default);
+          $.navbar[element] = css($.navbar[element]);
           break;
         default:
-          $.navbar[element] = navbar?.[element]?.default;
       }
     });
   });

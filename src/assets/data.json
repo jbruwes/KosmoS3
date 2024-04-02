@@ -1,9 +1,0 @@
-{
-  "navbar": { "type": "Object", "default": {} },
-  "content": { "type": "Array", "default": [] },
-  "settings": { "type": "Object", "default": {} },
-  "style": { "type": "String", "default": "" },
-  "script": { "type": "String", "default": "" },
-  "css": { "type": "Array", "default": [] },
-  "js": { "type": "Array", "default": [] }
-}
