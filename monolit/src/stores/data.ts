@@ -5,18 +5,12 @@ import {
   useFetch,
 } from "@vueuse/core";
 import Ajv from "ajv";
-import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults"; //  {DynamicDefaultFunc}
+import dynamicDefaults, {
+  DynamicDefaultFunc,
+} from "ajv-keywords/dist/definitions/dynamicDefaults";
 import { FromSchema } from "json-schema-to-ts";
 import { defineStore } from "pinia";
-import {
-  computed,
-  ComputedRef,
-  reactive,
-  Ref,
-  ref,
-  watch,
-  WatchCallback,
-} from "vue";
+import { computed, ComputedRef, reactive, Ref, ref, watch } from "vue";
 
 import Data, { plainData } from "~/src/schemas/data";
 import Navbar from "~/src/schemas/navbar";
@@ -25,12 +19,43 @@ import Resource from "~/src/schemas/resource";
 import Settings from "~/src/schemas/settings";
 
 /**
- * RandomUUID
- *
- * @returns {string} Uuid
+ * @type {TPage}
+ * @property {string | undefined} id - Идентификатор страницы, значения по
+ *   умолчанию вычисляются динамически
+ * @property {string | null} [changefreq=null] -. Default is `null`
+ * @property {string | null} [description=null] -. Default is `null`
+ * @property {string | null} [icon=null] -. Default is `null`
+ * @property {string | null} [image=null] -. Default is `null`
+ * @property {string[]} [keywords=[]] -. Default is `[]`
+ * @property {string | null} [label=null] -. Default is `null`
+ * @property {string | null} [lastmod=null] -. Default is `null`
+ * @property {string | null} [loc=null] -. Default is `null`
+ * @property {number | null} [priority=null] -. Default is `null`
+ * @property {string} [template=""] -. Default is `""`
+ * @property {string} [script=""] -. Default is `""`
+ * @property {string} [style=""] -. Default is `""`
+ * @property {string | null} [theme=null] -. Default is `null`
+ * @property {string | null} [title=null] -. Default is `null`
+ * @property {boolean} [visible=true] -. Default is `true`
+ * @property {string | null} [type=null] -. Default is `null`
+ * @property {string | null} [alt=null] -. Default is `null`
+ * @property {string | null} [full=true] -. Default is `true`
+ * @property {boolean} [setup=true] -. Default is `true`
+ * @property {boolean} [scoped=true] -. Default is `true`
+ * @property {TPage[]} children
+ * @property {TPage | null} parent
+ * @property {TPage[]} siblings
+ * @property {TPage[]} branch
+ * @property {string} path
+ * @property {number} index
+ * @property {TPage | null} prev
+ * @property {TPage | null} next
+ * @property {string | null} name
+ * @property {string} urn
+ * @property {astring | nullny} favicon
+ * @property {boolean} edit
+ * @property {TPage[]} pages
  */
-dynamicDefaults.DEFAULTS.uuid = () => () => crypto.randomUUID();
-
 type TPage = FromSchema<typeof plainPage> & {
   children: TPage[];
   parent: TPage | null;
@@ -43,36 +68,47 @@ type TPage = FromSchema<typeof plainPage> & {
   name: string | null;
   urn: string;
   favicon: string | null;
-  edit: boolean;
+  edit?: boolean;
+  pages: TPage[];
 };
 
 type TResource = FromSchema<typeof Resource>;
-
-const schemas = [Resource, Page, Settings, Navbar, Data];
-
-const useDefaults: boolean = true;
-const coerceTypes: boolean = true;
-const removeAdditional: boolean = true;
-const esm: boolean = true;
-const code: object = { esm };
-const keywords = [dynamicDefaults()];
-
-const ajv: Ajv = new Ajv({
-  useDefaults,
-  coerceTypes,
-  removeAdditional,
-  schemas,
-  code,
-  keywords,
-});
-
-const validateResource = ajv.getSchema("urn:jsonschema:resource");
-const validateData = ajv.getSchema("urn:jsonschema:data");
 
 type TData = FromSchema<
   typeof plainData,
   { references: [typeof Settings, typeof Resource, typeof Navbar] }
 > & { content: TPage[] | null };
+
+/**
+ * RandomUUID
+ *
+ * @returns {DynamicDefaultFunc} Ф-ция динамического рассчета uuid при валидации
+ */
+dynamicDefaults.DEFAULTS.uuid = (): DynamicDefaultFunc => (): any =>
+  crypto.randomUUID();
+
+const content = null;
+const settings = null;
+const style = null;
+const script = null;
+const css = null;
+const js = null;
+const navbar = null;
+
+/**
+ * Главный реактивный объект данных
+ *
+ * @type {TData}
+ */
+const $: TData = reactive({
+  content,
+  settings,
+  style,
+  script,
+  css,
+  js,
+  navbar,
+});
 
 /**
  * Путь, по которому происходит загрузка data.json
@@ -110,6 +146,117 @@ const refetch: boolean = true;
  * @type {boolean}
  */
 const deep: boolean = true;
+
+const schemas = [Resource, Page, Settings, Navbar, Data];
+
+const useDefaults: boolean = true;
+const coerceTypes: boolean = true;
+const removeAdditional: boolean = true;
+const esm: boolean = true;
+const code: object = { esm };
+const keywords = [dynamicDefaults()];
+
+const ajv: Ajv = new Ajv({
+  useDefaults,
+  coerceTypes,
+  removeAdditional,
+  schemas,
+  code,
+  keywords,
+});
+
+const validate = ajv.getSchema("urn:jsonschema:data");
+
+/**
+ * Колбек функция, запускаемая перед запросом "data.json"
+ *
+ * @type {(ctx: BeforeFetchContext) => Partial<BeforeFetchContext>}
+ * @param {BeforeFetchContext} ctx - Контекстный объект
+ * @param {RequestInit} ctx.options - Свойства запроса
+ * @param {string} ctx.url - Урл
+ * @param {Fn} ctx.cancel - Ф-ция отмены запроса
+ * @returns {Partial<BeforeFetchContext>} - Трансформированный контекстный
+ *   объект
+ */
+const beforeFetch: (ctx: BeforeFetchContext) => Partial<BeforeFetchContext> = ({
+  url,
+  options,
+  cancel,
+}: BeforeFetchContext): Partial<BeforeFetchContext> => {
+  if (!url) cancel();
+
+  /**
+   * Уровень кеширования
+   *
+   * @type {string}
+   */
+  const value: string = "no-cache";
+
+  Object.defineProperty(options.headers, "cache-control", {
+    value,
+    enumerable,
+  });
+  return { options };
+};
+
+/**
+ * Колбек функция, запускаемая после запроса "data.json". В ней производится
+ * первый этап ремонта данных
+ *
+ * @type {(ctx: AfterFetchContext) => Partial<AfterFetchContext>}
+ * @param {AfterFetchContext} ctx - Контекстный объект
+ * @returns {object} - Трансформированный контекстный объект
+ */
+const afterFetch: (ctx: AfterFetchContext) => Partial<AfterFetchContext> = (
+  ctx: AfterFetchContext,
+): Partial<AfterFetchContext> => {
+  if (!validate?.(ctx.data)) ctx.data = null;
+  return ctx;
+};
+
+/**
+ * Данные, полученные из data.json
+ *
+ * @type {{ data: Ref<any> }}
+ */
+const { data }: { data: Ref<any> } = useFetch(
+  () => (uri.value?.constructor === String ? `${uri.value}/data.json` : ""),
+  {
+    beforeFetch,
+    afterFetch,
+    refetch,
+  },
+).json();
+
+/**
+ * Рекурсивная функция преобразования древовидного объекта в массив страниц
+ *
+ * @type {Function}
+ * @param {TPage[]} pages - Элементы массива страниц
+ * @returns {TPage[]} - Аддитивный массив страниц
+ */
+const getPages: Function = (pages: TPage[]): TPage[] =>
+  pages.flatMap((element) => [element, ...getPages(element.children ?? [])]);
+
+/**
+ * Функция для вызова рассчета массива страниц
+ *
+ * @type {() => any}
+ * @returns {TPage[]} - Страницы
+ */
+const get: () => any = (): TPage[] => getPages($.content ?? []);
+
+/**
+ * Рассчетный массив страниц
+ *
+ * @type {ComputedRef<TPage[]>}
+ */
+const pages: ComputedRef<TPage[]> = computed(() =>
+  get().map((value = {}) => {
+    Object.defineProperty(value, "pages", { get });
+    return value;
+  }),
+);
 
 /**
  * Объект, на котором определяется свойство позиции в соседних объектах
@@ -272,129 +419,27 @@ const favicon: PropertyDescriptor = {
 /**
  * Функция ремонта плоских массивов js & css
  *
- * @type {WatchCallback}
- * @param {TResource[]} value - Исходный массив
+ * @type {Function}
+ * @param {{ value: TResource[] }} siblings - Исходный массив
  */
-const fixPlain: WatchCallback = (value: TResource[]) => {
-  if (!value.length) {
-    const resource = {};
-    validateResource?.(resource);
-    value.push(<TResource>resource);
-  }
-
-  /**
-   * Объект с массивом соседей
-   *
-   * @type {PropertyDescriptor}
-   */
-  const siblings: PropertyDescriptor = { value };
-
-  value.forEach((element) => {
+const fixPlain: Function = (siblings: { value: TResource[] }) => {
+  siblings.value.forEach((element) => {
     Object.defineProperties(element, { siblings, index, prev, next });
   });
 };
 
 /**
- * Объект, на котором определяется свойство массива соседних объектов
- *
- * @type {PropertyDescriptor}
- */
-const siblings: PropertyDescriptor = {
-  /**
-   * Геттер массива соседних объектов
-   *
-   * @returns {TPage[]} - Массив соседних объектов
-   */
-  get(): TPage[] {
-    return (<TPage>this).parent?.children ?? [<TPage>this];
-  },
-};
-
-/**
- * Колбек функция, запускаемая перед запросом "data.json"
- *
- * @type {(ctx: BeforeFetchContext) => Partial<BeforeFetchContext>}
- * @param {BeforeFetchContext} ctx - Контекстный объект
- * @param {RequestInit} ctx.options - Свойства запроса
- * @param {string} ctx.url - Урл
- * @param {Fn} ctx.cancel - Ф-ция отмены запроса
- * @returns {Partial<BeforeFetchContext>} - Трансформированный контекстный
- *   объект
- */
-const beforeFetch: (ctx: BeforeFetchContext) => Partial<BeforeFetchContext> = ({
-  url,
-  options,
-  cancel,
-}: BeforeFetchContext): Partial<BeforeFetchContext> => {
-  if (!url) cancel();
-
-  /**
-   * Уровень кеширования
-   *
-   * @type {string}
-   */
-  const value: string = "no-cache";
-
-  Object.defineProperty(options.headers, "cache-control", {
-    value,
-    enumerable,
-  });
-  return { options };
-};
-
-/**
- * Колбек функция, запускаемая после запроса "data.json". В ней производится
- * первый этап ремонта данных
- *
- * @type {(ctx: AfterFetchContext) => Partial<AfterFetchContext>}
- * @param {AfterFetchContext} ctx - Контекстный объект
- * @returns {object} - Трансформированный контекстный объект
- */
-const afterFetch: (ctx: AfterFetchContext) => Partial<AfterFetchContext> = (
-  ctx: AfterFetchContext,
-): Partial<AfterFetchContext> => {
-  if (!validateData?.(ctx.data)) ctx.data = null;
-  return ctx;
-};
-
-/**
- * Данные, полученные из data.json
- *
- * @type {{ data: Ref<any> }}
- */
-const { data }: { data: Ref<any> } = useFetch(
-  () => (uri.value?.constructor === String ? `${uri.value}/data.json` : ""),
-  {
-    beforeFetch,
-    afterFetch,
-    refetch,
-  },
-).json();
-
-/**
- * Рекурсивная функция преобразования древовидного объекта в массив страниц
- *
- * @type {Function}
- * @param {TPage[]} pages - Элементы массива страниц
- * @returns {TPage[]} - Аддитивный массив страниц
- */
-const getPages: Function = (pages: TPage[]): TPage[] =>
-  pages.reduce(
-    (accumulator, value) => [...accumulator, ...getPages(value.children)],
-    pages,
-  );
-
-/**
  * Рекурсивная функция ремонта страниц
  *
  * @type {Function}
- * @param {TPage[]} pages - Элементы массива страниц
+ * @param {{ value: TPage[] }} siblings - Элементы массива страниц
+ * @param {{ value: TPage }} parent - Элементы массива страниц
  */
 const fixDeep: Function = (
-  pages: TPage[],
+  siblings: { value: TPage[] },
   parent: { value: TPage | null } = { value: null },
 ) => {
-  pages.forEach((value) => {
+  siblings.value.forEach((value) => {
     Object.defineProperties(value, {
       parent,
       siblings,
@@ -407,52 +452,9 @@ const fixDeep: Function = (
       urn,
       favicon,
     });
-    fixDeep(value.children, { value });
+    fixDeep({ value: value.children ?? [] }, { value });
   });
 };
-
-const content = null;
-const settings = null;
-const style = null;
-const script = null;
-const css = null;
-const js = null;
-const navbar = null;
-
-/**
- * Главный реактивный объект данных
- *
- * @type {TData}
- */
-const $: TData = reactive({
-  content,
-  settings,
-  style,
-  script,
-  css,
-  js,
-  navbar,
-});
-
-/**
- * Функция для вызова рассчета массива страниц
- *
- * @type {() => any}
- * @returns {TPage[]} - Страницы
- */
-const get: () => any = (): TPage[] => getPages($.content ?? []);
-
-/**
- * Рассчетный массив страниц
- *
- * @type {ComputedRef<TPage[]>}
- */
-const pages: ComputedRef<TPage[]> = computed(() =>
-  get().map((value = {}) => {
-    Object.defineProperty(value, "pages", { get });
-    return value;
-  }),
-);
 
 export default defineStore("data", () => ({ $, uri, pages }));
 
@@ -461,12 +463,27 @@ watch(data, (value) => {
     $[key as keyof TData] = value[key];
   });
 });
+watch($, (value) => {
+  validate?.(value);
+});
 watch(
   () => $?.content,
   (value) => {
-    fixDeep(value);
+    fixDeep({ value });
   },
   { deep },
 );
-watch(() => $?.css, fixPlain, { deep });
-watch(() => $?.js, fixPlain, { deep });
+watch(
+  () => $?.css,
+  (value) => {
+    fixPlain({ value });
+  },
+  { deep },
+);
+watch(
+  () => $?.js,
+  (value) => {
+    fixPlain({ value });
+  },
+  { deep },
+);

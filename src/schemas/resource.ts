@@ -9,10 +9,13 @@ const properties = {
   visible: { type: "boolean", default: true },
 } as const;
 
-export default {
+/** Схема ресурсных записей */
+const Resource = {
   $id,
   dynamicDefaults,
   type,
   properties,
   additionalProperties,
 } as const;
+
+export default Resource;

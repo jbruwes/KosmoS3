@@ -1,3 +1,5 @@
+import type { JSONSchema } from "json-schema-to-ts";
+
 const $id = "urn:jsonschema:navbar";
 const additionalProperties = false;
 const nullable = true;
@@ -27,18 +29,55 @@ const properties = {
   },
   template: {
     type: "string",
-    default:
-      // eslint-disable-next-line no-template-curly-in-string
-      '<div class="flex-none"><label class="btn btn-square btn-ghost" for="drawer"><svg class="fill-current h-6 w-6"><path :d="mdi.mdiMenu"></path></svg></label></div><div class="flex-1 truncate"><svg class="fill-current h-6 w-6 mx-1"><path :d="mdi[`${the?.favicon??\'mdiWeb\'}`]"></path></svg>{{ the?.name }}</div><div v-if="the?.description" class="flex-none"><button class="btn btn-square btn-ghost" @click="speak"><svg class="fill-current h-6 w-6"><path :d="mdi.mdiVolumeHigh"></path></svg></button></div>',
+    default: `<div class="flex-none">
+    <label class="btn btn-square btn-ghost" for="drawer">
+        <svg class="fill-current h-6 w-6">
+            <path :d="mdi.mdiMenu"></path>
+        </svg>
+    </label>
+</div>
+<div class="flex-1 truncate">
+    <svg class="fill-current h-6 w-6 mx-1">
+        <path :d="mdi[\`\${the?.favicon??'mdiWeb'}\`]"></path>
+    </svg>
+    {{ the?.name }}
+</div>
+<div v-if="the?.description" class="flex-none">
+    <button class="btn btn-square btn-ghost" @click="speak">
+        <svg class="fill-current h-6 w-6">
+            <path :d="mdi.mdiVolumeHigh"></path>
+        </svg>
+    </button>
+</div>`,
   },
   script: {
     type: "string",
-    default:
-      'import{useSpeechSynthesis,useNavigatorLanguage}from"@vueuse/core";const{the}=defineProps(["the"]);const{language:lang}=useNavigatorLanguage();const{speak}=useSpeechSynthesis(()=>the?.description,{lang});',
+    default: `import {
+  useSpeechSynthesis,
+  useNavigatorLanguage
+} from "@vueuse/core";
+ const {
+  the
+} = defineProps(["the"]);
+const {
+  language: lang
+} = useNavigatorLanguage();
+const {
+  speak
+} = useSpeechSynthesis(() => the?.description, {
+  lang
+});`,
   },
   style: { type: "string", default: "" },
   setup: { type: "boolean", default: true },
   scoped: { type: "boolean", default: true },
 } as const;
 
-export default { $id, type, properties, additionalProperties } as const;
+const Navbar = {
+  $id,
+  type,
+  properties,
+  additionalProperties,
+} as const satisfies JSONSchema;
+
+export default Navbar;

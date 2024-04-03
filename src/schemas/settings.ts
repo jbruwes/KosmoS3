@@ -1,3 +1,5 @@
+import type { JSONSchema } from "json-schema-to-ts";
+
 const $id = "urn:jsonschema:settings";
 const additionalProperties = false;
 const nullable = true;
@@ -9,4 +11,10 @@ const properties = {
   analytics: { type: "string", nullable, default: null },
   landing: { type: "boolean", default: true },
 } as const;
-export default { $id, type, properties, additionalProperties } as const;
+
+export default {
+  $id,
+  type,
+  properties,
+  additionalProperties,
+} as const satisfies JSONSchema;

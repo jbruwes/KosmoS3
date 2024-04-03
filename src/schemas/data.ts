@@ -1,3 +1,5 @@
+import type { JSONSchema } from "json-schema-to-ts";
+
 const $id = "urn:jsonschema:data";
 const additionalProperties = false;
 const type = "object";
@@ -7,7 +9,7 @@ const content = {
   default: [{}],
   items: { $ref: "urn:jsonschema:page" },
   minItems: 1,
-};
+} as const;
 const properties = {
   settings: {
     type: "object",
@@ -39,16 +41,19 @@ const properties = {
   },
 } as const;
 
-export const plainData = {
+const plainData = {
   $id,
   type,
   properties,
   additionalProperties,
-} as const;
+} as const satisfies JSONSchema;
 
-export default {
+const Data = {
   $id,
   type,
   properties: { content, ...properties },
   additionalProperties,
-} as const;
+} as const satisfies JSONSchema;
+
+export { plainData };
+export default Data;

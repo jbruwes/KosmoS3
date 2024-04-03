@@ -78,7 +78,6 @@ q-page.column.full-height
 <script setup>
 import { get, useStorage } from "@vueuse/core";
 import Ajv from "ajv";
-import { css, html, js } from "js-beautify";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 
@@ -135,20 +134,6 @@ const fncResetNavbar = () => {
       delete $.navbar[element];
     });
     validateNavbar($.navbar);
-    value.forEach((element) => {
-      switch (element) {
-        case "template":
-          $.navbar[element] = html($.navbar[element]);
-          break;
-        case "script":
-          $.navbar[element] = js($.navbar[element]);
-          break;
-        case "style":
-          $.navbar[element] = css($.navbar[element]);
-          break;
-        default:
-      }
-    });
   });
 };
 </script>
