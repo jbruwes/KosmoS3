@@ -22,35 +22,78 @@ import Settings from "~/src/schemas/settings";
  * @type {TPage}
  * @property {string | undefined} id - Идентификатор страницы, значения по
  *   умолчанию вычисляются динамически
- * @property {string | null} [changefreq=null] -. Default is `null`
- * @property {string | null} [description=null] -. Default is `null`
- * @property {string | null} [icon=null] -. Default is `null`
- * @property {string | null} [image=null] -. Default is `null`
- * @property {string[]} [keywords=[]] -. Default is `[]`
- * @property {string | null} [label=null] -. Default is `null`
- * @property {string | null} [lastmod=null] -. Default is `null`
- * @property {string | null} [loc=null] -. Default is `null`
- * @property {number | null} [priority=null] -. Default is `null`
- * @property {string} [template=""] -. Default is `""`
- * @property {string} [script=""] -. Default is `""`
- * @property {string} [style=""] -. Default is `""`
- * @property {string | null} [theme=null] -. Default is `null`
- * @property {string | null} [title=null] -. Default is `null`
- * @property {boolean} [visible=true] -. Default is `true`
- * @property {string | null} [type=null] -. Default is `null`
- * @property {string | null} [alt=null] -. Default is `null`
- * @property {string | null} [full=true] -. Default is `true`
- * @property {boolean} [setup=true] -. Default is `true`
- * @property {boolean} [scoped=true] -. Default is `true`
- * @property {TPage[]} children
- * @property {TPage | null} parent
- * @property {TPage[]} siblings
- * @property {TPage[]} branch
- * @property {string} path
- * @property {number} index
- * @property {TPage | null} prev
- * @property {TPage | null} next
- * @property {string | null} name
+ * @property {string | null} [changefreq=null] - Вероятная частота изменения
+ *   этой страницы. Это значение предоставляет общую информацию для поисковых
+ *   систем и может не соответствовать точно частоте сканирования этой страницы.
+ *   Допустимые значения: always, hourly, daily, weekly, monthly, yearly, never.
+ *   Default is `null`
+ * @property {string | null} [description=null] - Предназначен для
+ *   предоставления поисковым системам краткого описания содержимого страницы
+ *   для индексации и вывода сопроводительной информации в выдаче результатов
+ *   поиска. Когда-то информация из этого тега обязательно отображалась в
+ *   поисковой выдаче и имела особый вес при индексации, однако, в связи со
+ *   злоупотреблениями, различные поисковые системы используют разные алгоритмы
+ *   для оценки релевантности указанного в теге описания и содержимого страницы,
+ *   на основании чего могут игнорировать содержимое тега. Default is `null`
+ * @property {string | null} [icon=null] - Название иконки сайта из набора
+ *   иконок mdi. Default is `null`
+ * @property {string | null} [image=null] - Содержит url картинки, используемой
+ *   поисковиками в выдаче. Default is `null`
+ * @property {string[]} [keywords=[]] -Используется для предоставления данных
+ *   поисковикам для повышения значимости некоторых слов при поиске, а также для
+ *   навигации внутри сайта по хештегам. Default is `[]`
+ * @property {string | null} [label=null] - Краткое название страницы,
+ *   используется в пути доступа. Default is `null`
+ * @property {string | null} [lastmod=null] - Дата последнего изменения файла.
+ *   Эта дата должна быть в формате W3C Datetime. Default is `null`
+ * @property {string | null} [loc=null] - URL-адрес страницы. Этот URL-адрес
+ *   должен начинаться с префикса (например, HTTP) и заканчиваться косой чертой,
+ *   если Ваш веб-сервер требует этого. Длина этого значения не должна превышать
+ *   2048 символов. Default is `null`
+ * @property {number | null} [priority=null] - Приоритетность URL относительно
+ *   других URL на Вашем сайте. Допустимый диапазон значений — от 0,0 до 1,0.
+ *   Это значение не влияет на процедуру сравнения Ваших страниц со страницами
+ *   на других сайтах — оно только позволяет указать поисковым системам, какие
+ *   страницы, по Вашему мнению, более важны для сканеров. Default is `null`
+ * @property {string} [template=""] - Шаблон страницы в формате vue. Default is
+ *   `""`
+ * @property {string} [script=""] - Скрипты страницы. Default is `""`
+ * @property {string} [style=""] - Стили страницы. Default is `""`
+ * @property {string | null} [theme=null] - Тема daisyui, @see
+ *   {@link https://daisyui.com/docs/themes/} см. документацию. Default is
+ *   `null`
+ * @property {string | null} [title=null] - Полный заголовок страницы. Default
+ *   is `null`
+ * @property {boolean} [visible=true] - Флаг видимости страницы на сайте. Не
+ *   скрывает страницу от поисковиков. Default is `true`
+ * @property {string | null} [type=null] - Тип объекта, например, video.movie
+ *   (фильм), @see {@link https://ogp.me/#types} см. документацию. Если у вас
+ *   несколько объектов на странице, выберите один из них (главный). В
+ *   зависимости от типа можно указать дополнительные свойства. Default is
+ *   `null`
+ * @property {string | null} [alt=null] - Описание картинки для страницы.
+ *   Default is `null`
+ * @property {string | null} [full=true] - Признак, что страница должна быть
+ *   минимум по высоте окна браузера. Default is `true`
+ * @property {boolean} [setup=true] - Добавление атрибута setup в таг script.
+ *   Default is `true`
+ * @property {boolean} [scoped=true] - Добавление атрибута scoped в таг style.
+ *   Default is `true`
+ * @property {TPage[]} children - Дочерние страницы
+ * @property {TPage | null} parent - Родительская страница
+ * @property {TPage[]} siblings - Массив одноуровневых страниц
+ * @property {TPage[]} branch - Массив объектов, определяющий путь до страницы,
+ *   проще говоря, ветка в дереве
+ * @property {string} path - Путь до страницы для использования в поисковой
+ *   строке браузера
+ * @property {number} index - Порядковый номер страницы в массиве одноуровневых
+ *   страниц
+ * @property {TPage | null} prev - Предыдущая страница в массиве одноуровневых
+ *   страниц
+ * @property {TPage | null} next - Последующая страниа в массиве одноуровневых
+ *   станиц
+ * @property {string | null} name - Вычисленное имя страницы, предпочтительно
+ *   полное
  * @property {string} urn
  * @property {astring | nullny} favicon
  * @property {boolean} edit
