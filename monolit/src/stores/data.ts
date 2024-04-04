@@ -104,14 +104,8 @@ type TPage = FromSchema<typeof plainPage> & {
   parent: TPage | null;
   siblings: TPage[];
   branch: TPage[];
-  path: string;
-  index: number;
   prev: TPage | null;
   next: TPage | null;
-  name: string | null;
-  urn: string;
-  favicon: string | null;
-  edit?: boolean;
   pages: TPage[];
 };
 
