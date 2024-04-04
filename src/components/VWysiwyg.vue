@@ -112,7 +112,7 @@ const insertedObject = useArrayFind(
 );
 const immediate = true;
 watch(
-  () => $?.content,
+  () => $?.content ?? [],
   ([{ id = "" } = {}] = []) => {
     inserted.value = id;
   },

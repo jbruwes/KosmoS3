@@ -237,7 +237,7 @@ const iconPicker = ref({
 });
 get(state).rightDrawer = true;
 watch(
-  () => $?.content,
+  () => $?.content ?? [],
   ([{ id = "" } = {}] = []) => {
     const {
       content: { expanded, selected },

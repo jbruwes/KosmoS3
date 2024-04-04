@@ -73,15 +73,15 @@ export default defineStore("s3", () => {
    */
   const getObject = async (Key) => {
     const Bucket = get(bucket);
-    const ResponseCacheControl = "no-store";
+    const ResponseCacheControl = "no-cache";
+    const textDecoder = new TextDecoder();
     let ret;
     if (isDefined(S3)) {
       const { Body } = await get(S3).send(
         new GetObjectCommand({ ResponseCacheControl, Bucket, Key }),
       );
+      const reader = Body.getReader();
       ret = await new Promise((resolve) => {
-        const reader = Body.getReader();
-        const textDecoder = new TextDecoder();
         (async function read(chunks) {
           const { done, value } = await reader.read();
           if (done) resolve(chunks.join(""));

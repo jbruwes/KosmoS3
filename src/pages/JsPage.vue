@@ -35,7 +35,7 @@ const { state } = storeToRefs(app());
 const { $ } = data();
 get(state).rightDrawer = null;
 watch(
-  () => $?.js,
+  () => $?.js ?? [],
   ([{ id = "" } = {}] = []) => {
     const {
       js: { selected },

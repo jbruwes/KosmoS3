@@ -128,7 +128,7 @@ watch(
   { once },
 );
 watch(
-  () => $?.settings,
+  () => $?.settings ?? {},
   ({ metrika, analytics }) => {
     if (metrika) {
       /**

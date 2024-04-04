@@ -547,7 +547,7 @@ const fixDeep: Function = (
   });
 };
 
-export default defineStore("data", () => ({ $, uri, pages }));
+export default defineStore("data", () => ({ $, uri, pages, validate }));
 
 watch(data, (value) => {
   Object.keys(value).forEach((key) => {
@@ -558,21 +558,21 @@ watch($, (value) => {
   validate?.(value);
 });
 watch(
-  () => $?.content,
+  () => $?.content ?? [],
   (value) => {
     fixDeep({ value });
   },
   { deep },
 );
 watch(
-  () => $?.css,
+  () => $?.css ?? [],
   (value) => {
     fixPlain({ value });
   },
   { deep },
 );
 watch(
-  () => $?.js,
+  () => $?.js ?? [],
   (value) => {
     fixPlain({ value });
   },

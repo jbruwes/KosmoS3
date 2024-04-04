@@ -6,7 +6,11 @@ import * as vueuseMath from "@vueuse/math";
 import { defineStore } from "pinia";
 import * as vue from "vue";
 import * as vueRouter from "vue-router";
-import { loadModule } from "vue3-sfc-loader";
+import { loadModule, Options } from "vue3-sfc-loader";
+
+// import Data from "@/stores/data";
+
+// const { $, validate } = Data();
 
 const { defineAsyncComponent } = vue;
 const { useStyleTag } = vueuseCore;
@@ -33,9 +37,9 @@ const moduleCache = {
  * @param {string} type - Тип записи
  * @param {...any} args - Содержимое записи
  */
-const log = (type = "", ...args) => {
+const log = (type = "", ...args: any[]) => {
   // eslint-disable-next-line no-console
-  console[type]?.(...args);
+  (<any>console)[type]?.(...args);
 };
 
 /**
@@ -69,7 +73,16 @@ const fncTemplate = ({
   path = "",
   setup = true,
   scoped = true,
-} = {}) => {
+}: {
+  _: string;
+  id: string;
+  template: string;
+  script: string;
+  style: string;
+  path: string;
+  setup: boolean;
+  scoped: boolean;
+}): object => {
   /**
    * Константа со скриптами
    *
@@ -116,14 +129,16 @@ const fncTemplate = ({
    * @returns {Promise} Промис
    */
   const loader = () =>
-    loadModule(`${["", "~"].includes(path) ? "" : "/"}${path}/view.vue`, {
+    loadModule(`${["", "~"].includes(path) ? "" : "/"}${path}/view.vue`, <
+      Options
+    >(<unknown>{
       moduleCache,
       getFile,
       addStyle,
       log,
-    });
+    }));
 
-  return defineAsyncComponent({ loader, delay });
+  return defineAsyncComponent(<any>{ loader, delay });
 };
 
 export default defineStore("monolit", () => ({ fncTemplate }));
