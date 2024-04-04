@@ -259,7 +259,7 @@ watch(files, async (newFiles) => {
     try {
       const { type } = file;
       if (mimes.includes(type)) {
-        const filePath = `images/${uid()}.${mime.getExtension(type)}`;
+        const filePath = `${uid()}.${mime.getExtension(type)}`;
         await putFile(filePath, type, file);
         get(the).image = `/${filePath}`;
       } else

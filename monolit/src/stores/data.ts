@@ -124,27 +124,19 @@ type TData = FromSchema<
 dynamicDefaults.DEFAULTS.uuid = (): DynamicDefaultFunc => (): any =>
   crypto.randomUUID();
 
-const content = null;
-const settings = null;
-const style = null;
-const script = null;
-const css = null;
-const js = null;
-const navbar = null;
-
 /**
  * Главный реактивный объект данных
  *
  * @type {TData}
  */
 const $: TData = reactive({
-  content,
-  settings,
-  style,
-  script,
-  css,
-  js,
-  navbar,
+  content: null,
+  settings: null,
+  style: null,
+  script: null,
+  css: null,
+  js: null,
+  navbar: null,
 });
 
 /**
@@ -229,7 +221,7 @@ const beforeFetch: (ctx: BeforeFetchContext) => Partial<BeforeFetchContext> = ({
    */
   const value: string = "no-cache";
 
-  Object.defineProperty(options.headers, "cache-control", {
+  Object.defineProperty(options, "cache", {
     value,
     enumerable,
   });
@@ -453,6 +445,65 @@ const favicon: PropertyDescriptor = {
   },
 };
 
+const cache = "no-cache";
+
+/**
+ * Объект, на котором определяется загрузка шаблона страницы
+ *
+ * @type {PropertyDescriptor}
+ */
+const htm: PropertyDescriptor = {
+  /**
+   * Геттер шаблона страницы
+   *
+   * @returns {Promise<string>} - Шаблон страницы
+   */
+  async get(): Promise<string> {
+    const response = await fetch(`${uri.value}/${(<TPage>this).id}.htm`, {
+      cache,
+    });
+    return response.ok ? response.text() : "";
+  },
+};
+
+/**
+ * Объект, на котором определяется загрузка стилей страницы
+ *
+ * @type {PropertyDescriptor}
+ */
+const css: PropertyDescriptor = {
+  /**
+   * Геттер стилей страницы
+   *
+   * @returns {Promise<string>} - Стили страницы
+   */
+  async get(): Promise<string> {
+    const response = await fetch(`${uri.value}/${(<TPage>this).id}.css`, {
+      cache,
+    });
+    return response.ok ? response.text() : "";
+  },
+};
+
+/**
+ * Объект, на котором определяется загрузка скриптов страницы
+ *
+ * @type {PropertyDescriptor}
+ */
+const js: PropertyDescriptor = {
+  /**
+   * Геттер скриптов страницы
+   *
+   * @returns {Promise<string>} - Скрипты страницы
+   */
+  async get(): Promise<string> {
+    const response = await fetch(`${uri.value}/${(<TPage>this).id}.js`, {
+      cache,
+    });
+    return response.ok ? response.text() : "";
+  },
+};
+
 /**
  * Функция ремонта плоских массивов js & css
  *
@@ -488,6 +539,9 @@ const fixDeep: Function = (
       name,
       urn,
       favicon,
+      htm,
+      css,
+      js,
     });
     fixDeep({ value: value.children ?? [] }, { value });
   });

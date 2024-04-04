@@ -131,7 +131,7 @@ const putImage = async (file) => {
   try {
     const { type } = file;
     if (mimes?.includes(type)) {
-      const filePath = `images/${crypto?.randomUUID()}.${mime?.getExtension(type)}`;
+      const filePath = `${crypto?.randomUUID()}.${mime?.getExtension(type)}`;
       await putFile(filePath, type, file);
       editorRef?.value?.runCmd("insertImage", `${base?.value}/${filePath}`);
     } else

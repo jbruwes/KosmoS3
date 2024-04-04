@@ -112,13 +112,26 @@ const properties = {
   urn: { type: "string" },
   favicon: { type: "string", nullable },
   edit: { type: "boolean" },
+  htm: { type: "string" },
+  js: { type: "string" },
+  css: { type: "string" },
 } as const;
 
 export const plainPage = {
   $id,
   type,
   properties,
-  required: [...required, "path", "index", "name", "urn", "favicon"],
+  required: [
+    ...required,
+    "path",
+    "index",
+    "name",
+    "urn",
+    "favicon",
+    "htm",
+    "js",
+    "css",
+  ],
   additionalProperties,
 } as const satisfies JSONSchema;
 

@@ -26,6 +26,8 @@ const extractors: Array<Extractor> = [extractorPug()];
 /**
  * Конфигурационный файл UnoCSS
  *
+ * @constant
+ * @default
  * @type {string}
  */
 const configFile: string = "../uno.config.js";
@@ -33,6 +35,8 @@ const configFile: string = "../uno.config.js";
 /**
  * Массив плагинов для использования
  *
+ * @constant
+ * @default
  * @type {any[]}
  */
 const plugins: Array<any> = [
@@ -49,6 +53,8 @@ const plugins: Array<any> = [
  * используйте абсолютные пути. Относительные alias значения будут
  * использоваться как есть и не будут резолвнуты в file system paths.
  *
+ * @constant
+ * @default
  * @type {object}
  */
 const alias: object = {
@@ -59,6 +65,8 @@ const alias: object = {
 /**
  * Блок resolve
  *
+ * @constant
+ * @default
  * @type {object}
  */
 const resolve: object = { alias };
@@ -69,6 +77,8 @@ const resolve: object = { alias };
  * хешированным версиям, который в дальнейшем может быть использован серверным
  * фреймворком чтобы срендерить корректные ссылки на ресурсы (assets).
  *
+ * @constant
+ * @default
  * @type {boolean}
  */
 const manifest: boolean = true;
@@ -80,10 +90,21 @@ const manifest: boolean = true;
  * параметр чтобы отключить warning'и. Это также можно сдлеать с помощью
  * параметра командной строки --emptyOutDir.
  *
+ * @constant
+ * @default
  * @type {string}
  */
 
 const outDir: string = "../public/monolit";
+
+/**
+ * Укажите каталог для вложения сгенерированных ресурсов
+ *
+ * @constant
+ * @default
+ * @type {string}
+ */
+const assetsDir: string = "";
 
 /**
  * Разборка по вендорам. Allows the creation of custom shared common chunks.
@@ -102,6 +123,8 @@ const manualChunks: Function = (id: string = ""): string =>
 /**
  * Блок output
  *
+ * @constant
+ * @default
  * @type {object}
  */
 const output: object = { manualChunks };
@@ -112,6 +135,8 @@ const output: object = { manualChunks };
  * будут смёржены с Vite's внутренними Rollup опциями. Смотрите Rollup options
  * документацию для большей информации.
  *
+ * @constant
+ * @default
  * @type {object}
  */
 const rollupOptions: object = { output };
@@ -119,14 +144,18 @@ const rollupOptions: object = { output };
 /**
  * Блок build
  *
+ * @constant
+ * @default
  * @type {object}
  */
-const build: object = { manifest, outDir, rollupOptions };
+const build: object = { manifest, outDir, rollupOptions, assetsDir };
 
 /**
  * Определяет глоальную замену констант. Записи будут определяться как
  * глобальные во время dev разработки и статически заменяться во время build.
  *
+ * @constant
+ * @default
  * @type {object}
  */
 const define: object = {
