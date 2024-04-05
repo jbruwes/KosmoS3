@@ -91,10 +91,10 @@ import {
 } from "vue-router";
 
 import data from "@/stores/data";
-import monolit from "@/stores/monolit";
+import Monolit from "@/stores/monolit";
 
 /** @type {{ fncTemplate: Function }} */
-const { fncTemplate }: { fncTemplate: Function } = monolit();
+const { fncTemplate }: { fncTemplate: Function } = Monolit();
 
 /** @type {{ $: any }} */
 const { $ }: { $: any } = data();

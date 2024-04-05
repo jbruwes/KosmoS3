@@ -44,7 +44,7 @@ export default defineStore("s3", () => {
    *
    * @param {string} Key Имя файла
    * @param {string} ContentType Тип mime
-   * @param {string | Uint8Array | Buffer} body Тело файла
+   * @param {string | Uint8Array | Buffer | Blob} body Тело файла
    */
   const putObject = async (Key, ContentType, body) => {
     const Bucket = get(bucket);

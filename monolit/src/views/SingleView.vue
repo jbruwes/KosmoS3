@@ -20,10 +20,10 @@ import { RouteLocationNormalizedLoaded, useRoute } from "vue-router";
 
 import selectors from "@/assets/glightbox.json";
 import data from "@/stores/data";
-import monolit from "@/stores/monolit";
+import Monolit from "@/stores/monolit";
 
 /** @type {{ fncTemplate: Function }} */
-const { fncTemplate }: { fncTemplate: Function } = monolit();
+const { fncTemplate }: { fncTemplate: Function } = Monolit();
 
 /** @type {{ pages: any[] }} */
 const { pages }: { pages: Ref<any[]> } = storeToRefs(data());

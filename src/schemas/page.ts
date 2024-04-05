@@ -7,7 +7,6 @@ const type = "object";
 const id = "uuid";
 const dynamicDefaults = { id };
 const children = { type: "array", default: [], items: { $ref: "#" } } as const;
-const required = ["id"] as const;
 const properties = {
   id: { type: "string" },
   changefreq: {
@@ -106,32 +105,12 @@ const properties = {
   full: { type: "boolean", default: true },
   setup: { type: "boolean", default: true },
   scoped: { type: "boolean", default: true },
-  path: { type: "string" },
-  index: { type: "number" },
-  name: { type: "string", nullable },
-  urn: { type: "string" },
-  favicon: { type: "string", nullable },
-  edit: { type: "boolean" },
-  htm: { type: "string" },
-  js: { type: "string" },
-  css: { type: "string" },
 } as const;
 
 export const plainPage = {
   $id,
   type,
   properties,
-  required: [
-    ...required,
-    "path",
-    "index",
-    "name",
-    "urn",
-    "favicon",
-    "htm",
-    "js",
-    "css",
-  ],
   additionalProperties,
 } as const satisfies JSONSchema;
 
@@ -140,6 +119,5 @@ export default {
   dynamicDefaults,
   type,
   properties: { children, ...properties },
-  required,
   additionalProperties,
 } as const;

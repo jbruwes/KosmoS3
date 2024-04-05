@@ -15,18 +15,18 @@ import { MotionPlugin } from "@vueuse/motion";
 import { createPinia, storeToRefs } from "pinia";
 import { createApp, watch } from "vue";
 import VueGtag from "vue-gtag";
-import VueYandexMetrika from "vue3-yandex-metrika";
+import { initYandexMetrika } from "yandex-metrika-vue3";
 
 import App from "@/App.vue";
 import router from "@/router";
-import data from "@/stores/data";
+import Data, { TData, TSettings } from "@/stores/data";
+import Monolit from "@/stores/monolit";
 import defaults from "~/uno.config";
 
 // eslint-disable-next-line no-console
 console.info(
   "👨‍🚀",
   "The vues3 framework",
-  /* global __APP_VERSION__ */
   `ver:${__APP_VERSION__}`,
   "https://vues3.ru",
 );
@@ -52,18 +52,33 @@ const app = createApp(App);
 app.config.globalProperties.mdi = mdi;
 app.use(createPinia());
 
-/** @type {{ pages: {}; uri: {} }} */
-const { pages, uri } = storeToRefs(data());
+/** @type {{ pages: {} }} */
+const { pages } = storeToRefs(Data());
 
-/** @type {{ $: {} }} */
-const { $ } = data();
+/** @type {{ $: {}; validate: Function }} */
+const { $, validate } = Data();
+
+const { fix } = Monolit();
+
+const cache = "no-cache";
+(async () => {
+  const response = await fetch("/assets/data.json", {
+    cache,
+  });
+  const data = response.ok ? await response.json() : {};
+  validate?.(data);
+  Object.keys(data).forEach((key) => {
+    $[key as keyof TData] = data[key as keyof {}];
+  });
+  fix($.content);
+})();
 
 /**
  * Перевод яндекс метрики в продуктовый режим
  *
  * @type {string}
  */
-const env = "production";
+const env = process.env.NODE_ENV;
 
 /**
  * Запуск вотчера единожды
@@ -94,7 +109,7 @@ watch(
           _: path = `/${_path}`,
           id: name = "",
           loc = "",
-        } = {}) => {
+        }: any) => {
           /**
            * Подготовленный алиас
            *
@@ -128,17 +143,17 @@ watch(
   { once },
 );
 watch(
-  () => $?.settings ?? {},
-  ({ metrika, analytics }) => {
+  () => <TSettings>$?.settings,
+  ({ metrika, analytics }: TSettings) => {
     if (metrika) {
       /**
        * Id метрики
        *
        * @type {string}
        */
-      const id = metrika;
+      const id: string = metrika;
 
-      app.use(VueYandexMetrika, { id, router, env });
+      app.use(initYandexMetrika, <any>{ id, router, env });
     }
     if (analytics) {
       /**
@@ -160,7 +175,6 @@ watch(
   },
   { once },
 );
-uri.value = "";
 app.use(router);
 app.use(createHead());
 app.use(Tres);

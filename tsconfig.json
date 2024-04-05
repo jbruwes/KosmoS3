@@ -5,6 +5,7 @@
     "paths": {
       "@/*": ["src/*", "monolit/src/*"],
       "~/*": ["*"]
-    }
+    },
+    "types": ["vite/client"]
   }
 }
