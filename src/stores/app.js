@@ -31,7 +31,7 @@ watch(S3, async (value) => {
     navbar: null,
   };
   if (value) {
-    const res = JSON.parse((await getObject("data.json")) ?? null);
+    const res = JSON.parse((await getObject("assets/data.json")) ?? null);
     if (res && validate(res)) data = res;
   }
   Object.keys(data).forEach((key) => {
@@ -84,7 +84,7 @@ watchDebounced(
   $,
   (value, oldValue) => {
     if (value && oldValue)
-      putObject("data.json", "application/json", JSON.stringify(value));
+      putObject("assets/data.json", "application/json", JSON.stringify(value));
   },
   { deep: true, debounce: 1000, maxWait: 10000 },
 );

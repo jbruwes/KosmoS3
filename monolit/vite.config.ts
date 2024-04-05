@@ -98,15 +98,6 @@ const manifest: boolean = true;
 const outDir: string = "../public/monolit";
 
 /**
- * Укажите каталог для вложения сгенерированных ресурсов
- *
- * @constant
- * @default
- * @type {string}
- */
-const assetsDir: string = "";
-
-/**
  * Разборка по вендорам. Allows the creation of custom shared common chunks.
  * When using the object form, each property represents a chunk that contains
  * the listed modules and all their dependencies if they are part of the module
@@ -148,7 +139,7 @@ const rollupOptions: object = { output };
  * @default
  * @type {object}
  */
-const build: object = { manifest, outDir, rollupOptions, assetsDir };
+const build: object = { manifest, outDir, rollupOptions };
 
 /**
  * Определяет глоальную замену констант. Записи будут определяться как

@@ -249,7 +249,8 @@ const afterFetch: (ctx: AfterFetchContext) => Partial<AfterFetchContext> = (
  * @type {{ data: Ref<any> }}
  */
 const { data }: { data: Ref<any> } = useFetch(
-  () => (uri.value?.constructor === String ? `${uri.value}/data.json` : ""),
+  () =>
+    uri.value?.constructor === String ? `${uri.value}/assets/data.json` : "",
   {
     beforeFetch,
     afterFetch,
